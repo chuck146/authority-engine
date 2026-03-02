@@ -12,6 +12,7 @@ When assigned a component or page to test:
 1. **Read the source file** to understand its props, state, user interactions, and rendering logic.
 
 2. **Check for existing tests:**
+
 ```bash
 find . -name "*.test.tsx" -path "*COMPONENT_NAME*"
 ```
@@ -27,6 +28,7 @@ find . -name "*.test.tsx" -path "*COMPONENT_NAME*"
    - **Edge cases:** Empty data, long strings, missing optional props
 
 4. **Run the tests:**
+
 ```bash
 npx vitest run COMPONENT_NAME
 ```

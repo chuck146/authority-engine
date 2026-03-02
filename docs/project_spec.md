@@ -3,14 +3,17 @@
 ## Part 1: Product Requirements
 
 ### What are you actually trying to do?
+
 Build an AI-powered SEO & Growth Platform that automates content creation, SEO optimization, review management, and community engagement for home improvement companies. Cleanest Painting LLC is the first customer. White-labeled to other companies via Rodas Consulting Group.
 
 ### Who is the product for?
+
 - **Primary:** Painting contractors and home improvement companies ($500K–$10M revenue)
 - **Secondary:** Marketing agencies serving home improvement verticals
 - **Internal:** Cleanest Painting LLC as proof-of-concept and daily driver
 
 ### What problems does it solve?
+
 - Home improvement companies have zero time for SEO, content, or social media
 - Hiring an agency costs $2K–$5K/month with generic results
 - No visibility into SEO health, keyword rankings, or review performance
@@ -18,6 +21,7 @@ Build an AI-powered SEO & Growth Platform that automates content creation, SEO o
 - Zero organic traffic because no service pages, location pages, or blog content exists
 
 ### What does the product do?
+
 Five modules: SEO Command Center, AI Content Engine, Review Command Center, Community Lead Capture, Analytics & Reporting. Full specs in @docs/PRD.md.
 
 ---
@@ -25,9 +29,11 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 ### Milestones
 
 #### 🟢 MVP — AI Content Generator + Auth + Database
+
 **Goal:** Generate SEO-optimized service pages, location pages, and blog posts via Claude API. Ship to Cleanest Painting.
 
 **Scope:**
+
 - Supabase Auth (email + magic link) with multi-tenant org model
 - Database schema: organizations, users, service_pages, location_pages, blog_posts
 - RLS policies on all tables (organization_id scoping)
@@ -43,9 +49,11 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 ---
 
 #### 🔵 V1 — SEO Scoring + Image Generation + Content Calendar
+
 **Goal:** See SEO health, auto-generate images for content, and schedule publishing.
 
 **Scope:**
+
 - SEO Health Score (on-page analysis of generated pages)
 - Google Search Console integration (keyword rankings, traffic data)
 - Google Analytics 4 integration (page performance)
@@ -60,9 +68,11 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 ---
 
 #### 🟡 V2 — Reviews + Video + Community
+
 **Goal:** Automate review management, add video content, capture leads from Facebook groups.
 
 **Scope:**
+
 - Review aggregation (Google, Yelp, Angi's)
 - Automated review request SMS (Twilio/SalesMessage)
 - AI review response drafts
@@ -77,9 +87,11 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 ---
 
 #### 🟣 Later — White-Label + Advanced Analytics + Marketplace
+
 **Goal:** Multi-tenant admin for Rodas Consulting clients. Advanced reporting.
 
 **Scope:**
+
 - White-label admin panel (onboard new orgs, configure branding)
 - Billing integration (Stripe) for subscription management
 - Advanced analytics (competitor tracking, market share estimates)
@@ -91,6 +103,7 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 ---
 
 #### ⚫ Not In Scope (Infrastructure / Maintenance)
+
 - CI/CD pipeline (GitHub Actions → Vercel)
 - Error monitoring (Sentry)
 - Logging infrastructure (structured logs)
@@ -105,37 +118,45 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 ## Part 2: Technical Design
 
 ### Frontend
+
 - **Framework:** Next.js 15 (App Router) — SSR for SEO pages, RSC by default
 - **Styling:** Tailwind CSS + Shadcn/ui component library
 - **State:** Zustand (client), TanStack Query (server), react-hook-form (forms)
 - **Deployment:** Vercel
 
 ### Programming Language
+
 - **TypeScript** (strict mode) — frontend, backend, shared types
 - **Python** — SEO audit microservice only (FastAPI)
 
 ### Backend
+
 - **API:** Next.js Route Handlers (App Router `/app/api/`)
 - **Background Jobs:** BullMQ + Redis
 - **Microservices:** Python FastAPI for SEO audits, Remotion for video
 
 ### Database
+
 - **PostgreSQL** via Supabase
 - **RLS** for multi-tenant isolation
 - **Migrations** via Supabase CLI
 
 ### Auth
+
 - **Supabase Auth** — email + magic link
 - **JWT** tokens feed RLS policies via `auth.uid()`
 - **Role-based access:** owner, admin, editor, viewer
 
 ### Email
+
 - **Resend** — transactional emails (invites, notifications, reports)
 
 ### Payment (V2/Later)
+
 - **Stripe** — subscription billing for white-label clients
 
 ### Cloud
+
 - **Vercel** — Next.js hosting + serverless functions
 - **Supabase** — database + auth + storage
 - **Redis** — BullMQ job queue (Upstash or Railway)
@@ -143,10 +164,12 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 - **Modal.com** — Python microservice hosting (SEO audits)
 
 ### Object Storage
+
 - **Supabase Storage** — images, documents, org assets
 - **Cloudflare R2** — video files, large media
 
 ### AI Models
+
 - **Claude API (Anthropic)** — text content generation, SEO analysis, sentiment
 - **Nano Banana 2 (Gemini 3.1 Flash Image)** — image generation
 - **Remotion** — programmatic video (React compositions)
@@ -159,6 +182,7 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 See @docs/architecture.md for system design diagram and component relationships.
 
 Key architectural decisions:
+
 1. **Next.js App Router** — Route groups: `(dashboard)` for app, `(marketing)` for public SSR pages
 2. **Multi-tenant RLS** — Every table has `organization_id`, scoped via Supabase RLS
 3. **Adapter pattern** — CRM, reviews, notifications abstracted behind interfaces
@@ -167,6 +191,7 @@ Key architectural decisions:
 6. **Edge-first** — Vercel Edge Runtime for public pages, Node runtime for API routes
 
 ### Accounts & API Keys Required
+
 - [ ] Supabase project (database + auth + storage)
 - [ ] Vercel account (deployment)
 - [ ] Anthropic API key (Claude)

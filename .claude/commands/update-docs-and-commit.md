@@ -16,18 +16,21 @@ After completing a feature or major change, update all project documentation and
 3. If architecture changed (new tables, new services, new integrations), update `docs/architecture.md`
 
 4. Run lint and typecheck:
+
 ```bash
 npm run lint
 npm run typecheck
 ```
 
 5. Stage and commit with a descriptive message:
+
 ```bash
 git add -A
 git commit -m "docs: update changelog, project status, and architecture for [FEATURE]"
 ```
 
 6. Push to current feature branch:
+
 ```bash
 git push origin HEAD
 ```

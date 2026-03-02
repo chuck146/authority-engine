@@ -55,11 +55,11 @@ This document describes the high-level system architecture, data flow, and compo
 
 ## Route Groups
 
-| Group | Path | Rendering | Auth Required | Purpose |
-|-------|------|-----------|---------------|---------|
-| `(marketing)` | `/services/*`, `/locations/*`, `/blog/*` | SSR (Server Components) | No | Public SEO pages indexed by Google |
-| `(dashboard)` | `/dashboard/*`, `/content/*`, `/seo/*` | Client + Server | Yes | Authenticated app for managing content |
-| `api` | `/api/v1/*` | Node Runtime | Yes (most) | REST API for all operations |
+| Group         | Path                                     | Rendering               | Auth Required | Purpose                                |
+| ------------- | ---------------------------------------- | ----------------------- | ------------- | -------------------------------------- |
+| `(marketing)` | `/services/*`, `/locations/*`, `/blog/*` | SSR (Server Components) | No            | Public SEO pages indexed by Google     |
+| `(dashboard)` | `/dashboard/*`, `/content/*`, `/seo/*`   | Client + Server         | Yes           | Authenticated app for managing content |
+| `api`         | `/api/v1/*`                              | Node Runtime            | Yes (most)    | REST API for all operations            |
 
 ---
 
@@ -123,12 +123,12 @@ All tables include `organization_id` FK with Supabase RLS policies.
 
 ## Integration Adapters
 
-| Category | Interface | Implementations |
-|----------|-----------|-----------------|
-| CRM | `CRMAdapter` | HubSpotAdapter, WebhookAdapter |
-| Reviews | `ReviewAdapter` | GoogleAdapter, YelpAdapter, AngiAdapter |
+| Category      | Interface             | Implementations                                 |
+| ------------- | --------------------- | ----------------------------------------------- |
+| CRM           | `CRMAdapter`          | HubSpotAdapter, WebhookAdapter                  |
+| Reviews       | `ReviewAdapter`       | GoogleAdapter, YelpAdapter, AngiAdapter         |
 | Notifications | `NotificationAdapter` | SlackAdapter, EmailAdapter (Resend), SMSAdapter |
-| Publishing | `PublishAdapter` | GBPAdapter, NextJSAdapter (internal SSR pages) |
+| Publishing    | `PublishAdapter`      | GBPAdapter, NextJSAdapter (internal SSR pages)  |
 
 Business logic imports the interface, never a specific adapter.
 Factory pattern: `CRMAdapterFactory.create(org.crmType)`
@@ -137,13 +137,13 @@ Factory pattern: `CRMAdapterFactory.create(org.crmType)`
 
 ## AI Stack
 
-| Engine | Provider | Model | Use |
-|--------|----------|-------|-----|
-| Text | Anthropic | claude-sonnet-4-5 | Content gen, SEO analysis |
-| Text (complex) | Anthropic | claude-opus-4-6 | Deep analysis only |
-| Images | Google | gemini-3.1-flash-image | Graphics, thumbnails, heroes |
-| Video (programmatic) | Remotion | React compositions | Branded reels, tips, testimonials |
-| Video (cinematic) | Google | veo-3.1-fast-generate-preview | Hero content, ads |
+| Engine               | Provider  | Model                         | Use                               |
+| -------------------- | --------- | ----------------------------- | --------------------------------- |
+| Text                 | Anthropic | claude-sonnet-4-5             | Content gen, SEO analysis         |
+| Text (complex)       | Anthropic | claude-opus-4-6               | Deep analysis only                |
+| Images               | Google    | gemini-3.1-flash-image        | Graphics, thumbnails, heroes      |
+| Video (programmatic) | Remotion  | React compositions            | Branded reels, tips, testimonials |
+| Video (cinematic)    | Google    | veo-3.1-fast-generate-preview | Hero content, ads                 |
 
 See @docs/video-guidelines.md for full decision logic and combination pipelines.
 

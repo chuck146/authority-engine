@@ -11,6 +11,7 @@ Built by Cleanest Painting LLC / Rodas Consulting Group
 This project follows the **PSB methodology** for AI-assisted development.
 
 ### Plan ✅
+
 - [Project Spec](docs/project_spec.md) — Requirements, milestones (MVP → V1 → V2 → Later), tech design
 - [Architecture](docs/architecture.md) — System design, data flow, component relationships
 - [Video Guidelines](docs/video-guidelines.md) — AI video generation decision logic
@@ -18,6 +19,7 @@ This project follows the **PSB methodology** for AI-assisted development.
 - [Changelog](docs/changelog.md) — All notable changes
 
 ### Setup ✅
+
 - **CLAUDE.md hierarchy** — Root + directory-specific context files
 - **Git workflow** — Feature branches, never commit to main, pre-push hooks
 - **.env.example** — All API keys documented
@@ -26,11 +28,15 @@ This project follows the **PSB methodology** for AI-assisted development.
 - **Slash commands** — `/new-feature`, `/build-milestone`, `/run-tests`, `/update-docs-and-commit`
 
 ### Build
+
 Start the MVP:
+
 ```
 /build-milestone MVP
 ```
+
 Or start a single feature:
+
 ```
 /new-feature content-generator
 ```
@@ -67,6 +73,7 @@ authority-engine/
 ```
 
 Claude Code loads context hierarchically:
+
 1. **Always:** Root `CLAUDE.md` (lean, ~90 lines)
 2. **On demand:** `@docs/*` files when Claude needs specs or architecture
 3. **By directory:** Nested `CLAUDE.md` files when working in specific packages
@@ -75,32 +82,32 @@ Claude Code loads context hierarchically:
 
 ## Tech Stack
 
-| Layer | Technology | Why |
-|-------|-----------|-----|
-| Framework | Next.js 15 (App Router) | SSR for SEO pages, API routes built-in |
-| Styling | Tailwind CSS + Shadcn/ui | Rapid UI development, consistent design |
-| Database | Supabase (PostgreSQL) | RLS for multi-tenancy, built-in auth |
-| Auth | Supabase Auth | JWT feeds RLS policies directly |
-| AI Text | Claude API (Anthropic) | Content generation, SEO analysis |
-| AI Images | Nano Banana 2 (Gemini) | Graphics, thumbnails, hero images |
-| AI Video | Remotion + Veo 3.1 | Programmatic + cinematic video |
-| Queue | BullMQ + Redis | Background job processing |
-| Storage | Supabase Storage + R2 | Images + video files |
-| Email | Resend | Transactional emails |
-| Deploy | Vercel | Native Next.js hosting |
+| Layer     | Technology               | Why                                     |
+| --------- | ------------------------ | --------------------------------------- |
+| Framework | Next.js 15 (App Router)  | SSR for SEO pages, API routes built-in  |
+| Styling   | Tailwind CSS + Shadcn/ui | Rapid UI development, consistent design |
+| Database  | Supabase (PostgreSQL)    | RLS for multi-tenancy, built-in auth    |
+| Auth      | Supabase Auth            | JWT feeds RLS policies directly         |
+| AI Text   | Claude API (Anthropic)   | Content generation, SEO analysis        |
+| AI Images | Nano Banana 2 (Gemini)   | Graphics, thumbnails, hero images       |
+| AI Video  | Remotion + Veo 3.1       | Programmatic + cinematic video          |
+| Queue     | BullMQ + Redis           | Background job processing               |
+| Storage   | Supabase Storage + R2    | Images + video files                    |
+| Email     | Resend                   | Transactional emails                    |
+| Deploy    | Vercel                   | Native Next.js hosting                  |
 
 ---
 
 ## MCP Servers (Claude Code)
 
-| Server | Purpose |
-|--------|---------|
-| Supabase | Query database, manage schema directly from Claude Code |
-| Playwright | Automated browser testing and QA |
-| Vercel | Deploy previews and production from Claude Code |
-| ClickUp | Task management and project tracking |
-| HubSpot | CRM integration testing |
-| n8n | Workflow automation testing |
+| Server     | Purpose                                                 |
+| ---------- | ------------------------------------------------------- |
+| Supabase   | Query database, manage schema directly from Claude Code |
+| Playwright | Automated browser testing and QA                        |
+| Vercel     | Deploy previews and production from Claude Code         |
+| ClickUp    | Task management and project tracking                    |
+| HubSpot    | CRM integration testing                                 |
+| n8n        | Workflow automation testing                             |
 
 ---
 
@@ -129,14 +136,14 @@ claude
 
 ## Milestones
 
-| Phase | Focus | Target |
-|-------|-------|--------|
-| 🟢 MVP | Auth + DB + AI Content Generator + SSR Pages | April 2026 |
-| 🔵 V1 | SEO Scoring + Images + Content Calendar | June 2026 |
-| 🟡 V2 | Reviews + Video + Community | September 2026 |
-| 🟣 Later | White-Label Admin + Stripe + Advanced Analytics | TBD |
+| Phase    | Focus                                           | Target         |
+| -------- | ----------------------------------------------- | -------------- |
+| 🟢 MVP   | Auth + DB + AI Content Generator + SSR Pages    | April 2026     |
+| 🔵 V1    | SEO Scoring + Images + Content Calendar         | June 2026      |
+| 🟡 V2    | Reviews + Video + Community                     | September 2026 |
+| 🟣 Later | White-Label Admin + Stripe + Advanced Analytics | TBD            |
 
 ---
 
-*Cleanest Painting LLC — "Where Artistry Meets Craftsmanship"*
-*Rodas Consulting Group — Digital Transformation for Home Improvement*
+_Cleanest Painting LLC — "Where Artistry Meets Craftsmanship"_
+_Rodas Consulting Group — Digital Transformation for Home Improvement_

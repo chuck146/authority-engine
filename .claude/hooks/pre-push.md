@@ -22,6 +22,7 @@ If any step fails, the push is blocked with a clear error message.
 ## Setup
 
 Add to `.husky/pre-push`:
+
 ```bash
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
@@ -41,6 +42,7 @@ echo "✅ All checks passed. Pushing..."
 ```
 
 ## Dependencies
+
 ```bash
 npm install -D husky
 npx husky init

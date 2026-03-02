@@ -1,7 +1,9 @@
 # Team Agent: MVP Build
 
 ## Setup Required
+
 Enable Agent Teams in Claude Code settings:
+
 ```json
 // settings.json
 {
@@ -16,8 +18,10 @@ Recommended: Install tmux for split-pane visibility into each teammate's work.
 ## Team Composition: MVP Milestone
 
 ### Lead Agent (You interact with this one)
+
 **Role:** Tech Lead / Orchestrator
 **Responsibilities:**
+
 - Reads `@docs/project_spec.md` MVP scope
 - Creates shared task list with dependencies
 - Spawns teammates with role-specific context
@@ -27,6 +31,7 @@ Recommended: Install tmux for split-pane visibility into each teammate's work.
 - Runs retro-agent when complete
 
 ### Spawn Prompt
+
 Use this prompt to kick off the MVP build:
 
 ```
@@ -40,7 +45,7 @@ Context: Read @docs/architecture.md for table definitions. Every table needs org
 Files: packages/db/
 Deliver: Working migrations, RLS policies, seed script. Message Teammate 4 with the final TypeScript types for all tables.
 
-**Teammate 2 — Auth & Middleware Engineer**  
+**Teammate 2 — Auth & Middleware Engineer**
 Role: Build Supabase Auth flow (email + magic link), auth middleware, org scope middleware, protected API routes.
 Context: Read CLAUDE.md for auth rules. JWT from Supabase Auth feeds RLS. Middleware must extract user_id → look up organization_id → inject into request context.
 Files: app/api/auth/, lib/supabase.ts, middleware.ts
@@ -65,7 +70,7 @@ After all 4 teammates finish Phase 1, assign Phase 2:
 
 **Teammate 1 (repurposed) — Content Generator Backend**
 Role: Build API routes for content generation — POST /api/v1/content/generate, GET /api/v1/content, PATCH /api/v1/content/:id/approve. Wire up BullMQ for async generation.
-Files: app/api/v1/content/, 
+Files: app/api/v1/content/,
 Dependency: Uses types from Teammate 4, DB from Teammate 1's own schema.
 
 **Teammate 3 (repurposed) — Content Generator Frontend**
@@ -124,11 +129,11 @@ git merge feature/mvp-shared-infra
 
 ## Cost Estimate
 
-| Phase | Teammates | Est. Duration | Est. Cost |
-|-------|-----------|---------------|-----------|
-| Phase 1 (parallel) | 4 | 30-45 min | $4-$6 |
-| Phase 2 (parallel) | 3 | 20-30 min | $3-$4 |
-| Integration + QA | 1 (lead) | 15-20 min | $1-$2 |
-| **Total** | | **~75 min** | **~$8-$12** |
+| Phase              | Teammates | Est. Duration | Est. Cost   |
+| ------------------ | --------- | ------------- | ----------- |
+| Phase 1 (parallel) | 4         | 30-45 min     | $4-$6       |
+| Phase 2 (parallel) | 3         | 20-30 min     | $3-$4       |
+| Integration + QA   | 1 (lead)  | 15-20 min     | $1-$2       |
+| **Total**          |           | **~75 min**   | **~$8-$12** |
 
 vs. sequential single-session: ~3-4 hours, similar token cost but 3x slower.
