@@ -1,11 +1,13 @@
 # Authority Engine
 
 ## About
+
 SEO & Growth Platform for home improvement companies.
 Built by Cleanest Painting LLC / Rodas Consulting Group.
 Multi-tenant SaaS — white-labeled via Rodas Consulting.
 
 ## Documentation
+
 - @docs/project_spec.md — Full PRD with milestones (MVP → V1 → V2 → Later)
 - @docs/architecture.md — System architecture, data flow, component relationships
 - @docs/video-guidelines.md — Video generation tech stack (Remotion, Veo 3.1, Nano Banana 2)
@@ -13,6 +15,7 @@ Multi-tenant SaaS — white-labeled via Rodas Consulting.
 - @docs/changelog.md — All notable changes
 
 ## Tech Stack
+
 - **Framework:** Next.js 15 (App Router) + TypeScript strict mode
 - **Styling:** Tailwind CSS + Shadcn/ui components
 - **Database:** PostgreSQL via Supabase (RLS for multi-tenancy)
@@ -26,6 +29,7 @@ Multi-tenant SaaS — white-labeled via Rodas Consulting.
 - **Email:** Resend
 
 ## Code Style
+
 - ES modules (import/export), never CommonJS
 - Functional components with hooks, never class components
 - TypeScript strict mode — type hints on all functions
@@ -35,6 +39,7 @@ Multi-tenant SaaS — white-labeled via Rodas Consulting.
 - Server Components by default; add 'use client' only when needed
 
 ## Architecture Rules
+
 - **Multi-tenant always.** Every table has `organization_id`. Every query scoped via RLS.
 - **Adapter pattern for integrations.** Never hard-code HubSpot/Google/Slack in business logic.
 - **AI services are stateless.** All context passed in request. No session state.
@@ -44,6 +49,7 @@ Multi-tenant SaaS — white-labeled via Rodas Consulting.
 - **Route Groups:** `(dashboard)` for authenticated app, `(marketing)` for public SEO pages.
 
 ## Git Workflow
+
 - ALWAYS create a feature branch before starting major changes
 - NEVER commit directly to `main`
 - Branch naming: `feature/description` or `fix/description`
@@ -51,12 +57,14 @@ Multi-tenant SaaS — white-labeled via Rodas Consulting.
 - Use `/update-docs-and-commit` slash command for doc updates
 
 ## Security
+
 - ALWAYS use environment variables for secrets (see .env.example)
 - Never commit .env files — only .env.example
 - Supabase service role key: server-side only, never expose to client
 - All API routes validate auth token before processing
 
 ## Common Commands
+
 ```bash
 npm run dev          # Next.js dev server (frontend + API)
 npm run dev:worker   # BullMQ background worker
@@ -70,6 +78,7 @@ npm run db:reset     # Reset and re-seed
 ```
 
 ## MCP Servers (Connected)
+
 - **Supabase** — Direct database queries and schema management
 - **Playwright** — Automated browser testing and QA
 - **Vercel** — Deploy previews and production deployments
@@ -78,6 +87,7 @@ npm run db:reset     # Reset and re-seed
 - **n8n** — Workflow automation testing
 
 ## Project Structure
+
 ```
 authority-engine/
 ├── app/                        # Next.js App Router
@@ -124,6 +134,7 @@ authority-engine/
 ```
 
 ## Agent Strategy
+
 - **Single session:** Small fixes, one-file changes, quick questions
 - **Sub-agents:** Focused tasks (write tests, update docs, generate changelog)
 - **Team Agents:** Multi-layer features, milestone builds, debugging, code review, content sprints
@@ -131,6 +142,7 @@ authority-engine/
 - Use git worktrees to prevent teammates from conflicting on same files
 
 ## Multi-Tenant Context (Dev)
+
 - Default org: Cleanest Painting LLC
 - Slug: `cleanest-painting`
 - Colors: primary #1a472a, secondary #fbbf24, accent #1e3a5f

@@ -5,16 +5,19 @@ Run the full test suite with typecheck and lint.
 ## Steps
 
 1. TypeScript check:
+
 ```bash
 npm run typecheck
 ```
 
 2. Lint:
+
 ```bash
 npm run lint
 ```
 
 3. Unit tests:
+
 ```bash
 npm run test
 ```

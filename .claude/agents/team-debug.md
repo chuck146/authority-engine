@@ -26,7 +26,7 @@ Create an agent team with 3 teammates to investigate competing hypotheses:
 
 **Teammate 1 — Frontend Investigation**
 Hypothesis: The bug originates in the client — state management, component rendering, or API call construction.
-Instructions: 
+Instructions:
 - Use Playwright MCP to reproduce the bug in browser
 - Check React component state, re-renders, and error boundaries
 - Inspect network requests — are the right params being sent?

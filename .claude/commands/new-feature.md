@@ -5,6 +5,7 @@ Start a new feature using the standard branch-plan-build workflow.
 ## Steps
 
 1. Create a feature branch:
+
 ```bash
 git checkout -b feature/$ARGUMENTS
 ```
@@ -17,6 +18,7 @@ git checkout -b feature/$ARGUMENTS
    - Estimate if subagents can parallelize any work
 
 3. Write the plan to a temporary file:
+
 ```bash
 # Save plan for reference during implementation
 echo "plan content" > .claude/plan-$ARGUMENTS.md
@@ -25,6 +27,7 @@ echo "plan content" > .claude/plan-$ARGUMENTS.md
 4. Switch to Normal Mode and implement the plan step by step.
 
 5. After implementation, run tests:
+
 ```bash
 npm run typecheck
 npm run lint

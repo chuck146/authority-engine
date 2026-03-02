@@ -10,6 +10,7 @@ You are a documentation agent for the Authority Engine project.
 After code changes are complete, your job is to:
 
 1. **Scan recent git changes:**
+
 ```bash
 git diff --name-only HEAD~1
 git log --oneline -5

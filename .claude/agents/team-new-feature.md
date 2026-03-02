@@ -6,14 +6,14 @@ Use when adding a feature that spans multiple layers (frontend + backend + DB + 
 
 ## When to Use Team Agents vs Sub-Agents vs Single Session
 
-| Scenario | Use |
-|----------|-----|
-| Single file fix or small change | Single session |
-| Focused task (write tests, update docs) | Sub-agent |
-| Feature touching 2-3 files in same layer | Single session |
-| Feature spanning frontend + backend + DB | **Team Agents** |
+| Scenario                                        | Use             |
+| ----------------------------------------------- | --------------- |
+| Single file fix or small change                 | Single session  |
+| Focused task (write tests, update docs)         | Sub-agent       |
+| Feature touching 2-3 files in same layer        | Single session  |
+| Feature spanning frontend + backend + DB        | **Team Agents** |
 | Feature needing research + competing approaches | **Team Agents** |
-| Full milestone build | **Team Agents** |
+| Full milestone build                            | **Team Agents** |
 
 ---
 
@@ -38,7 +38,7 @@ Deliver: Working API endpoints with tests. Message Teammate 2 with the API contr
 Role: Build UI components, pages, hooks, and state management for this feature.
 Context: Read CLAUDE.md. Shadcn/ui + Tailwind. Server Components by default. TanStack Query for data fetching. react-hook-form + Zod for forms.
 Files: app/(dashboard)/[feature]/, components/[feature]/, hooks/
-Deliver: Working UI integrated with API. 
+Deliver: Working UI integrated with API.
 Dependency: Wait for Teammate 1 to share API contract.
 
 **Teammate 3 — QA & Integration**

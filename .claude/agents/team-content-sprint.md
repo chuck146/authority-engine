@@ -73,8 +73,9 @@ After all complete:
 ## Expected Output
 
 For a typical painting company (8 services × 12 towns):
+
 - 8 service pages
-- 12 location pages  
+- 12 location pages
 - 4-5 blog posts
 - ~25 pieces of content in ~30 minutes
 
