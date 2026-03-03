@@ -1,0 +1,1 @@
+/Applications/RCG/authority-engine/packages/db/supabase/seed.sql

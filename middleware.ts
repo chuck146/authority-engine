@@ -14,8 +14,13 @@ const protectedPrefixes = [
 const authRoutes = ['/login', '/signup']
 
 export async function middleware(request: NextRequest) {
-  const { supabaseResponse, user } = await updateSession(request)
   const { pathname } = request.nextUrl
+
+  if (pathname.startsWith('/api/auth/callback')) {
+    return NextResponse.next()
+  }
+
+  const { supabaseResponse, user } = await updateSession(request)
 
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix))
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
@@ -27,7 +32,10 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    const hasError = request.nextUrl.searchParams.has('error')
+    if (!hasError) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return supabaseResponse

@@ -13,23 +13,25 @@ export async function requireAuth(): Promise<AuthContext> {
     redirect('/login')
   }
 
-  const organizationId = user.app_metadata?.organization_id as string | undefined
+  // Query user_organizations directly instead of relying on app_metadata.
+  // The custom_access_token_hook injects organization_id into JWT claims
+  // (used by RLS), but getUser() returns raw_app_meta_data from auth.users
+  // which doesn't have it.
+  const { data: membership } = await supabase
+    .from('user_organizations')
+    .select('organization_id, role')
+    .eq('user_id', user.id)
+    .eq('is_default', true)
+    .single<{ organization_id: string; role: string }>()
 
-  if (!organizationId) {
+  if (!membership) {
     redirect('/login?error=no_organization')
   }
 
-  const { data: membership } = await supabase
-    .from('user_organizations')
-    .select('role')
-    .eq('user_id', user.id)
-    .eq('organization_id', organizationId)
-    .single<{ role: string }>()
-
   return {
     userId: user.id,
-    organizationId,
-    role: (membership?.role ?? 'viewer') as UserRole,
+    organizationId: membership.organization_id,
+    role: (membership.role ?? 'viewer') as UserRole,
   }
 }
 
