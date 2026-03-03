@@ -7,6 +7,7 @@ export type {
   GenerateContentResponse,
   ContentListItem,
   ContentStatusUpdate,
+  ContentEditRequest,
   ContentDetail,
 } from './content'
 

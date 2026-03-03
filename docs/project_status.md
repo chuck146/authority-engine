@@ -8,7 +8,7 @@ _Last Updated: March 2026_
 
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
-| 🟢 MVP — Content Generator + Auth + DB  | 🔲 Not Started | April 2026     | 0%       |
+| 🟢 MVP — Content Generator + Auth + DB  | 🚧 In Progress | April 2026     | 90%      |
 | 🔵 V1 — SEO Scoring + Images + Calendar | 🔲 Not Started | June 2026      | 0%       |
 | 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
@@ -24,28 +24,33 @@ _Last Updated: March 2026_
 - [x] Video generation tech stack guidelines
 - [x] CLAUDE.md project scaffold with PSB framework
 - [x] Tech stack decision: Next.js + Supabase + Supabase Auth
-- [ ] Project repo initialized on GitHub
-- [ ] Supabase project created
+- [x] Project repo initialized on GitHub
+- [x] Supabase project created
 - [ ] Vercel project linked
-- [ ] Database schema + migrations
-- [ ] Auth flow (email + magic link)
-- [ ] Dashboard shell (layout, sidebar, org context)
-- [ ] AI content generation (Claude API integration)
-- [ ] Content review + approval workflow
-- [ ] Public SSR pages for published content
-- [ ] Seed data (Cleanest Painting services + towns)
-- [ ] Deploy to production
+- [x] Database schema + migrations (11 migrations, 7+ tables with RLS policies)
+- [x] Auth flow (email + magic link, middleware, server/API guards)
+- [x] Dashboard shell (layout, sidebar, org branding, user nav, module stubs)
+- [x] AI content generation (Claude API integration, prompt templates for 3 content types)
+- [x] Content review + approval workflow (status transitions, role-based approve/reject/publish)
+- [x] Content editing endpoint (PUT — edit title, slug, content, meta fields)
+- [x] Public SSR pages for published content (/services, /locations, /blog)
+- [x] Seed data (8 services, 12 locations, 3 blog posts for Cleanest Painting)
+- [x] Test suite (141+ tests, Vitest + React Testing Library)
+- [ ] Apply migrations + seed to live Supabase
+- [ ] Deploy to production (Vercel)
 
 ### What's Next
 
-1. Initialize GitHub repo and connect Vercel
-2. Create Supabase project and build database schema
-3. Scaffold Next.js app with auth and dashboard layout
-4. Build AI content generator (service pages first)
+1. Apply migrations and seed data to live Supabase project
+2. Link auth user to organization
+3. Run `npx supabase login` → `gen types` to replace hand-written database types
+4. End-to-end smoke test: generate → review → edit → approve → publish → SSR render
+5. Connect Vercel project and deploy to production
 
 ### Blockers
 
-- None currently
+- Supabase CLI not authenticated (`npx supabase login` needed for `gen types`)
+- Hand-written `types/database.ts` requires `as never` casts — resolve with generated types
 
 ---
 

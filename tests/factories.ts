@@ -1,6 +1,6 @@
 import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { AuthContext, OrgBranding } from '@/types'
-import type { StructuredContent, ContentListItem } from '@/types/content'
+import type { StructuredContent, ContentListItem, ContentDetail } from '@/types/content'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -44,6 +44,28 @@ export function buildStructuredContent(overrides?: Partial<StructuredContent>): 
     cta: 'Get your free estimate today!',
     meta_title: 'Interior Painting | Cleanest Painting',
     meta_description: 'Professional interior painting in NJ. Free estimates. Premium paints.',
+    ...overrides,
+  }
+}
+
+export function buildContentDetail(overrides?: Partial<ContentDetail>): ContentDetail {
+  return {
+    id: 'detail-1',
+    type: 'service_page',
+    title: 'Interior Painting',
+    slug: 'interior-painting',
+    status: 'review',
+    content: buildStructuredContent(),
+    seoScore: null,
+    keywords: ['interior painting', 'house painting'],
+    metaTitle: 'Interior Painting | Cleanest Painting',
+    metaDescription: 'Professional interior painting in NJ.',
+    approvedBy: null,
+    approvedAt: null,
+    rejectionNote: null,
+    publishedAt: null,
+    createdAt: '2026-03-01T12:00:00Z',
+    updatedAt: '2026-03-01T12:00:00Z',
     ...overrides,
   }
 }
