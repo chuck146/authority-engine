@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import type { Database } from '@/types/database'
 
 function sanitizeRedirect(input: string | null): string {
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
                 return { name, value: decodeURIComponent(rest.join('=')) }
               })
           },
-          setAll(cookiesToSet) {
+          setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
             cookiesToSet.forEach(({ name, value, options }) => {
               response.cookies.set(name, value, options)
             })

@@ -96,6 +96,9 @@ export interface Database {
           seo_score: number | null
           keywords: string[]
           created_by: string | null
+          approved_by: string | null
+          approved_at: string | null
+          rejection_note: string | null
           published_at: string | null
           created_at: string
           updated_at: string
@@ -112,6 +115,9 @@ export interface Database {
           seo_score?: number | null
           keywords?: string[]
           created_by?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_note?: string | null
           published_at?: string | null
           created_at?: string
           updated_at?: string
@@ -128,6 +134,9 @@ export interface Database {
           seo_score?: number | null
           keywords?: string[]
           created_by?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_note?: string | null
           published_at?: string | null
           created_at?: string
           updated_at?: string
@@ -159,6 +168,9 @@ export interface Database {
           latitude: number | null
           longitude: number | null
           created_by: string | null
+          approved_by: string | null
+          approved_at: string | null
+          rejection_note: string | null
           published_at: string | null
           created_at: string
           updated_at: string
@@ -180,6 +192,9 @@ export interface Database {
           latitude?: number | null
           longitude?: number | null
           created_by?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_note?: string | null
           published_at?: string | null
           created_at?: string
           updated_at?: string
@@ -201,6 +216,9 @@ export interface Database {
           latitude?: number | null
           longitude?: number | null
           created_by?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_note?: string | null
           published_at?: string | null
           created_at?: string
           updated_at?: string
@@ -232,6 +250,9 @@ export interface Database {
           keywords: string[]
           reading_time_minutes: number | null
           created_by: string | null
+          approved_by: string | null
+          approved_at: string | null
+          rejection_note: string | null
           published_at: string | null
           created_at: string
           updated_at: string
@@ -253,6 +274,9 @@ export interface Database {
           keywords?: string[]
           reading_time_minutes?: number | null
           created_by?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_note?: string | null
           published_at?: string | null
           created_at?: string
           updated_at?: string
@@ -274,6 +298,9 @@ export interface Database {
           keywords?: string[]
           reading_time_minutes?: number | null
           created_by?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_note?: string | null
           published_at?: string | null
           created_at?: string
           updated_at?: string

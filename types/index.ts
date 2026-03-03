@@ -1,4 +1,14 @@
 export type { Database, Json } from './database'
+export type {
+  ContentType,
+  StructuredContent,
+  ContentSection,
+  GenerateContentRequest,
+  GenerateContentResponse,
+  ContentListItem,
+  ContentStatusUpdate,
+  ContentDetail,
+} from './content'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'
