@@ -4,6 +4,7 @@ import { updateSession } from '@/lib/supabase/middleware'
 const protectedPrefixes = [
   '/dashboard',
   '/content',
+  '/calendar',
   '/seo',
   '/reviews',
   '/community',

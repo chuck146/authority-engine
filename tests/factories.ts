@@ -1,6 +1,7 @@
 import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { AuthContext, OrgBranding } from '@/types'
 import type { StructuredContent, ContentListItem, ContentDetail } from '@/types/content'
+import type { CalendarEntry, CalendarViewItem } from '@/types/calendar'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -80,6 +81,37 @@ export function buildContentListItem(overrides?: Partial<ContentListItem>): Cont
     seoScore: null,
     createdAt: '2026-03-01T12:00:00Z',
     updatedAt: '2026-03-01T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildCalendarEntry(overrides?: Partial<CalendarEntry>): CalendarEntry {
+  return {
+    id: 'cal-1',
+    organization_id: 'org-456',
+    content_type: 'service_page',
+    content_id: 'content-789',
+    scheduled_at: '2026-04-01T10:00:00Z',
+    published_at: null,
+    status: 'scheduled',
+    error_message: null,
+    created_by: 'user-123',
+    created_at: '2026-03-15T12:00:00Z',
+    updated_at: '2026-03-15T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildCalendarViewItem(overrides?: Partial<CalendarViewItem>): CalendarViewItem {
+  return {
+    id: 'cal-1',
+    contentType: 'service_page',
+    contentId: 'content-789',
+    contentTitle: 'Interior Painting',
+    scheduledAt: '2026-04-01T10:00:00Z',
+    publishedAt: null,
+    status: 'scheduled',
+    errorMessage: null,
     ...overrides,
   }
 }

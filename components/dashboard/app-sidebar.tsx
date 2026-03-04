@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, FileText, Search, Star, Users, BarChart3, Settings } from 'lucide-react'
+import { LayoutDashboard, FileText, CalendarDays, Search, Star, Users, BarChart3, Settings } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +21,7 @@ import type { OrgBranding } from '@/types'
 const navItems = [
   { title: 'Dashboard', href: '/dashboard' as const, icon: LayoutDashboard },
   { title: 'Content', href: '/content' as const, icon: FileText },
+  { title: 'Calendar', href: '/calendar' as const, icon: CalendarDays },
   { title: 'SEO', href: '/seo' as const, icon: Search },
   { title: 'Reviews', href: '/reviews' as const, icon: Star },
   { title: 'Community', href: '/community' as const, icon: Users },

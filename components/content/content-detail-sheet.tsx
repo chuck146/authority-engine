@@ -6,6 +6,7 @@ import {
   XCircle,
   Globe,
   Archive,
+  CalendarDays,
   Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -23,6 +24,7 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet'
 import { ContentPreview } from '@/components/content/content-preview'
+import { ScheduleDialog } from '@/components/calendar/schedule-dialog'
 import { getAvailableActions } from '@/lib/content/status-transitions'
 import type { ContentListItem, ContentDetail, ContentType } from '@/types/content'
 import type { ContentStatus, UserRole } from '@/types'
@@ -83,6 +85,7 @@ export function ContentDetailSheet({
   const [showRejectForm, setShowRejectForm] = useState(false)
   const [rejectionNote, setRejectionNote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [scheduleOpen, setScheduleOpen] = useState(false)
 
   useEffect(() => {
     if (!open || !item) {
@@ -240,6 +243,16 @@ export function ContentDetailSheet({
               </div>
             ) : (
               <div className="flex w-full justify-end gap-2">
+                {currentStatus === 'approved' && (
+                  <Button
+                    variant="outline"
+                    disabled={isSubmitting || loading}
+                    onClick={() => setScheduleOpen(true)}
+                  >
+                    <CalendarDays className="h-4 w-4" />
+                    Schedule
+                  </Button>
+                )}
                 {availableActions.map((action) => {
                   const config = actionConfig[action]
                   if (!config) return null
@@ -265,6 +278,19 @@ export function ContentDetailSheet({
           </SheetFooter>
         )}
       </SheetContent>
+
+      {item && (
+        <ScheduleDialog
+          open={scheduleOpen}
+          onOpenChange={setScheduleOpen}
+          defaultContentType={item.type}
+          defaultContentId={item.id}
+          onScheduled={() => {
+            setScheduleOpen(false)
+            onOpenChange(false)
+          }}
+        />
+      )}
     </Sheet>
   )
 }

@@ -10,6 +10,14 @@ export type {
   ContentEditRequest,
   ContentDetail,
 } from './content'
+export type {
+  CalendarEntry,
+  CalendarStatus,
+  CalendarViewItem,
+  ScheduleContentRequest,
+  UpdateScheduleRequest,
+  CalendarQueryParams,
+} from './calendar'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'
