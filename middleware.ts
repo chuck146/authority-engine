@@ -14,11 +14,21 @@ const protectedPrefixes = [
 const authRoutes = ['/login', '/signup']
 
 export async function middleware(request: NextRequest) {
-  const { supabaseResponse, user } = await updateSession(request)
   const { pathname } = request.nextUrl
+
+  if (pathname.startsWith('/api/auth/callback')) {
+    return NextResponse.next()
+  }
+
+  const { supabaseResponse, user } = await updateSession(request)
 
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix))
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
+
+  // Dev bypass: skip auth redirect in development
+  if (process.env.NODE_ENV === 'development' && process.env.DEV_BYPASS_AUTH === 'true') {
+    return supabaseResponse
+  }
 
   if (isProtected && !user) {
     const redirectUrl = new URL('/login', request.url)
@@ -27,7 +37,10 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    const hasError = request.nextUrl.searchParams.has('error')
+    if (!hasError) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return supabaseResponse

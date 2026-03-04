@@ -1,428 +1,594 @@
-// Auto-generated types from Supabase schema.
-// Regenerate with: npm run db:gen-types
-// This is a hand-written skeleton until the Supabase project is connected.
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
-
-export interface Database {
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.1"
+  }
   public: {
     Tables: {
-      organizations: {
-        Row: {
-          id: string
-          name: string
-          slug: string
-          domain: string | null
-          logo_url: string | null
-          branding: Json
-          settings: Json
-          plan: 'free' | 'starter' | 'pro' | 'enterprise'
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          slug: string
-          domain?: string | null
-          logo_url?: string | null
-          branding?: Json
-          settings?: Json
-          plan?: 'free' | 'starter' | 'pro' | 'enterprise'
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          slug?: string
-          domain?: string | null
-          logo_url?: string | null
-          branding?: Json
-          settings?: Json
-          plan?: 'free' | 'starter' | 'pro' | 'enterprise'
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      user_organizations: {
-        Row: {
-          id: string
-          user_id: string
-          organization_id: string
-          role: 'owner' | 'admin' | 'editor' | 'viewer'
-          is_default: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          organization_id: string
-          role?: 'owner' | 'admin' | 'editor' | 'viewer'
-          is_default?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          organization_id?: string
-          role?: 'owner' | 'admin' | 'editor' | 'viewer'
-          is_default?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'user_organizations_organization_id_fkey'
-            columns: ['organization_id']
-            referencedRelation: 'organizations'
-            referencedColumns: ['id']
-          },
-        ]
-      }
-      service_pages: {
-        Row: {
-          id: string
-          organization_id: string
-          title: string
-          slug: string
-          meta_title: string | null
-          meta_description: string | null
-          content: Json
-          status: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score: number | null
-          keywords: string[]
-          created_by: string | null
-          published_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          organization_id: string
-          title: string
-          slug: string
-          meta_title?: string | null
-          meta_description?: string | null
-          content?: Json
-          status?: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score?: number | null
-          keywords?: string[]
-          created_by?: string | null
-          published_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          organization_id?: string
-          title?: string
-          slug?: string
-          meta_title?: string | null
-          meta_description?: string | null
-          content?: Json
-          status?: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score?: number | null
-          keywords?: string[]
-          created_by?: string | null
-          published_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'service_pages_organization_id_fkey'
-            columns: ['organization_id']
-            referencedRelation: 'organizations'
-            referencedColumns: ['id']
-          },
-        ]
-      }
-      location_pages: {
-        Row: {
-          id: string
-          organization_id: string
-          title: string
-          slug: string
-          city: string
-          state: string
-          zip_codes: string[]
-          meta_title: string | null
-          meta_description: string | null
-          content: Json
-          status: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score: number | null
-          keywords: string[]
-          latitude: number | null
-          longitude: number | null
-          created_by: string | null
-          published_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          organization_id: string
-          title: string
-          slug: string
-          city: string
-          state: string
-          zip_codes?: string[]
-          meta_title?: string | null
-          meta_description?: string | null
-          content?: Json
-          status?: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score?: number | null
-          keywords?: string[]
-          latitude?: number | null
-          longitude?: number | null
-          created_by?: string | null
-          published_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          organization_id?: string
-          title?: string
-          slug?: string
-          city?: string
-          state?: string
-          zip_codes?: string[]
-          meta_title?: string | null
-          meta_description?: string | null
-          content?: Json
-          status?: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score?: number | null
-          keywords?: string[]
-          latitude?: number | null
-          longitude?: number | null
-          created_by?: string | null
-          published_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'location_pages_organization_id_fkey'
-            columns: ['organization_id']
-            referencedRelation: 'organizations'
-            referencedColumns: ['id']
-          },
-        ]
-      }
       blog_posts: {
         Row: {
-          id: string
-          organization_id: string
-          title: string
-          slug: string
-          excerpt: string | null
-          meta_title: string | null
-          meta_description: string | null
-          content: Json
-          featured_image_url: string | null
+          approved_at: string | null
+          approved_by: string | null
           category: string | null
-          tags: string[]
-          status: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score: number | null
-          keywords: string[]
-          reading_time_minutes: number | null
-          created_by: string | null
-          published_at: string | null
+          content: Json
           created_at: string
+          created_by: string | null
+          excerpt: string | null
+          featured_image_url: string | null
+          id: string
+          keywords: string[] | null
+          meta_description: string | null
+          meta_title: string | null
+          organization_id: string
+          published_at: string | null
+          reading_time_minutes: number | null
+          rejection_note: string | null
+          seo_score: number | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          tags: string[] | null
+          title: string
           updated_at: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string | null
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          featured_image_url?: string | null
           id?: string
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
           organization_id: string
-          title: string
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          rejection_note?: string | null
+          seo_score?: number | null
           slug: string
-          excerpt?: string | null
-          meta_title?: string | null
-          meta_description?: string | null
-          content?: Json
-          featured_image_url?: string | null
-          category?: string | null
-          tags?: string[]
-          status?: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score?: number | null
-          keywords?: string[]
-          reading_time_minutes?: number | null
-          created_by?: string | null
-          published_at?: string | null
-          created_at?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          tags?: string[] | null
+          title: string
           updated_at?: string
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string | null
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          featured_image_url?: string | null
           id?: string
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
           organization_id?: string
-          title?: string
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          rejection_note?: string | null
+          seo_score?: number | null
           slug?: string
-          excerpt?: string | null
-          meta_title?: string | null
-          meta_description?: string | null
-          content?: Json
-          featured_image_url?: string | null
-          category?: string | null
-          tags?: string[]
-          status?: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-          seo_score?: number | null
-          keywords?: string[]
-          reading_time_minutes?: number | null
-          created_by?: string | null
-          published_at?: string | null
-          created_at?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          tags?: string[] | null
+          title?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: 'blog_posts_organization_id_fkey'
-            columns: ['organization_id']
-            referencedRelation: 'organizations'
-            referencedColumns: ['id']
-          },
-        ]
-      }
-      media_assets: {
-        Row: {
-          id: string
-          organization_id: string
-          type: 'image' | 'video' | 'document'
-          filename: string
-          storage_path: string
-          storage_provider: 'supabase' | 'r2'
-          mime_type: string
-          size_bytes: number | null
-          width: number | null
-          height: number | null
-          duration_seconds: number | null
-          alt_text: string | null
-          metadata: Json
-          created_by: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          organization_id: string
-          type: 'image' | 'video' | 'document'
-          filename: string
-          storage_path: string
-          storage_provider?: 'supabase' | 'r2'
-          mime_type: string
-          size_bytes?: number | null
-          width?: number | null
-          height?: number | null
-          duration_seconds?: number | null
-          alt_text?: string | null
-          metadata?: Json
-          created_by?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          organization_id?: string
-          type?: 'image' | 'video' | 'document'
-          filename?: string
-          storage_path?: string
-          storage_provider?: 'supabase' | 'r2'
-          mime_type?: string
-          size_bytes?: number | null
-          width?: number | null
-          height?: number | null
-          duration_seconds?: number | null
-          alt_text?: string | null
-          metadata?: Json
-          created_by?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'media_assets_organization_id_fkey'
-            columns: ['organization_id']
-            referencedRelation: 'organizations'
-            referencedColumns: ['id']
+            foreignKeyName: "blog_posts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
           },
         ]
       }
       job_executions: {
         Row: {
-          id: string
-          organization_id: string
-          queue_name: string
-          job_type: string
-          status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled'
-          payload: Json
-          result: Json | null
-          error_message: string | null
           attempts: number
-          max_attempts: number
-          started_at: string | null
           completed_at: string | null
-          created_by: string | null
           created_at: string
+          created_by: string | null
+          error_message: string | null
+          id: string
+          job_type: string
+          max_attempts: number
+          organization_id: string
+          payload: Json
+          queue_name: string
+          result: Json | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["job_status"]
         }
         Insert: {
-          id?: string
-          organization_id: string
-          queue_name: string
-          job_type: string
-          status?: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled'
-          payload?: Json
-          result?: Json | null
-          error_message?: string | null
           attempts?: number
-          max_attempts?: number
-          started_at?: string | null
           completed_at?: string | null
-          created_by?: string | null
           created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          job_type: string
+          max_attempts?: number
+          organization_id: string
+          payload?: Json
+          queue_name: string
+          result?: Json | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
         }
         Update: {
-          id?: string
-          organization_id?: string
-          queue_name?: string
-          job_type?: string
-          status?: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled'
-          payload?: Json
-          result?: Json | null
-          error_message?: string | null
           attempts?: number
-          max_attempts?: number
-          started_at?: string | null
           completed_at?: string | null
-          created_by?: string | null
           created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          job_type?: string
+          max_attempts?: number
+          organization_id?: string
+          payload?: Json
+          queue_name?: string
+          result?: Json | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
         }
         Relationships: [
           {
-            foreignKeyName: 'job_executions_organization_id_fkey'
-            columns: ['organization_id']
-            referencedRelation: 'organizations'
-            referencedColumns: ['id']
+            foreignKeyName: "job_executions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      location_pages: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          city: string
+          content: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          keywords: string[] | null
+          latitude: number | null
+          longitude: number | null
+          meta_description: string | null
+          meta_title: string | null
+          organization_id: string
+          published_at: string | null
+          rejection_note: string | null
+          seo_score: number | null
+          slug: string
+          state: string
+          status: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at: string
+          zip_codes: string[] | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          city: string
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          keywords?: string[] | null
+          latitude?: number | null
+          longitude?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
+          organization_id: string
+          published_at?: string | null
+          rejection_note?: string | null
+          seo_score?: number | null
+          slug: string
+          state: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at?: string
+          zip_codes?: string[] | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          city?: string
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          keywords?: string[] | null
+          latitude?: number | null
+          longitude?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
+          organization_id?: string
+          published_at?: string | null
+          rejection_note?: string | null
+          seo_score?: number | null
+          slug?: string
+          state?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title?: string
+          updated_at?: string
+          zip_codes?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_pages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_assets: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          created_by: string | null
+          duration_seconds: number | null
+          filename: string
+          height: number | null
+          id: string
+          metadata: Json
+          mime_type: string
+          organization_id: string
+          size_bytes: number | null
+          storage_path: string
+          storage_provider: string
+          type: Database["public"]["Enums"]["media_type"]
+          width: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_seconds?: number | null
+          filename: string
+          height?: number | null
+          id?: string
+          metadata?: Json
+          mime_type: string
+          organization_id: string
+          size_bytes?: number | null
+          storage_path: string
+          storage_provider?: string
+          type: Database["public"]["Enums"]["media_type"]
+          width?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_seconds?: number | null
+          filename?: string
+          height?: number | null
+          id?: string
+          metadata?: Json
+          mime_type?: string
+          organization_id?: string
+          size_bytes?: number | null
+          storage_path?: string
+          storage_provider?: string
+          type?: Database["public"]["Enums"]["media_type"]
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_assets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          branding: Json
+          created_at: string
+          domain: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          plan: string
+          settings: Json
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          branding?: Json
+          created_at?: string
+          domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          plan?: string
+          settings?: Json
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          branding?: Json
+          created_at?: string
+          domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          plan?: string
+          settings?: Json
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      service_pages: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          content: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          keywords: string[] | null
+          meta_description: string | null
+          meta_title: string | null
+          organization_id: string
+          published_at: string | null
+          rejection_note: string | null
+          seo_score: number | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          organization_id: string
+          published_at?: string | null
+          rejection_note?: string | null
+          seo_score?: number | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          organization_id?: string
+          published_at?: string | null
+          rejection_note?: string | null
+          seo_score?: number | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_pages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_organizations: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          organization_id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          organization_id: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          organization_id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_organizations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
           },
         ]
       }
     }
-    Views: Record<string, never>
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
-      get_org_id: {
-        Args: Record<string, never>
-        Returns: string | null
-      }
-      get_user_id: {
-        Args: Record<string, never>
-        Returns: string | null
-      }
+      custom_access_token_hook: { Args: { event: Json }; Returns: Json }
+      get_org_id: { Args: never; Returns: string }
+      get_user_id: { Args: never; Returns: string }
     }
     Enums: {
-      content_status: 'draft' | 'review' | 'approved' | 'published' | 'archived'
-      media_type: 'image' | 'video' | 'document'
-      job_status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled'
+      content_status: "draft" | "review" | "approved" | "published" | "archived"
+      job_status: "queued" | "processing" | "completed" | "failed" | "cancelled"
+      media_type: "image" | "video" | "document"
     }
-    CompositeTypes: Record<string, never>
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      content_status: ["draft", "review", "approved", "published", "archived"],
+      job_status: ["queued", "processing", "completed", "failed", "cancelled"],
+      media_type: ["image", "video", "document"],
+    },
+  },
+} as const

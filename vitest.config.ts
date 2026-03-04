@@ -12,7 +12,7 @@ export default defineConfig({
     exclude: ['node_modules', '.next', 'packages/db/supabase'],
     coverage: {
       provider: 'v8',
-      include: ['app/**', 'components/**', 'lib/**', 'hooks/**', 'stores/**'],
+      include: ['app/**', 'components/**', 'lib/**', 'hooks/**', 'stores/**', 'packages/ai/**', 'types/**'],
     },
   },
 })
