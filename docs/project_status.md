@@ -8,8 +8,8 @@ _Last Updated: March 2026_
 
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
-| 🟢 MVP — Content Generator + Auth + DB  | 🚧 In Progress | April 2026     | 95%      |
-| 🔵 V1 — SEO Scoring + Images + Calendar | 🔲 Not Started | June 2026      | 0%       |
+| 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete     | April 2026     | 95%      |
+| 🔵 V1 — SEO Scoring + Images + Calendar | 🚧 In Progress | June 2026      | 55%      |
 | 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
@@ -43,8 +43,7 @@ _Last Updated: March 2026_
 
 ### What's Next
 
-1. End-to-end smoke test: generate → review → edit → approve → publish → SSR render
-2. Connect Vercel project and deploy to production
+1. Connect Vercel project and deploy to production
 
 ### Blockers
 
@@ -54,7 +53,36 @@ _Last Updated: March 2026_
 
 ## 🔵 V1 — SEO Scoring + Images + Calendar
 
-_Not started — waiting on MVP completion_
+### What's Been Accomplished
+
+- [x] SEO Health Score: pure scoring engine (10 rules, 4 categories, weights sum to 100)
+- [x] SEO Dashboard: overview cards, distribution chart, content list, rule-by-rule detail panel
+- [x] SEO APIs: GET /api/v1/seo (overview with backfill), GET /api/v1/seo/[type]/[id] (detail)
+- [x] Auto SEO scoring on content generate and edit
+- [x] Nano Banana 2 image generation: Gemini client, image generator pipeline
+- [x] Image prompt templates: blog thumbnail, location hero, social graphic
+- [x] Media UI: image generation form, media library grid, detail sheet
+- [x] Media APIs: POST /api/v1/media/generate, GET /api/v1/media, GET /api/v1/media/[id]
+- [x] Media storage: Supabase Storage upload, storage bucket migration
+- [x] Content calendar: scheduling, grid UI, CRUD APIs, BullMQ worker for scheduled publishing
+- [x] Dashboard metrics: hero cards, content pipeline chart, recent activity feed, dashboard API
+- [x] Redis timeout handling and API robustness improvements
+- [x] Test suite expanded to 289+ tests
+- [ ] Google Search Console integration (keyword rankings, traffic data)
+- [ ] Google Analytics 4 integration (page performance)
+- [ ] GBP post generation and publishing
+- [ ] Social media post generation (Instagram, Facebook)
+
+### What's Next
+
+1. Google Search Console integration
+2. Google Analytics 4 integration
+3. GBP post generation and publishing
+4. Social media post generation
+
+### Blockers
+
+- None
 
 ---
 

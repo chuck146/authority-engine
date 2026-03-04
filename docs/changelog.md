@@ -7,6 +7,44 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Planned
+
+- Deploy MVP to Vercel
+- Google Search Console integration
+- Google Analytics 4 integration
+- GBP post generation and publishing
+- Social media post generation (Instagram, Facebook)
+
+---
+
+## [V1] — 2026-03-04
+
+### Added
+
+- **SEO Health Score:** Pure scoring engine with 10 rules across 4 categories (lib/seo/rules.ts, lib/seo/scorer.ts)
+- **SEO Dashboard:** Overview cards, distribution chart, content list, detail panel with rule-by-rule breakdown
+- **SEO APIs:** GET /api/v1/seo (overview with backfill), GET /api/v1/seo/[type]/[id] (detail)
+- **Auto SEO scoring:** Content scored on generate and edit (PUT route recalculates on content/meta/keyword change)
+- **Nano Banana 2 image generation:** Gemini 2.0 Flash client (lib/ai/gemini.ts), image generator pipeline (lib/ai/image-generator.ts)
+- **Image prompt templates:** Blog thumbnail, location hero, social graphic (packages/ai/prompts/images/)
+- **Media UI:** Image generation form, media library grid, detail sheet (components/media/)
+- **Media APIs:** POST /api/v1/media/generate, GET /api/v1/media, GET /api/v1/media/[id]
+- **Media storage:** Supabase Storage upload helper (lib/storage/supabase-storage.ts), storage bucket migration
+- **Content calendar:** Scheduling with grid UI, calendar APIs (POST/GET/PUT/DELETE), BullMQ worker for scheduled publishing
+- **Dashboard metrics:** Hero cards (total content, published, avg SEO score, media count), content pipeline chart, recent activity feed
+- **Dashboard API:** GET /api/v1/dashboard (aggregated metrics from all content tables + media)
+- **Redis timeout handling:** Graceful BullMQ connection timeouts, API robustness improvements
+- **Test suite expanded:** 289+ tests (up from 172), covering SEO scoring, calendar, dashboard, media, image prompts
+
+### Changed
+
+- Upgraded Supabase types to auto-generated schema (replaced hand-written types/database.ts)
+- Cleaned up type casts across codebase after schema upgrade
+
+---
+
+## [MVP] — 2026-03-03
+
 ### Added
 
 - Project scaffold with PSB framework
@@ -27,11 +65,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Public SSR pages: /services/[slug], /locations/[slug], /blog/[slug] with ISR
 - Marketing layout components: service page, location page, blog post
 - Seed data: 1 org, 8 services, 12 locations, 3 blog posts for Cleanest Painting
-- Test infrastructure: Vitest + React Testing Library, factories, mock Supabase client (141+ tests)
+- Test infrastructure: Vitest + React Testing Library, factories, mock Supabase client (172+ tests)
 - Generated TypeScript types from live Supabase schema (replaced hand-written types/database.ts)
 - Auto-link auth user to organization on first login (auth callback creates user_organizations record)
 - Auth callback test suite (9 tests covering auto-linking, redirect sanitization, edge cases)
 
-### Planned
+### Fixed
 
-- Deploy to Vercel
+- Auth flow: middleware callback bypass, redirect loop prevention, auto-link user to org (PR #2)
