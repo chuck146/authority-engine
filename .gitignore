@@ -20,6 +20,9 @@ dist/
 
 # Testing
 coverage/
+.auth/
+test-results/
+playwright-report/
 
 # IDE
 .vscode/

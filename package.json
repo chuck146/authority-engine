@@ -16,7 +16,10 @@
     "db:migrate": "supabase db push --db-url $DATABASE_URL",
     "db:seed": "supabase db reset --db-url $DATABASE_URL",
     "db:reset": "supabase db reset --db-url $DATABASE_URL",
-    "db:gen-types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > types/database.ts"
+    "db:gen-types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > types/database.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
@@ -44,6 +47,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.0.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.0",

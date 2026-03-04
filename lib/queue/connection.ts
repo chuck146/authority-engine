@@ -7,6 +7,7 @@ export function getRedisConnection(): ConnectionOptions {
   if (!connectionInstance) {
     connectionInstance = new IORedis(process.env.REDIS_URL ?? 'redis://localhost:6379', {
       maxRetriesPerRequest: null, // Required by BullMQ
+      connectTimeout: 5000, // Fail fast if Redis unreachable
     })
   }
   // Cast needed: top-level ioredis vs BullMQ's bundled ioredis have incompatible types

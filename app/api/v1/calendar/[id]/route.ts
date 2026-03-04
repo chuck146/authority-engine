@@ -48,7 +48,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
     // Handle cancellation
     if (input.status === 'cancelled') {
-      await cancelScheduledPublish(entry.id)
+      try { await cancelScheduledPublish(entry.id) } catch (e) {
+        console.warn('[Calendar PATCH] Failed to cancel BullMQ job:', e)
+      }
 
       const { data: updated, error: updateError } = await supabase
         .from('content_calendar')
@@ -72,7 +74,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       }
 
       // Cancel old job, schedule new one
-      await cancelScheduledPublish(entry.id)
+      try { await cancelScheduledPublish(entry.id) } catch (e) {
+        console.warn('[Calendar PATCH] Failed to cancel old BullMQ job:', e)
+      }
 
       const { data: updated, error: updateError } = await supabase
         .from('content_calendar')
@@ -84,15 +88,19 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
       if (updateError) throw updateError
 
-      await schedulePublish(
-        {
-          calendarEntryId: entry.id,
-          organizationId: auth.organizationId,
-          contentType: entry.content_type,
-          contentId: entry.content_id,
-        },
-        new Date(input.scheduledAt),
-      )
+      try {
+        await schedulePublish(
+          {
+            calendarEntryId: entry.id,
+            organizationId: auth.organizationId,
+            contentType: entry.content_type,
+            contentId: entry.content_id,
+          },
+          new Date(input.scheduledAt),
+        )
+      } catch (e) {
+        console.warn('[Calendar PATCH] Failed to schedule BullMQ job:', e)
+      }
 
       return NextResponse.json(updated)
     }

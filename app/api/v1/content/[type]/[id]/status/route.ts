@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
 import { contentTypeSchema, contentStatusUpdateSchema, type ContentType } from '@/types/content'
@@ -99,7 +100,26 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
     if (updateError) throw updateError
 
-    // 8. Return updated status
+    // 8. Revalidate SSR page cache after publish
+    if (action === 'publish') {
+      const pathMap: Record<ContentType, string> = {
+        service_page: '/services/',
+        location_page: '/locations/',
+        blog_post: '/blog/',
+      }
+      const { data: published } = await supabase
+        .from(tableName)
+        .select('slug')
+        .eq('id', id)
+        .returns<{ slug: string }[]>()
+        .single()
+
+      if (published) {
+        revalidatePath(pathMap[typeResult.data] + published.slug)
+      }
+    }
+
+    // 9. Return updated status
     return NextResponse.json({
       id,
       type: typeResult.data,

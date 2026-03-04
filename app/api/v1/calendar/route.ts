@@ -170,16 +170,20 @@ export async function POST(request: Request) {
       throw insertError
     }
 
-    // Schedule the BullMQ job
-    await schedulePublish(
-      {
-        calendarEntryId: entry.id,
-        organizationId: auth.organizationId,
-        contentType,
-        contentId,
-      },
-      new Date(scheduledAt),
-    )
+    // Schedule the BullMQ job (best-effort — DB is source of truth)
+    try {
+      await schedulePublish(
+        {
+          calendarEntryId: entry.id,
+          organizationId: auth.organizationId,
+          contentType,
+          contentId,
+        },
+        new Date(scheduledAt),
+      )
+    } catch (scheduleError) {
+      console.warn('[Calendar POST] Failed to schedule BullMQ job:', scheduleError)
+    }
 
     return NextResponse.json(entry, { status: 201 })
   } catch (err) {

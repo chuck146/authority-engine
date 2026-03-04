@@ -117,13 +117,13 @@ export async function PUT(request: Request, { params }: RouteParams) {
     const supabase = await createClient()
     const tableName = TABLE_MAP[typeResult.data]
 
-    // 4. Fetch current record to check status
+    // 4. Fetch current record to check status (include content for JSONB meta sync)
     const { data: current, error: fetchError } = await supabase
       .from(tableName)
-      .select('id, status, slug')
+      .select('id, status, slug, content')
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
-      .returns<{ id: string; status: ContentStatus; slug: string }[]>()
+      .returns<{ id: string; status: ContentStatus; slug: string; content: Json }[]>()
       .single()
 
     if (fetchError || !current) {
@@ -165,6 +165,15 @@ export async function PUT(request: Request, { params }: RouteParams) {
     if (input.metaTitle !== undefined) updatePayload.meta_title = input.metaTitle
     if (input.metaDescription !== undefined) updatePayload.meta_description = input.metaDescription
     if (input.keywords !== undefined) updatePayload.keywords = input.keywords
+
+    // Sync meta fields into JSONB content (SSR pages read from content.meta_title)
+    if (input.metaTitle !== undefined || input.metaDescription !== undefined) {
+      const existingContent = (current.content ?? {}) as Record<string, unknown>
+      const mergedContent = { ...((updatePayload.content ?? existingContent) as Record<string, unknown>) }
+      if (input.metaTitle !== undefined) mergedContent.meta_title = input.metaTitle
+      if (input.metaDescription !== undefined) mergedContent.meta_description = input.metaDescription
+      updatePayload.content = mergedContent
+    }
 
     // Blog-specific: recalculate excerpt and reading_time if content changed
     if (input.content && typeResult.data === 'blog_post') {
