@@ -28,8 +28,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Marketing layout components: service page, location page, blog post
 - Seed data: 1 org, 8 services, 12 locations, 3 blog posts for Cleanest Painting
 - Test infrastructure: Vitest + React Testing Library, factories, mock Supabase client (141+ tests)
+- Generated TypeScript types from live Supabase schema (replaced hand-written types/database.ts)
+- Auto-link auth user to organization on first login (auth callback creates user_organizations record)
+- Auth callback test suite (9 tests covering auto-linking, redirect sanitization, edge cases)
 
 ### Planned
 
-- Apply migrations + seed to live Supabase
 - Deploy to Vercel

@@ -8,7 +8,7 @@ _Last Updated: March 2026_
 
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
-| 🟢 MVP — Content Generator + Auth + DB  | 🚧 In Progress | April 2026     | 90%      |
+| 🟢 MVP — Content Generator + Auth + DB  | 🚧 In Progress | April 2026     | 95%      |
 | 🔵 V1 — SEO Scoring + Images + Calendar | 🔲 Not Started | June 2026      | 0%       |
 | 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
@@ -35,22 +35,20 @@ _Last Updated: March 2026_
 - [x] Content editing endpoint (PUT — edit title, slug, content, meta fields)
 - [x] Public SSR pages for published content (/services, /locations, /blog)
 - [x] Seed data (8 services, 12 locations, 3 blog posts for Cleanest Painting)
-- [x] Test suite (141+ tests, Vitest + React Testing Library)
-- [ ] Apply migrations + seed to live Supabase
+- [x] Test suite (172+ tests, Vitest + React Testing Library)
+- [x] Apply migrations + seed to live Supabase
+- [x] Generated TypeScript types from live schema (replaced hand-written types/database.ts)
+- [x] Auto-link auth user to organization on first login
 - [ ] Deploy to production (Vercel)
 
 ### What's Next
 
-1. Apply migrations and seed data to live Supabase project
-2. Link auth user to organization
-3. Run `npx supabase login` → `gen types` to replace hand-written database types
-4. End-to-end smoke test: generate → review → edit → approve → publish → SSR render
-5. Connect Vercel project and deploy to production
+1. End-to-end smoke test: generate → review → edit → approve → publish → SSR render
+2. Connect Vercel project and deploy to production
 
 ### Blockers
 
-- Supabase CLI not authenticated (`npx supabase login` needed for `gen types`)
-- Hand-written `types/database.ts` requires `as never` casts — resolve with generated types
+- None
 
 ---
 

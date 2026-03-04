@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createAdminClient } from '@/lib/supabase/admin'
 import type { Database } from '@/types/database'
 
 function sanitizeRedirect(input: string | null): string {
@@ -44,6 +45,42 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
+      // Auto-link user to organization if not already linked
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (user) {
+        const admin = createAdminClient()
+
+        // Check if user already has an org membership
+        const { data: existing } = await admin
+          .from('user_organizations')
+          .select('id')
+          .eq('user_id', user.id)
+          .limit(1)
+          .maybeSingle()
+
+        if (!existing) {
+          // Find the first organization (MVP: single-tenant)
+          const { data: org } = await admin
+            .from('organizations')
+            .select('id')
+            .order('created_at', { ascending: true })
+            .limit(1)
+            .single()
+
+          if (org) {
+            await admin.from('user_organizations').insert({
+              user_id: user.id,
+              organization_id: org.id,
+              role: 'owner',
+              is_default: true,
+            })
+          }
+        }
+      }
+
       return response
     }
   }
