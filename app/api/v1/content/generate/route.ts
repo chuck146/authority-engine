@@ -5,6 +5,7 @@ import { generateContent } from '@/lib/ai'
 import { generateSlug, generateTitleFromInput } from '@/lib/ai/utils'
 import { generateContentRequestSchema, type GenerateContentResponse } from '@/types/content'
 import type { OrgContext } from '@/packages/ai/prompts/content'
+import { calculateSeoScoreValue } from '@/lib/seo'
 import type { OrgBranding, Json } from '@/types'
 
 export async function POST(request: Request) {
@@ -51,10 +52,15 @@ export async function POST(request: Request) {
     // 4. Generate content via Claude
     const structuredContent = await generateContent(input, orgContext)
 
-    // 5. Build title and slug
+    // 5. Build title, slug, and SEO score
     const title =
       input.contentType === 'blog_post' ? structuredContent.headline : generateTitleFromInput(input)
     const slug = generateSlug(title)
+    const seoScore = calculateSeoScoreValue({
+      content: structuredContent,
+      keywords: input.targetKeywords ?? [],
+      contentType: input.contentType,
+    })
 
     // 6. Save to the correct table
     let insertedId: string
@@ -72,6 +78,7 @@ export async function POST(request: Request) {
             content: structuredContent as unknown as Json,
             status: 'review' as const,
             keywords: input.targetKeywords ?? [],
+            seo_score: seoScore,
             created_by: auth.userId,
           })
           .select('id')
@@ -95,6 +102,7 @@ export async function POST(request: Request) {
             content: structuredContent as unknown as Json,
             status: 'review' as const,
             keywords: input.targetKeywords ?? [],
+            seo_score: seoScore,
             created_by: auth.userId,
           })
           .select('id')
@@ -126,6 +134,7 @@ export async function POST(request: Request) {
             content: structuredContent as unknown as Json,
             status: 'review' as const,
             keywords: input.targetKeywords ?? [],
+            seo_score: seoScore,
             category: input.category ?? null,
             reading_time_minutes: readingTime,
             created_by: auth.userId,
@@ -147,6 +156,7 @@ export async function POST(request: Request) {
       slug,
       content: structuredContent,
       status: 'review',
+      seoScore,
     }
 
     return NextResponse.json(response, { status: 201 })

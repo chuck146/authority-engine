@@ -76,6 +76,7 @@ export type GenerateContentResponse = {
   slug: string
   content: StructuredContent
   status: 'review'
+  seoScore: number
 }
 
 // --- Status Update Request (approval workflow) ---

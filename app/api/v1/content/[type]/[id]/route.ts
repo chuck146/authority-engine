@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { requireApiAuth, requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
-import { contentTypeSchema, contentEditRequestSchema, type ContentType, type ContentDetail } from '@/types/content'
+import { contentTypeSchema, contentEditRequestSchema, type ContentType, type ContentDetail, type StructuredContent } from '@/types/content'
+import { calculateSeoScoreValue } from '@/lib/seo'
 import type { ContentStatus, Json } from '@/types'
 
 type RouteParams = {
@@ -120,10 +121,10 @@ export async function PUT(request: Request, { params }: RouteParams) {
     // 4. Fetch current record to check status (include content for JSONB meta sync)
     const { data: current, error: fetchError } = await supabase
       .from(tableName)
-      .select('id, status, slug, content')
+      .select('id, status, slug, content, keywords')
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
-      .returns<{ id: string; status: ContentStatus; slug: string; content: Json }[]>()
+      .returns<{ id: string; status: ContentStatus; slug: string; content: Json; keywords: string[] }[]>()
       .single()
 
     if (fetchError || !current) {
@@ -188,7 +189,23 @@ export async function PUT(request: Request, { params }: RouteParams) {
       updatePayload.reading_time_minutes = Math.max(1, Math.ceil(wordCount / 200))
     }
 
-    // 8. Execute update
+    // 8. Recalculate SEO score if content, meta, or keywords changed
+    if (input.content || input.metaTitle !== undefined || input.metaDescription !== undefined || input.keywords) {
+      const effectiveContent: StructuredContent = {
+        ...(current.content as unknown as StructuredContent),
+        ...(input.content ?? {}),
+        ...(input.metaTitle !== undefined ? { meta_title: input.metaTitle } : {}),
+        ...(input.metaDescription !== undefined ? { meta_description: input.metaDescription } : {}),
+      }
+      const effectiveKeywords = input.keywords ?? current.keywords ?? []
+      updatePayload.seo_score = calculateSeoScoreValue({
+        content: effectiveContent,
+        keywords: effectiveKeywords,
+        contentType: typeResult.data,
+      })
+    }
+
+    // 9. Execute update
     const { error: updateError } = await supabase
       .from(tableName)
       .update(updatePayload as never)

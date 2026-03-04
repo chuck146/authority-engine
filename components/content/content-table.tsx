@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { getAvailableActions } from '@/lib/content/status-transitions'
+import { SeoScoreBadge } from '@/components/seo/seo-score-badge'
 import type { ContentListItem } from '@/types/content'
 import type { ContentStatus, UserRole } from '@/types'
 
@@ -106,7 +107,7 @@ export function ContentTable({ items, userRole, onSelectItem }: ContentTableProp
               <TableCell>
                 <Badge variant={statusVariant[item.status]}>{item.status}</Badge>
               </TableCell>
-              <TableCell>{item.seoScore !== null ? `${item.seoScore}/100` : '--'}</TableCell>
+              <TableCell><SeoScoreBadge score={item.seoScore} /></TableCell>
               <TableCell className="text-muted-foreground">{formatDate(item.createdAt)}</TableCell>
               <TableCell>
                 {actions.length > 0 && (

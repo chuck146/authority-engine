@@ -31,6 +31,10 @@ vi.mock('@/lib/ai/utils', () => ({
   generateTitleFromInput: (...args: unknown[]) => mockGenerateTitleFromInput(...args),
 }))
 
+vi.mock('@/lib/seo', () => ({
+  calculateSeoScoreValue: vi.fn(() => 72),
+}))
+
 const { POST } = await import('../route')
 const { AuthError } = await import('@/lib/auth/api-guard')
 
@@ -117,6 +121,7 @@ describe('POST /api/v1/content/generate', () => {
         slug: 'interior-painting',
         content: defaultContent,
         status: 'review',
+        seoScore: 72,
       })
     })
 
@@ -163,6 +168,19 @@ describe('POST /api/v1/content/generate', () => {
       const fromCalls = mockSupabase.from.mock.calls
       expect(fromCalls[0]![0]).toBe('organizations')
       expect(fromCalls[1]![0]).toBe('service_pages')
+    })
+
+    it('includes seo_score in insert payload', async () => {
+      setupHappyPath()
+
+      await POST(makeRequest({
+        contentType: 'service_page',
+        serviceName: 'Interior Painting',
+        tone: 'professional',
+      }))
+
+      const insertPayload = mockSupabase.insert.mock.calls[0]![0] as Record<string, unknown>
+      expect(insertPayload.seo_score).toBe(72)
     })
 
     it('passes org context to generateContent', async () => {

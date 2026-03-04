@@ -18,6 +18,17 @@ export type {
   UpdateScheduleRequest,
   CalendarQueryParams,
 } from './calendar'
+export type {
+  SeoRuleId,
+  SeoRuleCategory,
+  SeoRuleResult,
+  SeoScoreResult,
+  SeoScorerInput,
+  SeoOverview,
+  SeoContentItem,
+  SeoScoreDistribution,
+  SeoContentTypeSummary,
+} from './seo'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'

@@ -21,6 +21,11 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => Promise.resolve(mockSupabase)),
 }))
 
+const mockCalculateSeoScoreValue = vi.fn().mockReturnValue(75)
+vi.mock('@/lib/seo', () => ({
+  calculateSeoScoreValue: (...args: unknown[]) => mockCalculateSeoScoreValue(...args),
+}))
+
 const { GET, PUT } = await import('../route')
 const { AuthError } = await import('@/lib/auth/api-guard')
 
@@ -81,6 +86,7 @@ beforeEach(() => {
   vi.resetAllMocks()
   vi.spyOn(console, 'error').mockImplementation(() => {})
   rewireChain()
+  mockCalculateSeoScoreValue.mockReturnValue(75)
 })
 
 // --- GET Tests ---
@@ -120,9 +126,9 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
   function setupPutHappyPath(currentOverrides?: Record<string, unknown>) {
     mockRequireApiRole.mockResolvedValue(defaultAuth)
 
-    // 1st single: fetch current record (includes content for JSONB meta sync)
+    // 1st single: fetch current record (includes content, keywords for JSONB meta sync + SEO scoring)
     mockSupabase.single.mockResolvedValueOnce({
-      data: { id: 'content-1', status: 'review', slug: 'interior-painting', content: defaultContent, ...currentOverrides },
+      data: { id: 'content-1', status: 'review', slug: 'interior-painting', content: defaultContent, keywords: ['interior painting'], ...currentOverrides },
       error: null,
     })
     // update chain: .update().eq().eq() — await resolves to chain (no error prop = undefined = falsy)
@@ -151,7 +157,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single
         .mockResolvedValueOnce({
-          data: { id: 'content-1', status: 'draft', slug: 'interior-painting', content: defaultContent },
+          data: { id: 'content-1', status: 'draft', slug: 'interior-painting', content: defaultContent, keywords: ['interior painting'] },
           error: null,
         })
       mockSupabase.single
@@ -195,7 +201,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('updates slug when changed and no conflict', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'review', slug: 'old-slug', content: defaultContent },
+        data: { id: 'content-1', status: 'review', slug: 'old-slug', content: defaultContent, keywords: ['painting'] },
         error: null,
       })
       // slug uniqueness check — no conflict
@@ -226,6 +232,43 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
       expect(mockSupabase.maybeSingle).not.toHaveBeenCalled()
     })
 
+    it('recalculates seo_score when content changes', async () => {
+      const updatedContent = buildStructuredContent({ headline: 'Updated Content' })
+      setupPutHappyPath()
+
+      await PUT(...makePutRequest('service_page', 'content-1', {
+        content: updatedContent,
+      }))
+
+      expect(mockCalculateSeoScoreValue).toHaveBeenCalled()
+      const updateCalls = mockSupabase.update.mock.calls
+      const payload = updateCalls[0]![0] as Record<string, unknown>
+      expect(payload.seo_score).toBe(75)
+    })
+
+    it('recalculates seo_score when keywords change', async () => {
+      setupPutHappyPath()
+
+      await PUT(...makePutRequest('service_page', 'content-1', {
+        keywords: ['new keyword'],
+      }))
+
+      expect(mockCalculateSeoScoreValue).toHaveBeenCalled()
+      const updateCalls = mockSupabase.update.mock.calls
+      const payload = updateCalls[0]![0] as Record<string, unknown>
+      expect(payload.seo_score).toBe(75)
+    })
+
+    it('does not recalculate seo_score when only title changes', async () => {
+      setupPutHappyPath()
+
+      await PUT(...makePutRequest('service_page', 'content-1', {
+        title: 'New Title Only',
+      }))
+
+      expect(mockCalculateSeoScoreValue).not.toHaveBeenCalled()
+    })
+
     it('recalculates excerpt and reading_time for blog_post content update', async () => {
       const longContent = buildStructuredContent({
         intro: 'A'.repeat(300),
@@ -236,7 +279,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
 
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'blog-1', status: 'review', slug: 'test-blog', content: defaultContent },
+        data: { id: 'blog-1', status: 'review', slug: 'test-blog', content: defaultContent, keywords: [] },
         error: null,
       })
       mockSupabase.single.mockResolvedValueOnce({ data: defaultRow, error: null })
@@ -336,7 +379,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 422 when editing approved content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'approved', slug: 'test', content: defaultContent },
+        data: { id: 'content-1', status: 'approved', slug: 'test', content: defaultContent, keywords: [] },
         error: null,
       })
 
@@ -353,7 +396,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 422 when editing published content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'published', slug: 'test', content: defaultContent },
+        data: { id: 'content-1', status: 'published', slug: 'test', content: defaultContent, keywords: [] },
         error: null,
       })
 
@@ -367,7 +410,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 422 when editing archived content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'archived', slug: 'test', content: defaultContent },
+        data: { id: 'content-1', status: 'archived', slug: 'test', content: defaultContent, keywords: [] },
         error: null,
       })
 
@@ -383,7 +426,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 409 when new slug conflicts', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'review', slug: 'old-slug', content: defaultContent },
+        data: { id: 'content-1', status: 'review', slug: 'old-slug', content: defaultContent, keywords: ['painting'] },
         error: null,
       })
       // slug check returns existing record
@@ -417,7 +460,7 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 500 for generic Supabase error', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'review', slug: 'test', content: defaultContent },
+        data: { id: 'content-1', status: 'review', slug: 'test', content: defaultContent, keywords: [] },
         error: null,
       })
       // update chain returns error via separate chain object

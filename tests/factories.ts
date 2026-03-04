@@ -2,6 +2,7 @@ import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { AuthContext, OrgBranding } from '@/types'
 import type { StructuredContent, ContentListItem, ContentDetail } from '@/types/content'
 import type { CalendarEntry, CalendarViewItem } from '@/types/calendar'
+import type { SeoScorerInput, SeoContentItem } from '@/types/seo'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -112,6 +113,28 @@ export function buildCalendarViewItem(overrides?: Partial<CalendarViewItem>): Ca
     publishedAt: null,
     status: 'scheduled',
     errorMessage: null,
+    ...overrides,
+  }
+}
+
+export function buildSeoScorerInput(overrides?: Partial<SeoScorerInput>): SeoScorerInput {
+  return {
+    content: buildStructuredContent(),
+    keywords: ['interior painting'],
+    contentType: 'service_page',
+    ...overrides,
+  }
+}
+
+export function buildSeoContentItem(overrides?: Partial<SeoContentItem>): SeoContentItem {
+  return {
+    id: 'sp-1',
+    contentType: 'service_page',
+    title: 'Interior Painting',
+    slug: 'interior-painting',
+    status: 'published',
+    seoScore: 72,
+    topIssue: null,
     ...overrides,
   }
 }
