@@ -147,6 +147,100 @@ export type Database = {
           },
         ]
       }
+      google_connections: {
+        Row: {
+          access_token: string
+          connected_by: string
+          created_at: string
+          id: string
+          last_synced_at: string | null
+          organization_id: string
+          provider: string
+          refresh_token: string
+          scopes: string[]
+          site_url: string
+          status: string
+          sync_error: string | null
+          token_expires_at: string
+          updated_at: string
+        }
+        Insert: {
+          access_token: string
+          connected_by: string
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          organization_id: string
+          provider: string
+          refresh_token: string
+          scopes?: string[]
+          site_url?: string
+          status?: string
+          sync_error?: string | null
+          token_expires_at: string
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string
+          connected_by?: string
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          organization_id?: string
+          provider?: string
+          refresh_token?: string
+          scopes?: string[]
+          site_url?: string
+          status?: string
+          sync_error?: string | null
+          token_expires_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_snapshots: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          organization_id: string
+          snapshot_date: string
+          snapshot_type: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          id?: string
+          organization_id: string
+          snapshot_date: string
+          snapshot_type: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          organization_id?: string
+          snapshot_date?: string
+          snapshot_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_executions: {
         Row: {
           attempts: number
@@ -199,6 +293,59 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "job_executions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      keyword_rankings: {
+        Row: {
+          clicks: number
+          country: string
+          created_at: string
+          ctr: number
+          date: string
+          device: string
+          id: string
+          impressions: number
+          organization_id: string
+          page: string
+          position: number
+          query: string
+        }
+        Insert: {
+          clicks?: number
+          country?: string
+          created_at?: string
+          ctr?: number
+          date: string
+          device?: string
+          id?: string
+          impressions?: number
+          organization_id: string
+          page: string
+          position?: number
+          query: string
+        }
+        Update: {
+          clicks?: number
+          country?: string
+          created_at?: string
+          ctr?: number
+          date?: string
+          device?: string
+          id?: string
+          impressions?: number
+          organization_id?: string
+          page?: string
+          position?: number
+          query?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "keyword_rankings_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

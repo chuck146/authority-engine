@@ -43,6 +43,26 @@ export type {
   GenerateImageResponse,
   MediaLibraryItem,
 } from './media'
+export type {
+  GscConnectionStatus,
+  GscProvider,
+  GscConnection,
+  SearchAnalyticsRow,
+  SearchAnalyticsDimension,
+  SearchAnalyticsQuery,
+  GscSitemap,
+  GscSitemapContent,
+  UrlInspectionRequest,
+  UrlInspectionResult,
+  RichResultItem,
+  GscOverview,
+  GscSummary,
+  KeywordRankingItem,
+  PagePerformanceItem,
+  IndexingCoverage,
+  CrawlError,
+  KeywordTrendPoint,
+} from './gsc'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'

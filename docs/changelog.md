@@ -10,7 +10,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Planned
 
 - Deploy MVP to Vercel
-- Google Search Console integration
 - Google Analytics 4 integration
 - GBP post generation and publishing
 - Social media post generation (Instagram, Facebook)
@@ -34,7 +33,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Dashboard metrics:** Hero cards (total content, published, avg SEO score, media count), content pipeline chart, recent activity feed
 - **Dashboard API:** GET /api/v1/dashboard (aggregated metrics from all content tables + media)
 - **Redis timeout handling:** Graceful BullMQ connection timeouts, API robustness improvements
-- **Test suite expanded:** 289+ tests (up from 172), covering SEO scoring, calendar, dashboard, media, image prompts
+- **Google Search Console OAuth2:** Token encryption (AES-256-GCM), auto-refresh, HMAC-signed state parameter, admin-only connect/disconnect
+- **GSC Service Library:** fetchSearchAnalytics, fetchSitemaps, inspectUrl, listSites (lib/google/search-console.ts)
+- **GSC Integration APIs:** GET /api/v1/integrations/google/status, POST disconnect, GET properties
+- **GSC Data APIs:** GET /api/v1/gsc/overview (28-day trends + top queries/pages + sitemaps + indexing), GET search-analytics (Zod-validated dimensions/pagination), GET sitemaps, POST url-inspection
+- **GSC Background Sync:** BullMQ worker with daily cron (6 AM), keyword_rankings upsert in batches of 500, sitemap snapshot storage (lib/queue/gsc-sync-worker.ts, lib/queue/gsc-scheduler.ts)
+- **Settings UI:** Integrations section with GSC connect/disconnect, status badge, site URL display (components/settings/integrations-section.tsx)
+- **SEO Dashboard tabs:** "On-Page SEO" + "Search Console" with overview cards, top queries table, top pages table, indexing coverage (components/seo/gsc-*.tsx)
+- **Database migrations:** google_connections (encrypted tokens, RLS), keyword_rankings (composite unique, RLS), gsc_snapshots
+- **Test suite expanded:** 440+ tests (up from 289), covering GSC routes, sync worker, scheduler, dashboard components
 
 ### Changed
 

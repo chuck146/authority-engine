@@ -10,6 +10,15 @@ import type {
   RecentActivityItem,
 } from '@/types/dashboard'
 import type { GenerateImageResponse, MediaLibraryItem } from '@/types/media'
+import type {
+  GscSummary,
+  KeywordRankingItem,
+  PagePerformanceItem,
+  GscSitemap,
+  GscOverview,
+  UrlInspectionResult,
+  IndexingCoverage,
+} from '@/types/gsc'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -233,6 +242,105 @@ export function buildMediaLibraryItem(
     height: null,
     altText: 'Blog thumbnail for "Choosing Paint Colors" — Cleanest Painting LLC',
     createdAt: '2026-03-04T12:00:00Z',
+    ...overrides,
+  }
+}
+
+// --- GSC Factories ---
+
+export function buildGscSummary(overrides?: Partial<GscSummary>): GscSummary {
+  return {
+    clicks: 1250,
+    impressions: 45000,
+    ctr: 0.028,
+    position: 18.3,
+    clicksTrend: 12,
+    impressionsTrend: 8,
+    ctrTrend: 4,
+    positionTrend: -5,
+    ...overrides,
+  }
+}
+
+export function buildKeywordRankingItem(
+  overrides?: Partial<KeywordRankingItem>,
+): KeywordRankingItem {
+  return {
+    query: 'interior painting nj',
+    clicks: 85,
+    impressions: 2400,
+    ctr: 0.035,
+    position: 8.2,
+    positionChange: 1.3,
+    ...overrides,
+  }
+}
+
+export function buildPagePerformanceItem(
+  overrides?: Partial<PagePerformanceItem>,
+): PagePerformanceItem {
+  return {
+    page: 'https://cleanestpainting.com/services/interior-painting',
+    clicks: 120,
+    impressions: 3200,
+    ctr: 0.038,
+    position: 6.5,
+    ...overrides,
+  }
+}
+
+export function buildGscSitemap(overrides?: Partial<GscSitemap>): GscSitemap {
+  return {
+    path: 'https://cleanestpainting.com/sitemap.xml',
+    lastSubmitted: '2026-03-01T00:00:00Z',
+    isPending: false,
+    lastDownloaded: '2026-03-04T00:00:00Z',
+    warnings: 0,
+    errors: 0,
+    contents: [{ type: 'web', submitted: 45, indexed: 38 }],
+    ...overrides,
+  }
+}
+
+export function buildIndexingCoverage(
+  overrides?: Partial<IndexingCoverage>,
+): IndexingCoverage {
+  return {
+    valid: 38,
+    warnings: 0,
+    errors: 2,
+    excluded: 7,
+    ...overrides,
+  }
+}
+
+export function buildGscOverview(overrides?: Partial<GscOverview>): GscOverview {
+  return {
+    isConnected: true,
+    siteUrl: 'https://cleanestpainting.com',
+    lastSyncedAt: '2026-03-05T12:00:00Z',
+    summary: buildGscSummary(),
+    topQueries: [buildKeywordRankingItem()],
+    topPages: [buildPagePerformanceItem()],
+    sitemaps: [buildGscSitemap()],
+    indexingCoverage: buildIndexingCoverage(),
+    ...overrides,
+  }
+}
+
+export function buildUrlInspectionResult(
+  overrides?: Partial<UrlInspectionResult>,
+): UrlInspectionResult {
+  return {
+    inspectionUrl: 'https://cleanestpainting.com/services/interior-painting',
+    indexingState: 'INDEXING_ALLOWED',
+    coverageState: 'SUBMITTED_AND_INDEXED',
+    lastCrawlTime: '2026-03-04T08:00:00Z',
+    crawlAllowed: true,
+    robotsTxtState: 'ALLOWED',
+    pageFetchState: 'SUCCESSFUL',
+    mobileUsability: 'MOBILE_FRIENDLY',
+    richResults: [],
     ...overrides,
   }
 }

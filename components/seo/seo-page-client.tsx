@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SeoOverviewCards } from './seo-overview-cards'
 import { SeoDistributionChart } from './seo-distribution-chart'
 import { SeoContentList } from './seo-content-list'
 import { SeoDetailPanel } from './seo-detail-panel'
+import { GscDashboard } from './gsc-dashboard'
 import type { SeoOverview, SeoContentItem } from '@/types/seo'
 
-export function SeoPageClient() {
+function OnPageSeoTab() {
   const [overview, setOverview] = useState<SeoOverview | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -82,5 +84,22 @@ export function SeoPageClient() {
         onClose={() => setSelectedItem(null)}
       />
     </div>
+  )
+}
+
+export function SeoPageClient() {
+  return (
+    <Tabs defaultValue="on-page">
+      <TabsList>
+        <TabsTrigger value="on-page">On-Page SEO</TabsTrigger>
+        <TabsTrigger value="search-console">Search Console</TabsTrigger>
+      </TabsList>
+      <TabsContent value="on-page">
+        <OnPageSeoTab />
+      </TabsContent>
+      <TabsContent value="search-console">
+        <GscDashboard />
+      </TabsContent>
+    </Tabs>
   )
 }

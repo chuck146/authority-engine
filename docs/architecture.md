@@ -111,13 +111,47 @@ social_posts         — Social media posts with performance data
 reviews              — Aggregated from all platforms
 review_requests      — Outbound review solicitations
 seo_audits           — Weekly audit results with scoring
-keyword_rankings     — Historical rank tracking
+keyword_rankings     — Historical rank tracking (GSC daily sync)
+google_connections   — OAuth2 tokens (AES-256-GCM encrypted), site URLs
+gsc_snapshots        — Daily sitemap + indexing snapshots from GSC sync
 lead_events          — Unified lead tracking
 media_assets         — Generated images + videos with metadata
 job_executions       — Background job logs for debugging
 ```
 
 All tables include `organization_id` FK with Supabase RLS policies.
+
+---
+
+## Data Flow: GSC Sync
+
+```
+Admin clicks "Connect Google Search Console" in Settings
+    │
+    ▼
+OAuth2 redirect → Google consent → callback with auth code
+    │
+    ▼
+API Route: /api/auth/google/callback
+    │ Exchanges code for tokens, encrypts with AES-256-GCM
+    ▼
+Supabase: google_connections (encrypted access/refresh tokens, site_url)
+    │
+    ▼
+BullMQ Scheduler: daily cron at 6 AM (gsc-sync queue)
+    │
+    ▼
+GSC Sync Worker: for each active connection
+    │ 1. Decrypt tokens, auto-refresh if expired
+    │ 2. Fetch search analytics (query + page + date dimensions)
+    │ 3. Upsert keyword_rankings in batches of 500
+    │ 4. Fetch sitemaps + indexing data → gsc_snapshots
+    ▼
+SEO Dashboard "Search Console" tab
+    │ GET /api/v1/gsc/overview
+    ▼
+Displays: overview cards, top queries, top pages, indexing coverage
+```
 
 ---
 

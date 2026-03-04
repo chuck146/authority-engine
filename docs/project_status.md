@@ -9,7 +9,7 @@ _Last Updated: March 2026_
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete     | April 2026     | 95%      |
-| 🔵 V1 — SEO Scoring + Images + Calendar | 🚧 In Progress | June 2026      | 55%      |
+| 🔵 V1 — SEO Scoring + Images + Calendar | 🚧 In Progress | June 2026      | 75%      |
 | 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
@@ -67,18 +67,24 @@ _Last Updated: March 2026_
 - [x] Content calendar: scheduling, grid UI, CRUD APIs, BullMQ worker for scheduled publishing
 - [x] Dashboard metrics: hero cards, content pipeline chart, recent activity feed, dashboard API
 - [x] Redis timeout handling and API robustness improvements
-- [x] Test suite expanded to 289+ tests
-- [ ] Google Search Console integration (keyword rankings, traffic data)
+- [x] Google Search Console OAuth2 (AES-256-GCM token encryption, auto-refresh, HMAC-signed state)
+- [x] GSC Service Library (fetchSearchAnalytics, fetchSitemaps, inspectUrl, listSites)
+- [x] GSC Integration APIs (status, disconnect, properties endpoints)
+- [x] GSC Data APIs (overview with 28-day trends, search-analytics, sitemaps, url-inspection)
+- [x] GSC Background Sync (BullMQ daily cron, keyword_rankings upsert, sitemap snapshots)
+- [x] Settings UI: Integrations section with GSC connect/disconnect
+- [x] SEO Dashboard tabs: "On-Page SEO" + "Search Console" with overview cards, top queries, top pages, indexing coverage
+- [x] Database migrations: google_connections, keyword_rankings, gsc_snapshots (all with RLS)
+- [x] Test suite expanded to 440+ tests
 - [ ] Google Analytics 4 integration (page performance)
 - [ ] GBP post generation and publishing
 - [ ] Social media post generation (Instagram, Facebook)
 
 ### What's Next
 
-1. Google Search Console integration
-2. Google Analytics 4 integration
-3. GBP post generation and publishing
-4. Social media post generation
+1. Google Analytics 4 integration
+2. GBP post generation and publishing
+3. Social media post generation
 
 ### Blockers
 
