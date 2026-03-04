@@ -19,7 +19,7 @@ export function LocationPageLayout({ page }: { page: LocationPage }) {
         title={content.headline}
         subtitle={`Serving ${page.city}, ${page.state}`}
       />
-      {page.zip_codes.length > 0 && (
+      {page.zip_codes && page.zip_codes.length > 0 && (
         <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-4 w-4" />
           <span>ZIP codes: {page.zip_codes.join(', ')}</span>

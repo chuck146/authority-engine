@@ -59,7 +59,7 @@ export function BlogPostLayout({ post }: { post: BlogPost }) {
         <p className="mb-8 text-lg italic text-muted-foreground">{post.excerpt}</p>
       )}
       <ContentBody content={content} />
-      {post.tags.length > 0 && (
+      {post.tags && post.tags.length > 0 && (
         <div className="mt-8 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
             <span
