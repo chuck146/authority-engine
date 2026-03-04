@@ -2,10 +2,17 @@ const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 const GOOGLE_REVOKE_URL = 'https://oauth2.googleapis.com/revoke'
 
-const GSC_SCOPES = [
-  'https://www.googleapis.com/auth/webmasters.readonly',
-  'https://www.googleapis.com/auth/indexing',
-]
+export type GoogleProvider = 'search_console' | 'analytics'
+
+const SCOPES_BY_PROVIDER: Record<GoogleProvider, string[]> = {
+  search_console: [
+    'https://www.googleapis.com/auth/webmasters.readonly',
+    'https://www.googleapis.com/auth/indexing',
+  ],
+  analytics: [
+    'https://www.googleapis.com/auth/analytics.readonly',
+  ],
+}
 
 function getClientId(): string {
   const id = process.env.GOOGLE_OAUTH_CLIENT_ID
@@ -23,12 +30,13 @@ function getRedirectUri(): string {
   return process.env.GOOGLE_OAUTH_REDIRECT_URI ?? 'http://localhost:3000/api/auth/google/callback'
 }
 
-export function getGoogleAuthUrl(state: string): string {
+export function getGoogleAuthUrl(state: string, provider: GoogleProvider = 'search_console'): string {
+  const scopes = SCOPES_BY_PROVIDER[provider]
   const params = new URLSearchParams({
     client_id: getClientId(),
     redirect_uri: getRedirectUri(),
     response_type: 'code',
-    scope: GSC_SCOPES.join(' '),
+    scope: scopes.join(' '),
     access_type: 'offline',
     prompt: 'consent',
     state,

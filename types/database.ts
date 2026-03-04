@@ -241,6 +241,94 @@ export type Database = {
           },
         ]
       }
+      ga4_page_metrics: {
+        Row: {
+          id: string
+          organization_id: string
+          page_path: string
+          page_title: string
+          date: string
+          sessions: number
+          users: number
+          pageviews: number
+          bounce_rate: number
+          avg_session_duration: number
+          engagement_rate: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          organization_id: string
+          page_path: string
+          page_title?: string
+          date: string
+          sessions?: number
+          users?: number
+          pageviews?: number
+          bounce_rate?: number
+          avg_session_duration?: number
+          engagement_rate?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          organization_id?: string
+          page_path?: string
+          page_title?: string
+          date?: string
+          sessions?: number
+          users?: number
+          pageviews?: number
+          bounce_rate?: number
+          avg_session_duration?: number
+          engagement_rate?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ga4_page_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ga4_snapshots: {
+        Row: {
+          id: string
+          organization_id: string
+          snapshot_type: string
+          snapshot_date: string
+          data: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          organization_id: string
+          snapshot_type: string
+          snapshot_date: string
+          data?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          organization_id?: string
+          snapshot_type?: string
+          snapshot_date?: string
+          data?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ga4_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_executions: {
         Row: {
           attempts: number

@@ -10,9 +10,31 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Planned
 
 - Deploy MVP to Vercel
-- Google Analytics 4 integration
 - GBP post generation and publishing
 - Social media post generation (Instagram, Facebook)
+
+---
+
+## [V1.1] — 2026-03-05
+
+### Added
+
+- **GA4 Service Library:** listAccountSummaries, runReport (lib/google/analytics.ts) — Admin + Data API wrappers
+- **GA4 Integration APIs:** GET /api/v1/integrations/ga4/status, POST disconnect, GET properties, POST select-property
+- **GA4 Data API:** GET /api/v1/ga4/overview (28-day metrics: sessions, users, pageviews, bounce rate + top pages, traffic sources, device breakdown, daily trend)
+- **GA4 Background Sync:** BullMQ worker syncs page metrics, traffic sources, device breakdown, daily totals into ga4_page_metrics + ga4_snapshots (lib/queue/ga4-sync-worker.ts, lib/queue/ga4-scheduler.ts)
+- **GA4 Dashboard UI:** "Analytics" tab in SEO Dashboard with overview cards, traffic trend chart, top pages table, traffic sources breakdown, device breakdown (components/seo/ga4-*.tsx)
+- **GA4 Settings UI:** Property selector for choosing GA4 property after OAuth connect (components/settings/ga4-property-selector.tsx)
+- **Settings UI updated:** Integrations section now shows both GSC and GA4 rows with independent connect/disconnect
+- **Database migration:** ga4_page_metrics (per-page daily metrics with upsert), ga4_snapshots (JSONB traffic/device/daily snapshots), both with RLS
+- **GA4 types:** Full type definitions for GA4 accounts, properties, reports, metrics, snapshots (types/ga4.ts)
+- **OAuth extended:** Google OAuth state now includes 4-part format (integration type: gsc|ga4, org_id, user_id, HMAC)
+- **Test suite expanded:** 507+ tests across 71 files (67 new GA4 tests), 6 pre-existing OAuth test failures fixed
+
+### Fixed
+
+- OAuth state format updated from 3-part to 4-part (added integration type) — fixes GSC state validation tests
+- Integrations section tests updated to match refactored 2-row layout (GSC + GA4)
 
 ---
 

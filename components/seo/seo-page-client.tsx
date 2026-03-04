@@ -8,6 +8,7 @@ import { SeoDistributionChart } from './seo-distribution-chart'
 import { SeoContentList } from './seo-content-list'
 import { SeoDetailPanel } from './seo-detail-panel'
 import { GscDashboard } from './gsc-dashboard'
+import { Ga4Dashboard } from './ga4-dashboard'
 import type { SeoOverview, SeoContentItem } from '@/types/seo'
 
 function OnPageSeoTab() {
@@ -93,12 +94,16 @@ export function SeoPageClient() {
       <TabsList>
         <TabsTrigger value="on-page">On-Page SEO</TabsTrigger>
         <TabsTrigger value="search-console">Search Console</TabsTrigger>
+        <TabsTrigger value="analytics">Analytics</TabsTrigger>
       </TabsList>
       <TabsContent value="on-page">
         <OnPageSeoTab />
       </TabsContent>
       <TabsContent value="search-console">
         <GscDashboard />
+      </TabsContent>
+      <TabsContent value="analytics">
+        <Ga4Dashboard />
       </TabsContent>
     </Tabs>
   )

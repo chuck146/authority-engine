@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'
 import { createClient } from '@supabase/supabase-js'
-import { refreshAccessToken } from './oauth'
+import { refreshAccessToken, type GoogleProvider } from './oauth'
 import type { Database } from '@/types/database'
 
 const ALGORITHM = 'aes-256-gcm'
@@ -51,23 +51,31 @@ type TokenResult = {
   siteUrl: string
 }
 
+const PROVIDER_LABELS: Record<GoogleProvider, string> = {
+  search_console: 'Google Search Console',
+  analytics: 'Google Analytics',
+}
+
 /**
- * Get a valid access token for an org's GSC connection.
+ * Get a valid access token for an org's Google connection.
  * Auto-refreshes if expired, updating DB with new tokens.
  */
-export async function getValidToken(organizationId: string): Promise<TokenResult> {
+export async function getValidToken(
+  organizationId: string,
+  provider: GoogleProvider = 'search_console',
+): Promise<TokenResult> {
   const supabase = getAdminClient()
 
   const { data: conn, error } = await supabase
     .from('google_connections')
     .select('id, access_token, refresh_token, token_expires_at, site_url')
     .eq('organization_id', organizationId)
-    .eq('provider', 'search_console')
+    .eq('provider', provider)
     .eq('status', 'active')
     .single()
 
   if (error || !conn) {
-    throw new Error('No active Google Search Console connection found')
+    throw new Error(`No active ${PROVIDER_LABELS[provider]} connection found`)
   }
 
   const expiresAt = new Date(conn.token_expires_at).getTime()

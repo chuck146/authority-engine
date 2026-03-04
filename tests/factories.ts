@@ -19,6 +19,14 @@ import type {
   UrlInspectionResult,
   IndexingCoverage,
 } from '@/types/gsc'
+import type {
+  Ga4Summary,
+  Ga4TrafficTrendPoint,
+  Ga4PageMetric,
+  Ga4TrafficSource,
+  Ga4DeviceBreakdown,
+  Ga4Overview,
+} from '@/types/ga4'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -341,6 +349,88 @@ export function buildUrlInspectionResult(
     pageFetchState: 'SUCCESSFUL',
     mobileUsability: 'MOBILE_FRIENDLY',
     richResults: [],
+    ...overrides,
+  }
+}
+
+// --- GA4 Factories ---
+
+export function buildGa4Summary(overrides?: Partial<Ga4Summary>): Ga4Summary {
+  return {
+    sessions: 3200,
+    users: 2100,
+    pageviews: 8500,
+    bounceRate: 0.42,
+    sessionsTrend: 15,
+    usersTrend: 12,
+    pageviewsTrend: 18,
+    bounceRateTrend: -3,
+    ...overrides,
+  }
+}
+
+export function buildGa4TrafficTrendPoint(
+  overrides?: Partial<Ga4TrafficTrendPoint>,
+): Ga4TrafficTrendPoint {
+  return {
+    date: '2026-03-04',
+    sessions: 120,
+    users: 85,
+    pageviews: 310,
+    ...overrides,
+  }
+}
+
+export function buildGa4PageMetric(overrides?: Partial<Ga4PageMetric>): Ga4PageMetric {
+  return {
+    pagePath: '/services/interior-painting',
+    pageTitle: 'Interior Painting | Cleanest Painting',
+    sessions: 150,
+    users: 120,
+    pageviews: 280,
+    bounceRate: 0.38,
+    avgSessionDuration: 125.4,
+    ...overrides,
+  }
+}
+
+export function buildGa4TrafficSource(overrides?: Partial<Ga4TrafficSource>): Ga4TrafficSource {
+  return {
+    source: 'google',
+    medium: 'organic',
+    sessions: 1800,
+    users: 1200,
+    bounceRate: 0.35,
+    ...overrides,
+  }
+}
+
+export function buildGa4DeviceBreakdown(
+  overrides?: Partial<Ga4DeviceBreakdown>,
+): Ga4DeviceBreakdown {
+  return {
+    deviceCategory: 'desktop',
+    sessions: 1600,
+    users: 1050,
+    percentage: 50,
+    ...overrides,
+  }
+}
+
+export function buildGa4Overview(overrides?: Partial<Ga4Overview>): Ga4Overview {
+  return {
+    isConnected: true,
+    propertyId: 'properties/123456789',
+    lastSyncedAt: '2026-03-05T12:00:00Z',
+    summary: buildGa4Summary(),
+    dailyTrend: [buildGa4TrafficTrendPoint()],
+    topPages: [buildGa4PageMetric()],
+    trafficSources: [buildGa4TrafficSource()],
+    deviceBreakdown: [
+      buildGa4DeviceBreakdown(),
+      buildGa4DeviceBreakdown({ deviceCategory: 'mobile', sessions: 1200, users: 800, percentage: 37.5 }),
+      buildGa4DeviceBreakdown({ deviceCategory: 'tablet', sessions: 400, users: 250, percentage: 12.5 }),
+    ],
     ...overrides,
   }
 }

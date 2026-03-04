@@ -15,7 +15,7 @@ describe('createOAuthState / validateOAuthState', () => {
   it('creates a valid state and validates it', () => {
     const state = createOAuthState('org-123')
     const result = validateOAuthState(state)
-    expect(result).toEqual({ organizationId: 'org-123' })
+    expect(result).toEqual({ organizationId: 'org-123', provider: 'search_console' })
   })
 
   it('produces different states each time (random nonce)', () => {
@@ -27,14 +27,14 @@ describe('createOAuthState / validateOAuthState', () => {
   it('returns null for tampered signature', () => {
     const state = createOAuthState('org-123')
     const parts = state.split('.')
-    const tampered = `${parts[0]}.${parts[1]}.tampered-sig`
+    const tampered = `${parts[0]}.${parts[1]}.${parts[2]}.tampered-sig`
     expect(validateOAuthState(tampered)).toBeNull()
   })
 
   it('returns null for tampered org ID', () => {
     const state = createOAuthState('org-123')
     const parts = state.split('.')
-    const tampered = `org-evil.${parts[1]}.${parts[2]}`
+    const tampered = `org-evil.${parts[1]}.${parts[2]}.${parts[3]}`
     expect(validateOAuthState(tampered)).toBeNull()
   })
 

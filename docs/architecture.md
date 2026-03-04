@@ -112,8 +112,10 @@ reviews              — Aggregated from all platforms
 review_requests      — Outbound review solicitations
 seo_audits           — Weekly audit results with scoring
 keyword_rankings     — Historical rank tracking (GSC daily sync)
-google_connections   — OAuth2 tokens (AES-256-GCM encrypted), site URLs
+google_connections   — OAuth2 tokens (AES-256-GCM encrypted), site URLs, GA4 property IDs
 gsc_snapshots        — Daily sitemap + indexing snapshots from GSC sync
+ga4_page_metrics     — Per-page daily analytics (sessions, users, pageviews, bounce rate, engagement)
+ga4_snapshots        — JSONB snapshots (traffic_sources, device_breakdown, daily_totals)
 lead_events          — Unified lead tracking
 media_assets         — Generated images + videos with metadata
 job_executions       — Background job logs for debugging
@@ -151,6 +153,32 @@ SEO Dashboard "Search Console" tab
     │ GET /api/v1/gsc/overview
     ▼
 Displays: overview cards, top queries, top pages, indexing coverage
+```
+
+---
+
+## Data Flow: GA4 Sync
+
+```
+Admin connects GA4 via Settings → OAuth2 with scope=analytics.readonly
+    │
+    ▼
+Property Selector UI → POST /api/v1/integrations/ga4/select-property
+    │ Saves ga4_property_id to google_connections row
+    ▼
+BullMQ Scheduler: daily cron (ga4-sync queue)
+    │
+    ▼
+GA4 Sync Worker: for each connection with ga4_property_id
+    │ 1. Decrypt tokens, auto-refresh if expired
+    │ 2. Run GA4 Data API reports (page metrics, traffic sources, devices, daily totals)
+    │ 3. Upsert ga4_page_metrics in batches
+    │ 4. Store ga4_snapshots (traffic_sources, device_breakdown, daily_totals)
+    ▼
+SEO Dashboard "Analytics" tab
+    │ GET /api/v1/ga4/overview
+    ▼
+Displays: overview cards, traffic trend chart, top pages, traffic sources, device breakdown
 ```
 
 ---

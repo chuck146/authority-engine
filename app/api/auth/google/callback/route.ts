@@ -4,6 +4,7 @@ import { exchangeCodeForTokens } from '@/lib/google/oauth'
 import { encrypt } from '@/lib/google/token-manager'
 import { validateOAuthState } from '@/lib/google/state'
 import { listSites } from '@/lib/google/search-console'
+import { listAccountSummaries } from '@/lib/google/analytics'
 import type { Database } from '@/types/database'
 
 function getAdminClient() {
@@ -11,6 +12,19 @@ function getAdminClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
+}
+
+async function resolveSiteUrl(provider: string, accessToken: string): Promise<string> {
+  if (provider === 'search_console') {
+    const sites = await listSites({ accessToken })
+    return sites[0]?.siteUrl ?? ''
+  }
+  if (provider === 'analytics') {
+    const accounts = await listAccountSummaries({ accessToken })
+    const firstProp = accounts[0]?.propertySummaries?.[0]
+    return firstProp?.property ?? ''
+  }
+  return ''
 }
 
 export async function GET(request: NextRequest) {
@@ -44,9 +58,8 @@ export async function GET(request: NextRequest) {
     // Exchange code for tokens
     const tokens = await exchangeCodeForTokens(code)
 
-    // Fetch available GSC properties to auto-select site_url
-    const sites = await listSites({ accessToken: tokens.access_token })
-    const siteUrl = sites[0]?.siteUrl ?? ''
+    // Resolve site_url / property ID based on provider
+    const siteUrl = await resolveSiteUrl(stateData.provider, tokens.access_token)
 
     const supabase = getAdminClient()
     const expiresAt = new Date(Date.now() + tokens.expires_in * 1000).toISOString()
@@ -57,13 +70,13 @@ export async function GET(request: NextRequest) {
       .upsert(
         {
           organization_id: stateData.organizationId,
-          provider: 'search_console',
+          provider: stateData.provider,
           site_url: siteUrl,
           access_token: encrypt(tokens.access_token),
           refresh_token: encrypt(tokens.refresh_token),
           token_expires_at: expiresAt,
           scopes: tokens.scope.split(' '),
-          connected_by: stateData.organizationId, // Will be overwritten — see note below
+          connected_by: stateData.organizationId,
           status: 'active',
           sync_error: null,
           updated_at: new Date().toISOString(),
@@ -78,7 +91,9 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    return NextResponse.redirect(`${origin}/settings?tab=integrations&status=connected`)
+    return NextResponse.redirect(
+      `${origin}/settings?tab=integrations&status=connected&provider=${stateData.provider}`,
+    )
   } catch (err) {
     console.error('[Google Callback Error]', err)
     return NextResponse.redirect(

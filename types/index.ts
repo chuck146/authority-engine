@@ -63,6 +63,19 @@ export type {
   CrawlError,
   KeywordTrendPoint,
 } from './gsc'
+export type {
+  Ga4AccountSummary,
+  Ga4PropertySummary,
+  Ga4ReportRequest,
+  Ga4ReportRow,
+  Ga4ReportResponse,
+  Ga4Overview,
+  Ga4Summary,
+  Ga4TrafficTrendPoint,
+  Ga4PageMetric,
+  Ga4TrafficSource,
+  Ga4DeviceBreakdown,
+} from './ga4'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'

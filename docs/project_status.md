@@ -9,7 +9,7 @@ _Last Updated: March 2026_
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete     | April 2026     | 95%      |
-| 🔵 V1 — SEO Scoring + Images + Calendar | 🚧 In Progress | June 2026      | 75%      |
+| 🔵 V1 — SEO Scoring + Images + Calendar | 🚧 In Progress | June 2026      | 85%      |
 | 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
@@ -76,15 +76,19 @@ _Last Updated: March 2026_
 - [x] SEO Dashboard tabs: "On-Page SEO" + "Search Console" with overview cards, top queries, top pages, indexing coverage
 - [x] Database migrations: google_connections, keyword_rankings, gsc_snapshots (all with RLS)
 - [x] Test suite expanded to 440+ tests
-- [ ] Google Analytics 4 integration (page performance)
+- [x] Google Analytics 4 integration: service library, OAuth flow, integration APIs, data API, background sync, dashboard UI, property selector
+- [x] GA4 database migration: ga4_page_metrics + ga4_snapshots (with RLS)
+- [x] GA4 Settings UI: property selector, connect/disconnect for GA4 alongside GSC
+- [x] GA4 Dashboard: "Analytics" tab with overview cards, traffic trend, top pages, traffic sources, device breakdown
+- [x] OAuth state format extended to 4-part (integration type + org_id + user_id + HMAC)
+- [x] Test suite expanded to 507+ tests across 71 files
 - [ ] GBP post generation and publishing
 - [ ] Social media post generation (Instagram, Facebook)
 
 ### What's Next
 
-1. Google Analytics 4 integration
-2. GBP post generation and publishing
-3. Social media post generation
+1. GBP post generation and publishing
+2. Social media post generation
 
 ### Blockers
 
