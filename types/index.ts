@@ -29,6 +29,20 @@ export type {
   SeoScoreDistribution,
   SeoContentTypeSummary,
 } from './seo'
+export type {
+  HeroMetrics,
+  StatusBreakdown,
+  ContentTypeBreakdown,
+  ContentPipeline,
+  RecentActivityItem,
+  DashboardMetrics,
+} from './dashboard'
+export type {
+  ImageType,
+  GenerateImageRequest,
+  GenerateImageResponse,
+  MediaLibraryItem,
+} from './media'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'

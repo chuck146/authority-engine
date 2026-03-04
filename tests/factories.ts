@@ -3,6 +3,13 @@ import type { AuthContext, OrgBranding } from '@/types'
 import type { StructuredContent, ContentListItem, ContentDetail } from '@/types/content'
 import type { CalendarEntry, CalendarViewItem } from '@/types/calendar'
 import type { SeoScorerInput, SeoContentItem } from '@/types/seo'
+import type {
+  DashboardMetrics,
+  HeroMetrics,
+  ContentPipeline,
+  RecentActivityItem,
+} from '@/types/dashboard'
+import type { GenerateImageResponse, MediaLibraryItem } from '@/types/media'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -135,6 +142,97 @@ export function buildSeoContentItem(overrides?: Partial<SeoContentItem>): SeoCon
     status: 'published',
     seoScore: 72,
     topIssue: null,
+    ...overrides,
+  }
+}
+
+export function buildHeroMetrics(overrides?: Partial<HeroMetrics>): HeroMetrics {
+  return {
+    totalPublished: 23,
+    averageSeoScore: 74,
+    contentInReview: 3,
+    nextScheduledPublish: '2026-04-01T10:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildContentPipeline(overrides?: Partial<ContentPipeline>): ContentPipeline {
+  return {
+    statusBreakdown: { draft: 2, review: 3, approved: 1, published: 23, archived: 0 },
+    totalContent: 29,
+    byType: [
+      { contentType: 'service_page', label: 'Service Pages', total: 8, published: 8 },
+      { contentType: 'location_page', label: 'Location Pages', total: 12, published: 12 },
+      { contentType: 'blog_post', label: 'Blog Posts', total: 9, published: 3 },
+    ],
+    ...overrides,
+  }
+}
+
+export function buildRecentActivityItem(
+  overrides?: Partial<RecentActivityItem>,
+): RecentActivityItem {
+  return {
+    id: 'ra-1',
+    contentType: 'service_page',
+    title: 'Interior Painting',
+    slug: 'interior-painting',
+    status: 'published',
+    publishedAt: '2026-03-01T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildDashboardMetrics(overrides?: Partial<DashboardMetrics>): DashboardMetrics {
+  return {
+    hero: buildHeroMetrics(),
+    pipeline: buildContentPipeline(),
+    recentActivity: [
+      buildRecentActivityItem(),
+      buildRecentActivityItem({
+        id: 'ra-2',
+        contentType: 'location_page',
+        title: 'Summit, NJ',
+        slug: 'summit-nj',
+        publishedAt: '2026-02-28T12:00:00Z',
+      }),
+    ],
+    ...overrides,
+  }
+}
+
+export function buildGenerateImageResponse(
+  overrides?: Partial<GenerateImageResponse>,
+): GenerateImageResponse {
+  return {
+    id: 'media-1',
+    imageType: 'blog_thumbnail',
+    filename: 'blog-choosing-paint-colors.png',
+    storagePath: 'org-456/images/blog_thumbnail/abc123.png',
+    publicUrl: 'https://example.supabase.co/storage/v1/object/public/media/org-456/images/blog_thumbnail/abc123.png',
+    mimeType: 'image/png',
+    sizeBytes: 102400,
+    width: null,
+    height: null,
+    altText: 'Blog thumbnail for "Choosing Paint Colors" — Cleanest Painting LLC',
+    ...overrides,
+  }
+}
+
+export function buildMediaLibraryItem(
+  overrides?: Partial<MediaLibraryItem>,
+): MediaLibraryItem {
+  return {
+    id: 'media-1',
+    imageType: 'blog_thumbnail',
+    filename: 'blog-choosing-paint-colors.png',
+    publicUrl: 'https://example.supabase.co/storage/v1/object/public/media/org-456/images/blog_thumbnail/abc123.png',
+    mimeType: 'image/png',
+    sizeBytes: 102400,
+    width: null,
+    height: null,
+    altText: 'Blog thumbnail for "Choosing Paint Colors" — Cleanest Painting LLC',
+    createdAt: '2026-03-04T12:00:00Z',
     ...overrides,
   }
 }

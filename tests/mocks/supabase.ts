@@ -11,6 +11,7 @@ type MockChain = {
   gte: ReturnType<typeof vi.fn>
   lte: ReturnType<typeof vi.fn>
   order: ReturnType<typeof vi.fn>
+  limit: ReturnType<typeof vi.fn>
   single: ReturnType<typeof vi.fn>
   maybeSingle: ReturnType<typeof vi.fn>
   returns: ReturnType<typeof vi.fn>
@@ -30,6 +31,7 @@ export function createMockSupabaseClient() {
     gte: vi.fn(),
     lte: vi.fn(),
     order: vi.fn(),
+    limit: vi.fn(),
     single: vi.fn(),
     maybeSingle: vi.fn(),
     returns: vi.fn(),
@@ -49,6 +51,7 @@ export function createMockSupabaseClient() {
   chain.gte.mockReturnValue(chain)
   chain.lte.mockReturnValue(chain)
   chain.order.mockReturnValue(chain)
+  chain.limit.mockReturnValue(chain)
   chain.returns.mockReturnValue(chain)
   chain.single.mockResolvedValue({ data: null, error: null })
   chain.maybeSingle.mockResolvedValue({ data: null, error: null })
