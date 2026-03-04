@@ -97,6 +97,56 @@ export type Database = {
           },
         ]
       }
+      content_calendar: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          id: string
+          organization_id: string
+          published_at: string | null
+          scheduled_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          organization_id: string
+          published_at?: string | null
+          scheduled_at: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          organization_id?: string
+          published_at?: string | null
+          scheduled_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_calendar_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_executions: {
         Row: {
           attempts: number

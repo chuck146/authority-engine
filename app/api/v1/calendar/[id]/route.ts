@@ -52,7 +52,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
       const { data: updated, error: updateError } = await supabase
         .from('content_calendar')
-        .update({ status: 'cancelled' } as never)
+        .update({ status: 'cancelled' })
         .eq('id', id)
         .select('*')
         .returns<CalendarEntry[]>()
@@ -76,7 +76,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
       const { data: updated, error: updateError } = await supabase
         .from('content_calendar')
-        .update({ scheduled_at: input.scheduledAt } as never)
+        .update({ scheduled_at: input.scheduledAt })
         .eq('id', id)
         .select('*')
         .returns<CalendarEntry[]>()

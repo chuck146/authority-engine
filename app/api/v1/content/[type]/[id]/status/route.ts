@@ -9,11 +9,11 @@ type RouteParams = {
   params: Promise<{ type: string; id: string }>
 }
 
-const TABLE_MAP: Record<ContentType, string> = {
+const TABLE_MAP = {
   service_page: 'service_pages',
   location_page: 'location_pages',
   blog_post: 'blog_posts',
-}
+} as const satisfies Record<ContentType, string>
 
 export async function PATCH(request: Request, { params }: RouteParams) {
   try {

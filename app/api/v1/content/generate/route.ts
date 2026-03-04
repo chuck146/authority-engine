@@ -7,15 +7,6 @@ import { generateContentRequestSchema, type GenerateContentResponse } from '@/ty
 import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { OrgBranding, Json } from '@/types'
 
-type OrgRow = {
-  name: string
-  domain: string | null
-  branding: Json
-  settings: Json
-}
-
-type IdRow = { id: string }
-
 export async function POST(request: Request) {
   try {
     // 1. Auth: require at least editor role to generate content
@@ -40,7 +31,6 @@ export async function POST(request: Request) {
       .from('organizations')
       .select('name, domain, branding, settings')
       .eq('id', auth.organizationId)
-      .returns<OrgRow[]>()
       .single()
 
     if (!org) {
@@ -67,7 +57,6 @@ export async function POST(request: Request) {
     const slug = generateSlug(title)
 
     // 6. Save to the correct table
-    // Note: using .rpc or raw insert with .returns<> to work around hand-written Database types
     let insertedId: string
 
     switch (input.contentType) {
@@ -84,9 +73,8 @@ export async function POST(request: Request) {
             status: 'review' as const,
             keywords: input.targetKeywords ?? [],
             created_by: auth.userId,
-          } as never)
+          })
           .select('id')
-          .returns<IdRow[]>()
           .single()
 
         if (error) throw error
@@ -108,9 +96,8 @@ export async function POST(request: Request) {
             status: 'review' as const,
             keywords: input.targetKeywords ?? [],
             created_by: auth.userId,
-          } as never)
+          })
           .select('id')
-          .returns<IdRow[]>()
           .single()
 
         if (error) throw error
@@ -142,9 +129,8 @@ export async function POST(request: Request) {
             category: input.category ?? null,
             reading_time_minutes: readingTime,
             created_by: auth.userId,
-          } as never)
+          })
           .select('id')
-          .returns<IdRow[]>()
           .single()
 
         if (error) throw error

@@ -7,11 +7,11 @@ import type { ContentType } from '@/types/content'
 import { schedulePublish } from '@/lib/queue/scheduler'
 
 // Table names for each content type
-const tableMap: Record<ContentType, string> = {
+const tableMap = {
   service_page: 'service_pages',
   location_page: 'location_pages',
   blog_post: 'blog_posts',
-}
+} as const satisfies Record<ContentType, string>
 
 type ContentRow = { id: string; title: string }
 
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
         content_id: contentId,
         scheduled_at: scheduledAt,
         created_by: auth.userId,
-      } as never)
+      })
       .select('*')
       .returns<CalendarEntry[]>()
       .single()

@@ -2,15 +2,18 @@ import { Worker, type Job } from 'bullmq'
 import { createClient } from '@supabase/supabase-js'
 import { getRedisConnection } from './connection'
 import type { PublishJobData } from './scheduler'
+import type { Database } from '@/types/database'
 
 function getAdminClient() {
-  return createClient(
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 }
 
-function getTableName(contentType: string): string {
+type ContentTableName = 'service_pages' | 'location_pages' | 'blog_posts'
+
+function getTableName(contentType: string): ContentTableName {
   switch (contentType) {
     case 'service_page':
       return 'service_pages'
@@ -52,7 +55,7 @@ async function processPublishJob(job: Job<PublishJobData>): Promise<void> {
   const table = getTableName(contentType)
   const { error: publishError } = await supabase
     .from(table)
-    .update({ status: 'published', published_at: new Date().toISOString() } as never)
+    .update({ status: 'published' as Database['public']['Enums']['content_status'], published_at: new Date().toISOString() })
     .eq('id', contentId)
 
   if (publishError) {

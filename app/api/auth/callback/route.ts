@@ -29,8 +29,9 @@ export async function GET(request: Request) {
               .split(';')
               .filter(Boolean)
               .map((c) => {
-                const [name, ...rest] = c.trim().split('=')
-                return { name, value: decodeURIComponent(rest.join('=')) }
+                const eq = c.indexOf('=')
+                if (eq === -1) return { name: c.trim(), value: '' }
+                return { name: c.slice(0, eq).trim(), value: decodeURIComponent(c.slice(eq + 1)) }
               })
           },
           setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {

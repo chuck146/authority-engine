@@ -7,11 +7,11 @@ import type { ContentType } from '@/types/content'
 
 export const metadata: Metadata = { title: 'Content Calendar' }
 
-const tableMap: Record<ContentType, string> = {
+const tableMap = {
   service_page: 'service_pages',
   location_page: 'location_pages',
   blog_post: 'blog_posts',
-}
+} as const satisfies Record<ContentType, string>
 
 type ContentRow = { id: string; title: string }
 

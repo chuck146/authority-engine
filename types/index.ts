@@ -37,6 +37,8 @@ export type BlogPost = import('./database').Database['public']['Tables']['blog_p
 export type MediaAsset = import('./database').Database['public']['Tables']['media_assets']['Row']
 export type JobExecution =
   import('./database').Database['public']['Tables']['job_executions']['Row']
+export type ContentCalendar =
+  import('./database').Database['public']['Tables']['content_calendar']['Row']
 
 // Insert types
 export type OrganizationInsert =
@@ -47,6 +49,8 @@ export type LocationPageInsert =
   import('./database').Database['public']['Tables']['location_pages']['Insert']
 export type BlogPostInsert =
   import('./database').Database['public']['Tables']['blog_posts']['Insert']
+export type ContentCalendarInsert =
+  import('./database').Database['public']['Tables']['content_calendar']['Insert']
 
 // Update types
 export type ServicePageUpdate =
@@ -55,6 +59,8 @@ export type LocationPageUpdate =
   import('./database').Database['public']['Tables']['location_pages']['Update']
 export type BlogPostUpdate =
   import('./database').Database['public']['Tables']['blog_posts']['Update']
+export type ContentCalendarUpdate =
+  import('./database').Database['public']['Tables']['content_calendar']['Update']
 
 // Auth context (used by middleware and auth guards)
 export type AuthContext = {
