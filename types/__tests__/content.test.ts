@@ -15,7 +15,9 @@ describe('structuredContentSchema', () => {
   })
 
   it('rejects missing headline', () => {
-    const { headline: _, ...rest } = buildStructuredContent()
+    const content = buildStructuredContent()
+    const { headline, ...rest } = content
+    expect(headline).toBeDefined()
     const result = structuredContentSchema.safeParse(rest)
     expect(result.success).toBe(false)
   })

@@ -349,7 +349,7 @@ async function testSSR(slug: string, titleFragment: string) {
 // ---------------------------------------------------------------------------
 // Seed fallback: use existing "review" content when --skip-generate
 // ---------------------------------------------------------------------------
-async function useSeedData(): Promise<{ id: string; slug: string; title: string }> {
+async function getSeedData(): Promise<{ id: string; slug: string; title: string }> {
   console.log('\n📦 Using Seed Data (--skip-generate)\n')
 
   const { data, error } = await admin
@@ -429,7 +429,7 @@ async function main() {
   let restoreInfo: { slug: string; title: string } | undefined
 
   if (SKIP_GENERATE) {
-    const seed = await useSeedData()
+    const seed = await getSeedData()
     id = seed.id
     slug = seed.slug
     titleFragment = seed.title
