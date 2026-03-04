@@ -3,6 +3,15 @@ import { createClient } from '@/lib/supabase/server'
 import type { AuthContext, UserRole } from '@/types'
 
 export async function requireAuth(): Promise<AuthContext> {
+  // Dev bypass: return hardcoded Cleanest Painting context
+  if (process.env.NODE_ENV === 'development' && process.env.DEV_BYPASS_AUTH === 'true') {
+    return {
+      userId: '00000000-0000-0000-0000-000000000002',
+      organizationId: '00000000-0000-0000-0000-000000000001',
+      role: 'owner' as UserRole,
+    }
+  }
+
   const supabase = await createClient()
   const {
     data: { user },

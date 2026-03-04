@@ -25,6 +25,11 @@ export async function middleware(request: NextRequest) {
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix))
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
 
+  // Dev bypass: skip auth redirect in development
+  if (process.env.NODE_ENV === 'development' && process.env.DEV_BYPASS_AUTH === 'true') {
+    return supabaseResponse
+  }
+
   if (isProtected && !user) {
     const redirectUrl = new URL('/login', request.url)
     redirectUrl.searchParams.set('redirect', pathname)
