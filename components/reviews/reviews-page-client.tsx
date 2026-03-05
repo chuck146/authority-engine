@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { ReviewList } from './review-list'
 import { ReviewEntryForm } from './review-entry-form'
 import { ReviewOverviewCards } from './review-overview-cards'
+import { ReviewRequestForm } from './review-request-form'
+import { ReviewRequestList } from './review-request-list'
 
 export function ReviewsPageClient() {
   const [refreshKey, setRefreshKey] = useState(0)
@@ -43,6 +45,7 @@ export function ReviewsPageClient() {
         <TabsTrigger value="manual">Manual</TabsTrigger>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="add">Add Review</TabsTrigger>
+        <TabsTrigger value="requests">Request Reviews</TabsTrigger>
       </TabsList>
       <TabsContent value="all">
         <ReviewList key={`all-${refreshKey}`} />
@@ -72,6 +75,12 @@ export function ReviewsPageClient() {
       </TabsContent>
       <TabsContent value="add">
         <ReviewEntryForm onCreated={handleCreated} />
+      </TabsContent>
+      <TabsContent value="requests">
+        <div className="space-y-6">
+          <ReviewRequestForm onCreated={handleCreated} />
+          <ReviewRequestList key={`requests-${refreshKey}`} />
+        </div>
       </TabsContent>
     </Tabs>
   )

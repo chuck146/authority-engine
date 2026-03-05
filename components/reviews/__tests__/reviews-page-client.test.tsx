@@ -19,6 +19,16 @@ vi.mock('../review-overview-cards', () => ({
   ReviewOverviewCards: () => <div data-testid="overview-cards">Overview Cards</div>,
 }))
 
+vi.mock('../review-request-form', () => ({
+  ReviewRequestForm: ({ onCreated: _onCreated }: { onCreated?: () => void }) => (
+    <div data-testid="request-form">Request Form</div>
+  ),
+}))
+
+vi.mock('../review-request-list', () => ({
+  ReviewRequestList: () => <div data-testid="request-list">Request List</div>,
+}))
+
 describe('ReviewsPageClient', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -34,6 +44,7 @@ describe('ReviewsPageClient', () => {
     expect(screen.getByRole('tab', { name: 'Manual' })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: 'Overview' })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: 'Add Review' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Request Reviews' })).toBeInTheDocument()
   })
 
   it('shows All Reviews tab content by default', () => {

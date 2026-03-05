@@ -5,11 +5,13 @@ import { createGa4SyncWorker } from './queue/ga4-sync-worker'
 import { scheduleDailyGa4Sync } from './queue/ga4-scheduler'
 import { createGbpSyncWorker } from './queue/gbp-sync-worker'
 import { scheduleDailyGbpSync } from './queue/gbp-scheduler'
+import { createSmsWorker } from './queue/sms-worker'
 
 const publishWorker = createPublishWorker()
 const gscSyncWorker = createGscSyncWorker()
 const ga4SyncWorker = createGa4SyncWorker()
 const gbpSyncWorker = createGbpSyncWorker()
+const smsWorker = createSmsWorker()
 
 publishWorker.on('completed', (job) => {
   console.warn(`[worker] Publish job ${job.id} completed`)
@@ -43,10 +45,19 @@ gbpSyncWorker.on('failed', (job, error) => {
   console.error(`[worker] GBP sync job ${job?.id} failed:`, error.message)
 })
 
+smsWorker.on('completed', (job) => {
+  console.warn(`[worker] SMS job ${job.id} completed`)
+})
+
+smsWorker.on('failed', (job, error) => {
+  console.error(`[worker] SMS job ${job?.id} failed:`, error.message)
+})
+
 console.warn('[worker] Content publish worker started')
 console.warn('[worker] GSC sync worker started')
 console.warn('[worker] GA4 sync worker started')
 console.warn('[worker] GBP sync worker started')
+console.warn('[worker] SMS send worker started')
 
 // Schedule daily syncs for all active connections
 scheduleDailyGscSync()
@@ -68,6 +79,7 @@ function shutdown() {
     gscSyncWorker.close(),
     ga4SyncWorker.close(),
     gbpSyncWorker.close(),
+    smsWorker.close(),
   ]).then(() => process.exit(0))
 }
 

@@ -34,6 +34,11 @@ import type {
   ReviewResponseContent,
   ReviewOverview,
 } from '@/types/reviews'
+import type {
+  ReviewRequestListItem,
+  ReviewRequestDetail,
+  ReviewRequestOverview,
+} from '@/types/review-requests'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -573,6 +578,63 @@ export function buildReviewOverview(overrides?: Partial<ReviewOverview>): Review
       { sentiment: 'negative', count: 2 },
     ],
     recentReviews: [buildReviewListItem()],
+    ...overrides,
+  }
+}
+
+// --- Review Request Factories ---
+
+export function buildReviewRequestListItem(
+  overrides?: Partial<ReviewRequestListItem>,
+): ReviewRequestListItem {
+  return {
+    id: 'rr-1',
+    customerName: 'John Smith',
+    customerPhone: '+12015551234',
+    customerEmail: null,
+    channel: 'sms',
+    reviewUrl: 'https://g.page/r/cleanest-painting/review',
+    status: 'pending',
+    sentAt: null,
+    createdAt: '2026-03-05T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildReviewRequestDetail(
+  overrides?: Partial<ReviewRequestDetail>,
+): ReviewRequestDetail {
+  return {
+    id: 'rr-1',
+    customerName: 'John Smith',
+    customerPhone: '+12015551234',
+    customerEmail: null,
+    channel: 'sms',
+    reviewUrl: 'https://g.page/r/cleanest-painting/review',
+    status: 'pending',
+    sentAt: null,
+    deliveredAt: null,
+    completedAt: null,
+    reviewId: null,
+    errorMessage: null,
+    metadata: {},
+    createdBy: 'user-123',
+    createdAt: '2026-03-05T12:00:00Z',
+    updatedAt: '2026-03-05T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildReviewRequestOverview(
+  overrides?: Partial<ReviewRequestOverview>,
+): ReviewRequestOverview {
+  return {
+    total: 10,
+    pending: 3,
+    sent: 4,
+    delivered: 1,
+    completed: 1,
+    failed: 1,
     ...overrides,
   }
 }
