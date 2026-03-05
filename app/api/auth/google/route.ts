@@ -3,7 +3,7 @@ import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { getGoogleAuthUrl, type GoogleProvider } from '@/lib/google/oauth'
 import { createOAuthState } from '@/lib/google/state'
 
-const VALID_PROVIDERS = new Set<GoogleProvider>(['search_console', 'analytics'])
+const VALID_PROVIDERS = new Set<GoogleProvider>(['search_console', 'analytics', 'business_profile'])
 
 export async function GET(request: NextRequest) {
   try {

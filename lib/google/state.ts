@@ -47,7 +47,8 @@ export function validateOAuthState(state: string): OAuthStateResult | null {
     nonce = parts[2]!
     signature = parts[3]!
     if (!organizationId || !provider || !nonce || !signature) return null
-    if (provider !== 'search_console' && provider !== 'analytics') return null
+    if (provider !== 'search_console' && provider !== 'analytics' && provider !== 'business_profile')
+      return null
     payload = `${organizationId}.${provider}.${nonce}`
   } else if (parts.length === 3) {
     // Legacy format: orgId.nonce.signature (defaults to search_console)
