@@ -10,7 +10,28 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Planned
 
 - Deploy MVP to Vercel
-- Apply social_posts + reviews migrations to live Supabase + regenerate types
+
+---
+
+## [V2.2] — 2026-03-05
+
+### Added
+
+- **GBP types:** Zod schemas for GBP accounts, locations, reviews, reply operations, starRatingToNumber helper (types/gbp.ts)
+- **GBP service library:** listAccounts, listLocations, listReviews, replyToReview, deleteReply — Google My Business API v4 wrapper (lib/google/business-profile.ts)
+- **GBP background sync worker:** BullMQ worker syncs Google reviews into reviews table with dedup, sentiment/theme extraction, star rating conversion (lib/queue/gbp-sync-worker.ts)
+- **GBP sync scheduler:** Daily cron + manual trigger for all connections with gbp_location_id (lib/queue/gbp-scheduler.ts)
+- **GBP integration APIs (4 routes):** GET status, POST disconnect, GET locations, POST select-location (app/api/v1/integrations/gbp/)
+- **Review sync API:** POST /api/v1/reviews/sync — manual trigger for GBP review sync
+- **Post reply API:** POST /api/v1/reviews/[id]/post-reply — post approved response to Google, with update/delete support
+- **GBP location selector:** Settings UI component for choosing GBP location after OAuth connect (components/settings/gbp-location-selector.tsx)
+- **Settings UI updated:** Integrations section now shows GBP row alongside GSC and GA4 with connect/disconnect
+- **OAuth extended:** Google OAuth route + callback handle business_profile provider with GBP-specific scopes
+- **Token manager:** business_profile provider support for token refresh
+- **Review detail sheet:** "Post to Google" action button for approved responses on Google reviews
+- **Reviews page:** Sync button on Google tab for manual GBP review sync
+- **Worker updated:** Registers GBP sync worker + scheduler alongside existing workers
+- **Test suite expanded:** 736 tests across 102 files (50 new GBP tests across 10 files)
 
 ---
 

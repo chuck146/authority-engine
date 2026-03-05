@@ -56,6 +56,7 @@ export function ReviewDetailSheet({ reviewId, onClose, onStatusChange }: ReviewD
   const [copied, setCopied] = useState(false)
   const [editingResponse, setEditingResponse] = useState(false)
   const [editedResponseText, setEditedResponseText] = useState('')
+  const [postingReply, setPostingReply] = useState(false)
 
   useEffect(() => {
     if (!reviewId) {
@@ -128,6 +129,27 @@ export function ReviewDetailSheet({ reviewId, onClose, onStatusChange }: ReviewD
       // silently fail
     } finally {
       setActionLoading(false)
+    }
+  }
+
+  async function handlePostToGoogle() {
+    if (!review) return
+    setPostingReply(true)
+    try {
+      const res = await fetch(`/api/v1/reviews/${review.id}/post-reply`, {
+        method: 'POST',
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error ?? 'Failed to post reply')
+      }
+      const result = await res.json()
+      setReview((prev) => (prev ? { ...prev, responseStatus: result.responseStatus } : null))
+      onStatusChange?.()
+    } catch {
+      // silently fail
+    } finally {
+      setPostingReply(false)
     }
   }
 
@@ -312,7 +334,13 @@ export function ReviewDetailSheet({ reviewId, onClose, onStatusChange }: ReviewD
                 </>
               )}
 
-              {review.responseStatus === 'approved' && (
+              {review.responseStatus === 'approved' && review.platform === 'google' && (
+                <Button onClick={handlePostToGoogle} disabled={postingReply || actionLoading}>
+                  {postingReply ? 'Posting...' : 'Post to Google'}
+                </Button>
+              )}
+
+              {review.responseStatus === 'approved' && review.platform !== 'google' && (
                 <Button onClick={() => handleAction('mark_sent')} disabled={actionLoading}>
                   Mark as Sent
                 </Button>

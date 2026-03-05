@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 95%      |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 20%      |
+| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 35%      |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -98,9 +98,7 @@ _Last Updated: March 2026_
 
 ### What's Next
 
-1. Apply social_posts migration to live Supabase + regenerate types
-2. Merge feature/content-calendar → main
-3. Deploy to production (Vercel)
+1. Deploy to production (Vercel)
 
 ### Blockers
 
@@ -122,13 +120,26 @@ _Last Updated: March 2026_
 - [x] Review UI: page client with 7 tabs, review list with star ratings/platform badges/status badges, detail sheet with response draft + actions, response form with tone selector, overview cards with rating distribution + platform/sentiment breakdowns, manual entry form with star picker
 - [x] Test suite: 94 new tests across 10 files (686 total, up from 583)
 
+**Phase B: Google Business Profile Review Sync** ✅
+
+- [x] GBP types: Zod schemas for accounts, locations, reviews, replies, starRatingToNumber helper (types/gbp.ts)
+- [x] GBP service library: listAccounts, listLocations, listReviews, replyToReview, deleteReply (lib/google/business-profile.ts)
+- [x] GBP background sync worker: BullMQ worker with dedup, sentiment extraction, star rating conversion (lib/queue/gbp-sync-worker.ts)
+- [x] GBP sync scheduler: daily cron + manual trigger for connections with gbp_location_id (lib/queue/gbp-scheduler.ts)
+- [x] GBP integration APIs (4 routes): status, disconnect, locations, select-location (app/api/v1/integrations/gbp/)
+- [x] Review sync API: POST /api/v1/reviews/sync — manual GBP review sync trigger
+- [x] Post reply API: POST /api/v1/reviews/[id]/post-reply — post approved response to Google
+- [x] GBP location selector UI: settings component for choosing GBP location after OAuth (components/settings/gbp-location-selector.tsx)
+- [x] OAuth + token manager extended for business_profile provider with GBP scopes
+- [x] Review UI: "Post to Google" action on detail sheet, sync button on Google tab
+- [x] Settings UI: GBP integration row alongside GSC and GA4
+- [x] Test suite: 50 new tests across 10 files (736 total, up from 686)
+
 ### What's Next
 
-1. Apply review migrations to live Supabase + regenerate types
-2. Phase B: Google Business Profile review sync adapter
-3. Phase C: SalesMessage SMS review requests
-4. Video generation (Remotion + Veo 3.1)
-5. Community module (Facebook group monitoring + lead capture)
+1. Phase C: SalesMessage SMS review requests
+2. Video generation (Remotion + Veo 3.1)
+3. Community module (Facebook group monitoring + lead capture)
 
 ### Blockers
 

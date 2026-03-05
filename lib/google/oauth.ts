@@ -2,7 +2,7 @@ const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 const GOOGLE_REVOKE_URL = 'https://oauth2.googleapis.com/revoke'
 
-export type GoogleProvider = 'search_console' | 'analytics'
+export type GoogleProvider = 'search_console' | 'analytics' | 'business_profile'
 
 const SCOPES_BY_PROVIDER: Record<GoogleProvider, string[]> = {
   search_console: [
@@ -10,6 +10,7 @@ const SCOPES_BY_PROVIDER: Record<GoogleProvider, string[]> = {
     'https://www.googleapis.com/auth/indexing',
   ],
   analytics: ['https://www.googleapis.com/auth/analytics.readonly'],
+  business_profile: ['https://www.googleapis.com/auth/business.manage'],
 }
 
 function getClientId(): string {

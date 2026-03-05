@@ -3,10 +3,13 @@ import { createGscSyncWorker } from './queue/gsc-sync-worker'
 import { scheduleDailyGscSync } from './queue/gsc-scheduler'
 import { createGa4SyncWorker } from './queue/ga4-sync-worker'
 import { scheduleDailyGa4Sync } from './queue/ga4-scheduler'
+import { createGbpSyncWorker } from './queue/gbp-sync-worker'
+import { scheduleDailyGbpSync } from './queue/gbp-scheduler'
 
 const publishWorker = createPublishWorker()
 const gscSyncWorker = createGscSyncWorker()
 const ga4SyncWorker = createGa4SyncWorker()
+const gbpSyncWorker = createGbpSyncWorker()
 
 publishWorker.on('completed', (job) => {
   console.warn(`[worker] Publish job ${job.id} completed`)
@@ -32,9 +35,18 @@ ga4SyncWorker.on('failed', (job, error) => {
   console.error(`[worker] GA4 sync job ${job?.id} failed:`, error.message)
 })
 
+gbpSyncWorker.on('completed', (job) => {
+  console.warn(`[worker] GBP sync job ${job.id} completed`)
+})
+
+gbpSyncWorker.on('failed', (job, error) => {
+  console.error(`[worker] GBP sync job ${job?.id} failed:`, error.message)
+})
+
 console.warn('[worker] Content publish worker started')
 console.warn('[worker] GSC sync worker started')
 console.warn('[worker] GA4 sync worker started')
+console.warn('[worker] GBP sync worker started')
 
 // Schedule daily syncs for all active connections
 scheduleDailyGscSync()
@@ -45,11 +57,18 @@ scheduleDailyGa4Sync()
   .then(() => console.warn('[worker] Daily GA4 sync scheduled'))
   .catch((err) => console.error('[worker] Failed to schedule GA4 sync:', err.message))
 
+scheduleDailyGbpSync()
+  .then(() => console.warn('[worker] Daily GBP sync scheduled'))
+  .catch((err) => console.error('[worker] Failed to schedule GBP sync:', err.message))
+
 function shutdown() {
   console.warn('[worker] Shutting down...')
-  Promise.all([publishWorker.close(), gscSyncWorker.close(), ga4SyncWorker.close()]).then(() =>
-    process.exit(0),
-  )
+  Promise.all([
+    publishWorker.close(),
+    gscSyncWorker.close(),
+    ga4SyncWorker.close(),
+    gbpSyncWorker.close(),
+  ]).then(() => process.exit(0))
 }
 
 process.on('SIGTERM', shutdown)

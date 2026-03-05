@@ -11,6 +11,7 @@ type ConnectionStatus = {
   provider: string | null
   siteUrl?: string | null
   propertyId?: string | null
+  locationName?: string | null
   connectedAt: string | null
 }
 
@@ -20,7 +21,7 @@ type IntegrationRowProps = {
   statusUrl: string
   disconnectUrl: string
   connectUrl: string
-  displayField: 'siteUrl' | 'propertyId'
+  displayField: 'siteUrl' | 'propertyId' | 'locationName'
 }
 
 function IntegrationRow({
@@ -77,7 +78,12 @@ function IntegrationRow({
     )
   }
 
-  const displayValue = displayField === 'propertyId' ? status?.propertyId : status?.siteUrl
+  const displayValue =
+    displayField === 'propertyId'
+      ? status?.propertyId
+      : displayField === 'locationName'
+        ? status?.locationName
+        : status?.siteUrl
 
   return (
     <div className="flex items-center justify-between rounded-lg border p-4">
@@ -135,6 +141,14 @@ export function IntegrationsSection() {
           disconnectUrl="/api/v1/integrations/ga4/disconnect"
           connectUrl="/api/auth/google?provider=analytics"
           displayField="propertyId"
+        />
+        <IntegrationRow
+          label="Google Business Profile"
+          description="Connect to sync reviews and post responses to Google."
+          statusUrl="/api/v1/integrations/gbp/status"
+          disconnectUrl="/api/v1/integrations/gbp/disconnect"
+          connectUrl="/api/auth/google?provider=business_profile"
+          displayField="locationName"
         />
       </CardContent>
     </Card>

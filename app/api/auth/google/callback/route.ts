@@ -5,6 +5,7 @@ import { encrypt } from '@/lib/google/token-manager'
 import { validateOAuthState } from '@/lib/google/state'
 import { listSites } from '@/lib/google/search-console'
 import { listAccountSummaries } from '@/lib/google/analytics'
+import { listAccounts, listLocations } from '@/lib/google/business-profile'
 import type { Database } from '@/types/database'
 
 function getAdminClient() {
@@ -23,6 +24,12 @@ async function resolveSiteUrl(provider: string, accessToken: string): Promise<st
     const accounts = await listAccountSummaries({ accessToken })
     const firstProp = accounts[0]?.propertySummaries?.[0]
     return firstProp?.property ?? ''
+  }
+  if (provider === 'business_profile') {
+    const accounts = await listAccounts({ accessToken })
+    if (accounts.length === 0) return ''
+    const locations = await listLocations({ accessToken, accountId: accounts[0]!.name })
+    return locations[0]?.name ?? ''
   }
   return ''
 }

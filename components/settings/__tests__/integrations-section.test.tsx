@@ -30,6 +30,7 @@ const ga4Connected = {
 function mockStatuses(
   gsc: Record<string, unknown> = notConnected,
   ga4: Record<string, unknown> = notConnected,
+  gbp: Record<string, unknown> = notConnected,
   extras?: Record<string, () => Promise<Response>>,
 ) {
   mockFetch.mockImplementation((url: string, opts?: RequestInit) => {
@@ -42,6 +43,9 @@ function mockStatuses(
     }
     if (url === '/api/v1/integrations/ga4/status') {
       return Promise.resolve({ ok: true, json: () => Promise.resolve(ga4) })
+    }
+    if (url === '/api/v1/integrations/gbp/status') {
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(gbp) })
     }
     return Promise.resolve({ ok: true, json: () => Promise.resolve({}) })
   })
@@ -62,20 +66,21 @@ describe('IntegrationsSection', () => {
   })
 
   it('shows Connect buttons when not connected', async () => {
-    mockStatuses(notConnected, notConnected)
+    mockStatuses(notConnected, notConnected, notConnected)
 
     render(<IntegrationsSection />)
 
     await waitFor(() => {
       expect(screen.getByText('Google Search Console')).toBeInTheDocument()
       expect(screen.getByText('Google Analytics')).toBeInTheDocument()
-      expect(screen.getAllByText('Not Connected')).toHaveLength(2)
-      expect(screen.getAllByRole('button', { name: 'Connect' })).toHaveLength(2)
+      expect(screen.getByText('Google Business Profile')).toBeInTheDocument()
+      expect(screen.getAllByText('Not Connected')).toHaveLength(3)
+      expect(screen.getAllByRole('button', { name: 'Connect' })).toHaveLength(3)
     })
   })
 
   it('shows Disconnect button and site URL when GSC connected', async () => {
-    mockStatuses(gscConnected, notConnected)
+    mockStatuses(gscConnected, notConnected, notConnected)
 
     render(<IntegrationsSection />)
 
@@ -83,7 +88,7 @@ describe('IntegrationsSection', () => {
       expect(screen.getByText('Connected')).toBeInTheDocument()
       expect(screen.getByText('https://cleanestpainting.com')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Disconnect' })).toBeInTheDocument()
-      expect(screen.getByText('Not Connected')).toBeInTheDocument()
+      expect(screen.getAllByText('Not Connected')).toHaveLength(2)
     })
   })
 
@@ -99,12 +104,12 @@ describe('IntegrationsSection', () => {
   })
 
   it('redirects to Google OAuth on Connect click', async () => {
-    mockStatuses(notConnected, notConnected)
+    mockStatuses(notConnected, notConnected, notConnected)
 
     render(<IntegrationsSection />)
 
     await waitFor(() => {
-      expect(screen.getAllByRole('button', { name: 'Connect' })).toHaveLength(2)
+      expect(screen.getAllByRole('button', { name: 'Connect' })).toHaveLength(3)
     })
 
     // Mock window.location
@@ -129,7 +134,7 @@ describe('IntegrationsSection', () => {
   })
 
   it('handles disconnect flow', async () => {
-    mockStatuses(gscConnected, notConnected, {
+    mockStatuses(gscConnected, notConnected, notConnected, {
       'POST /api/v1/integrations/google/disconnect': () =>
         Promise.resolve({
           ok: true,
@@ -147,8 +152,8 @@ describe('IntegrationsSection', () => {
     await user.click(screen.getByRole('button', { name: 'Disconnect' }))
 
     await waitFor(() => {
-      expect(screen.getAllByText('Not Connected')).toHaveLength(2)
-      expect(screen.getAllByRole('button', { name: 'Connect' })).toHaveLength(2)
+      expect(screen.getAllByText('Not Connected')).toHaveLength(3)
+      expect(screen.getAllByRole('button', { name: 'Connect' })).toHaveLength(3)
     })
   })
 
@@ -161,7 +166,7 @@ describe('IntegrationsSection', () => {
     render(<IntegrationsSection />)
 
     await waitFor(() => {
-      expect(screen.getAllByText('Not Connected')).toHaveLength(2)
+      expect(screen.getAllByText('Not Connected')).toHaveLength(3)
     })
   })
 })

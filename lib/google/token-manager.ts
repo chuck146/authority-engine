@@ -54,6 +54,7 @@ type TokenResult = {
 const PROVIDER_LABELS: Record<GoogleProvider, string> = {
   search_console: 'Google Search Console',
   analytics: 'Google Analytics',
+  business_profile: 'Google Business Profile',
 }
 
 /**
