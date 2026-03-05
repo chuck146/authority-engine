@@ -1,5 +1,14 @@
 import { z } from 'zod'
-import { contentTypeSchema } from './content'
+
+// --- Calendar content type (extends content types to include social_post) ---
+
+export const calendarContentTypeSchema = z.enum([
+  'service_page',
+  'location_page',
+  'blog_post',
+  'social_post',
+])
+export type CalendarContentType = z.infer<typeof calendarContentTypeSchema>
 
 // --- Calendar status ---
 
@@ -10,7 +19,7 @@ export type CalendarStatus = 'scheduled' | 'publishing' | 'published' | 'failed'
 export type CalendarEntry = {
   id: string
   organization_id: string
-  content_type: 'service_page' | 'location_page' | 'blog_post'
+  content_type: 'service_page' | 'location_page' | 'blog_post' | 'social_post'
   content_id: string
   scheduled_at: string
   published_at: string | null
@@ -25,7 +34,7 @@ export type CalendarEntry = {
 
 export type CalendarViewItem = {
   id: string
-  contentType: 'service_page' | 'location_page' | 'blog_post'
+  contentType: 'service_page' | 'location_page' | 'blog_post' | 'social_post'
   contentId: string
   contentTitle: string
   scheduledAt: string
@@ -37,7 +46,7 @@ export type CalendarViewItem = {
 // --- API request schemas ---
 
 export const scheduleContentSchema = z.object({
-  contentType: contentTypeSchema,
+  contentType: calendarContentTypeSchema,
   contentId: z.string().uuid(),
   scheduledAt: z.string().datetime(),
 })

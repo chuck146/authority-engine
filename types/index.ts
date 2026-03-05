@@ -11,6 +11,7 @@ export type {
   ContentDetail,
 } from './content'
 export type {
+  CalendarContentType,
   CalendarEntry,
   CalendarStatus,
   CalendarViewItem,
@@ -63,6 +64,20 @@ export type {
   CrawlError,
   KeywordTrendPoint,
 } from './gsc'
+export type {
+  SocialPlatform,
+  GbpPostType,
+  GbpCtaType,
+  SocialPostContent,
+  GbpPostInput,
+  InstagramPostInput,
+  FacebookPostInput,
+  GenerateSocialPostRequest,
+  SocialPostResponse,
+  SocialPostListItem,
+  SocialPostDetail,
+  SocialPostEdit,
+} from './social'
 export type {
   Ga4AccountSummary,
   Ga4PropertySummary,

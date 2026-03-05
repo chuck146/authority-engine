@@ -22,6 +22,8 @@ export function generateTitleFromInput(input: {
       return `${input.serviceName ?? 'Service'} in ${input.city ?? 'City'}, ${input.state ?? 'ST'}`
     case 'blog_post':
       return input.topic ?? 'Blog Post'
+    case 'social_post':
+      return input.topic ?? 'Social Post'
     default:
       return 'Content'
   }

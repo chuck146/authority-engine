@@ -10,8 +10,28 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Planned
 
 - Deploy MVP to Vercel
-- GBP post generation and publishing
-- Social media post generation (Instagram, Facebook)
+- Apply social_posts migration to live Supabase + regenerate types
+
+---
+
+## [V1.2] — 2026-03-05
+
+### Added
+
+- **Social post types:** Zod discriminated union for GBP/Instagram/Facebook inputs, platform-specific schemas, edit schema (types/social.ts)
+- **Calendar content type extension:** CalendarContentType includes 'social_post' alongside original ContentType (types/calendar.ts)
+- **Social prompt builders:** Platform-optimized Claude prompts for GBP (local business focus, CTA suggestions), Instagram (emoji, hashtag strategy), Facebook (community engagement, longer-form) (packages/ai/prompts/social/)
+- **Social content generator:** Claude API integration with maxTokens=1024, temperature=0.8, JSON output parsing (lib/ai/social-generator.ts)
+- **Social generate API:** POST /api/v1/social/generate — auth, Zod validation, Claude generation, optional Nano Banana 2 image, insert with status='review'
+- **Social list API:** GET /api/v1/social — list posts with optional platform/status filters
+- **Social detail API:** GET /api/v1/social/[id] — single post with media URL resolution; PUT for editing body/hashtags/CTA
+- **Social status API:** PATCH /api/v1/social/[id]/status — reuses existing content status transitions (approve/reject/publish/archive)
+- **Publish worker extended:** BullMQ worker handles 'social_post' content type for scheduled publishing via content calendar
+- **Social dashboard UI:** /social page with 5 tabs (All Posts, GBP, Instagram, Facebook, Generate), platform-specific previews, generate form with dynamic fields per platform, post detail sheet with approval actions and clipboard copy
+- **Social sidebar nav:** "Social & GBP" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
+- **Database migration:** social_posts table with RLS policies, platform/status indexes (20260310000002_create_social_posts.sql)
+- **Test factories:** buildSocialPostContent, buildSocialPostListItem, buildSocialPostDetail (tests/factories.ts)
+- **Test suite expanded:** 568 tests across 79 files (61 new social tests covering routes, generator, components)
 
 ---
 
@@ -23,7 +43,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **GA4 Integration APIs:** GET /api/v1/integrations/ga4/status, POST disconnect, GET properties, POST select-property
 - **GA4 Data API:** GET /api/v1/ga4/overview (28-day metrics: sessions, users, pageviews, bounce rate + top pages, traffic sources, device breakdown, daily trend)
 - **GA4 Background Sync:** BullMQ worker syncs page metrics, traffic sources, device breakdown, daily totals into ga4_page_metrics + ga4_snapshots (lib/queue/ga4-sync-worker.ts, lib/queue/ga4-scheduler.ts)
-- **GA4 Dashboard UI:** "Analytics" tab in SEO Dashboard with overview cards, traffic trend chart, top pages table, traffic sources breakdown, device breakdown (components/seo/ga4-*.tsx)
+- **GA4 Dashboard UI:** "Analytics" tab in SEO Dashboard with overview cards, traffic trend chart, top pages table, traffic sources breakdown, device breakdown (components/seo/ga4-\*.tsx)
 - **GA4 Settings UI:** Property selector for choosing GA4 property after OAuth connect (components/settings/ga4-property-selector.tsx)
 - **Settings UI updated:** Integrations section now shows both GSC and GA4 rows with independent connect/disconnect
 - **Database migration:** ga4_page_metrics (per-page daily metrics with upsert), ga4_snapshots (JSONB traffic/device/daily snapshots), both with RLS
@@ -61,7 +81,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **GSC Data APIs:** GET /api/v1/gsc/overview (28-day trends + top queries/pages + sitemaps + indexing), GET search-analytics (Zod-validated dimensions/pagination), GET sitemaps, POST url-inspection
 - **GSC Background Sync:** BullMQ worker with daily cron (6 AM), keyword_rankings upsert in batches of 500, sitemap snapshot storage (lib/queue/gsc-sync-worker.ts, lib/queue/gsc-scheduler.ts)
 - **Settings UI:** Integrations section with GSC connect/disconnect, status badge, site URL display (components/settings/integrations-section.tsx)
-- **SEO Dashboard tabs:** "On-Page SEO" + "Search Console" with overview cards, top queries table, top pages table, indexing coverage (components/seo/gsc-*.tsx)
+- **SEO Dashboard tabs:** "On-Page SEO" + "Search Console" with overview cards, top queries table, top pages table, indexing coverage (components/seo/gsc-\*.tsx)
 - **Database migrations:** google_connections (encrypted tokens, RLS), keyword_rankings (composite unique, RLS), gsc_snapshots
 - **Test suite expanded:** 440+ tests (up from 289), covering GSC routes, sync worker, scheduler, dashboard components
 

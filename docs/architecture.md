@@ -55,11 +55,11 @@ This document describes the high-level system architecture, data flow, and compo
 
 ## Route Groups
 
-| Group         | Path                                     | Rendering               | Auth Required | Purpose                                |
-| ------------- | ---------------------------------------- | ----------------------- | ------------- | -------------------------------------- |
-| `(marketing)` | `/services/*`, `/locations/*`, `/blog/*` | SSR (Server Components) | No            | Public SEO pages indexed by Google     |
-| `(dashboard)` | `/dashboard/*`, `/content/*`, `/seo/*`   | Client + Server         | Yes           | Authenticated app for managing content |
-| `api`         | `/api/v1/*`                              | Node Runtime            | Yes (most)    | REST API for all operations            |
+| Group         | Path                                                | Rendering               | Auth Required | Purpose                                |
+| ------------- | --------------------------------------------------- | ----------------------- | ------------- | -------------------------------------- |
+| `(marketing)` | `/services/*`, `/locations/*`, `/blog/*`            | SSR (Server Components) | No            | Public SEO pages indexed by Google     |
+| `(dashboard)` | `/dashboard/*`, `/content/*`, `/seo/*`, `/social/*` | Client + Server         | Yes           | Authenticated app for managing content |
+| `api`         | `/api/v1/*`                                         | Node Runtime            | Yes (most)    | REST API for all operations            |
 
 ---
 
@@ -179,6 +179,43 @@ SEO Dashboard "Analytics" tab
     │ GET /api/v1/ga4/overview
     ▼
 Displays: overview cards, traffic trend chart, top pages, traffic sources, device breakdown
+```
+
+---
+
+## Data Flow: Social Post Generation
+
+```
+User navigates to /social → "Generate" tab
+    │
+    ▼
+SocialGenerateForm (client component)
+    │ Selects platform (GBP / Instagram / Facebook)
+    │ Fills topic, tone, keywords, platform-specific fields
+    │ POST /api/v1/social/generate
+    ▼
+API Route (auth middleware → org scope → Zod validation)
+    │
+    ├─► Claude API: platform-specific prompt (maxTokens=1024, temp=0.8)
+    │   Returns: { body, hashtags, cta_type, cta_url, image_prompt }
+    │
+    ├─► (Optional) Nano Banana 2: generate image from image_prompt
+    │   Stored via Supabase Storage → media_assets row
+    │
+    ▼
+Supabase: inserts social_posts row (status: "review")
+    │
+    ▼
+Social dashboard shows post in list with platform preview
+    │
+    ▼
+User reviews, edits, approves → PATCH /api/v1/social/[id]/status
+    │
+    ├─► Can schedule via content calendar (social_post content type)
+    │   BullMQ publish worker handles scheduled publishing
+    │
+    ▼
+Post marked "published" → ready for manual copy to platform
 ```
 
 ---

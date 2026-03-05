@@ -11,7 +11,7 @@ function getAdminClient() {
   )
 }
 
-type ContentTableName = 'service_pages' | 'location_pages' | 'blog_posts'
+type ContentTableName = 'service_pages' | 'location_pages' | 'blog_posts' | 'social_posts'
 
 function getTableName(contentType: string): ContentTableName {
   switch (contentType) {
@@ -21,6 +21,8 @@ function getTableName(contentType: string): ContentTableName {
       return 'location_pages'
     case 'blog_post':
       return 'blog_posts'
+    case 'social_post':
+      return 'social_posts'
     default:
       throw new Error(`Unknown content type: ${contentType}`)
   }
@@ -46,16 +48,13 @@ async function processPublishJob(job: Job<PublishJobData>): Promise<void> {
   }
 
   // Mark as publishing
-  await supabase
-    .from('content_calendar')
-    .update({ status: 'publishing' })
-    .eq('id', calendarEntryId)
+  await supabase.from('content_calendar').update({ status: 'publishing' }).eq('id', calendarEntryId)
 
   // Publish the content
   const table = getTableName(contentType)
   const { error: publishError } = await supabase
-    .from(table)
-    .update({ status: 'published' as Database['public']['Enums']['content_status'], published_at: new Date().toISOString() })
+    .from(table as never)
+    .update({ status: 'published', published_at: new Date().toISOString() } as never)
     .eq('id', contentId)
 
   if (publishError) {

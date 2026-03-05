@@ -27,6 +27,7 @@ import type {
   Ga4DeviceBreakdown,
   Ga4Overview,
 } from '@/types/ga4'
+import type { SocialPostListItem, SocialPostDetail, SocialPostContent } from '@/types/social'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -226,7 +227,8 @@ export function buildGenerateImageResponse(
     imageType: 'blog_thumbnail',
     filename: 'blog-choosing-paint-colors.png',
     storagePath: 'org-456/images/blog_thumbnail/abc123.png',
-    publicUrl: 'https://example.supabase.co/storage/v1/object/public/media/org-456/images/blog_thumbnail/abc123.png',
+    publicUrl:
+      'https://example.supabase.co/storage/v1/object/public/media/org-456/images/blog_thumbnail/abc123.png',
     mimeType: 'image/png',
     sizeBytes: 102400,
     width: null,
@@ -236,14 +238,13 @@ export function buildGenerateImageResponse(
   }
 }
 
-export function buildMediaLibraryItem(
-  overrides?: Partial<MediaLibraryItem>,
-): MediaLibraryItem {
+export function buildMediaLibraryItem(overrides?: Partial<MediaLibraryItem>): MediaLibraryItem {
   return {
     id: 'media-1',
     imageType: 'blog_thumbnail',
     filename: 'blog-choosing-paint-colors.png',
-    publicUrl: 'https://example.supabase.co/storage/v1/object/public/media/org-456/images/blog_thumbnail/abc123.png',
+    publicUrl:
+      'https://example.supabase.co/storage/v1/object/public/media/org-456/images/blog_thumbnail/abc123.png',
     mimeType: 'image/png',
     sizeBytes: 102400,
     width: null,
@@ -310,9 +311,7 @@ export function buildGscSitemap(overrides?: Partial<GscSitemap>): GscSitemap {
   }
 }
 
-export function buildIndexingCoverage(
-  overrides?: Partial<IndexingCoverage>,
-): IndexingCoverage {
+export function buildIndexingCoverage(overrides?: Partial<IndexingCoverage>): IndexingCoverage {
   return {
     valid: 38,
     warnings: 0,
@@ -428,9 +427,68 @@ export function buildGa4Overview(overrides?: Partial<Ga4Overview>): Ga4Overview 
     trafficSources: [buildGa4TrafficSource()],
     deviceBreakdown: [
       buildGa4DeviceBreakdown(),
-      buildGa4DeviceBreakdown({ deviceCategory: 'mobile', sessions: 1200, users: 800, percentage: 37.5 }),
-      buildGa4DeviceBreakdown({ deviceCategory: 'tablet', sessions: 400, users: 250, percentage: 12.5 }),
+      buildGa4DeviceBreakdown({
+        deviceCategory: 'mobile',
+        sessions: 1200,
+        users: 800,
+        percentage: 37.5,
+      }),
+      buildGa4DeviceBreakdown({
+        deviceCategory: 'tablet',
+        sessions: 400,
+        users: 250,
+        percentage: 12.5,
+      }),
     ],
+    ...overrides,
+  }
+}
+
+// --- Social Post Factories ---
+
+export function buildSocialPostContent(overrides?: Partial<SocialPostContent>): SocialPostContent {
+  return {
+    body: 'Transform your home with our expert painting services! Free estimates available.',
+    hashtags: ['painting', 'homeimprovement'],
+    ...overrides,
+  }
+}
+
+export function buildSocialPostListItem(
+  overrides?: Partial<SocialPostListItem>,
+): SocialPostListItem {
+  return {
+    id: 'social-1',
+    platform: 'gbp',
+    postType: 'update',
+    title: 'Spring Painting Special',
+    body: 'Transform your home with our expert painting services! Free estimates available.',
+    hashtags: [],
+    status: 'review',
+    mediaAssetId: null,
+    createdAt: '2026-03-10T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildSocialPostDetail(overrides?: Partial<SocialPostDetail>): SocialPostDetail {
+  return {
+    id: 'social-1',
+    platform: 'gbp',
+    postType: 'update',
+    title: 'Spring Painting Special',
+    body: 'Transform your home with our expert painting services! Free estimates available.',
+    hashtags: [],
+    ctaType: 'LEARN_MORE',
+    ctaUrl: 'https://cleanestpainting.com',
+    mediaAssetId: null,
+    mediaUrl: null,
+    status: 'review',
+    keywords: ['painting', 'spring special'],
+    metadata: {},
+    createdAt: '2026-03-10T12:00:00Z',
+    updatedAt: '2026-03-10T12:00:00Z',
+    publishedAt: null,
     ...overrides,
   }
 }

@@ -8,8 +8,8 @@ _Last Updated: March 2026_
 
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
-| 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete     | April 2026     | 95%      |
-| 🔵 V1 — SEO Scoring + Images + Calendar | 🚧 In Progress | June 2026      | 85%      |
+| 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 95%      |
+| 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
 | 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
@@ -82,13 +82,19 @@ _Last Updated: March 2026_
 - [x] GA4 Dashboard: "Analytics" tab with overview cards, traffic trend, top pages, traffic sources, device breakdown
 - [x] OAuth state format extended to 4-part (integration type + org_id + user_id + HMAC)
 - [x] Test suite expanded to 507+ tests across 71 files
-- [ ] GBP post generation and publishing
-- [ ] Social media post generation (Instagram, Facebook)
+- [x] Social post types: Zod discriminated union for GBP/Instagram/Facebook, CalendarContentType extension
+- [x] Social prompt builders: platform-optimized Claude prompts (GBP, Instagram, Facebook)
+- [x] Social content generator: Claude API with JSON output parsing (lib/ai/social-generator.ts)
+- [x] Social APIs: generate, list, detail/edit, status transitions (app/api/v1/social/)
+- [x] Publish worker extended for social_post content type
+- [x] Social dashboard UI: /social page with platform tabs, generate form, post previews, approval actions
+- [x] Database migration: social_posts table with RLS policies
+- [x] Test suite expanded to 568 tests across 79 files
 
 ### What's Next
 
-1. GBP post generation and publishing
-2. Social media post generation
+1. Apply social_posts migration to live Supabase + regenerate types
+2. Deploy to production (Vercel)
 
 ### Blockers
 
