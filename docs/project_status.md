@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 95%      |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 35%      |
+| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 45%      |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -135,11 +135,26 @@ _Last Updated: March 2026_
 - [x] Settings UI: GBP integration row alongside GSC and GA4
 - [x] Test suite: 50 new tests across 10 files (736 total, up from 686)
 
+**Phase C: SalesMessage SMS Review Requests** ✅
+
+- [x] Review request types: Zod schemas (createReviewRequest, channel, status, platform), API response types (types/review-requests.ts)
+- [x] SMS adapter interface: SmsAdapter with send/getStatus (lib/sms/adapter.ts)
+- [x] SalesMessage client: two-step API flow (conversations → messages), E.164 phone normalization, factory function (lib/sms/salesmessage.ts)
+- [x] SMS message template: variable interpolation ({name}, {org}, {url}), default + custom message support (lib/sms/message-template.ts)
+- [x] BullMQ SMS worker: sms-send queue, concurrency 3, rate limiter 50/60s, status updates (lib/queue/sms-worker.ts)
+- [x] SMS scheduler: enqueueSmsJob with exponential backoff retry (3 attempts), 5s Redis timeout (lib/queue/sms-scheduler.ts)
+- [x] Review request APIs (5 routes): list with filters, create, detail, send/resend trigger, overview aggregations (app/api/v1/reviews/requests/)
+- [x] SMS status API: GET /api/v1/integrations/sms/status — env-var configuration check
+- [x] Review request UI: form (customer name, phone, platform, URL, custom message), list with status badges, detail sheet with Send/Resend actions
+- [x] Reviews page: "Request Reviews" tab added to reviews-page-client
+- [x] Settings UI: SalesMessage status row in integrations section (env-var based, no OAuth)
+- [x] Worker updated: SMS worker registered in lib/worker.ts with shutdown handling
+- [x] Test suite: ~81 new tests across 12 files (817+ total, up from 736)
+
 ### What's Next
 
-1. Phase C: SalesMessage SMS review requests
-2. Video generation (Remotion + Veo 3.1)
-3. Community module (Facebook group monitoring + lead capture)
+1. Video generation (Remotion + Veo 3.1)
+2. Community module (Facebook group monitoring + lead capture)
 
 ### Blockers
 

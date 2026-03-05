@@ -13,6 +13,33 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [V2.3] — 2026-03-05
+
+### Added
+
+- **Review request types:** Zod schemas for createReviewRequest, channel/status/platform literals, API response types — ReviewRequestListItem, ReviewRequestDetail, ReviewRequestOverview (types/review-requests.ts)
+- **SMS adapter interface:** SmsAdapter with send() and getStatus() methods (lib/sms/adapter.ts)
+- **SalesMessage client:** Two-step API flow (POST conversations → POST messages), E.164 phone normalization, factory function createSmsAdapter() (lib/sms/salesmessage.ts)
+- **SMS message template:** buildReviewRequestMessage() with variable interpolation ({name}, {org}, {url}), default + custom message support (lib/sms/message-template.ts)
+- **SMS BullMQ worker:** sms-send queue with concurrency 3, rate limiter 50 msgs/60s, fetches request + org, builds message, sends via adapter, updates status (lib/queue/sms-worker.ts)
+- **SMS scheduler:** enqueueSmsJob() with exponential backoff retry (3 attempts, 5s delay), 5s Redis timeout (lib/queue/sms-scheduler.ts)
+- **Review request list API:** GET /api/v1/reviews/requests — status/channel filters, pagination
+- **Review request create API:** POST /api/v1/reviews/requests — Zod validation, editor+ role, stores custom message in metadata
+- **Review request detail API:** GET /api/v1/reviews/requests/[id] — full request with timestamps and error info
+- **Review request send API:** POST /api/v1/reviews/requests/[id]/send — triggers BullMQ SMS job, only pending/failed status
+- **Review request overview API:** GET /api/v1/reviews/requests/overview — aggregated counts by status
+- **SMS status API:** GET /api/v1/integrations/sms/status — env-var configuration check for SalesMessage
+- **Review request form:** Customer name, phone, platform select, review URL, custom message with variable hints (components/reviews/review-request-form.tsx)
+- **Review request list:** Fetches requests, status badges, channel labels, click-to-detail (components/reviews/review-request-list.tsx)
+- **Review request detail sheet:** Full details, timestamps, Send SMS / Resend SMS actions (components/reviews/review-request-detail-sheet.tsx)
+- **Reviews page updated:** "Request Reviews" tab added with form + list (components/reviews/reviews-page-client.tsx)
+- **Settings UI updated:** SalesMessage (SMS) status row in integrations section, env-var based configuration check
+- **Worker updated:** SMS worker registered in lib/worker.ts with event handlers and shutdown handling
+- **.env.example updated:** Replaced Twilio placeholders with SALESMESSAGE_API_KEY, SALESMESSAGE_NUMBER_ID, SALESMESSAGE_TEAM_ID
+- **Test suite expanded:** 817+ tests across 114+ files (81 new SMS/review-request tests across 12 files)
+
+---
+
 ## [V2.2] — 2026-03-05
 
 ### Added

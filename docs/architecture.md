@@ -222,12 +222,13 @@ Post marked "published" → ready for manual copy to platform
 
 ## Integration Adapters
 
-| Category      | Interface             | Implementations                                 |
-| ------------- | --------------------- | ----------------------------------------------- |
-| CRM           | `CRMAdapter`          | HubSpotAdapter, WebhookAdapter                  |
-| Reviews       | `ReviewAdapter`       | GoogleAdapter, YelpAdapter, AngiAdapter         |
-| Notifications | `NotificationAdapter` | SlackAdapter, EmailAdapter (Resend), SMSAdapter |
-| Publishing    | `PublishAdapter`      | GBPAdapter, NextJSAdapter (internal SSR pages)  |
+| Category      | Interface             | Implementations                                            |
+| ------------- | --------------------- | ---------------------------------------------------------- |
+| CRM           | `CRMAdapter`          | HubSpotAdapter, WebhookAdapter                             |
+| Reviews       | `ReviewAdapter`       | GoogleAdapter, YelpAdapter, AngiAdapter                    |
+| Notifications | `NotificationAdapter` | SlackAdapter, EmailAdapter (Resend), SMSAdapter            |
+| SMS           | `SmsAdapter`          | SalesMessageAdapter (review requests via SalesMessage API) |
+| Publishing    | `PublishAdapter`      | GBPAdapter, NextJSAdapter (internal SSR pages)             |
 
 Business logic imports the interface, never a specific adapter.
 Factory pattern: `CRMAdapterFactory.create(org.crmType)`
