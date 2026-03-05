@@ -118,6 +118,53 @@ function IntegrationRow({
   )
 }
 
+function SmsStatusRow() {
+  const [status, setStatus] = useState<{ isConfigured: boolean; provider: string } | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/v1/integrations/sms/status')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to load status')
+        return res.json()
+      })
+      .then((data) => setStatus(data))
+      .catch(() => setStatus({ isConfigured: false, provider: 'salesmessage' }))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-between rounded-lg border p-4">
+        <div className="bg-muted h-10 w-48 animate-pulse rounded" />
+        <div className="bg-muted h-8 w-20 animate-pulse rounded" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex items-center justify-between rounded-lg border p-4">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <span className="font-medium">SalesMessage (SMS)</span>
+          {status?.isConfigured ? (
+            <Badge variant="default" className="bg-green-600">
+              Configured
+            </Badge>
+          ) : (
+            <Badge variant="secondary">Not Configured</Badge>
+          )}
+        </div>
+        <p className="text-muted-foreground text-sm">
+          {status?.isConfigured
+            ? 'SMS review requests via SalesMessage.'
+            : 'Set SALESMESSAGE_API_KEY, SALESMESSAGE_NUMBER_ID, and SALESMESSAGE_TEAM_ID in environment.'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export function IntegrationsSection() {
   return (
     <Card>
@@ -150,6 +197,7 @@ export function IntegrationsSection() {
           connectUrl="/api/auth/google?provider=business_profile"
           displayField="locationName"
         />
+        <SmsStatusRow />
       </CardContent>
     </Card>
   )

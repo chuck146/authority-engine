@@ -104,6 +104,15 @@ export type {
   ReviewDetail,
   ReviewOverview,
 } from './reviews'
+export type {
+  ReviewRequestChannel,
+  ReviewRequestStatus,
+  ReviewRequestPlatform,
+  CreateReviewRequestInput,
+  ReviewRequestListItem,
+  ReviewRequestDetail,
+  ReviewRequestOverview,
+} from './review-requests'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'
