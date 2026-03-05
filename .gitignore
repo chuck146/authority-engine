@@ -17,6 +17,7 @@ out/
 # Build
 build/
 dist/
+tsconfig.tsbuildinfo
 
 # Testing
 coverage/
@@ -43,7 +44,7 @@ yarn-error.log*
 .vercel
 
 # Supabase
-supabase/.temp/
+**/supabase/.temp/
 
 # Claude Code temp plans
 .claude/plan-*.md
