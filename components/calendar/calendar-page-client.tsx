@@ -1,11 +1,26 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { useState, useCallback, useMemo } from 'react'
+import { ChevronLeft, ChevronRight, Plus, CalendarDays, List } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { CalendarGrid } from './calendar-grid'
+import { CalendarListView } from './calendar-list-view'
+import { CalendarEntrySheet } from './calendar-entry-sheet'
 import { ScheduleDialog } from './schedule-dialog'
-import type { CalendarViewItem } from '@/types/calendar'
+import {
+  contentTypeFullLabels,
+  statusLabels,
+  ALL_CONTENT_TYPES,
+  ALL_CALENDAR_STATUSES,
+} from './calendar-constants'
+import type { CalendarViewItem, CalendarContentType, CalendarStatus } from '@/types/calendar'
 
 type CalendarPageClientProps = {
   initialItems: CalendarViewItem[]
@@ -13,6 +28,8 @@ type CalendarPageClientProps = {
   initialYear: number
   userRole: string
 }
+
+type ViewMode = 'month' | 'list'
 
 const MONTH_NAMES = [
   'January',
@@ -40,6 +57,15 @@ export function CalendarPageClient({
   const [items, setItems] = useState(initialItems)
   const [loading, setLoading] = useState(false)
   const [scheduleOpen, setScheduleOpen] = useState(false)
+  const [view, setView] = useState<ViewMode>('month')
+
+  // Detail sheet state
+  const [selectedEntry, setSelectedEntry] = useState<CalendarViewItem | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  // Filter state
+  const [typeFilter, setTypeFilter] = useState<CalendarContentType | 'all'>('all')
+  const [statusFilter, setStatusFilter] = useState<CalendarStatus | 'all'>('all')
 
   const canSchedule = ['owner', 'admin', 'editor'].includes(userRole)
 
@@ -55,6 +81,14 @@ export function CalendarPageClient({
       setLoading(false)
     }
   }, [])
+
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      if (typeFilter !== 'all' && item.contentType !== typeFilter) return false
+      if (statusFilter !== 'all' && item.status !== statusFilter) return false
+      return true
+    })
+  }, [items, typeFilter, statusFilter])
 
   function navigateMonth(direction: -1 | 1) {
     let newMonth = month + direction
@@ -82,6 +116,11 @@ export function CalendarPageClient({
     fetchMonth(m, y)
   }
 
+  function handleEntryClick(item: CalendarViewItem) {
+    setSelectedEntry(item)
+    setSheetOpen(true)
+  }
+
   return (
     <div className="space-y-4">
       {/* Calendar header */}
@@ -101,17 +140,87 @@ export function CalendarPageClient({
           </Button>
         </div>
 
-        {canSchedule && (
-          <Button onClick={() => setScheduleOpen(true)}>
-            <Plus className="mr-1 h-4 w-4" />
-            Schedule Content
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {/* View toggle */}
+          <div className="flex rounded-md border">
+            <Button
+              variant={view === 'month' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="rounded-r-none"
+              onClick={() => setView('month')}
+              aria-label="Month view"
+            >
+              <CalendarDays className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={view === 'list' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="rounded-l-none"
+              onClick={() => setView('list')}
+              aria-label="List view"
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {canSchedule && (
+            <Button onClick={() => setScheduleOpen(true)}>
+              <Plus className="mr-1 h-4 w-4" />
+              Schedule Content
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* Calendar grid */}
+      {/* Filters */}
+      <div className="flex items-center gap-3">
+        <Select
+          value={typeFilter}
+          onValueChange={(v) => setTypeFilter(v as CalendarContentType | 'all')}
+        >
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="All Types" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            {ALL_CONTENT_TYPES.map((type) => (
+              <SelectItem key={type} value={type}>
+                {contentTypeFullLabels[type]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={statusFilter}
+          onValueChange={(v) => setStatusFilter(v as CalendarStatus | 'all')}
+        >
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="All Statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            {ALL_CALENDAR_STATUSES.map((status) => (
+              <SelectItem key={status} value={status}>
+                {statusLabels[status]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Calendar view */}
       <div className={loading ? 'opacity-50' : ''}>
-        <CalendarGrid items={items} month={month} year={year} />
+        {view === 'month' ? (
+          <CalendarGrid
+            items={filteredItems}
+            month={month}
+            year={year}
+            onEntryClick={handleEntryClick}
+          />
+        ) : (
+          <CalendarListView items={filteredItems} onEntryClick={handleEntryClick} />
+        )}
       </div>
 
       {/* Schedule dialog */}
@@ -119,6 +228,15 @@ export function CalendarPageClient({
         open={scheduleOpen}
         onOpenChange={setScheduleOpen}
         onScheduled={() => fetchMonth(month, year)}
+      />
+
+      {/* Entry detail sheet */}
+      <CalendarEntrySheet
+        item={selectedEntry}
+        userRole={userRole}
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        onEntryUpdated={() => fetchMonth(month, year)}
       />
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarEntryCard } from './calendar-entry-card'
 import type { CalendarViewItem } from '@/types/calendar'
 
@@ -81,6 +82,7 @@ export function CalendarGrid({ items, month, year, onEntryClick }: CalendarGridP
               className={cn(
                 'min-h-[100px] border-r border-b p-1.5 last:border-r-0',
                 !isCurrentMonth && 'bg-muted/30',
+                isToday && 'bg-primary/5 ring-primary/20 ring-1 ring-inset',
               )}
             >
               <span
@@ -101,9 +103,30 @@ export function CalendarGrid({ items, month, year, onEntryClick }: CalendarGridP
                   />
                 ))}
                 {dayItems.length > 3 && (
-                  <span className="text-muted-foreground px-1 text-xs">
-                    +{dayItems.length - 3} more
-                  </span>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="text-muted-foreground hover:text-foreground w-full px-1 text-left text-xs transition-colors">
+                        +{dayItems.length - 3} more
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-64 p-2" align="start">
+                      <div className="mb-1 text-xs font-medium">
+                        {date.toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </div>
+                      <div className="space-y-0.5">
+                        {dayItems.map((item) => (
+                          <CalendarEntryCard
+                            key={item.id}
+                            item={item}
+                            onClick={() => onEntryClick?.(item)}
+                          />
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 )}
               </div>
             </div>

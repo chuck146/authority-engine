@@ -20,13 +20,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import type { ContentType } from '@/types/content'
+import type { CalendarContentType } from '@/types/calendar'
 
 type ScheduleDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   onScheduled?: () => void
-  defaultContentType?: ContentType
+  defaultContentType?: CalendarContentType
   defaultContentId?: string
 }
 
@@ -42,22 +42,17 @@ export function ScheduleDialog({
   defaultContentType,
   defaultContentId,
 }: ScheduleDialogProps) {
-  const [contentType, setContentType] = useState<ContentType | ''>(defaultContentType ?? '')
+  const [contentType, setContentType] = useState<CalendarContentType | ''>(defaultContentType ?? '')
   const [contentId, setContentId] = useState(defaultContentId ?? '')
   const [scheduledAt, setScheduledAt] = useState('')
   const [loading, setLoading] = useState(false)
   const [approvedContent, setApprovedContent] = useState<ApprovedContent[]>([])
   const [loadingContent, setLoadingContent] = useState(false)
 
-  async function fetchApprovedContent(type: ContentType) {
+  async function fetchApprovedContent(type: CalendarContentType) {
     setLoadingContent(true)
     try {
-      const tableMap: Record<ContentType, string> = {
-        service_page: 'service_pages',
-        location_page: 'location_pages',
-        blog_post: 'blog_posts',
-      }
-      const res = await fetch(`/api/v1/content/${type}/approved?table=${tableMap[type]}`)
+      const res = await fetch(`/api/v1/content/approved?type=${type}`)
       if (res.ok) {
         const data = await res.json()
         setApprovedContent(data)
@@ -70,7 +65,7 @@ export function ScheduleDialog({
   }
 
   function handleContentTypeChange(value: string) {
-    const type = value as ContentType
+    const type = value as CalendarContentType
     setContentType(type)
     setContentId('')
     setApprovedContent([])
@@ -131,6 +126,7 @@ export function ScheduleDialog({
                 <SelectItem value="service_page">Service Page</SelectItem>
                 <SelectItem value="location_page">Location Page</SelectItem>
                 <SelectItem value="blog_post">Blog Post</SelectItem>
+                <SelectItem value="social_post">Social Post</SelectItem>
               </SelectContent>
             </Select>
           </div>

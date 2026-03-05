@@ -2,18 +2,18 @@ import type { Metadata } from 'next'
 import { requireAuth } from '@/lib/auth/guard'
 import { createClient } from '@/lib/supabase/server'
 import { CalendarPageClient } from '@/components/calendar/calendar-page-client'
-import type { CalendarEntry, CalendarViewItem } from '@/types/calendar'
-import type { ContentType } from '@/types/content'
+import type { CalendarEntry, CalendarViewItem, CalendarContentType } from '@/types/calendar'
 
 export const metadata: Metadata = { title: 'Content Calendar' }
 
-const tableMap = {
+const tableMap: Record<CalendarContentType, string> = {
   service_page: 'service_pages',
   location_page: 'location_pages',
   blog_post: 'blog_posts',
-} as const satisfies Record<ContentType, string>
+  social_post: 'social_posts',
+}
 
-type ContentRow = { id: string; title: string }
+type ContentRow = { id: string; title: string | null; body?: string }
 
 export default async function CalendarPage() {
   const auth = await requireAuth()
@@ -36,9 +36,9 @@ export default async function CalendarPage() {
     .returns<CalendarEntry[]>()
 
   // Batch-fetch content titles
-  const entriesByType = new Map<ContentType, CalendarEntry[]>()
+  const entriesByType = new Map<CalendarContentType, CalendarEntry[]>()
   for (const entry of entries ?? []) {
-    const type = entry.content_type as ContentType
+    const type = entry.content_type as CalendarContentType
     const list = entriesByType.get(type) ?? []
     list.push(entry)
     entriesByType.set(type, list)
@@ -48,20 +48,21 @@ export default async function CalendarPage() {
 
   for (const [type, typeEntries] of entriesByType) {
     const contentIds = typeEntries.map((e) => e.content_id)
+    const selectFields = type === 'social_post' ? 'id, title, body' : 'id, title'
     const { data: rows } = await supabase
-      .from(tableMap[type])
-      .select('id, title')
+      .from(tableMap[type] as never)
+      .select(selectFields)
       .in('id', contentIds)
       .returns<ContentRow[]>()
 
     for (const row of rows ?? []) {
-      titleMap.set(row.id, row.title)
+      titleMap.set(row.id, row.title ?? row.body?.slice(0, 80) ?? 'Untitled')
     }
   }
 
   const items: CalendarViewItem[] = (entries ?? []).map((entry) => ({
     id: entry.id,
-    contentType: entry.content_type as ContentType,
+    contentType: entry.content_type as CalendarContentType,
     contentId: entry.content_id,
     contentTitle: titleMap.get(entry.content_id) ?? 'Untitled',
     scheduledAt: entry.scheduled_at,
