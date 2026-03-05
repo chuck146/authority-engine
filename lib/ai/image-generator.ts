@@ -88,7 +88,11 @@ function buildAltText(input: GenerateImageRequest, org: OrgContext): string {
 
 function buildFilename(input: GenerateImageRequest): string {
   const slug = (text: string) =>
-    text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').slice(0, 50)
+    text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .slice(0, 50)
 
   switch (input.imageType) {
     case 'blog_thumbnail':

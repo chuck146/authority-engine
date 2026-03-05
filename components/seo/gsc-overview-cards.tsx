@@ -8,11 +8,15 @@ type GscOverviewCardsProps = {
 }
 
 function TrendIndicator({ value, invertColor }: { value: number; invertColor?: boolean }) {
-  if (value === 0) return <span className="text-xs text-muted-foreground">—</span>
+  if (value === 0) return <span className="text-muted-foreground text-xs">—</span>
   const isPositive = invertColor ? value < 0 : value > 0
   const color = isPositive ? 'text-green-600' : 'text-red-600'
   const arrow = value > 0 ? '↑' : '↓'
-  return <span className={`text-xs ${color}`}>{arrow} {Math.abs(value)}%</span>
+  return (
+    <span className={`text-xs ${color}`}>
+      {arrow} {Math.abs(value)}%
+    </span>
+  )
 }
 
 export function GscOverviewCards({ summary }: GscOverviewCardsProps) {
@@ -20,7 +24,7 @@ export function GscOverviewCards({ summary }: GscOverviewCardsProps) {
     <div className="grid gap-4 md:grid-cols-4">
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Total Clicks</CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">Total Clicks</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
@@ -32,7 +36,7 @@ export function GscOverviewCards({ summary }: GscOverviewCardsProps) {
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Impressions</CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">Impressions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
@@ -44,7 +48,7 @@ export function GscOverviewCards({ summary }: GscOverviewCardsProps) {
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Avg CTR</CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">Avg CTR</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
@@ -56,7 +60,7 @@ export function GscOverviewCards({ summary }: GscOverviewCardsProps) {
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Avg Position</CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">Avg Position</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">

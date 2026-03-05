@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server'
 import { requireApiAuth, requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
-import { contentTypeSchema, contentEditRequestSchema, type ContentType, type ContentDetail, type StructuredContent } from '@/types/content'
+import {
+  contentTypeSchema,
+  contentEditRequestSchema,
+  type ContentType,
+  type ContentDetail,
+  type StructuredContent,
+} from '@/types/content'
 import { calculateSeoScoreValue } from '@/lib/seo'
 import type { ContentStatus, Json } from '@/types'
 
@@ -124,7 +130,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
       .select('id, status, slug, content, keywords')
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
-      .returns<{ id: string; status: ContentStatus; slug: string; content: Json; keywords: string[] }[]>()
+      .returns<
+        { id: string; status: ContentStatus; slug: string; content: Json; keywords: string[] }[]
+      >()
       .single()
 
     if (fetchError || !current) {
@@ -170,9 +178,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
     // Sync meta fields into JSONB content (SSR pages read from content.meta_title)
     if (input.metaTitle !== undefined || input.metaDescription !== undefined) {
       const existingContent = (current.content ?? {}) as Record<string, unknown>
-      const mergedContent = { ...((updatePayload.content ?? existingContent) as Record<string, unknown>) }
+      const mergedContent = {
+        ...((updatePayload.content ?? existingContent) as Record<string, unknown>),
+      }
       if (input.metaTitle !== undefined) mergedContent.meta_title = input.metaTitle
-      if (input.metaDescription !== undefined) mergedContent.meta_description = input.metaDescription
+      if (input.metaDescription !== undefined)
+        mergedContent.meta_description = input.metaDescription
       updatePayload.content = mergedContent
     }
 
@@ -190,7 +201,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
 
     // 8. Recalculate SEO score if content, meta, or keywords changed
-    if (input.content || input.metaTitle !== undefined || input.metaDescription !== undefined || input.keywords) {
+    if (
+      input.content ||
+      input.metaTitle !== undefined ||
+      input.metaDescription !== undefined ||
+      input.keywords
+    ) {
       const effectiveContent: StructuredContent = {
         ...(current.content as unknown as StructuredContent),
         ...(input.content ?? {}),
@@ -261,10 +277,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       'code' in err &&
       (err as { code: string }).code === '23505'
     ) {
-      return NextResponse.json(
-        { error: 'A page with this slug already exists.' },
-        { status: 409 },
-      )
+      return NextResponse.json({ error: 'A page with this slug already exists.' }, { status: 409 })
     }
 
     return NextResponse.json(

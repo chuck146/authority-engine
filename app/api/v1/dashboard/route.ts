@@ -124,10 +124,7 @@ export async function GET() {
     // --- Recent Activity (8 most recently published) ---
     const recentActivity: RecentActivityItem[] = publishedItems
       .filter((i) => i.published_at !== null)
-      .sort(
-        (a, b) =>
-          new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime(),
-      )
+      .sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime())
       .slice(0, 8)
       .map((item) => ({
         id: item.id,

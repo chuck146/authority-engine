@@ -48,7 +48,9 @@ describe('ContentPreview', () => {
 
   it('renders section body HTML', () => {
     render(<ContentPreview {...defaultProps} />)
-    expect(screen.getByText('We deliver exceptional results with premium materials.')).toBeInTheDocument()
+    expect(
+      screen.getByText('We deliver exceptional results with premium materials.'),
+    ).toBeInTheDocument()
   })
 
   it('renders the CTA block', () => {

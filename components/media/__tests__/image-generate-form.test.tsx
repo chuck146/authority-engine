@@ -22,7 +22,9 @@ describe('ImageGenerateForm', () => {
   it('renders with blog thumbnail selected by default', () => {
     render(<ImageGenerateForm onGenerated={mockOnGenerated} />)
 
-    expect(screen.getByText('Generate Image', { selector: '[data-slot="card-title"]' })).toBeInTheDocument()
+    expect(
+      screen.getByText('Generate Image', { selector: '[data-slot="card-title"]' }),
+    ).toBeInTheDocument()
     expect(screen.getByLabelText('Topic')).toBeInTheDocument()
   })
 

@@ -51,10 +51,18 @@ export const rules: RuleDefinition[] = [
     weight: 15,
     evaluate: ({ content }) => {
       const len = content.meta_title.length
-      if (len === 0) return { score: 0, recommendation: 'Add a meta title (30–60 characters recommended).' }
+      if (len === 0)
+        return { score: 0, recommendation: 'Add a meta title (30–60 characters recommended).' }
       if (len >= 30 && len <= 60) return { score: 100, recommendation: null }
-      if (len < 30) return { score: linearScale(len, 0, 30), recommendation: `Meta title is too short (${len} chars). Aim for 30–60 characters.` }
-      return { score: Math.max(50, 100 - (len - 60) * 2), recommendation: `Meta title is too long (${len} chars). Keep it under 60 characters.` }
+      if (len < 30)
+        return {
+          score: linearScale(len, 0, 30),
+          recommendation: `Meta title is too short (${len} chars). Aim for 30–60 characters.`,
+        }
+      return {
+        score: Math.max(50, 100 - (len - 60) * 2),
+        recommendation: `Meta title is too long (${len} chars). Keep it under 60 characters.`,
+      }
     },
   },
   {
@@ -64,10 +72,21 @@ export const rules: RuleDefinition[] = [
     weight: 10,
     evaluate: ({ content }) => {
       const len = content.meta_description.length
-      if (len === 0) return { score: 0, recommendation: 'Add a meta description (120–160 characters recommended).' }
+      if (len === 0)
+        return {
+          score: 0,
+          recommendation: 'Add a meta description (120–160 characters recommended).',
+        }
       if (len >= 120 && len <= 160) return { score: 100, recommendation: null }
-      if (len < 120) return { score: linearScale(len, 0, 120), recommendation: `Meta description is short (${len} chars). Aim for 120–160 characters.` }
-      return { score: Math.max(50, 100 - (len - 160) * 2), recommendation: `Meta description is too long (${len} chars). Keep it under 160 characters.` }
+      if (len < 120)
+        return {
+          score: linearScale(len, 0, 120),
+          recommendation: `Meta description is short (${len} chars). Aim for 120–160 characters.`,
+        }
+      return {
+        score: Math.max(50, 100 - (len - 160) * 2),
+        recommendation: `Meta description is too long (${len} chars). Keep it under 160 characters.`,
+      }
     },
   },
 
@@ -110,7 +129,10 @@ export const rules: RuleDefinition[] = [
 
       if (words >= target) return { score: 100, recommendation: null }
       const score = linearScale(words, 0, target)
-      return { score, recommendation: `Content is ${words} words. Aim for ${target}+ words for better SEO.` }
+      return {
+        score,
+        recommendation: `Content is ${words} words. Aim for ${target}+ words for better SEO.`,
+      }
     },
   },
   {
@@ -121,8 +143,13 @@ export const rules: RuleDefinition[] = [
     evaluate: ({ content }) => {
       const len = content.intro.trim().length
       if (len >= 50) return { score: 100, recommendation: null }
-      if (len >= 20) return { score: 60, recommendation: 'Expand the introduction to at least 50 characters.' }
-      if (len > 0) return { score: 20, recommendation: 'Introduction is very short. Expand it to improve engagement.' }
+      if (len >= 20)
+        return { score: 60, recommendation: 'Expand the introduction to at least 50 characters.' }
+      if (len > 0)
+        return {
+          score: 20,
+          recommendation: 'Introduction is very short. Expand it to improve engagement.',
+        }
       return { score: 0, recommendation: 'Add an introduction paragraph.' }
     },
   },
@@ -134,7 +161,8 @@ export const rules: RuleDefinition[] = [
     category: 'keyword-optimization',
     weight: 10,
     evaluate: ({ content, keywords }) => {
-      if (keywords.length === 0) return { score: 50, recommendation: 'Add target keywords to improve optimization.' }
+      if (keywords.length === 0)
+        return { score: 50, recommendation: 'Add target keywords to improve optimization.' }
       const title = content.meta_title.toLowerCase()
       const found = keywords.some((kw) => title.includes(kw.toLowerCase()))
       if (found) return { score: 100, recommendation: null }
@@ -148,7 +176,8 @@ export const rules: RuleDefinition[] = [
     weight: 10,
     evaluate: (input) => {
       const { keywords } = input
-      if (keywords.length === 0) return { score: 50, recommendation: 'Add target keywords to improve optimization.' }
+      if (keywords.length === 0)
+        return { score: 50, recommendation: 'Add target keywords to improve optimization.' }
       const body = getBodyText(input).toLowerCase()
       const found = keywords.some((kw) => body.includes(kw.toLowerCase()))
       if (found) return { score: 100, recommendation: null }
@@ -162,21 +191,30 @@ export const rules: RuleDefinition[] = [
     weight: 5,
     evaluate: (input) => {
       const { keywords } = input
-      if (keywords.length === 0) return { score: 50, recommendation: 'Add target keywords to measure density.' }
+      if (keywords.length === 0)
+        return { score: 50, recommendation: 'Add target keywords to measure density.' }
 
       const body = getBodyText(input).toLowerCase()
       const totalWords = countWords(body)
-      if (totalWords === 0) return { score: 0, recommendation: 'Add content to measure keyword density.' }
+      if (totalWords === 0)
+        return { score: 0, recommendation: 'Add content to measure keyword density.' }
 
       // Count occurrences of the primary keyword (first in array)
       const primary = keywords[0]!.toLowerCase()
       const keywordWords = primary.split(/\s+/).length
       const occurrences = body.split(primary).length - 1
-      const density = (occurrences * keywordWords / totalWords) * 100
+      const density = ((occurrences * keywordWords) / totalWords) * 100
 
       if (density >= 1 && density <= 3) return { score: 100, recommendation: null }
-      if (density < 1) return { score: 50, recommendation: `Keyword density is low (${density.toFixed(1)}%). Aim for 1–3%.` }
-      return { score: 60, recommendation: `Keyword density is high (${density.toFixed(1)}%). Keep it between 1–3% to avoid keyword stuffing.` }
+      if (density < 1)
+        return {
+          score: 50,
+          recommendation: `Keyword density is low (${density.toFixed(1)}%). Aim for 1–3%.`,
+        }
+      return {
+        score: 60,
+        recommendation: `Keyword density is high (${density.toFixed(1)}%). Keep it between 1–3% to avoid keyword stuffing.`,
+      }
     },
   },
 
@@ -189,7 +227,11 @@ export const rules: RuleDefinition[] = [
     evaluate: ({ content }) => {
       const len = content.cta.trim().length
       if (len >= 10) return { score: 100, recommendation: null }
-      if (len > 0) return { score: 50, recommendation: 'Expand the call to action (10+ characters recommended).' }
+      if (len > 0)
+        return {
+          score: 50,
+          recommendation: 'Expand the call to action (10+ characters recommended).',
+        }
       return { score: 0, recommendation: 'Add a call to action to improve conversions.' }
     },
   },
@@ -206,8 +248,15 @@ export const rules: RuleDefinition[] = [
       const avg = sentenceCounts.reduce((a, b) => a + b, 0) / sentenceCounts.length
 
       if (avg >= 2 && avg <= 6) return { score: 100, recommendation: null }
-      if (avg < 2) return { score: 60, recommendation: 'Sections are very short. Aim for 2–6 sentences per section.' }
-      return { score: 70, recommendation: `Sections average ${Math.round(avg)} sentences. Consider breaking into smaller paragraphs (2–6 sentences ideal).` }
+      if (avg < 2)
+        return {
+          score: 60,
+          recommendation: 'Sections are very short. Aim for 2–6 sentences per section.',
+        }
+      return {
+        score: 70,
+        recommendation: `Sections average ${Math.round(avg)} sentences. Consider breaking into smaller paragraphs (2–6 sentences ideal).`,
+      }
     },
   },
 ]

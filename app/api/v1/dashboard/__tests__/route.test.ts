@@ -8,7 +8,8 @@ const mockRequireApiAuth = vi.fn()
 const mockSupabase = createMockSupabaseClient()
 
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     AuthError: actual.AuthError,
     requireApiAuth: (...args: unknown[]) => mockRequireApiAuth(...args),
@@ -201,7 +202,13 @@ describe('GET /api/v1/dashboard', () => {
     mockRequireApiAuth.mockResolvedValue(defaultAuth)
 
     const rows = Array.from({ length: 12 }, (_, i) =>
-      makeRow(`sp-${i}`, `Page ${i}`, 'published', 70, `2026-03-0${String(i + 1).padStart(2, '0')}T00:00:00Z`),
+      makeRow(
+        `sp-${i}`,
+        `Page ${i}`,
+        'published',
+        70,
+        `2026-03-0${String(i + 1).padStart(2, '0')}T00:00:00Z`,
+      ),
     )
 
     mockSupabase.returns

@@ -1,7 +1,14 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import type { Ga4TrafficSource } from '@/types/ga4'
 
 type Ga4TrafficSourcesProps = {
@@ -16,7 +23,7 @@ export function Ga4TrafficSources({ sources }: Ga4TrafficSourcesProps) {
           <CardTitle>Traffic Sources</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No traffic source data available yet.</p>
+          <p className="text-muted-foreground text-sm">No traffic source data available yet.</p>
         </CardContent>
       </Card>
     )

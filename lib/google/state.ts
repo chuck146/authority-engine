@@ -11,7 +11,10 @@ function getSecret(): string {
  * Create an HMAC-signed state parameter for OAuth.
  * Format: orgId.provider.nonce.signature
  */
-export function createOAuthState(organizationId: string, provider: GoogleProvider = 'search_console'): string {
+export function createOAuthState(
+  organizationId: string,
+  provider: GoogleProvider = 'search_console',
+): string {
   const nonce = randomBytes(16).toString('hex')
   const payload = `${organizationId}.${provider}.${nonce}`
   const signature = createHmac('sha256', getSecret()).update(payload).digest('hex')

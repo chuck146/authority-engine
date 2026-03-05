@@ -99,9 +99,7 @@ describe('GET /api/auth/callback', () => {
       error: null,
     })
 
-    const response = await GET(
-      makeCallbackRequest({ code: 'valid-code', redirect: '/content' }),
-    )
+    const response = await GET(makeCallbackRequest({ code: 'valid-code', redirect: '/content' }))
     expect(response.status).toBe(307)
     expect(new URL(response.headers.get('location')!).pathname).toBe('/content')
   })
@@ -114,9 +112,7 @@ describe('GET /api/auth/callback', () => {
       error: null,
     })
 
-    const response = await GET(
-      makeCallbackRequest({ code: 'valid-code', redirect: '//evil.com' }),
-    )
+    const response = await GET(makeCallbackRequest({ code: 'valid-code', redirect: '//evil.com' }))
     expect(new URL(response.headers.get('location')!).pathname).toBe('/dashboard')
   })
 

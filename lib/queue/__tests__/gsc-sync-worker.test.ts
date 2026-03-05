@@ -69,7 +69,13 @@ describe('processGscSyncJob', () => {
 
     mockFetchSearchAnalytics.mockResolvedValueOnce({
       rows: [
-        { keys: ['painting nj', 'https://example.com/painting', '2026-03-01'], clicks: 10, impressions: 200, ctr: 0.05, position: 8.5 },
+        {
+          keys: ['painting nj', 'https://example.com/painting', '2026-03-01'],
+          clicks: 10,
+          impressions: 200,
+          ctr: 0.05,
+          position: 8.5,
+        },
       ],
     })
 
@@ -116,8 +122,6 @@ describe('processGscSyncJob', () => {
     mockFetchSitemaps.mockResolvedValueOnce([])
 
     const { processGscSyncJob } = await import('../gsc-sync-worker')
-    await expect(
-      processGscSyncJob(makeJob({ organizationId: 'org-123' })),
-    ).resolves.toBeUndefined()
+    await expect(processGscSyncJob(makeJob({ organizationId: 'org-123' }))).resolves.toBeUndefined()
   })
 })

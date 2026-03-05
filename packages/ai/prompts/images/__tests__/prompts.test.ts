@@ -66,7 +66,13 @@ describe('buildBlogThumbnailPrompt', () => {
 describe('buildLocationHeroPrompt', () => {
   it('includes city, state, and service', () => {
     const prompt = buildLocationHeroPrompt(
-      { imageType: 'location_hero', city: 'Summit', state: 'NJ', serviceName: 'Interior Painting', style: 'photorealistic' },
+      {
+        imageType: 'location_hero',
+        city: 'Summit',
+        state: 'NJ',
+        serviceName: 'Interior Painting',
+        style: 'photorealistic',
+      },
       org,
     )
     expect(prompt).toContain('Summit')
@@ -77,7 +83,13 @@ describe('buildLocationHeroPrompt', () => {
 
   it('includes brand colors', () => {
     const prompt = buildLocationHeroPrompt(
-      { imageType: 'location_hero', city: 'Summit', state: 'NJ', serviceName: 'Painting', style: 'photorealistic' },
+      {
+        imageType: 'location_hero',
+        city: 'Summit',
+        state: 'NJ',
+        serviceName: 'Painting',
+        style: 'photorealistic',
+      },
       org,
     )
     expect(prompt).toContain('#1a472a')
@@ -87,7 +99,12 @@ describe('buildLocationHeroPrompt', () => {
 describe('buildSocialGraphicPrompt', () => {
   it('includes message and dimensions', () => {
     const prompt = buildSocialGraphicPrompt(
-      { imageType: 'social_graphic', message: 'Spring sale 15% off!', style: 'flat', mood: 'vibrant' },
+      {
+        imageType: 'social_graphic',
+        message: 'Spring sale 15% off!',
+        style: 'flat',
+        mood: 'vibrant',
+      },
       org,
     )
     expect(prompt).toContain('Spring sale 15% off!')

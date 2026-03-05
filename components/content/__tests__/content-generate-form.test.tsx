@@ -92,9 +92,7 @@ describe('ContentGenerateForm', () => {
     await user.click(screen.getByRole('button', { name: /Generate Content/ }))
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith(
-        'Content generated successfully! Review it below.',
-      )
+      expect(toast.success).toHaveBeenCalledWith('Content generated successfully! Review it below.')
     })
   })
 
@@ -157,7 +155,10 @@ describe('ContentGenerateForm', () => {
   it('shows loading state during generation', async () => {
     const user = userEvent.setup()
     // Mock fetch that never resolves
-    vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise(() => {})),
+    )
 
     render(<ContentGenerateForm onGenerated={mockOnGenerated} />)
 

@@ -12,12 +12,15 @@ export function PageHeader({ breadcrumbs, title, subtitle }: PageHeaderProps) {
   return (
     <header className="mb-8">
       <nav aria-label="Breadcrumb" className="mb-4">
-        <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <ol className="text-muted-foreground flex items-center gap-1.5 text-sm">
           {breadcrumbs.map((crumb, i) => (
             <li key={i} className="flex items-center gap-1.5">
               {i > 0 && <span aria-hidden="true">/</span>}
               {crumb.href ? (
-                <Link href={crumb.href as never} className="hover:text-foreground transition-colors">
+                <Link
+                  href={crumb.href as never}
+                  className="hover:text-foreground transition-colors"
+                >
                   {crumb.label}
                 </Link>
               ) : (
@@ -28,7 +31,7 @@ export function PageHeader({ breadcrumbs, title, subtitle }: PageHeaderProps) {
         </ol>
       </nav>
       <h1 className="text-4xl font-bold tracking-tight">{title}</h1>
-      {subtitle && <p className="mt-2 text-lg text-muted-foreground">{subtitle}</p>}
+      {subtitle && <p className="text-muted-foreground mt-2 text-lg">{subtitle}</p>}
     </header>
   )
 }

@@ -6,8 +6,18 @@ import { buildKeywordRankingItem } from '@/tests/factories'
 describe('GscTopQueries', () => {
   it('renders query table with data', () => {
     const queries = [
-      buildKeywordRankingItem({ query: 'painting nj', clicks: 85, position: 8.2, positionChange: 1.3 }),
-      buildKeywordRankingItem({ query: 'house painting', clicks: 42, position: 12.5, positionChange: -2.1 }),
+      buildKeywordRankingItem({
+        query: 'painting nj',
+        clicks: 85,
+        position: 8.2,
+        positionChange: 1.3,
+      }),
+      buildKeywordRankingItem({
+        query: 'house painting',
+        clicks: 42,
+        position: 12.5,
+        positionChange: -2.1,
+      }),
     ]
     render(<GscTopQueries queries={queries} />)
 
@@ -24,9 +34,7 @@ describe('GscTopQueries', () => {
   })
 
   it('shows position change indicators', () => {
-    const queries = [
-      buildKeywordRankingItem({ query: 'test', positionChange: 2.5 }),
-    ]
+    const queries = [buildKeywordRankingItem({ query: 'test', positionChange: 2.5 })]
     render(<GscTopQueries queries={queries} />)
     expect(screen.getByText(/↑2.5/)).toBeInTheDocument()
   })

@@ -40,15 +40,14 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     }
 
     if (entry.status !== 'scheduled') {
-      return NextResponse.json(
-        { error: 'Only scheduled entries can be modified' },
-        { status: 422 },
-      )
+      return NextResponse.json({ error: 'Only scheduled entries can be modified' }, { status: 422 })
     }
 
     // Handle cancellation
     if (input.status === 'cancelled') {
-      try { await cancelScheduledPublish(entry.id) } catch (e) {
+      try {
+        await cancelScheduledPublish(entry.id)
+      } catch (e) {
         console.warn('[Calendar PATCH] Failed to cancel BullMQ job:', e)
       }
 
@@ -67,14 +66,13 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     // Handle rescheduling
     if (input.scheduledAt) {
       if (new Date(input.scheduledAt) <= new Date()) {
-        return NextResponse.json(
-          { error: 'Scheduled time must be in the future' },
-          { status: 422 },
-        )
+        return NextResponse.json({ error: 'Scheduled time must be in the future' }, { status: 422 })
       }
 
       // Cancel old job, schedule new one
-      try { await cancelScheduledPublish(entry.id) } catch (e) {
+      try {
+        await cancelScheduledPublish(entry.id)
+      } catch (e) {
         console.warn('[Calendar PATCH] Failed to cancel old BullMQ job:', e)
       }
 

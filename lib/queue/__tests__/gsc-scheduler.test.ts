@@ -48,10 +48,7 @@ describe('gsc-scheduler', () => {
       mockSelect.mockReturnValueOnce({
         eq: vi.fn().mockReturnValue({
           eq: vi.fn().mockResolvedValue({
-            data: [
-              { organization_id: 'org-1' },
-              { organization_id: 'org-2' },
-            ],
+            data: [{ organization_id: 'org-1' }, { organization_id: 'org-2' }],
           }),
         }),
       })

@@ -4,7 +4,11 @@ import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
 import { contentTypeSchema, contentStatusUpdateSchema, type ContentType } from '@/types/content'
 import type { ContentStatus } from '@/types'
-import { getTargetStatus, isValidTransition, getRequiredRole } from '@/lib/content/status-transitions'
+import {
+  getTargetStatus,
+  isValidTransition,
+  getRequiredRole,
+} from '@/lib/content/status-transitions'
 
 type RouteParams = {
   params: Promise<{ type: string; id: string }>

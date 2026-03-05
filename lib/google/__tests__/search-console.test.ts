@@ -7,7 +7,9 @@ afterEach(() => {
 
 describe('fetchSearchAnalytics', () => {
   it('posts correct query to Search Analytics API', async () => {
-    const mockResponse = { rows: [{ keys: ['test query'], clicks: 10, impressions: 100, ctr: 0.1, position: 5.2 }] }
+    const mockResponse = {
+      rows: [{ keys: ['test query'], clicks: 10, impressions: 100, ctr: 0.1, position: 5.2 }],
+    }
     vi.spyOn(global, 'fetch').mockResolvedValueOnce(
       new Response(JSON.stringify(mockResponse), { status: 200 }),
     )
@@ -53,9 +55,7 @@ describe('fetchSearchAnalytics', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Forbidden', { status: 403 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Forbidden', { status: 403 }))
 
     await expect(
       fetchSearchAnalytics({
@@ -94,9 +94,7 @@ describe('fetchSitemaps', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Not Found', { status: 404 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Not Found', { status: 404 }))
 
     await expect(
       fetchSitemaps({ accessToken: 'bad', siteUrl: 'https://example.com' }),
@@ -126,9 +124,7 @@ describe('inspectUrl', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Server Error', { status: 500 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Server Error', { status: 500 }))
 
     await expect(
       inspectUrl({
@@ -167,9 +163,7 @@ describe('listSites', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Unauthorized', { status: 401 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Unauthorized', { status: 401 }))
 
     await expect(listSites({ accessToken: 'bad' })).rejects.toThrow('GSC Sites API error (401)')
   })

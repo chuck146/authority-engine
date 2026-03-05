@@ -1,7 +1,12 @@
 import type { SeoRuleCategory, SeoScoreResult, SeoScorerInput } from '@/types/seo'
 import { rules, evaluateRule } from './rules'
 
-const CATEGORIES: SeoRuleCategory[] = ['meta-tags', 'content-structure', 'keyword-optimization', 'readability']
+const CATEGORIES: SeoRuleCategory[] = [
+  'meta-tags',
+  'content-structure',
+  'keyword-optimization',
+  'readability',
+]
 
 /**
  * Calculate full SEO score with rule-by-rule breakdown.
@@ -27,9 +32,10 @@ export function calculateSeoScore(input: SeoScorerInput): SeoScoreResult {
   const failedCount = ruleResults.filter((r) => !r.passed).length
   let summary: string
   if (score >= 80) {
-    summary = failedCount > 0
-      ? `Great SEO score. ${failedCount} area(s) could still be improved.`
-      : 'Excellent SEO — all checks passed.'
+    summary =
+      failedCount > 0
+        ? `Great SEO score. ${failedCount} area(s) could still be improved.`
+        : 'Excellent SEO — all checks passed.'
   } else if (score >= 60) {
     summary = `Good foundation. ${failedCount} area(s) need attention to improve rankings.`
   } else if (score >= 40) {

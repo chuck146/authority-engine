@@ -54,7 +54,9 @@ describe('POST /api/v1/gsc/url-inspection', () => {
     })
 
     const { POST } = await import('../route')
-    const req = buildInspectRequest({ url: 'https://cleanestpainting.com/services/interior-painting' })
+    const req = buildInspectRequest({
+      url: 'https://cleanestpainting.com/services/interior-painting',
+    })
     const res = await POST(req)
     const json = await res.json()
 

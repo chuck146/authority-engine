@@ -30,7 +30,7 @@ export function DashboardMetricsClient() {
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i}>
               <CardContent className="pt-6">
-                <div className="h-8 w-16 animate-pulse rounded bg-muted" />
+                <div className="bg-muted h-8 w-16 animate-pulse rounded" />
               </CardContent>
             </Card>
           ))}
@@ -41,7 +41,7 @@ export function DashboardMetricsClient() {
 
   if (error || !metrics) {
     return (
-      <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
+      <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-6 text-center">
         <p className="text-destructive">{error ?? 'Failed to load dashboard data'}</p>
       </div>
     )

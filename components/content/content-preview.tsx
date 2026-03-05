@@ -27,7 +27,12 @@ const statusVariant: Record<ContentStatus, 'default' | 'secondary' | 'outline'> 
   archived: 'secondary',
 }
 
-export function ContentPreview({ content, title, contentType, status = 'review' }: ContentPreviewProps) {
+export function ContentPreview({
+  content,
+  title,
+  contentType,
+  status = 'review',
+}: ContentPreviewProps) {
   return (
     <Card>
       <CardHeader>

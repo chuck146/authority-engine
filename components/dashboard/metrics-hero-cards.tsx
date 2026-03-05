@@ -26,38 +26,36 @@ export function MetricsHeroCards({ hero }: MetricsHeroCardsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-4">
       {/* Hero card — visually dominant */}
-      <Card className="ring-1 ring-primary/20">
+      <Card className="ring-primary/20 ring-1">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardTitle className="text-muted-foreground text-sm font-medium">
             Published Pages
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold">{hero.totalPublished}</div>
-          <p className="text-xs text-muted-foreground">live &amp; indexed</p>
+          <p className="text-muted-foreground text-xs">live &amp; indexed</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardTitle className="text-muted-foreground text-sm font-medium">
             Avg. SEO Score
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold">
             {hero.averageSeoScore}
-            <span className="text-lg font-normal text-muted-foreground">/100</span>
+            <span className="text-muted-foreground text-lg font-normal">/100</span>
           </div>
-          <p className="text-xs text-muted-foreground">published pages</p>
+          <p className="text-muted-foreground text-xs">published pages</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Needs Review
-          </CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">Needs Review</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -65,26 +63,24 @@ export function MetricsHeroCards({ hero }: MetricsHeroCardsProps) {
           >
             {hero.contentInReview}
           </div>
-          <p className="text-xs text-muted-foreground">awaiting approval</p>
+          <p className="text-muted-foreground text-xs">awaiting approval</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Next Publish
-          </CardTitle>
+          <CardTitle className="text-muted-foreground text-sm font-medium">Next Publish</CardTitle>
         </CardHeader>
         <CardContent>
           {nextPublish ? (
             <>
               <div className="text-3xl font-bold">{nextPublish.primary}</div>
-              <p className="text-xs text-muted-foreground">{nextPublish.secondary}</p>
+              <p className="text-muted-foreground text-xs">{nextPublish.secondary}</p>
             </>
           ) : (
             <>
-              <div className="text-3xl font-bold text-muted-foreground">—</div>
-              <p className="text-xs text-muted-foreground">nothing scheduled</p>
+              <div className="text-muted-foreground text-3xl font-bold">—</div>
+              <p className="text-muted-foreground text-xs">nothing scheduled</p>
             </>
           )}
         </CardContent>

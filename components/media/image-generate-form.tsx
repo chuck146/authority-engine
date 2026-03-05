@@ -123,10 +123,7 @@ export function ImageGenerateForm({ onGenerated }: ImageGenerateFormProps) {
         <CardContent>
           <div className="mb-6">
             <label className="text-sm font-medium">Image Type</label>
-            <Select
-              value={selectedType}
-              onValueChange={(v) => handleTypeChange(v as ImageType)}
-            >
+            <Select value={selectedType} onValueChange={(v) => handleTypeChange(v as ImageType)}>
               <SelectTrigger className="mt-1.5 w-full max-w-xs">
                 <SelectValue />
               </SelectTrigger>
@@ -245,10 +242,7 @@ function BlogThumbnailFields() {
         <FormItem>
           <FormLabel>Topic</FormLabel>
           <FormControl>
-            <Input
-              placeholder="e.g., How to Choose Paint Colors for Your Living Room"
-              {...field}
-            />
+            <Input placeholder="e.g., How to Choose Paint Colors for Your Living Room" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -318,10 +312,7 @@ function SocialGraphicFields() {
         <FormItem>
           <FormLabel>Message / Theme</FormLabel>
           <FormControl>
-            <Input
-              placeholder="e.g., Spring special: 15% off exterior painting"
-              {...field}
-            />
+            <Input placeholder="e.g., Spring special: 15% off exterior painting" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

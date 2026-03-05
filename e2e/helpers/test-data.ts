@@ -9,7 +9,8 @@ const suffix = Date.now().toString(36)
 export const SERVICE_PAGE_INPUT = {
   contentType: 'service_page' as const,
   serviceName: `E2E Deck Staining ${suffix}`,
-  serviceDescription: 'Professional deck staining services for residential homes in Northern New Jersey.',
+  serviceDescription:
+    'Professional deck staining services for residential homes in Northern New Jersey.',
   targetKeywords: ['deck staining', 'deck refinishing'],
   tone: 'professional' as const,
 }

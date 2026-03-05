@@ -63,7 +63,7 @@ export function SeoContentList({ items, onSelectItem }: SeoContentListProps) {
             <TableCell>
               <SeoScoreBadge score={item.seoScore} />
             </TableCell>
-            <TableCell className="max-w-[300px] truncate text-sm text-muted-foreground">
+            <TableCell className="text-muted-foreground max-w-[300px] truncate text-sm">
               {item.topIssue ?? 'All checks passed'}
             </TableCell>
           </TableRow>

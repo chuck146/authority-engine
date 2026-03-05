@@ -32,7 +32,12 @@ const categoryOrder: SeoRuleCategory[] = [
   'readability',
 ]
 
-function RuleRow({ label, score, passed, recommendation }: {
+function RuleRow({
+  label,
+  score,
+  passed,
+  recommendation,
+}: {
   label: string
   score: number
   passed: boolean
@@ -44,16 +49,14 @@ function RuleRow({ label, score, passed, recommendation }: {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{label}</span>
           {passed ? (
-            <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs">Pass</Badge>
+            <Badge className="bg-green-100 text-xs text-green-800 hover:bg-green-100">Pass</Badge>
           ) : (
-            <Badge className="bg-red-100 text-red-800 hover:bg-red-100 text-xs">Fail</Badge>
+            <Badge className="bg-red-100 text-xs text-red-800 hover:bg-red-100">Fail</Badge>
           )}
         </div>
-        {recommendation && (
-          <p className="mt-1 text-xs text-muted-foreground">{recommendation}</p>
-        )}
+        {recommendation && <p className="text-muted-foreground mt-1 text-xs">{recommendation}</p>}
       </div>
-      <span className="text-sm font-mono tabular-nums">{score}/100</span>
+      <span className="font-mono text-sm tabular-nums">{score}/100</span>
     </div>
   )
 }
@@ -78,7 +81,7 @@ export function SeoDetailPanel({ item, onClose }: SeoDetailPanelProps) {
 
   return (
     <Sheet open={!!item} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
         <SheetHeader>
           <SheetTitle>{item?.title}</SheetTitle>
           <SheetDescription>
@@ -94,7 +97,7 @@ export function SeoDetailPanel({ item, onClose }: SeoDetailPanelProps) {
 
         {result && !loading && (
           <div className="mt-6 space-y-4">
-            <p className="text-sm text-muted-foreground">{result.summary}</p>
+            <p className="text-muted-foreground text-sm">{result.summary}</p>
 
             {categoryOrder.map((cat) => {
               const catRules = result.rules.filter((r) => r.category === cat)
@@ -105,7 +108,7 @@ export function SeoDetailPanel({ item, onClose }: SeoDetailPanelProps) {
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm">{categoryLabels[cat]}</CardTitle>
-                      <span className="text-sm font-mono tabular-nums text-muted-foreground">
+                      <span className="text-muted-foreground font-mono text-sm tabular-nums">
                         {result.categoryScores[cat]}/100
                       </span>
                     </div>

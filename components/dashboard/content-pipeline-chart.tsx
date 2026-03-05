@@ -19,23 +19,19 @@ export function ContentPipelineChart({ pipeline }: ContentPipelineChartProps) {
   const { statusBreakdown, totalContent, byType } = pipeline
 
   if (totalContent === 0) {
-    return <div className="text-sm text-muted-foreground">No content yet.</div>
+    return <div className="text-muted-foreground text-sm">No content yet.</div>
   }
 
   return (
     <div className="space-y-4">
       {/* Stacked bar */}
-      <div className="flex h-4 overflow-hidden rounded-full bg-muted">
+      <div className="bg-muted flex h-4 overflow-hidden rounded-full">
         {segments.map(({ key, color }) => {
           const count = statusBreakdown[key] ?? 0
           const pct = (count / totalContent) * 100
           if (pct === 0) return null
           return (
-            <div
-              key={key}
-              className={`${color} transition-all`}
-              style={{ width: `${pct}%` }}
-            />
+            <div key={key} className={`${color} transition-all`} style={{ width: `${pct}%` }} />
           )
         })}
       </div>
@@ -55,11 +51,14 @@ export function ContentPipelineChart({ pipeline }: ContentPipelineChartProps) {
       {/* Content by type */}
       <div className="grid gap-3 pt-2 md:grid-cols-3">
         {byType.map(({ contentType, label, total, published }) => (
-          <div key={contentType} className="flex items-center justify-between rounded-md border px-3 py-2">
+          <div
+            key={contentType}
+            className="flex items-center justify-between rounded-md border px-3 py-2"
+          >
             <span className="text-sm font-medium">{label}</span>
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{total}</Badge>
-              <span className="text-xs text-muted-foreground">{published} published</span>
+              <span className="text-muted-foreground text-xs">{published} published</span>
             </div>
           </div>
         ))}

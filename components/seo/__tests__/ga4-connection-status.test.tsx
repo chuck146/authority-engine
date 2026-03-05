@@ -22,6 +22,9 @@ describe('Ga4ConnectionStatus', () => {
 
     expect(screen.getByText('Google Analytics not connected')).toBeInTheDocument()
     expect(screen.getByText('Go to Settings')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Go to Settings' })).toHaveAttribute('href', '/settings')
+    expect(screen.getByRole('link', { name: 'Go to Settings' })).toHaveAttribute(
+      'href',
+      '/settings',
+    )
   })
 })

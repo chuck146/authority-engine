@@ -2,16 +2,16 @@ import { NextResponse } from 'next/server'
 import { requireApiAuth, requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
 import { calendarQuerySchema, scheduleContentSchema } from '@/types/calendar'
-import type { CalendarEntry, CalendarViewItem } from '@/types/calendar'
-import type { ContentType } from '@/types/content'
+import type { CalendarEntry, CalendarViewItem, CalendarContentType } from '@/types/calendar'
 import { schedulePublish } from '@/lib/queue/scheduler'
 
 // Table names for each content type
-const tableMap = {
+const tableMap: Record<CalendarContentType, string> = {
   service_page: 'service_pages',
   location_page: 'location_pages',
   blog_post: 'blog_posts',
-} as const satisfies Record<ContentType, string>
+  social_post: 'social_posts',
+}
 
 type ContentRow = { id: string; title: string }
 
@@ -53,9 +53,9 @@ export async function GET(request: Request) {
     if (error) throw error
 
     // Batch-fetch content titles per type
-    const entriesByType = new Map<ContentType, CalendarEntry[]>()
+    const entriesByType = new Map<CalendarContentType, CalendarEntry[]>()
     for (const entry of entries ?? []) {
-      const type = entry.content_type as ContentType
+      const type = entry.content_type as CalendarContentType
       const list = entriesByType.get(type) ?? []
       list.push(entry)
       entriesByType.set(type, list)
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
     for (const [type, typeEntries] of entriesByType) {
       const contentIds = typeEntries.map((e) => e.content_id)
       const { data: rows } = await supabase
-        .from(tableMap[type])
+        .from(tableMap[type] as never)
         .select('id, title')
         .in('id', contentIds)
         .returns<ContentRow[]>()
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
     // Map to view items
     const items: CalendarViewItem[] = (entries ?? []).map((entry) => ({
       id: entry.id,
-      contentType: entry.content_type as ContentType,
+      contentType: entry.content_type as CalendarContentType,
       contentId: entry.content_id,
       contentTitle: titleMap.get(entry.content_id) ?? 'Untitled',
       scheduledAt: entry.scheduled_at,
@@ -118,16 +118,13 @@ export async function POST(request: Request) {
 
     // Verify scheduled time is in the future
     if (new Date(scheduledAt) <= new Date()) {
-      return NextResponse.json(
-        { error: 'Scheduled time must be in the future' },
-        { status: 422 },
-      )
+      return NextResponse.json({ error: 'Scheduled time must be in the future' }, { status: 422 })
     }
 
     // Verify content exists and is in approved status
     const table = tableMap[contentType]
     const { data: content, error: contentError } = await supabase
-      .from(table)
+      .from(table as never)
       .select('id, status')
       .eq('id', contentId)
       .eq('organization_id', auth.organizationId)

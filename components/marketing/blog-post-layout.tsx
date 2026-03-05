@@ -27,7 +27,7 @@ export function BlogPostLayout({ post }: { post: BlogPost }) {
         ]}
         title={content.headline}
       />
-      <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+      <div className="text-muted-foreground mb-8 flex flex-wrap items-center gap-4 text-sm">
         {post.published_at && (
           <span className="flex items-center gap-1.5">
             <Calendar className="h-4 w-4" />
@@ -41,7 +41,7 @@ export function BlogPostLayout({ post }: { post: BlogPost }) {
           </span>
         )}
         {post.category && (
-          <span className="rounded-full bg-muted px-3 py-0.5">{post.category}</span>
+          <span className="bg-muted rounded-full px-3 py-0.5">{post.category}</span>
         )}
       </div>
       {post.featured_image_url && (
@@ -55,17 +55,12 @@ export function BlogPostLayout({ post }: { post: BlogPost }) {
           />
         </div>
       )}
-      {post.excerpt && (
-        <p className="mb-8 text-lg italic text-muted-foreground">{post.excerpt}</p>
-      )}
+      {post.excerpt && <p className="text-muted-foreground mb-8 text-lg italic">{post.excerpt}</p>}
       <ContentBody content={content} />
       {post.tags && post.tags.length > 0 && (
         <div className="mt-8 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border px-3 py-1 text-xs text-muted-foreground"
-            >
+            <span key={tag} className="text-muted-foreground rounded-full border px-3 py-1 text-xs">
               {tag}
             </span>
           ))}

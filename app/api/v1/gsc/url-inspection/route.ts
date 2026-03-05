@@ -33,15 +33,21 @@ export async function POST(request: NextRequest) {
 
     const result: UrlInspectionResult = {
       inspectionUrl: parsed.data.url,
-      indexingState: (indexStatus?.indexingState as UrlInspectionResult['indexingState']) ?? 'UNKNOWN',
+      indexingState:
+        (indexStatus?.indexingState as UrlInspectionResult['indexingState']) ?? 'UNKNOWN',
       coverageState: (indexStatus?.coverageState as string) ?? 'URL_IS_UNKNOWN',
       lastCrawlTime: (indexStatus?.lastCrawlTime as string) ?? null,
       crawlAllowed: (indexStatus?.crawledAs as string) !== 'CRAWLED_AS_NONE',
-      robotsTxtState: (indexStatus?.robotsTxtState as UrlInspectionResult['robotsTxtState']) ?? 'UNKNOWN',
+      robotsTxtState:
+        (indexStatus?.robotsTxtState as UrlInspectionResult['robotsTxtState']) ?? 'UNKNOWN',
       pageFetchState: (indexStatus?.pageFetchState as string) ?? 'UNKNOWN',
-      mobileUsability: (mobileResult?.verdict as UrlInspectionResult['mobileUsability']) ?? 'UNKNOWN',
+      mobileUsability:
+        (mobileResult?.verdict as UrlInspectionResult['mobileUsability']) ?? 'UNKNOWN',
       richResults: Array.isArray(richResultsResult?.detectedItems)
-        ? (richResultsResult.detectedItems as { richResultType: string; items: { name: string; issues: string[] }[] }[])
+        ? (richResultsResult.detectedItems as {
+            richResultType: string
+            items: { name: string; issues: string[] }[]
+          }[])
         : [],
     }
 

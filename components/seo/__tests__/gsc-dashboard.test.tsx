@@ -39,16 +39,17 @@ describe('GscDashboard', () => {
   it('shows not-connected state when GSC is disconnected', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({
-        isConnected: false,
-        siteUrl: null,
-        lastSyncedAt: null,
-        summary: null,
-        topQueries: [],
-        topPages: [],
-        sitemaps: [],
-        indexingCoverage: null,
-      }),
+      json: () =>
+        Promise.resolve({
+          isConnected: false,
+          siteUrl: null,
+          lastSyncedAt: null,
+          summary: null,
+          topQueries: [],
+          topPages: [],
+          sitemaps: [],
+          indexingCoverage: null,
+        }),
     })
 
     render(<GscDashboard />)

@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const compat = new FlatCompat({ baseDirectory: __dirname })
 
-export default [
+const config = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
@@ -17,6 +17,20 @@ export default [
     },
   },
   {
+    files: ['scripts/**', 'e2e/**'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
+    files: ['next-env.d.ts'],
+    rules: {
+      '@typescript-eslint/triple-slash-reference': 'off',
+    },
+  },
+  {
     ignores: ['.next/', 'node_modules/', 'packages/db/supabase/'],
   },
 ]
+
+export default config

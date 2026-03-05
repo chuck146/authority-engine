@@ -116,9 +116,7 @@ export async function GET() {
           keywords: item.keywords ?? [],
           contentType: item.contentType,
         })
-        const worstRule = result.rules
-          .filter((r) => !r.passed)
-          .sort((a, b) => a.score - b.score)[0]
+        const worstRule = result.rules.filter((r) => !r.passed).sort((a, b) => a.score - b.score)[0]
 
         return {
           id: item.id,

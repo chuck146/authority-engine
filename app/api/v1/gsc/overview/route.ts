@@ -81,8 +81,20 @@ function computeSummary(
 }
 
 function mapTopQueries(
-  currentRows: { keys: string[]; clicks: number; impressions: number; ctr: number; position: number }[],
-  previousRows: { keys: string[]; clicks: number; impressions: number; ctr: number; position: number }[],
+  currentRows: {
+    keys: string[]
+    clicks: number
+    impressions: number
+    ctr: number
+    position: number
+  }[],
+  previousRows: {
+    keys: string[]
+    clicks: number
+    impressions: number
+    ctr: number
+    position: number
+  }[],
 ): KeywordRankingItem[] {
   const prevMap = new Map(previousRows.map((r) => [r.keys[0], r.position]))
 
@@ -118,7 +130,15 @@ function mapTopPages(
 }
 
 function mapSitemaps(
-  raw: { path: string; lastSubmitted?: string; isPending: boolean; lastDownloaded?: string; warnings: string; errors: string; contents?: { type: string; submitted: string; indexed: string }[] }[],
+  raw: {
+    path: string
+    lastSubmitted?: string
+    isPending: boolean
+    lastDownloaded?: string
+    warnings: string
+    errors: string
+    contents?: { type: string; submitted: string; indexed: string }[]
+  }[],
 ): GscSitemap[] {
   return raw.map((s) => ({
     path: s.path,

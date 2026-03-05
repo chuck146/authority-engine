@@ -40,11 +40,23 @@ describe('GET /api/v1/ga4/overview', () => {
       // 0: daily totals (current)
       { rows: makeRows([{ dims: ['20260301'], metrics: ['100', '80', '250', '0.4'] }]) },
       // 1: top pages
-      { rows: makeRows([{ dims: ['/services/painting', 'Painting Services'], metrics: ['50', '40', '120', '0.35', '95.2'] }]) },
+      {
+        rows: makeRows([
+          {
+            dims: ['/services/painting', 'Painting Services'],
+            metrics: ['50', '40', '120', '0.35', '95.2'],
+          },
+        ]),
+      },
       // 2: traffic sources
       { rows: makeRows([{ dims: ['google', 'organic'], metrics: ['60', '45', '0.3'] }]) },
       // 3: device breakdown
-      { rows: makeRows([{ dims: ['desktop'], metrics: ['60', '50'] }, { dims: ['mobile'], metrics: ['40', '30'] }]) },
+      {
+        rows: makeRows([
+          { dims: ['desktop'], metrics: ['60', '50'] },
+          { dims: ['mobile'], metrics: ['40', '30'] },
+        ]),
+      },
       // 4: daily totals (previous)
       { rows: makeRows([{ dims: ['20260201'], metrics: ['80', '60', '200', '0.45'] }]) },
     ])

@@ -21,7 +21,7 @@ export function Ga4DeviceBreakdownCards({ devices }: Ga4DeviceBreakdownProps) {
           <CardTitle>Device Breakdown</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No device data available yet.</p>
+          <p className="text-muted-foreground text-sm">No device data available yet.</p>
         </CardContent>
       </Card>
     )
@@ -36,11 +36,11 @@ export function Ga4DeviceBreakdownCards({ devices }: Ga4DeviceBreakdownProps) {
         <div className="grid gap-4 sm:grid-cols-3">
           {devices.map((d) => (
             <div key={d.deviceCategory} className="rounded-lg border p-4 text-center">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-muted-foreground text-sm font-medium">
                 {DEVICE_LABELS[d.deviceCategory] ?? d.deviceCategory}
               </p>
               <p className="mt-1 text-2xl font-bold">{d.percentage}%</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 {d.sessions.toLocaleString()} sessions
               </p>
             </div>

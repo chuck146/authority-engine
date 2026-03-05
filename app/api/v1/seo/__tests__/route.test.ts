@@ -8,7 +8,8 @@ const mockRequireApiAuth = vi.fn()
 const mockSupabase = createMockSupabaseClient()
 
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     AuthError: actual.AuthError,
     requireApiAuth: (...args: unknown[]) => mockRequireApiAuth(...args),
@@ -24,10 +25,31 @@ vi.mock('@/lib/seo', () => ({
   calculateSeoScore: vi.fn(() => ({
     score: 65,
     rules: [
-      { id: 'meta-title-length', label: 'Meta Title Length', category: 'meta-tags', score: 100, weight: 15, passed: true, recommendation: null },
-      { id: 'content-length', label: 'Content Length', category: 'content-structure', score: 30, weight: 15, passed: false, recommendation: 'Content is too short.' },
+      {
+        id: 'meta-title-length',
+        label: 'Meta Title Length',
+        category: 'meta-tags',
+        score: 100,
+        weight: 15,
+        passed: true,
+        recommendation: null,
+      },
+      {
+        id: 'content-length',
+        label: 'Content Length',
+        category: 'content-structure',
+        score: 30,
+        weight: 15,
+        passed: false,
+        recommendation: 'Content is too short.',
+      },
     ],
-    categoryScores: { 'meta-tags': 100, 'content-structure': 30, 'keyword-optimization': 50, readability: 80 },
+    categoryScores: {
+      'meta-tags': 100,
+      'content-structure': 30,
+      'keyword-optimization': 50,
+      readability: 80,
+    },
     summary: 'Good foundation.',
   })),
   calculateSeoScoreValue: vi.fn(() => 65),
@@ -132,10 +154,10 @@ describe('GET /api/v1/seo', () => {
     mockRequireApiAuth.mockResolvedValue(defaultAuth)
 
     mockSupabase.returns
-      .mockResolvedValueOnce({ data: [
-        makeRow('sp-1', 'High Score', 90),
-        makeRow('sp-2', 'Low Score', 20),
-      ], error: null })
+      .mockResolvedValueOnce({
+        data: [makeRow('sp-1', 'High Score', 90), makeRow('sp-2', 'Low Score', 20)],
+        error: null,
+      })
       .mockResolvedValueOnce({ data: [], error: null })
       .mockResolvedValueOnce({ data: [], error: null })
 

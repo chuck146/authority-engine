@@ -1,14 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import {
-  CheckCircle,
-  XCircle,
-  Globe,
-  Archive,
-  CalendarDays,
-  Loader2,
-} from 'lucide-react'
+import { CheckCircle, XCircle, Globe, Archive, CalendarDays, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -56,7 +49,10 @@ const typeLabels: Record<ContentType, string> = {
   blog_post: 'Blog Post',
 }
 
-const actionConfig: Record<string, { label: string; icon: typeof CheckCircle; variant: 'default' | 'outline' | 'destructive' }> = {
+const actionConfig: Record<
+  string,
+  { label: string; icon: typeof CheckCircle; variant: 'default' | 'outline' | 'destructive' }
+> = {
   approve: { label: 'Approve', icon: CheckCircle, variant: 'default' },
   publish: { label: 'Publish', icon: Globe, variant: 'default' },
   reject: { label: 'Reject', icon: XCircle, variant: 'outline' },
@@ -157,7 +153,7 @@ export function ContentDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="sm:max-w-2xl overflow-y-auto">
+      <SheetContent side="right" className="overflow-y-auto sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>{item?.title ?? 'Content Detail'}</SheetTitle>
           <SheetDescription asChild>
@@ -192,9 +188,7 @@ export function ContentDetailSheet({
                 {detail.approvedBy && detail.approvedAt && (
                   <p>Approved {formatDateTime(detail.approvedAt)}</p>
                 )}
-                {detail.publishedAt && (
-                  <p>Published {formatDateTime(detail.publishedAt)}</p>
-                )}
+                {detail.publishedAt && <p>Published {formatDateTime(detail.publishedAt)}</p>}
                 {detail.rejectionNote && (
                   <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-3 text-red-800">
                     <p className="font-medium">Rejection note:</p>

@@ -36,7 +36,11 @@ export type SearchAnalyticsDimension = 'query' | 'page' | 'country' | 'device' |
 export const searchAnalyticsQuerySchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be YYYY-MM-DD'),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be YYYY-MM-DD'),
-  dimensions: z.array(z.enum(['query', 'page', 'country', 'device', 'date'])).min(1).max(4).optional(),
+  dimensions: z
+    .array(z.enum(['query', 'page', 'country', 'device', 'date']))
+    .min(1)
+    .max(4)
+    .optional(),
   rowLimit: z.coerce.number().int().min(1).max(25000).default(1000),
   startRow: z.coerce.number().int().min(0).default(0),
 })
@@ -71,12 +75,29 @@ export type UrlInspectionRequest = z.infer<typeof urlInspectionSchema>
 
 export type UrlInspectionResult = {
   inspectionUrl: string
-  indexingState: 'INDEXING_ALLOWED' | 'BLOCKED_BY_META_TAG' | 'BLOCKED_BY_HTTP_HEADER' | 'BLOCKED_BY_ROBOTS_TXT' | 'UNKNOWN'
-  coverageState: 'SUBMITTED_AND_INDEXED' | 'CRAWLED_NOT_INDEXED' | 'DISCOVERED_NOT_INDEXED' | 'URL_IS_UNKNOWN' | 'DUPLICATE' | string
+  indexingState:
+    | 'INDEXING_ALLOWED'
+    | 'BLOCKED_BY_META_TAG'
+    | 'BLOCKED_BY_HTTP_HEADER'
+    | 'BLOCKED_BY_ROBOTS_TXT'
+    | 'UNKNOWN'
+  coverageState:
+    | 'SUBMITTED_AND_INDEXED'
+    | 'CRAWLED_NOT_INDEXED'
+    | 'DISCOVERED_NOT_INDEXED'
+    | 'URL_IS_UNKNOWN'
+    | 'DUPLICATE'
+    | string
   lastCrawlTime: string | null
   crawlAllowed: boolean
   robotsTxtState: 'ALLOWED' | 'DISALLOWED' | 'UNKNOWN'
-  pageFetchState: 'SUCCESSFUL' | 'SOFT_404' | 'BLOCKED_BY_ROBOTS_TXT' | 'NOT_FOUND' | 'SERVER_ERROR' | string
+  pageFetchState:
+    | 'SUCCESSFUL'
+    | 'SOFT_404'
+    | 'BLOCKED_BY_ROBOTS_TXT'
+    | 'NOT_FOUND'
+    | 'SERVER_ERROR'
+    | string
   mobileUsability: 'MOBILE_FRIENDLY' | 'NOT_MOBILE_FRIENDLY' | 'UNKNOWN'
   richResults: RichResultItem[]
 }

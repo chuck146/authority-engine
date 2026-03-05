@@ -9,7 +9,8 @@ const mockGenerateAndStoreImage = vi.fn()
 const mockSupabase = createMockSupabaseClient()
 
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     AuthError: actual.AuthError,
     requireApiRole: (...args: unknown[]) => mockRequireApiRole(...args),
@@ -71,12 +72,14 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 201 with response for blog_thumbnail', async () => {
       setupHappyPath()
 
-      const res = await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        topic: 'Choosing Paint Colors',
-        style: 'photorealistic',
-        mood: 'warm',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          topic: 'Choosing Paint Colors',
+          style: 'photorealistic',
+          mood: 'warm',
+        }),
+      )
 
       expect(res.status).toBe(201)
       const json = await res.json()
@@ -88,13 +91,15 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 201 for location_hero', async () => {
       setupHappyPath()
 
-      const res = await POST(makeRequest({
-        imageType: 'location_hero',
-        city: 'Summit',
-        state: 'NJ',
-        serviceName: 'Painting',
-        style: 'photorealistic',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'location_hero',
+          city: 'Summit',
+          state: 'NJ',
+          serviceName: 'Painting',
+          style: 'photorealistic',
+        }),
+      )
 
       expect(res.status).toBe(201)
     })
@@ -102,12 +107,14 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 201 for social_graphic', async () => {
       setupHappyPath()
 
-      const res = await POST(makeRequest({
-        imageType: 'social_graphic',
-        message: 'Spring special: 15% off exterior painting',
-        style: 'flat',
-        mood: 'vibrant',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'social_graphic',
+          message: 'Spring special: 15% off exterior painting',
+          style: 'flat',
+          mood: 'vibrant',
+        }),
+      )
 
       expect(res.status).toBe(201)
     })
@@ -115,12 +122,14 @@ describe('POST /api/v1/media/generate', () => {
     it('passes org context to generateAndStoreImage', async () => {
       setupHappyPath()
 
-      await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        topic: 'Choosing Paint Colors',
-        style: 'photorealistic',
-        mood: 'warm',
-      }))
+      await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          topic: 'Choosing Paint Colors',
+          style: 'photorealistic',
+          mood: 'warm',
+        }),
+      )
 
       expect(mockGenerateAndStoreImage).toHaveBeenCalledOnce()
       const [, orgCtx, orgId, userId] = mockGenerateAndStoreImage.mock.calls[0]!
@@ -134,10 +143,12 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 401 when not authenticated', async () => {
       mockRequireApiRole.mockRejectedValue(new AuthError('Unauthorized', 401))
 
-      const res = await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        topic: 'Choosing Paint Colors',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          topic: 'Choosing Paint Colors',
+        }),
+      )
 
       expect(res.status).toBe(401)
     })
@@ -145,10 +156,12 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 403 when insufficient role', async () => {
       mockRequireApiRole.mockRejectedValue(new AuthError('Insufficient permissions', 403))
 
-      const res = await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        topic: 'Choosing Paint Colors',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          topic: 'Choosing Paint Colors',
+        }),
+      )
 
       expect(res.status).toBe(403)
     })
@@ -168,10 +181,12 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 400 for missing required fields', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
 
-      const res = await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        // missing topic
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          // missing topic
+        }),
+      )
 
       expect(res.status).toBe(400)
     })
@@ -179,12 +194,14 @@ describe('POST /api/v1/media/generate', () => {
     it('returns 400 for location_hero with invalid state', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
 
-      const res = await POST(makeRequest({
-        imageType: 'location_hero',
-        city: 'Summit',
-        state: 'New Jersey', // must be 2 chars
-        serviceName: 'Painting',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'location_hero',
+          city: 'Summit',
+          state: 'New Jersey', // must be 2 chars
+          serviceName: 'Painting',
+        }),
+      )
 
       expect(res.status).toBe(400)
     })
@@ -195,12 +212,14 @@ describe('POST /api/v1/media/generate', () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({ data: null, error: null })
 
-      const res = await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        topic: 'Choosing Paint Colors',
-        style: 'photorealistic',
-        mood: 'warm',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          topic: 'Choosing Paint Colors',
+          style: 'photorealistic',
+          mood: 'warm',
+        }),
+      )
 
       expect(res.status).toBe(404)
     })
@@ -213,12 +232,14 @@ describe('POST /api/v1/media/generate', () => {
       })
       mockGenerateAndStoreImage.mockRejectedValue(new Error('Gemini API error'))
 
-      const res = await POST(makeRequest({
-        imageType: 'blog_thumbnail',
-        topic: 'Choosing Paint Colors',
-        style: 'photorealistic',
-        mood: 'warm',
-      }))
+      const res = await POST(
+        makeRequest({
+          imageType: 'blog_thumbnail',
+          topic: 'Choosing Paint Colors',
+          style: 'photorealistic',
+          mood: 'warm',
+        }),
+      )
 
       expect(res.status).toBe(500)
       const json = await res.json()

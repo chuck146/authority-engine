@@ -29,7 +29,11 @@ export type Ga4ReportRequest = {
   metrics: { name: string }[]
   limit?: number
   offset?: number
-  orderBys?: { dimension?: { dimensionName: string }; metric?: { metricName: string }; desc?: boolean }[]
+  orderBys?: {
+    dimension?: { dimensionName: string }
+    metric?: { metricName: string }
+    desc?: boolean
+  }[]
 }
 
 export type Ga4DimensionValue = {

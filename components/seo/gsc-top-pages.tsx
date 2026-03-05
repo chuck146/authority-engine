@@ -1,7 +1,14 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import type { PagePerformanceItem } from '@/types/gsc'
 
 type GscTopPagesProps = {
@@ -25,7 +32,7 @@ export function GscTopPages({ pages }: GscTopPagesProps) {
           <CardTitle>Top Pages</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No page data available yet.</p>
+          <p className="text-muted-foreground text-sm">No page data available yet.</p>
         </CardContent>
       </Card>
     )

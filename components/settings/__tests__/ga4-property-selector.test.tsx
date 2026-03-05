@@ -22,12 +22,17 @@ describe('Ga4PropertySelector', () => {
   it('renders property options after loading', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({
-        properties: [
-          { propertyId: 'properties/111', displayName: 'Main Site', accountName: 'Cleanest Painting' },
-          { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
-        ],
-      }),
+      json: () =>
+        Promise.resolve({
+          properties: [
+            {
+              propertyId: 'properties/111',
+              displayName: 'Main Site',
+              accountName: 'Cleanest Painting',
+            },
+            { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
+          ],
+        }),
     })
 
     render(<Ga4PropertySelector />)
@@ -42,11 +47,16 @@ describe('Ga4PropertySelector', () => {
   it('auto-selects when only one property', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({
-        properties: [
-          { propertyId: 'properties/111', displayName: 'Main Site', accountName: 'Cleanest Painting' },
-        ],
-      }),
+      json: () =>
+        Promise.resolve({
+          properties: [
+            {
+              propertyId: 'properties/111',
+              displayName: 'Main Site',
+              accountName: 'Cleanest Painting',
+            },
+          ],
+        }),
     })
 
     render(<Ga4PropertySelector />)
@@ -74,12 +84,17 @@ describe('Ga4PropertySelector', () => {
     // Load properties
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({
-        properties: [
-          { propertyId: 'properties/111', displayName: 'Main Site', accountName: 'Cleanest Painting' },
-          { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
-        ],
-      }),
+      json: () =>
+        Promise.resolve({
+          properties: [
+            {
+              propertyId: 'properties/111',
+              displayName: 'Main Site',
+              accountName: 'Cleanest Painting',
+            },
+            { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
+          ],
+        }),
     })
 
     render(<Ga4PropertySelector />)
@@ -115,12 +130,17 @@ describe('Ga4PropertySelector', () => {
   it('disables Save button when no property selected', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({
-        properties: [
-          { propertyId: 'properties/111', displayName: 'Main Site', accountName: 'Cleanest Painting' },
-          { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
-        ],
-      }),
+      json: () =>
+        Promise.resolve({
+          properties: [
+            {
+              propertyId: 'properties/111',
+              displayName: 'Main Site',
+              accountName: 'Cleanest Painting',
+            },
+            { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
+          ],
+        }),
     })
 
     render(<Ga4PropertySelector />)

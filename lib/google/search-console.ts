@@ -42,17 +42,14 @@ export async function fetchSearchAnalytics(
     startRow: startRow ?? 0,
   }
 
-  const res = await fetch(
-    `${GSC_SEARCH_ANALYTICS_URL}/${encodedSite}/searchAnalytics/query`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
+  const res = await fetch(`${GSC_SEARCH_ANALYTICS_URL}/${encodedSite}/searchAnalytics/query`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify(body),
+  })
 
   if (!res.ok) {
     const text = await res.text()

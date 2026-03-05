@@ -1,8 +1,4 @@
-import type {
-  Ga4AccountSummary,
-  Ga4ReportRequest,
-  Ga4ReportResponse,
-} from '@/types/ga4'
+import type { Ga4AccountSummary, Ga4ReportRequest, Ga4ReportResponse } from '@/types/ga4'
 
 const ADMIN_API_BASE = 'https://analyticsadmin.googleapis.com/v1beta'
 const DATA_API_BASE = 'https://analyticsdata.googleapis.com/v1beta'
@@ -18,9 +14,7 @@ type AccountSummariesResponse = {
   nextPageToken?: string
 }
 
-export async function listAccountSummaries(
-  options: FetchOptions,
-): Promise<Ga4AccountSummary[]> {
+export async function listAccountSummaries(options: FetchOptions): Promise<Ga4AccountSummary[]> {
   const res = await fetch(`${ADMIN_API_BASE}/accountSummaries?pageSize=200`, {
     headers: { Authorization: `Bearer ${options.accessToken}` },
   })

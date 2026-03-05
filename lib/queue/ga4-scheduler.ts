@@ -20,9 +20,7 @@ function getGa4SyncQueue(): Queue {
 function withTimeout<T>(promise: Promise<T>, ms = REDIS_TIMEOUT_MS): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('Redis timeout')), ms),
-    ),
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Redis timeout')), ms)),
   ])
 }
 

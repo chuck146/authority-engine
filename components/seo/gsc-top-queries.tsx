@@ -1,7 +1,14 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import type { KeywordRankingItem } from '@/types/gsc'
 
 type GscTopQueriesProps = {
@@ -14,7 +21,12 @@ function PositionChange({ change }: { change: number | null }) {
   const isImproved = change > 0 // positive = position improved (went up)
   const color = isImproved ? 'text-green-600' : 'text-red-600'
   const arrow = isImproved ? '↑' : '↓'
-  return <span className={color}>{arrow}{Math.abs(change).toFixed(1)}</span>
+  return (
+    <span className={color}>
+      {arrow}
+      {Math.abs(change).toFixed(1)}
+    </span>
+  )
 }
 
 export function GscTopQueries({ queries }: GscTopQueriesProps) {
@@ -25,7 +37,7 @@ export function GscTopQueries({ queries }: GscTopQueriesProps) {
           <CardTitle>Top Queries</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No query data available yet.</p>
+          <p className="text-muted-foreground text-sm">No query data available yet.</p>
         </CardContent>
       </Card>
     )

@@ -37,9 +37,7 @@ describe('structuredContentSchema', () => {
   })
 
   it('rejects empty sections array', () => {
-    const result = structuredContentSchema.safeParse(
-      buildStructuredContent({ sections: [] }),
-    )
+    const result = structuredContentSchema.safeParse(buildStructuredContent({ sections: [] }))
     expect(result.success).toBe(false)
   })
 })

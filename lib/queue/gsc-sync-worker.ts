@@ -75,12 +75,10 @@ export async function processGscSyncJob(job: Job<GscSyncJobData>): Promise<void>
         position: r.position,
       }))
 
-      await supabase
-        .from('keyword_rankings')
-        .upsert(batch as never, {
-          onConflict: 'organization_id,query,page,date,device',
-          ignoreDuplicates: false,
-        })
+      await supabase.from('keyword_rankings').upsert(batch as never, {
+        onConflict: 'organization_id,query,page,date,device',
+        ignoreDuplicates: false,
+      })
     }
   }
 
@@ -99,17 +97,15 @@ export async function processGscSyncJob(job: Job<GscSyncJobData>): Promise<void>
     })),
   }))
 
-  await supabase
-    .from('gsc_snapshots')
-    .upsert(
-      {
-        organization_id: organizationId,
-        snapshot_type: 'sitemaps',
-        snapshot_date: today,
-        data: sitemapData as unknown as Database['public']['Tables']['gsc_snapshots']['Insert']['data'],
-      } as never,
-      { onConflict: 'organization_id,snapshot_type,snapshot_date', ignoreDuplicates: false },
-    )
+  await supabase.from('gsc_snapshots').upsert(
+    {
+      organization_id: organizationId,
+      snapshot_type: 'sitemaps',
+      snapshot_date: today,
+      data: sitemapData as unknown as Database['public']['Tables']['gsc_snapshots']['Insert']['data'],
+    } as never,
+    { onConflict: 'organization_id,snapshot_type,snapshot_date', ignoreDuplicates: false },
+  )
 
   // Update last synced timestamp on the connection
   await supabase

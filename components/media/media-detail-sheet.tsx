@@ -67,9 +67,7 @@ export function MediaDetailSheet({ item, open, onOpenChange, onDelete }: MediaDe
             {item.sizeBytes && (
               <div>
                 <p className="font-medium">Size</p>
-                <p className="text-muted-foreground">
-                  {(item.sizeBytes / 1024).toFixed(0)} KB
-                </p>
+                <p className="text-muted-foreground">{(item.sizeBytes / 1024).toFixed(0)} KB</p>
               </div>
             )}
             {item.width && item.height && (
@@ -88,20 +86,14 @@ export function MediaDetailSheet({ item, open, onOpenChange, onDelete }: MediaDe
             </div>
           </div>
 
-          {item.imageType && (
-            <Badge variant="outline">{IMAGE_TYPE_LABELS[item.imageType]}</Badge>
-          )}
+          {item.imageType && <Badge variant="outline">{IMAGE_TYPE_LABELS[item.imageType]}</Badge>}
 
           <div className="flex gap-2">
             <Button variant="outline" className="flex-1" onClick={handleCopyUrl}>
               <Copy className="mr-2 h-4 w-4" />
               Copy URL
             </Button>
-            <Button
-              variant="destructive"
-              className="flex-1"
-              onClick={() => onDelete(item.id)}
-            >
+            <Button variant="destructive" className="flex-1" onClick={() => onDelete(item.id)}>
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </Button>

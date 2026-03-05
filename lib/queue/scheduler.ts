@@ -18,9 +18,7 @@ function getPublishQueue(): Queue {
 function withTimeout<T>(promise: Promise<T>, ms = REDIS_TIMEOUT_MS): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('Redis timeout')), ms),
-    ),
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Redis timeout')), ms)),
   ])
 }
 
@@ -31,10 +29,7 @@ export type PublishJobData = {
   contentId: string
 }
 
-export async function schedulePublish(
-  data: PublishJobData,
-  scheduledAt: Date,
-): Promise<string> {
+export async function schedulePublish(data: PublishJobData, scheduledAt: Date): Promise<string> {
   const queue = getPublishQueue()
   const delay = scheduledAt.getTime() - Date.now()
 

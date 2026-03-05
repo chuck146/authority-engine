@@ -71,8 +71,7 @@ export function CalendarGrid({ items, month, year, onEntryClick }: CalendarGridP
       <div className="grid grid-cols-7">
         {days.map((date, i) => {
           const isCurrentMonth = date.getMonth() === month - 1
-          const isToday =
-            date.toDateString() === new Date().toDateString()
+          const isToday = date.toDateString() === new Date().toDateString()
           const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
           const dayItems = itemsByDay.get(key) ?? []
 
@@ -80,7 +79,7 @@ export function CalendarGrid({ items, month, year, onEntryClick }: CalendarGridP
             <div
               key={i}
               className={cn(
-                'min-h-[100px] border-b border-r p-1.5 last:border-r-0',
+                'min-h-[100px] border-r border-b p-1.5 last:border-r-0',
                 !isCurrentMonth && 'bg-muted/30',
               )}
             >

@@ -1,7 +1,14 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import type { Ga4PageMetric } from '@/types/ga4'
 
 type Ga4TopPagesProps = {
@@ -16,7 +23,7 @@ export function Ga4TopPages({ pages }: Ga4TopPagesProps) {
           <CardTitle>Top Pages</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No page data available yet.</p>
+          <p className="text-muted-foreground text-sm">No page data available yet.</p>
         </CardContent>
       </Card>
     )
@@ -41,7 +48,10 @@ export function Ga4TopPages({ pages }: Ga4TopPagesProps) {
           <TableBody>
             {pages.map((p) => (
               <TableRow key={p.pagePath}>
-                <TableCell className="max-w-[200px] truncate font-medium" title={p.pageTitle || p.pagePath}>
+                <TableCell
+                  className="max-w-[200px] truncate font-medium"
+                  title={p.pageTitle || p.pagePath}
+                >
                   {p.pagePath}
                 </TableCell>
                 <TableCell className="text-right">{p.sessions.toLocaleString()}</TableCell>

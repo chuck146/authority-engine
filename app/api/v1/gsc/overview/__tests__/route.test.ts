@@ -46,7 +46,17 @@ describe('GET /api/v1/gsc/overview', () => {
     mockFetchSearchAnalytics
       .mockResolvedValueOnce({ rows: queryRows }) // current queries
       .mockResolvedValueOnce({ rows: buildApiRows(['painting nj']) }) // previous queries
-      .mockResolvedValueOnce({ rows: [{ keys: ['https://example.com/'], clicks: 50, impressions: 1000, ctr: 0.05, position: 3.2 }] }) // current pages
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            keys: ['https://example.com/'],
+            clicks: 50,
+            impressions: 1000,
+            ctr: 0.05,
+            position: 3.2,
+          },
+        ],
+      }) // current pages
 
     mockFetchSitemaps.mockResolvedValueOnce([
       {
@@ -80,8 +90,12 @@ describe('GET /api/v1/gsc/overview', () => {
 
   it('computes trend percentages between current and previous periods', async () => {
     mockFetchSearchAnalytics
-      .mockResolvedValueOnce({ rows: [{ keys: ['test'], clicks: 200, impressions: 4000, ctr: 0.05, position: 10 }] })
-      .mockResolvedValueOnce({ rows: [{ keys: ['test'], clicks: 100, impressions: 4000, ctr: 0.025, position: 20 }] })
+      .mockResolvedValueOnce({
+        rows: [{ keys: ['test'], clicks: 200, impressions: 4000, ctr: 0.05, position: 10 }],
+      })
+      .mockResolvedValueOnce({
+        rows: [{ keys: ['test'], clicks: 100, impressions: 4000, ctr: 0.025, position: 20 }],
+      })
       .mockResolvedValueOnce({ rows: [] })
     mockFetchSitemaps.mockResolvedValueOnce([])
 
@@ -95,8 +109,7 @@ describe('GET /api/v1/gsc/overview', () => {
   })
 
   it('handles empty search analytics gracefully', async () => {
-    mockFetchSearchAnalytics
-      .mockResolvedValue({ rows: [] })
+    mockFetchSearchAnalytics.mockResolvedValue({ rows: [] })
     mockFetchSitemaps.mockResolvedValueOnce([])
 
     const { GET } = await import('../route')

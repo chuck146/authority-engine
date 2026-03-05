@@ -32,8 +32,18 @@ describe('GET /api/v1/integrations/ga4/properties', () => {
         account: 'accounts/111',
         displayName: 'Cleanest Painting',
         propertySummaries: [
-          { property: 'properties/222', displayName: 'Main Site', propertyType: 'PROPERTY_TYPE_ORDINARY', parent: 'accounts/111' },
-          { property: 'properties/333', displayName: 'Blog', propertyType: 'PROPERTY_TYPE_ORDINARY', parent: 'accounts/111' },
+          {
+            property: 'properties/222',
+            displayName: 'Main Site',
+            propertyType: 'PROPERTY_TYPE_ORDINARY',
+            parent: 'accounts/111',
+          },
+          {
+            property: 'properties/333',
+            displayName: 'Blog',
+            propertyType: 'PROPERTY_TYPE_ORDINARY',
+            parent: 'accounts/111',
+          },
         ],
       },
     ])

@@ -17,7 +17,10 @@ const authRoutes = ['/login', '/signup']
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (pathname.startsWith('/api/auth/callback') || pathname.startsWith('/api/auth/google/callback')) {
+  if (
+    pathname.startsWith('/api/auth/callback') ||
+    pathname.startsWith('/api/auth/google/callback')
+  ) {
     return NextResponse.next()
   }
 

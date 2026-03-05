@@ -41,7 +41,13 @@ describe('GET /api/v1/gsc/search-analytics', () => {
     mockFetchSearchAnalytics.mockResolvedValueOnce({
       rows: [
         { keys: ['painting nj'], clicks: 85, impressions: 2400, ctr: 0.035416, position: 8.234 },
-        { keys: ['house painting'], clicks: 42, impressions: 1800, ctr: 0.023333, position: 12.789 },
+        {
+          keys: ['house painting'],
+          clicks: 42,
+          impressions: 1800,
+          ctr: 0.023333,
+          position: 12.789,
+        },
       ],
     })
 

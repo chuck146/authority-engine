@@ -57,9 +57,7 @@ export function ScheduleDialog({
         location_page: 'location_pages',
         blog_post: 'blog_posts',
       }
-      const res = await fetch(
-        `/api/v1/content/${type}/approved?table=${tableMap[type]}`,
-      )
+      const res = await fetch(`/api/v1/content/${type}/approved?table=${tableMap[type]}`)
       if (res.ok) {
         const data = await res.json()
         setApprovedContent(data)
@@ -116,9 +114,7 @@ export function ScheduleDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Schedule Content</DialogTitle>
-          <DialogDescription>
-            Choose approved content and a publish date/time.
-          </DialogDescription>
+          <DialogDescription>Choose approved content and a publish date/time.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -142,11 +138,7 @@ export function ScheduleDialog({
           <div className="space-y-2">
             <Label htmlFor="content-id">Content</Label>
             {approvedContent.length > 0 ? (
-              <Select
-                value={contentId}
-                onValueChange={setContentId}
-                disabled={!!defaultContentId}
-              >
+              <Select value={contentId} onValueChange={setContentId} disabled={!!defaultContentId}>
                 <SelectTrigger id="content-id">
                   <SelectValue placeholder={loadingContent ? 'Loading...' : 'Select content'} />
                 </SelectTrigger>
@@ -184,10 +176,7 @@ export function ScheduleDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={loading || !contentType || !contentId || !scheduledAt}
-            >
+            <Button type="submit" disabled={loading || !contentType || !contentId || !scheduledAt}>
               {loading ? 'Scheduling...' : 'Schedule'}
             </Button>
           </DialogFooter>

@@ -81,31 +81,37 @@ export type GenerateContentResponse = {
 
 // --- Status Update Request (approval workflow) ---
 
-export const contentStatusUpdateSchema = z.object({
-  action: z.enum(['approve', 'reject', 'publish', 'archive']),
-  rejectionNote: z.string().min(1).max(1000).optional(),
-}).refine(
-  (data) => data.action !== 'reject' || !!data.rejectionNote?.trim(),
-  { message: 'Rejection note is required when rejecting', path: ['rejectionNote'] }
-)
+export const contentStatusUpdateSchema = z
+  .object({
+    action: z.enum(['approve', 'reject', 'publish', 'archive']),
+    rejectionNote: z.string().min(1).max(1000).optional(),
+  })
+  .refine((data) => data.action !== 'reject' || !!data.rejectionNote?.trim(), {
+    message: 'Rejection note is required when rejecting',
+    path: ['rejectionNote'],
+  })
 
 export type ContentStatusUpdate = z.infer<typeof contentStatusUpdateSchema>
 
 // --- Content Edit Request (PUT body) ---
 
-export const contentEditRequestSchema = z.object({
-  title: z.string().min(1).max(200).optional(),
-  slug: z.string().min(1).max(200)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens')
-    .optional(),
-  content: structuredContentSchema.optional(),
-  metaTitle: z.string().max(60).optional(),
-  metaDescription: z.string().max(160).optional(),
-  keywords: z.array(z.string().max(50)).max(10).optional(),
-}).refine(
-  (data) => Object.values(data).some((v) => v !== undefined),
-  { message: 'At least one field must be provided for update' }
-)
+export const contentEditRequestSchema = z
+  .object({
+    title: z.string().min(1).max(200).optional(),
+    slug: z
+      .string()
+      .min(1)
+      .max(200)
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens')
+      .optional(),
+    content: structuredContentSchema.optional(),
+    metaTitle: z.string().max(60).optional(),
+    metaDescription: z.string().max(160).optional(),
+    keywords: z.array(z.string().max(50)).max(10).optional(),
+  })
+  .refine((data) => Object.values(data).some((v) => v !== undefined), {
+    message: 'At least one field must be provided for update',
+  })
 
 export type ContentEditRequest = z.infer<typeof contentEditRequestSchema>
 

@@ -4,7 +4,8 @@ import { buildAuthContext, buildCalendarEntry } from '@/tests/factories'
 
 const mockAuth = buildAuthContext({ role: 'editor' })
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     ...actual,
     requireApiRole: vi.fn().mockResolvedValue(mockAuth),

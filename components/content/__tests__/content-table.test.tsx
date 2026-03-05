@@ -33,17 +33,29 @@ describe('ContentTable', () => {
     })
 
     it('renders item title', () => {
-      render(<ContentTable items={[buildContentListItem({ title: 'My Service Page' })]} {...defaultProps} />)
+      render(
+        <ContentTable
+          items={[buildContentListItem({ title: 'My Service Page' })]}
+          {...defaultProps}
+        />,
+      )
       expect(screen.getByText('My Service Page')).toBeInTheDocument()
     })
 
     it('renders type label as badge', () => {
-      render(<ContentTable items={[buildContentListItem({ type: 'location_page' })]} {...defaultProps} />)
+      render(
+        <ContentTable
+          items={[buildContentListItem({ type: 'location_page' })]}
+          {...defaultProps}
+        />,
+      )
       expect(screen.getByText('Location Page')).toBeInTheDocument()
     })
 
     it('renders status as badge', () => {
-      render(<ContentTable items={[buildContentListItem({ status: 'published' })]} {...defaultProps} />)
+      render(
+        <ContentTable items={[buildContentListItem({ status: 'published' })]} {...defaultProps} />,
+      )
       expect(screen.getByText('published')).toBeInTheDocument()
     })
 
@@ -58,7 +70,12 @@ describe('ContentTable', () => {
     })
 
     it('formats date correctly', () => {
-      render(<ContentTable items={[buildContentListItem({ createdAt: '2026-03-01T12:00:00Z' })]} {...defaultProps} />)
+      render(
+        <ContentTable
+          items={[buildContentListItem({ createdAt: '2026-03-01T12:00:00Z' })]}
+          {...defaultProps}
+        />,
+      )
       expect(screen.getByText('Mar 1, 2026')).toBeInTheDocument()
     })
 

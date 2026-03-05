@@ -19,7 +19,12 @@ describe('listAccountSummaries', () => {
         account: 'accounts/123',
         displayName: 'Cleanest Painting',
         propertySummaries: [
-          { property: 'properties/456', displayName: 'Main Site', propertyType: 'PROPERTY_TYPE_ORDINARY', parent: 'accounts/123' },
+          {
+            property: 'properties/456',
+            displayName: 'Main Site',
+            propertyType: 'PROPERTY_TYPE_ORDINARY',
+            parent: 'accounts/123',
+          },
         ],
       },
     ]
@@ -145,8 +150,14 @@ describe('batchRunReports', () => {
       accessToken: 'ya29.test',
       propertyId: 'properties/456',
       requests: [
-        { dateRanges: [{ startDate: '2026-02-01', endDate: '2026-02-28' }], metrics: [{ name: 'sessions' }] },
-        { dateRanges: [{ startDate: '2026-02-01', endDate: '2026-02-28' }], metrics: [{ name: 'totalUsers' }] },
+        {
+          dateRanges: [{ startDate: '2026-02-01', endDate: '2026-02-28' }],
+          metrics: [{ name: 'sessions' }],
+        },
+        {
+          dateRanges: [{ startDate: '2026-02-01', endDate: '2026-02-28' }],
+          metrics: [{ name: 'totalUsers' }],
+        },
       ],
     })
 

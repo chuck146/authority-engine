@@ -87,12 +87,10 @@ export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void>
         engagement_rate: parseFloat(r.metricValues?.[5]?.value ?? '0') || 0,
       }))
 
-      await supabase
-        .from('ga4_page_metrics')
-        .upsert(batch as never, {
-          onConflict: 'organization_id,page_path,date',
-          ignoreDuplicates: false,
-        })
+      await supabase.from('ga4_page_metrics').upsert(batch as never, {
+        onConflict: 'organization_id,page_path,date',
+        ignoreDuplicates: false,
+      })
     }
   }
 
@@ -103,11 +101,7 @@ export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void>
     request: {
       dateRanges,
       dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }],
-      metrics: [
-        { name: 'sessions' },
-        { name: 'totalUsers' },
-        { name: 'bounceRate' },
-      ],
+      metrics: [{ name: 'sessions' }, { name: 'totalUsers' }, { name: 'bounceRate' }],
       limit: 100,
     },
   })
@@ -120,17 +114,15 @@ export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void>
     bounceRate: parseFloat(r.metricValues?.[2]?.value ?? '0') || 0,
   }))
 
-  await supabase
-    .from('ga4_snapshots')
-    .upsert(
-      {
-        organization_id: organizationId,
-        snapshot_type: 'traffic_sources',
-        snapshot_date: today,
-        data: sourcesData as unknown as Database['public']['Tables']['ga4_snapshots']['Insert']['data'],
-      } as never,
-      { onConflict: 'organization_id,snapshot_type,snapshot_date', ignoreDuplicates: false },
-    )
+  await supabase.from('ga4_snapshots').upsert(
+    {
+      organization_id: organizationId,
+      snapshot_type: 'traffic_sources',
+      snapshot_date: today,
+      data: sourcesData as unknown as Database['public']['Tables']['ga4_snapshots']['Insert']['data'],
+    } as never,
+    { onConflict: 'organization_id,snapshot_type,snapshot_date', ignoreDuplicates: false },
+  )
 
   // Fetch device breakdown
   const deviceReport = await runReport({
@@ -139,10 +131,7 @@ export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void>
     request: {
       dateRanges,
       dimensions: [{ name: 'deviceCategory' }],
-      metrics: [
-        { name: 'sessions' },
-        { name: 'totalUsers' },
-      ],
+      metrics: [{ name: 'sessions' }, { name: 'totalUsers' }],
     },
   })
 
@@ -152,17 +141,15 @@ export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void>
     users: parseInt(r.metricValues?.[1]?.value ?? '0') || 0,
   }))
 
-  await supabase
-    .from('ga4_snapshots')
-    .upsert(
-      {
-        organization_id: organizationId,
-        snapshot_type: 'device_breakdown',
-        snapshot_date: today,
-        data: deviceData as unknown as Database['public']['Tables']['ga4_snapshots']['Insert']['data'],
-      } as never,
-      { onConflict: 'organization_id,snapshot_type,snapshot_date', ignoreDuplicates: false },
-    )
+  await supabase.from('ga4_snapshots').upsert(
+    {
+      organization_id: organizationId,
+      snapshot_type: 'device_breakdown',
+      snapshot_date: today,
+      data: deviceData as unknown as Database['public']['Tables']['ga4_snapshots']['Insert']['data'],
+    } as never,
+    { onConflict: 'organization_id,snapshot_type,snapshot_date', ignoreDuplicates: false },
+  )
 
   // Update last synced timestamp on the connection
   await supabase

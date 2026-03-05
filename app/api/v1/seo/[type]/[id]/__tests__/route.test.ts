@@ -8,7 +8,8 @@ const mockRequireApiAuth = vi.fn()
 const mockSupabase = createMockSupabaseClient()
 
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     AuthError: actual.AuthError,
     requireApiAuth: (...args: unknown[]) => mockRequireApiAuth(...args),
@@ -23,7 +24,12 @@ vi.mock('@/lib/seo', () => ({
   calculateSeoScore: vi.fn(() => ({
     score: 72,
     rules: [],
-    categoryScores: { 'meta-tags': 80, 'content-structure': 70, 'keyword-optimization': 60, readability: 80 },
+    categoryScores: {
+      'meta-tags': 80,
+      'content-structure': 70,
+      'keyword-optimization': 60,
+      readability: 80,
+    },
     summary: 'Good foundation.',
   })),
 }))
@@ -59,7 +65,12 @@ describe('GET /api/v1/seo/[type]/[id]', () => {
   it('returns 200 with full score breakdown', async () => {
     mockRequireApiAuth.mockResolvedValue(defaultAuth)
     mockSupabase.single.mockResolvedValueOnce({
-      data: { id: 'sp-1', title: 'Interior Painting', content: defaultContent, keywords: ['painting'] },
+      data: {
+        id: 'sp-1',
+        title: 'Interior Painting',
+        content: defaultContent,
+        keywords: ['painting'],
+      },
       error: null,
     })
 

@@ -9,7 +9,8 @@ const mockRequireApiRole = vi.fn()
 const mockSupabase = createMockSupabaseClient()
 
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     AuthError: actual.AuthError,
     requireApiAuth: (...args: unknown[]) => mockRequireApiAuth(...args),
@@ -128,7 +129,14 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
 
     // 1st single: fetch current record (includes content, keywords for JSONB meta sync + SEO scoring)
     mockSupabase.single.mockResolvedValueOnce({
-      data: { id: 'content-1', status: 'review', slug: 'interior-painting', content: defaultContent, keywords: ['interior painting'], ...currentOverrides },
+      data: {
+        id: 'content-1',
+        status: 'review',
+        slug: 'interior-painting',
+        content: defaultContent,
+        keywords: ['interior painting'],
+        ...currentOverrides,
+      },
       error: null,
     })
     // update chain: .update().eq().eq() — await resolves to chain (no error prop = undefined = falsy)
@@ -143,9 +151,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 200 when updating title only', async () => {
       setupPutHappyPath()
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Updated Title',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Updated Title',
+        }),
+      )
 
       expect(res.status).toBe(200)
       const json = await res.json()
@@ -155,21 +165,27 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
 
     it('returns 200 when updating meta fields and syncs into JSONB content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: 'content-1', status: 'draft', slug: 'interior-painting', content: defaultContent, keywords: ['interior painting'] },
-          error: null,
-        })
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { ...defaultRow, status: 'draft', meta_title: 'New Meta' },
-          error: null,
-        })
+      mockSupabase.single.mockResolvedValueOnce({
+        data: {
+          id: 'content-1',
+          status: 'draft',
+          slug: 'interior-painting',
+          content: defaultContent,
+          keywords: ['interior painting'],
+        },
+        error: null,
+      })
+      mockSupabase.single.mockResolvedValueOnce({
+        data: { ...defaultRow, status: 'draft', meta_title: 'New Meta' },
+        error: null,
+      })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        metaTitle: 'New Meta',
-        metaDescription: 'New description for SEO.',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          metaTitle: 'New Meta',
+          metaDescription: 'New description for SEO.',
+        }),
+      )
 
       expect(res.status).toBe(200)
 
@@ -184,16 +200,17 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
 
     it('allows editing content in draft status', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: 'content-1', status: 'draft', slug: 'test', content: defaultContent },
-          error: null,
-        })
+      mockSupabase.single.mockResolvedValueOnce({
+        data: { id: 'content-1', status: 'draft', slug: 'test', content: defaultContent },
+        error: null,
+      })
       mockSupabase.single.mockResolvedValueOnce({ data: defaultRow, error: null })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Edited Draft',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Edited Draft',
+        }),
+      )
 
       expect(res.status).toBe(200)
     })
@@ -201,7 +218,13 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('updates slug when changed and no conflict', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'review', slug: 'old-slug', content: defaultContent, keywords: ['painting'] },
+        data: {
+          id: 'content-1',
+          status: 'review',
+          slug: 'old-slug',
+          content: defaultContent,
+          keywords: ['painting'],
+        },
         error: null,
       })
       // slug uniqueness check — no conflict
@@ -212,9 +235,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
         error: null,
       })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        slug: 'new-slug',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          slug: 'new-slug',
+        }),
+      )
 
       expect(res.status).toBe(200)
       const json = await res.json()
@@ -224,9 +249,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('skips slug uniqueness check when slug unchanged', async () => {
       setupPutHappyPath()
 
-      await PUT(...makePutRequest('service_page', 'content-1', {
-        slug: 'interior-painting', // same as current
-      }))
+      await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          slug: 'interior-painting', // same as current
+        }),
+      )
 
       // maybeSingle should NOT have been called (no uniqueness query)
       expect(mockSupabase.maybeSingle).not.toHaveBeenCalled()
@@ -236,9 +263,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
       const updatedContent = buildStructuredContent({ headline: 'Updated Content' })
       setupPutHappyPath()
 
-      await PUT(...makePutRequest('service_page', 'content-1', {
-        content: updatedContent,
-      }))
+      await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          content: updatedContent,
+        }),
+      )
 
       expect(mockCalculateSeoScoreValue).toHaveBeenCalled()
       const updateCalls = mockSupabase.update.mock.calls
@@ -249,9 +278,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('recalculates seo_score when keywords change', async () => {
       setupPutHappyPath()
 
-      await PUT(...makePutRequest('service_page', 'content-1', {
-        keywords: ['new keyword'],
-      }))
+      await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          keywords: ['new keyword'],
+        }),
+      )
 
       expect(mockCalculateSeoScoreValue).toHaveBeenCalled()
       const updateCalls = mockSupabase.update.mock.calls
@@ -262,9 +293,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('does not recalculate seo_score when only title changes', async () => {
       setupPutHappyPath()
 
-      await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'New Title Only',
-      }))
+      await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'New Title Only',
+        }),
+      )
 
       expect(mockCalculateSeoScoreValue).not.toHaveBeenCalled()
     })
@@ -272,21 +305,27 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('recalculates excerpt and reading_time for blog_post content update', async () => {
       const longContent = buildStructuredContent({
         intro: 'A'.repeat(300),
-        sections: [
-          { title: 'S1', body: 'word '.repeat(400) },
-        ],
+        sections: [{ title: 'S1', body: 'word '.repeat(400) }],
       })
 
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'blog-1', status: 'review', slug: 'test-blog', content: defaultContent, keywords: [] },
+        data: {
+          id: 'blog-1',
+          status: 'review',
+          slug: 'test-blog',
+          content: defaultContent,
+          keywords: [],
+        },
         error: null,
       })
       mockSupabase.single.mockResolvedValueOnce({ data: defaultRow, error: null })
 
-      const res = await PUT(...makePutRequest('blog_post', 'blog-1', {
-        content: longContent,
-      }))
+      const res = await PUT(
+        ...makePutRequest('blog_post', 'blog-1', {
+          content: longContent,
+        }),
+      )
 
       expect(res.status).toBe(200)
 
@@ -303,9 +342,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 401 when not authenticated', async () => {
       mockRequireApiRole.mockRejectedValue(new AuthError('Unauthorized', 401))
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(401)
       const json = await res.json()
@@ -315,9 +356,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 403 for viewer role', async () => {
       mockRequireApiRole.mockRejectedValue(new AuthError('Insufficient permissions', 403))
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(403)
       const json = await res.json()
@@ -327,9 +370,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
 
   describe('validation', () => {
     it('returns 400 for invalid content type', async () => {
-      const res = await PUT(...makePutRequest('invalid_type', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('invalid_type', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(400)
     })
@@ -347,9 +392,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 400 for invalid slug format', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        slug: 'Has Spaces And Caps',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          slug: 'Has Spaces And Caps',
+        }),
+      )
 
       expect(res.status).toBe(400)
     })
@@ -357,9 +404,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 400 for meta_title exceeding 60 chars', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        metaTitle: 'A'.repeat(61),
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          metaTitle: 'A'.repeat(61),
+        }),
+      )
 
       expect(res.status).toBe(400)
     })
@@ -367,9 +416,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 400 for meta_description exceeding 160 chars', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        metaDescription: 'A'.repeat(161),
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          metaDescription: 'A'.repeat(161),
+        }),
+      )
 
       expect(res.status).toBe(400)
     })
@@ -379,13 +430,21 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 422 when editing approved content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'approved', slug: 'test', content: defaultContent, keywords: [] },
+        data: {
+          id: 'content-1',
+          status: 'approved',
+          slug: 'test',
+          content: defaultContent,
+          keywords: [],
+        },
         error: null,
       })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(422)
       const json = await res.json()
@@ -396,13 +455,21 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 422 when editing published content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'published', slug: 'test', content: defaultContent, keywords: [] },
+        data: {
+          id: 'content-1',
+          status: 'published',
+          slug: 'test',
+          content: defaultContent,
+          keywords: [],
+        },
         error: null,
       })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(422)
     })
@@ -410,13 +477,21 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 422 when editing archived content', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'archived', slug: 'test', content: defaultContent, keywords: [] },
+        data: {
+          id: 'content-1',
+          status: 'archived',
+          slug: 'test',
+          content: defaultContent,
+          keywords: [],
+        },
         error: null,
       })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(422)
     })
@@ -426,7 +501,13 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 409 when new slug conflicts', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'review', slug: 'old-slug', content: defaultContent, keywords: ['painting'] },
+        data: {
+          id: 'content-1',
+          status: 'review',
+          slug: 'old-slug',
+          content: defaultContent,
+          keywords: ['painting'],
+        },
         error: null,
       })
       // slug check returns existing record
@@ -435,9 +516,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
         error: null,
       })
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        slug: 'taken-slug',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          slug: 'taken-slug',
+        }),
+      )
 
       expect(res.status).toBe(409)
       const json = await res.json()
@@ -450,9 +533,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({ data: null, error: null })
 
-      const res = await PUT(...makePutRequest('service_page', 'nonexistent', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'nonexistent', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(404)
     })
@@ -460,7 +545,13 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
     it('returns 500 for generic Supabase error', async () => {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
       mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'content-1', status: 'review', slug: 'test', content: defaultContent, keywords: [] },
+        data: {
+          id: 'content-1',
+          status: 'review',
+          slug: 'test',
+          content: defaultContent,
+          keywords: [],
+        },
         error: null,
       })
       // update chain returns error via separate chain object
@@ -471,9 +562,11 @@ describe('PUT /api/v1/content/[type]/[id]', () => {
       }
       mockSupabase.update.mockReturnValueOnce(updateChain)
 
-      const res = await PUT(...makePutRequest('service_page', 'content-1', {
-        title: 'Test',
-      }))
+      const res = await PUT(
+        ...makePutRequest('service_page', 'content-1', {
+          title: 'Test',
+        }),
+      )
 
       expect(res.status).toBe(500)
     })

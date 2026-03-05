@@ -83,8 +83,12 @@ describe('processGa4SyncJob', () => {
           {
             dimensionValues: [{ value: '/painting' }, { value: 'Painting' }, { value: '20260301' }],
             metricValues: [
-              { value: '50' }, { value: '40' }, { value: '120' },
-              { value: '0.35' }, { value: '95.2' }, { value: '0.65' },
+              { value: '50' },
+              { value: '40' },
+              { value: '120' },
+              { value: '0.35' },
+              { value: '95.2' },
+              { value: '0.65' },
             ],
           },
         ],
@@ -118,7 +122,11 @@ describe('processGa4SyncJob', () => {
         accessToken: 'ya29.test',
         propertyId: 'properties/123456',
         request: expect.objectContaining({
-          dimensions: expect.arrayContaining([{ name: 'pagePath' }, { name: 'pageTitle' }, { name: 'date' }]),
+          dimensions: expect.arrayContaining([
+            { name: 'pagePath' },
+            { name: 'pageTitle' },
+            { name: 'date' },
+          ]),
           limit: 25000,
         }),
       }),
@@ -140,8 +148,6 @@ describe('processGa4SyncJob', () => {
     mockRunReport.mockResolvedValue({ rows: [] })
 
     const { processGa4SyncJob } = await import('../ga4-sync-worker')
-    await expect(
-      processGa4SyncJob(makeJob({ organizationId: 'org-123' })),
-    ).resolves.toBeUndefined()
+    await expect(processGa4SyncJob(makeJob({ organizationId: 'org-123' }))).resolves.toBeUndefined()
   })
 })

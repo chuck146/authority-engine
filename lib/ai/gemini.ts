@@ -32,8 +32,8 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gemi
     },
   })
 
-  const imagePart = response.candidates?.[0]?.content?.parts?.find(
-    (part) => part.inlineData?.mimeType?.startsWith('image/'),
+  const imagePart = response.candidates?.[0]?.content?.parts?.find((part) =>
+    part.inlineData?.mimeType?.startsWith('image/'),
   )
 
   if (!imagePart?.inlineData) {

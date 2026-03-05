@@ -71,8 +71,8 @@ function IntegrationRow({
   if (loading) {
     return (
       <div className="flex items-center justify-between rounded-lg border p-4">
-        <div className="h-10 w-48 animate-pulse rounded bg-muted" />
-        <div className="h-8 w-20 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-10 w-48 animate-pulse rounded" />
+        <div className="bg-muted h-8 w-20 animate-pulse rounded" />
       </div>
     )
   }
@@ -85,26 +85,21 @@ function IntegrationRow({
         <div className="flex items-center gap-2">
           <span className="font-medium">{label}</span>
           {status?.isConnected ? (
-            <Badge variant="default" className="bg-green-600">Connected</Badge>
+            <Badge variant="default" className="bg-green-600">
+              Connected
+            </Badge>
           ) : (
             <Badge variant="secondary">Not Connected</Badge>
           )}
         </div>
         {status?.isConnected && displayValue && (
-          <p className="text-sm text-muted-foreground">{displayValue}</p>
+          <p className="text-muted-foreground text-sm">{displayValue}</p>
         )}
-        {!status?.isConnected && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
+        {!status?.isConnected && <p className="text-muted-foreground text-sm">{description}</p>}
       </div>
       <div>
         {status?.isConnected ? (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDisconnect}
-            disabled={disconnecting}
-          >
+          <Button variant="outline" size="sm" onClick={handleDisconnect} disabled={disconnecting}>
             {disconnecting ? 'Disconnecting...' : 'Disconnect'}
           </Button>
         ) : (

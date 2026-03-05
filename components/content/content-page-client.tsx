@@ -48,14 +48,12 @@ export function ContentPageClient({ initialContent, userRole }: ContentPageClien
       throw new Error(err.error)
     }
 
-    const result = await response.json() as { status: ContentStatus }
+    const result = (await response.json()) as { status: ContentStatus }
 
     // Update list optimistically
     setContent((prev) =>
       prev.map((item) =>
-        item.id === id && item.type === type
-          ? { ...item, status: result.status }
-          : item,
+        item.id === id && item.type === type ? { ...item, status: result.status } : item,
       ),
     )
 
@@ -76,11 +74,7 @@ export function ContentPageClient({ initialContent, userRole }: ContentPageClien
           <TabsTrigger value="generate">Generate</TabsTrigger>
         </TabsList>
         <TabsContent value="all" className="mt-6">
-          <ContentTable
-            items={content}
-            userRole={userRole}
-            onSelectItem={handleSelectItem}
-          />
+          <ContentTable items={content} userRole={userRole} onSelectItem={handleSelectItem} />
         </TabsContent>
         <TabsContent value="generate" className="mt-6">
           <ContentGenerateForm onGenerated={handleGenerated} />

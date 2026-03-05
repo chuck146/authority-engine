@@ -7,8 +7,12 @@ export type ImageType = z.infer<typeof imageTypeSchema>
 
 // --- Style and Mood Options ---
 
-export const imageStyleSchema = z.enum(['photorealistic', 'illustration', 'flat', 'watercolor']).default('photorealistic')
-export const imageMoodSchema = z.enum(['warm', 'cool', 'vibrant', 'neutral', 'dramatic']).default('warm')
+export const imageStyleSchema = z
+  .enum(['photorealistic', 'illustration', 'flat', 'watercolor'])
+  .default('photorealistic')
+export const imageMoodSchema = z
+  .enum(['warm', 'cool', 'vibrant', 'neutral', 'dramatic'])
+  .default('warm')
 
 // --- Per-Type Input Schemas ---
 

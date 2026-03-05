@@ -15,7 +15,9 @@ export async function GET(request: Request) {
 
     let query = supabase
       .from('media_assets')
-      .select('id, filename, storage_path, mime_type, size_bytes, width, height, alt_text, metadata, created_at')
+      .select(
+        'id, filename, storage_path, mime_type, size_bytes, width, height, alt_text, metadata, created_at',
+      )
       .eq('organization_id', auth.organizationId)
       .eq('type', 'image')
       .order('created_at', { ascending: false })

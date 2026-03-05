@@ -66,9 +66,7 @@ describe('exchangeCodeForTokens', () => {
   })
 
   it('throws on non-200 response', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Bad Request', { status: 400 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Bad Request', { status: 400 }))
 
     await expect(exchangeCodeForTokens('bad-code')).rejects.toThrow(
       'Google token exchange failed (400)',
@@ -113,9 +111,7 @@ describe('refreshAccessToken', () => {
   })
 
   it('throws on non-200 response', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Unauthorized', { status: 401 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Unauthorized', { status: 401 }))
 
     await expect(refreshAccessToken('bad-token')).rejects.toThrow(
       'Google token refresh failed (401)',

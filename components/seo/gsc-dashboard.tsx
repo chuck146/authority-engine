@@ -32,7 +32,7 @@ export function GscDashboard() {
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i}>
               <CardContent className="pt-6">
-                <div className="h-8 w-16 animate-pulse rounded bg-muted" />
+                <div className="bg-muted h-8 w-16 animate-pulse rounded" />
               </CardContent>
             </Card>
           ))}
@@ -43,7 +43,7 @@ export function GscDashboard() {
 
   if (error || !overview) {
     return (
-      <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
+      <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-6 text-center">
         <p className="text-destructive">{error ?? 'Failed to load GSC data'}</p>
       </div>
     )
@@ -61,10 +61,7 @@ export function GscDashboard() {
         <GscTopQueries queries={overview.topQueries} />
         <GscTopPages pages={overview.topPages} />
       </div>
-      <GscIndexingCoverage
-        coverage={overview.indexingCoverage}
-        sitemaps={overview.sitemaps}
-      />
+      <GscIndexingCoverage coverage={overview.indexingCoverage} sitemaps={overview.sitemaps} />
     </div>
   )
 }

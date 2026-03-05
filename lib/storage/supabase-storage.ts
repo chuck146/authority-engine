@@ -19,20 +19,16 @@ export async function uploadImage(
   const filename = `${crypto.randomUUID()}.${ext}`
   const storagePath = `${orgId}/images/${imageType}/${filename}`
 
-  const { error } = await admin.storage
-    .from(BUCKET)
-    .upload(storagePath, buffer, {
-      contentType: mimeType,
-      upsert: false,
-    })
+  const { error } = await admin.storage.from(BUCKET).upload(storagePath, buffer, {
+    contentType: mimeType,
+    upsert: false,
+  })
 
   if (error) {
     throw new Error(`Storage upload failed: ${error.message}`)
   }
 
-  const { data: urlData } = admin.storage
-    .from(BUCKET)
-    .getPublicUrl(storagePath)
+  const { data: urlData } = admin.storage.from(BUCKET).getPublicUrl(storagePath)
 
   return {
     storagePath,

@@ -54,15 +54,13 @@ describe('generateTitleFromInput', () => {
   })
 
   it('falls back for location_page with missing fields', () => {
-    expect(generateTitleFromInput({ contentType: 'location_page' })).toBe(
-      'Service in City, ST',
-    )
+    expect(generateTitleFromInput({ contentType: 'location_page' })).toBe('Service in City, ST')
   })
 
   it('returns topic for blog_post', () => {
-    expect(
-      generateTitleFromInput({ contentType: 'blog_post', topic: 'How to Choose Paint' }),
-    ).toBe('How to Choose Paint')
+    expect(generateTitleFromInput({ contentType: 'blog_post', topic: 'How to Choose Paint' })).toBe(
+      'How to Choose Paint',
+    )
   })
 
   it('falls back for blog_post with no topic', () => {

@@ -50,10 +50,7 @@ function pctChange(current: number, previous: number): number {
   return Math.round(((current - previous) / previous) * 100)
 }
 
-function buildSummary(
-  currentRows: Ga4ReportRow[],
-  previousRows: Ga4ReportRow[],
-): Ga4Summary {
+function buildSummary(currentRows: Ga4ReportRow[], previousRows: Ga4ReportRow[]): Ga4Summary {
   const sum = (rows: Ga4ReportRow[]) =>
     rows.reduce(
       (acc, r) => ({
@@ -69,12 +66,14 @@ function buildSummary(
   const prev = sum(previousRows)
 
   // Bounce rate from first row (aggregate) if available
-  cur.bounceRate = currentRows.length > 0
-    ? currentRows.reduce((s, r) => s + getMetricValue(r, 3), 0) / currentRows.length
-    : 0
-  const prevBounceRate = previousRows.length > 0
-    ? previousRows.reduce((s, r) => s + getMetricValue(r, 3), 0) / previousRows.length
-    : 0
+  cur.bounceRate =
+    currentRows.length > 0
+      ? currentRows.reduce((s, r) => s + getMetricValue(r, 3), 0) / currentRows.length
+      : 0
+  const prevBounceRate =
+    previousRows.length > 0
+      ? previousRows.reduce((s, r) => s + getMetricValue(r, 3), 0) / previousRows.length
+      : 0
 
   return {
     sessions: cur.sessions,
@@ -143,12 +142,13 @@ function buildDeviceBreakdown(rows: Ga4ReportRow[]): Ga4DeviceBreakdown[] {
 export async function GET() {
   try {
     const auth = await requireApiAuth()
-    const { accessToken, siteUrl: propertyId } = await getValidToken(auth.organizationId, 'analytics')
+    const { accessToken, siteUrl: propertyId } = await getValidToken(
+      auth.organizationId,
+      'analytics',
+    )
     const ranges = computeDateRanges()
 
-    const dateRanges = [
-      { startDate: ranges.current.startDate, endDate: ranges.current.endDate },
-    ]
+    const dateRanges = [{ startDate: ranges.current.startDate, endDate: ranges.current.endDate }]
     const prevDateRanges = [
       { startDate: ranges.previous.startDate, endDate: ranges.previous.endDate },
     ]
@@ -183,21 +183,14 @@ export async function GET() {
       {
         dateRanges,
         dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }],
-        metrics: [
-          { name: 'sessions' },
-          { name: 'totalUsers' },
-          { name: 'bounceRate' },
-        ],
+        metrics: [{ name: 'sessions' }, { name: 'totalUsers' }, { name: 'bounceRate' }],
         limit: 50,
       },
       // 3: Device breakdown
       {
         dateRanges,
         dimensions: [{ name: 'deviceCategory' }],
-        metrics: [
-          { name: 'sessions' },
-          { name: 'totalUsers' },
-        ],
+        metrics: [{ name: 'sessions' }, { name: 'totalUsers' }],
       },
       // 4: Daily totals (previous period — for trend computation)
       {

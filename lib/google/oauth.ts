@@ -9,9 +9,7 @@ const SCOPES_BY_PROVIDER: Record<GoogleProvider, string[]> = {
     'https://www.googleapis.com/auth/webmasters.readonly',
     'https://www.googleapis.com/auth/indexing',
   ],
-  analytics: [
-    'https://www.googleapis.com/auth/analytics.readonly',
-  ],
+  analytics: ['https://www.googleapis.com/auth/analytics.readonly'],
 }
 
 function getClientId(): string {
@@ -30,7 +28,10 @@ function getRedirectUri(): string {
   return process.env.GOOGLE_OAUTH_REDIRECT_URI ?? 'http://localhost:3000/api/auth/google/callback'
 }
 
-export function getGoogleAuthUrl(state: string, provider: GoogleProvider = 'search_console'): string {
+export function getGoogleAuthUrl(
+  state: string,
+  provider: GoogleProvider = 'search_console',
+): string {
   const scopes = SCOPES_BY_PROVIDER[provider]
   const params = new URLSearchParams({
     client_id: getClientId(),

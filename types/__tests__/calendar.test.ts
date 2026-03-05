@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {
-  scheduleContentSchema,
-  updateScheduleSchema,
-  calendarQuerySchema,
-} from '@/types/calendar'
+import { scheduleContentSchema, updateScheduleSchema, calendarQuerySchema } from '@/types/calendar'
 
 describe('scheduleContentSchema', () => {
   it('accepts valid schedule request', () => {

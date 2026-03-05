@@ -12,16 +12,10 @@ export async function cleanupTestContent() {
   if (!testUser) return
 
   // Delete calendar entries created by test user
-  await admin
-    .from('content_calendar')
-    .delete()
-    .eq('created_by', testUser.id)
+  await admin.from('content_calendar').delete().eq('created_by', testUser.id)
 
   // Delete content rows created by test user (all three tables)
   for (const table of ['service_pages', 'location_pages', 'blog_posts'] as const) {
-    await admin
-      .from(table)
-      .delete()
-      .eq('created_by', testUser.id)
+    await admin.from(table).delete().eq('created_by', testUser.id)
   }
 }

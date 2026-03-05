@@ -30,7 +30,7 @@ function formatRelativeTime(isoDate: string): string {
 
 export function RecentActivity({ items }: RecentActivityProps) {
   if (items.length === 0) {
-    return <div className="text-sm text-muted-foreground">No published content yet.</div>
+    return <div className="text-muted-foreground text-sm">No published content yet.</div>
   }
 
   return (
@@ -38,15 +38,15 @@ export function RecentActivity({ items }: RecentActivityProps) {
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex items-center justify-between rounded-md px-3 py-2 hover:bg-muted/50"
+          className="hover:bg-muted/50 flex items-center justify-between rounded-md px-3 py-2"
         >
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex min-w-0 items-center gap-3">
             <Badge variant="outline" className="shrink-0">
               {typeLabels[item.contentType] ?? item.contentType}
             </Badge>
             <span className="truncate text-sm">{item.title}</span>
           </div>
-          <span className="shrink-0 text-xs text-muted-foreground">
+          <span className="text-muted-foreground shrink-0 text-xs">
             {formatRelativeTime(item.publishedAt)}
           </span>
         </div>

@@ -59,7 +59,7 @@ export function Ga4PropertySelector() {
     return (
       <Card>
         <CardContent className="pt-6">
-          <div className="h-10 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-10 animate-pulse rounded" />
         </CardContent>
       </Card>
     )
@@ -69,7 +69,7 @@ export function Ga4PropertySelector() {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-sm text-muted-foreground">No GA4 properties found for this account.</p>
+          <p className="text-muted-foreground text-sm">No GA4 properties found for this account.</p>
         </CardContent>
       </Card>
     )
@@ -82,7 +82,7 @@ export function Ga4PropertySelector() {
       </CardHeader>
       <CardContent className="space-y-3">
         <select
-          className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+          className="bg-background w-full rounded-md border px-3 py-2 text-sm"
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
         >

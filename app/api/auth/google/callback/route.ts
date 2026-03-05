@@ -65,24 +65,22 @@ export async function GET(request: NextRequest) {
     const expiresAt = new Date(Date.now() + tokens.expires_in * 1000).toISOString()
 
     // Upsert connection (one per org + provider)
-    const { error: dbError } = await supabase
-      .from('google_connections')
-      .upsert(
-        {
-          organization_id: stateData.organizationId,
-          provider: stateData.provider,
-          site_url: siteUrl,
-          access_token: encrypt(tokens.access_token),
-          refresh_token: encrypt(tokens.refresh_token),
-          token_expires_at: expiresAt,
-          scopes: tokens.scope.split(' '),
-          connected_by: stateData.organizationId,
-          status: 'active',
-          sync_error: null,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'organization_id,provider' },
-      )
+    const { error: dbError } = await supabase.from('google_connections').upsert(
+      {
+        organization_id: stateData.organizationId,
+        provider: stateData.provider,
+        site_url: siteUrl,
+        access_token: encrypt(tokens.access_token),
+        refresh_token: encrypt(tokens.refresh_token),
+        token_expires_at: expiresAt,
+        scopes: tokens.scope.split(' '),
+        connected_by: stateData.organizationId,
+        status: 'active',
+        sync_error: null,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'organization_id,provider' },
+    )
 
     if (dbError) {
       console.error('[Google Callback] DB error:', dbError)

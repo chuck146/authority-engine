@@ -15,7 +15,12 @@ describe('GscOverviewCards', () => {
   })
 
   it('displays formatted values', () => {
-    const summary = buildGscSummary({ clicks: 1250, impressions: 45000, ctr: 0.028, position: 18.3 })
+    const summary = buildGscSummary({
+      clicks: 1250,
+      impressions: 45000,
+      ctr: 0.028,
+      position: 18.3,
+    })
     render(<GscOverviewCards summary={summary} />)
 
     expect(screen.getByText('1,250')).toBeInTheDocument()

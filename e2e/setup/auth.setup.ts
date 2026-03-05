@@ -32,9 +32,7 @@ setup('authenticate via OTP verification', async ({ page }) => {
   })
 
   if (error || !data?.properties?.email_otp) {
-    throw new Error(
-      `Failed to generate magic link: ${error?.message ?? 'no email_otp returned'}`,
-    )
+    throw new Error(`Failed to generate magic link: ${error?.message ?? 'no email_otp returned'}`)
   }
 
   const emailOtp = data.properties.email_otp

@@ -107,7 +107,9 @@ export function ContentTable({ items, userRole, onSelectItem }: ContentTableProp
               <TableCell>
                 <Badge variant={statusVariant[item.status]}>{item.status}</Badge>
               </TableCell>
-              <TableCell><SeoScoreBadge score={item.seoScore} /></TableCell>
+              <TableCell>
+                <SeoScoreBadge score={item.seoScore} />
+              </TableCell>
               <TableCell className="text-muted-foreground">{formatDate(item.createdAt)}</TableCell>
               <TableCell>
                 {actions.length > 0 && (
@@ -129,10 +131,7 @@ export function ContentTable({ items, userRole, onSelectItem }: ContentTableProp
                       {actions.map((action) => {
                         const Icon = actionIcons[action]
                         return (
-                          <DropdownMenuItem
-                            key={action}
-                            onClick={() => onSelectItem(item)}
-                          >
+                          <DropdownMenuItem key={action} onClick={() => onSelectItem(item)}>
                             {Icon && <Icon className="h-4 w-4" />}
                             {actionLabels[action]}
                           </DropdownMenuItem>

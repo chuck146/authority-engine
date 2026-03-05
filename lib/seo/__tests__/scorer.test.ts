@@ -27,7 +27,12 @@ describe('calculateSeoScore', () => {
   it('returns all 4 category scores', () => {
     const result = calculateSeoScore(makeInput())
     expect(Object.keys(result.categoryScores)).toEqual(
-      expect.arrayContaining(['meta-tags', 'content-structure', 'keyword-optimization', 'readability']),
+      expect.arrayContaining([
+        'meta-tags',
+        'content-structure',
+        'keyword-optimization',
+        'readability',
+      ]),
     )
   })
 
@@ -42,15 +47,26 @@ describe('calculateSeoScore', () => {
     const input = makeInput({
       content: buildStructuredContent({
         headline: 'Professional Interior Painting Services',
-        intro: 'Transform your home with our expert interior painting services. We offer premium quality results.',
+        intro:
+          'Transform your home with our expert interior painting services. We offer premium quality results.',
         sections: [
-          { title: 'Why Choose Us', body: `<p>Our interior painting team delivers exceptional results. ${words}</p>` },
-          { title: 'Our Process', body: '<p>From consultation to final walkthrough, we ensure quality. Every detail matters to us.</p>' },
-          { title: 'Pricing', body: '<p>Competitive rates for interior painting projects. Get your free estimate today for any room.</p>' },
+          {
+            title: 'Why Choose Us',
+            body: `<p>Our interior painting team delivers exceptional results. ${words}</p>`,
+          },
+          {
+            title: 'Our Process',
+            body: '<p>From consultation to final walkthrough, we ensure quality. Every detail matters to us.</p>',
+          },
+          {
+            title: 'Pricing',
+            body: '<p>Competitive rates for interior painting projects. Get your free estimate today for any room.</p>',
+          },
         ],
         cta: 'Get your free interior painting estimate today!',
         meta_title: 'Interior Painting Services | Best Quality',
-        meta_description: 'Professional interior painting services for your home. Expert painters, premium materials, and satisfaction guaranteed. Get a free estimate today from our team.',
+        meta_description:
+          'Professional interior painting services for your home. Expert painters, premium materials, and satisfaction guaranteed. Get a free estimate today from our team.',
       }),
       keywords: ['interior painting'],
     })
@@ -79,15 +95,26 @@ describe('calculateSeoScore', () => {
     const input = makeInput({
       content: buildStructuredContent({
         headline: 'Professional Interior Painting Services',
-        intro: 'Transform your home with our expert interior painting services. We offer premium quality results.',
+        intro:
+          'Transform your home with our expert interior painting services. We offer premium quality results.',
         sections: [
-          { title: 'Why Choose Us', body: `<p>Our interior painting team delivers exceptional results. ${words}</p>` },
-          { title: 'Our Process', body: '<p>From consultation to final walkthrough, we ensure quality. Every detail matters to us.</p>' },
-          { title: 'Pricing', body: '<p>Competitive rates for interior painting projects. Get your free estimate today for any room.</p>' },
+          {
+            title: 'Why Choose Us',
+            body: `<p>Our interior painting team delivers exceptional results. ${words}</p>`,
+          },
+          {
+            title: 'Our Process',
+            body: '<p>From consultation to final walkthrough, we ensure quality. Every detail matters to us.</p>',
+          },
+          {
+            title: 'Pricing',
+            body: '<p>Competitive rates for interior painting projects. Get your free estimate today for any room.</p>',
+          },
         ],
         cta: 'Get your free interior painting estimate today!',
         meta_title: 'Interior Painting Services | Best Quality',
-        meta_description: 'Professional interior painting services for your home. Expert painters, premium materials, and satisfaction guaranteed. Get a free estimate today from our team.',
+        meta_description:
+          'Professional interior painting services for your home. Expert painters, premium materials, and satisfaction guaranteed. Get a free estimate today from our team.',
       }),
       keywords: ['interior painting'],
     })

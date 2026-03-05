@@ -12,7 +12,9 @@ vi.mock('@/lib/auth/api-guard', async (importActual) => {
 })
 
 vi.mock('@/lib/google/token-manager', () => ({
-  getValidToken: vi.fn().mockResolvedValue({ accessToken: 'ya29.test', siteUrl: 'https://example.com' }),
+  getValidToken: vi
+    .fn()
+    .mockResolvedValue({ accessToken: 'ya29.test', siteUrl: 'https://example.com' }),
 }))
 
 const mockListSites = vi.fn()

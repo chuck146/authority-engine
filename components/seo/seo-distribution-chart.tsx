@@ -16,23 +16,17 @@ const segments = [
 
 export function SeoDistributionChart({ distribution, total }: SeoDistributionChartProps) {
   if (total === 0) {
-    return (
-      <div className="text-sm text-muted-foreground">No pages to display.</div>
-    )
+    return <div className="text-muted-foreground text-sm">No pages to display.</div>
   }
 
   return (
     <div className="space-y-3">
-      <div className="flex h-4 overflow-hidden rounded-full bg-muted">
+      <div className="bg-muted flex h-4 overflow-hidden rounded-full">
         {segments.map(({ key, color }) => {
           const pct = (distribution[key] / total) * 100
           if (pct === 0) return null
           return (
-            <div
-              key={key}
-              className={`${color} transition-all`}
-              style={{ width: `${pct}%` }}
-            />
+            <div key={key} className={`${color} transition-all`} style={{ width: `${pct}%` }} />
           )
         })}
       </div>
