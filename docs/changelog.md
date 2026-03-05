@@ -10,7 +10,32 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Planned
 
 - Deploy MVP to Vercel
-- Apply social_posts migration to live Supabase + regenerate types
+- Apply social_posts + reviews migrations to live Supabase + regenerate types
+
+---
+
+## [V2.1] — 2026-03-05
+
+### Added
+
+- **Review database migrations:** reviews table with RLS, 6 indexes, UNIQUE constraint for platform dedup (20260306000001_create_reviews.sql); review_requests table with RLS (20260306000002_create_review_requests.sql)
+- **Review types:** Zod schemas (createReview, generateResponse, editResponse, statusUpdate), platform/status/sentiment literals, API response types — ReviewListItem, ReviewDetail, ReviewOverview, ReviewResponseContent (types/reviews.ts)
+- **Response status transitions:** pending→draft→review→approved→sent→archived with role requirements (lib/reviews/response-status-transitions.ts)
+- **AI review response generator:** Tone-aware prompt builder (appreciative/empathetic/professional/friendly) (packages/ai/prompts/reviews/response-generator.ts); Claude API wrapper returning response + sentiment + key_themes (lib/ai/review-response-generator.ts)
+- **Review list API:** GET /api/v1/reviews — platform/rating/status filters, pagination
+- **Review create API:** POST /api/v1/reviews — manual review entry with Zod validation
+- **Review detail API:** GET /api/v1/reviews/[id] — full review with response
+- **Review edit API:** PUT /api/v1/reviews/[id] — edit response text
+- **Review AI generate API:** POST /api/v1/reviews/[id]/generate-response — AI response draft with tone/length/instructions
+- **Review status API:** PATCH /api/v1/reviews/[id]/response-status — approve/reject/mark_sent/archive transitions
+- **Review overview API:** GET /api/v1/reviews/overview — dashboard aggregations (avg rating, total, pending, distributions)
+- **Reviews page client:** 7 tabs (All, Google, Yelp, Angi's, Manual, Overview, Add Review)
+- **Review list component:** Star ratings, platform badges, status badges, click-to-detail
+- **Review detail sheet:** Full review display, response draft, actions (generate/edit/approve/reject/mark_sent/archive/copy)
+- **Review response form:** Tone selector, max length, custom instructions, generate button
+- **Review overview cards:** Avg rating, total reviews, pending count, rating distribution bar chart, platform + sentiment breakdowns
+- **Review entry form:** Manual review entry with star picker
+- **Test suite expanded:** 686 tests across 92 files (94 new review tests across 10 files)
 
 ---
 

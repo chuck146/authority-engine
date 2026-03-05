@@ -91,6 +91,19 @@ export type {
   Ga4TrafficSource,
   Ga4DeviceBreakdown,
 } from './ga4'
+export type {
+  ReviewPlatform,
+  ReviewResponseStatus,
+  ReviewSentiment,
+  CreateReviewRequest,
+  GenerateResponseRequest,
+  ReviewResponseEdit,
+  ReviewResponseStatusUpdate,
+  ReviewResponseContent,
+  ReviewListItem,
+  ReviewDetail,
+  ReviewOverview,
+} from './reviews'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'

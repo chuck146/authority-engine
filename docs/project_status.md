@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 95%      |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Community     | 🔲 Not Started | September 2026 | 0%       |
+| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 20%      |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -110,7 +110,29 @@ _Last Updated: March 2026_
 
 ## 🟡 V2 — Reviews + Video + Community
 
-_Not started — waiting on V1 completion_
+### What's Been Accomplished
+
+**Phase A: Review Command Center — Core** ✅
+
+- [x] Database migrations: reviews table (RLS, 6 indexes, UNIQUE dedup constraint), review_requests table (RLS)
+- [x] TypeScript types: Zod schemas (createReview, generateResponse, editResponse, statusUpdate), platform/status/sentiment literals, API response types (types/reviews.ts)
+- [x] Response status transitions: pending→draft→review→approved→sent→archived with role requirements
+- [x] AI review response generator: tone-aware prompt builder (appreciative/empathetic/professional/friendly), Claude API wrapper returning response + sentiment + key_themes
+- [x] Review APIs (7 endpoints): list with filters, manual entry, detail, edit response, AI generate response, response status transitions, overview aggregations
+- [x] Review UI: page client with 7 tabs, review list with star ratings/platform badges/status badges, detail sheet with response draft + actions, response form with tone selector, overview cards with rating distribution + platform/sentiment breakdowns, manual entry form with star picker
+- [x] Test suite: 94 new tests across 10 files (686 total, up from 583)
+
+### What's Next
+
+1. Apply review migrations to live Supabase + regenerate types
+2. Phase B: Google Business Profile review sync adapter
+3. Phase C: SalesMessage SMS review requests
+4. Video generation (Remotion + Veo 3.1)
+5. Community module (Facebook group monitoring + lead capture)
+
+### Blockers
+
+- None
 
 ---
 

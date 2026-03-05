@@ -28,6 +28,12 @@ import type {
   Ga4Overview,
 } from '@/types/ga4'
 import type { SocialPostListItem, SocialPostDetail, SocialPostContent } from '@/types/social'
+import type {
+  ReviewListItem,
+  ReviewDetail,
+  ReviewResponseContent,
+  ReviewOverview,
+} from '@/types/reviews'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -489,6 +495,84 @@ export function buildSocialPostDetail(overrides?: Partial<SocialPostDetail>): So
     createdAt: '2026-03-10T12:00:00Z',
     updatedAt: '2026-03-10T12:00:00Z',
     publishedAt: null,
+    ...overrides,
+  }
+}
+
+// --- Review Factories ---
+
+export function buildReviewListItem(overrides?: Partial<ReviewListItem>): ReviewListItem {
+  return {
+    id: 'review-1',
+    platform: 'google',
+    reviewerName: 'John Smith',
+    rating: 5,
+    reviewText:
+      'Excellent painting work! The team was professional and the results exceeded our expectations.',
+    reviewDate: '2026-03-01T12:00:00Z',
+    responseStatus: 'pending',
+    sentiment: null,
+    createdAt: '2026-03-01T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildReviewDetail(overrides?: Partial<ReviewDetail>): ReviewDetail {
+  return {
+    id: 'review-1',
+    platform: 'google',
+    externalId: null,
+    reviewerName: 'John Smith',
+    reviewerProfileUrl: null,
+    rating: 5,
+    reviewText:
+      'Excellent painting work! The team was professional and the results exceeded our expectations.',
+    reviewDate: '2026-03-01T12:00:00Z',
+    responseText: null,
+    responseStatus: 'pending',
+    responseGeneratedAt: null,
+    responseApprovedBy: null,
+    responseApprovedAt: null,
+    responseSentAt: null,
+    sentiment: null,
+    sentimentScore: null,
+    metadata: {},
+    createdAt: '2026-03-01T12:00:00Z',
+    updatedAt: '2026-03-01T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildReviewResponseContent(
+  overrides?: Partial<ReviewResponseContent>,
+): ReviewResponseContent {
+  return {
+    response_text:
+      'Thank you so much for your kind words, John! We truly appreciate your feedback and are thrilled that our team exceeded your expectations. — The Cleanest Painting Team',
+    sentiment: 'positive',
+    sentiment_score: 0.95,
+    key_themes: ['professionalism', 'quality results', 'exceeded expectations'],
+    ...overrides,
+  }
+}
+
+export function buildReviewOverview(overrides?: Partial<ReviewOverview>): ReviewOverview {
+  return {
+    totalReviews: 25,
+    averageRating: 4.6,
+    ratingDistribution: { 1: 0, 2: 1, 3: 2, 4: 5, 5: 17 },
+    pendingResponses: 3,
+    platformBreakdown: [
+      { platform: 'google', count: 18, avgRating: 4.7 },
+      { platform: 'yelp', count: 5, avgRating: 4.4 },
+      { platform: 'angi', count: 2, avgRating: 4.5 },
+    ],
+    sentimentBreakdown: [
+      { sentiment: 'positive', count: 20 },
+      { sentiment: 'neutral', count: 3 },
+      { sentiment: 'negative', count: 2 },
+    ],
+    recentReviews: [buildReviewListItem()],
     ...overrides,
   }
 }

@@ -74,7 +74,7 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 **Scope:**
 
 - Review aggregation (Google, Yelp, Angi's)
-- Automated review request SMS (Twilio/SalesMessage)
+- Automated review request SMS (SalesMessage)
 - AI review response drafts
 - Remotion video generation (testimonial reels, project showcases, tip videos)
 - Veo 3.1 for cinematic hero content
@@ -203,6 +203,6 @@ Key architectural decisions:
 - [ ] Upstash Redis (BullMQ queue)
 - [ ] Cloudflare R2 bucket
 - [ ] Stripe account (Later milestone)
-- [ ] Twilio/SalesMessage (V2 milestone)
+- [ ] SalesMessage API key (V2 milestone)
 - [ ] Brand24 API key (V2 milestone)
 - [ ] Facebook Graph API access (V2 milestone)
