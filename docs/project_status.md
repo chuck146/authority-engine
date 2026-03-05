@@ -90,11 +90,17 @@ _Last Updated: March 2026_
 - [x] Social dashboard UI: /social page with platform tabs, generate form, post previews, approval actions
 - [x] Database migration: social_posts table with RLS policies
 - [x] Test suite expanded to 568 tests across 79 files
+- [x] Calendar enhancements: entry detail sheet, list/agenda view, content type + status filters
+- [x] Approved-content API (GET /api/v1/content/approved) for schedule dialog picker
+- [x] Schedule dialog UX: select dropdown for approved content instead of raw ID input
+- [x] Calendar grid: popover for overflow entries, entry card tooltips + color coding
+- [x] Test suite expanded to 583+ tests across 82 files
 
 ### What's Next
 
 1. Apply social_posts migration to live Supabase + regenerate types
-2. Deploy to production (Vercel)
+2. Merge feature/content-calendar → main
+3. Deploy to production (Vercel)
 
 ### Blockers
 

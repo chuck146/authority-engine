@@ -14,6 +14,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [V1.3] — 2026-03-05
+
+### Added
+
+- **Calendar entry sheet:** Right-side panel for viewing and acting on calendar entries (reschedule, cancel publish, error display, published timestamp)
+- **Calendar list view:** Chronological agenda view alternative to month grid, entries grouped by date
+- **Calendar filters:** Content type and status filter dropdowns on calendar page
+- **Approved-content API:** GET /api/v1/content/approved — returns 50 most recently updated approved items by content type, powers schedule dialog picker
+- **Schedule dialog improved:** Select dropdown for approved content replaces raw ID text input
+- **Calendar grid popover:** "+N more" overflow entries expandable via popover
+- **Entry card enhancements:** Tooltip on status dot, border-left color coding by content type
+- **Calendar constants:** Extracted shared label/color/type maps to calendar-constants.ts
+- **Test coverage:** 15+ new tests for entry sheet (10), list view (5), grid enhancements (2)
+
+---
+
 ## [V1.2] — 2026-03-05
 
 ### Added
