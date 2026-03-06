@@ -1,5 +1,6 @@
 'use client'
 
+import DOMPurify from 'isomorphic-dompurify'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -60,7 +61,7 @@ export function ContentPreview({
         {content.sections.map((section, index) => (
           <div key={index}>
             <h2>{section.title}</h2>
-            <div dangerouslySetInnerHTML={{ __html: section.body }} />
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(section.body) }} />
           </div>
         ))}
 
