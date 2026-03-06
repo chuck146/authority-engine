@@ -26,7 +26,9 @@ function getClientSecret(): string {
 }
 
 function getRedirectUri(): string {
-  return process.env.GOOGLE_OAUTH_REDIRECT_URI ?? 'http://localhost:3000/api/auth/google/callback'
+  const uri = process.env.GOOGLE_OAUTH_REDIRECT_URI
+  if (!uri) throw new Error('GOOGLE_OAUTH_REDIRECT_URI not configured')
+  return uri
 }
 
 export function getGoogleAuthUrl(
