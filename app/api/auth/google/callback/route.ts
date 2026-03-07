@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         refresh_token: encrypt(tokens.refresh_token),
         token_expires_at: expiresAt,
         scopes: tokens.scope.split(' '),
-        connected_by: stateData.organizationId,
+        connected_by: stateData.userId,
         status: 'active',
         sync_error: null,
         updated_at: new Date().toISOString(),

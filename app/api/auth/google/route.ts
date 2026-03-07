@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     const provider = providerParam as GoogleProvider
-    const state = createOAuthState(auth.organizationId, provider)
+    const state = createOAuthState(auth.organizationId, auth.userId, provider)
     const url = getGoogleAuthUrl(state, provider)
     return NextResponse.redirect(url)
   } catch (err) {
