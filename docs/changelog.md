@@ -7,9 +7,21 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Planned
+_No unreleased changes._
 
-- Deploy MVP to Vercel
+---
+
+## [V2.4] — 2026-03-06
+
+### Added
+
+- **Production deployment:** App deployed to Vercel at authority-engine-rose.vercel.app
+- **Supabase Auth configured:** Site URL and redirect URLs set for production magic link login
+
+### Changed
+
+- **XSS sanitizer swap:** Replaced isomorphic-dompurify with sanitize-html in content-body.tsx (isomorphic-dompurify requires jsdom which fails on Vercel Edge/serverless)
+- **Dependencies:** Added sanitize-html + @types/sanitize-html, removed isomorphic-dompurify dependency
 
 ---
 

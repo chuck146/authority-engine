@@ -8,7 +8,7 @@ _Last Updated: March 2026_
 
 | Milestone                               | Status         | Target         | Progress |
 | --------------------------------------- | -------------- | -------------- | -------- |
-| 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 95%      |
+| 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
 | 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 45%      |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
@@ -26,7 +26,7 @@ _Last Updated: March 2026_
 - [x] Tech stack decision: Next.js + Supabase + Supabase Auth
 - [x] Project repo initialized on GitHub
 - [x] Supabase project created
-- [ ] Vercel project linked
+- [x] Vercel project linked
 - [x] Database schema + migrations (11 migrations, 7+ tables with RLS policies)
 - [x] Auth flow (email + magic link, middleware, server/API guards)
 - [x] Dashboard shell (layout, sidebar, org branding, user nav, module stubs)
@@ -39,11 +39,12 @@ _Last Updated: March 2026_
 - [x] Apply migrations + seed to live Supabase
 - [x] Generated TypeScript types from live schema (replaced hand-written types/database.ts)
 - [x] Auto-link auth user to organization on first login
-- [ ] Deploy to production (Vercel)
+- [x] Deploy to production (Vercel)
+- [x] Supabase Auth URL configuration (Site URL + redirect URLs for production)
 
 ### What's Next
 
-1. Connect Vercel project and deploy to production
+- MVP complete and deployed
 
 ### Blockers
 
@@ -98,7 +99,7 @@ _Last Updated: March 2026_
 
 ### What's Next
 
-1. Deploy to production (Vercel)
+- V1 complete and deployed
 
 ### Blockers
 

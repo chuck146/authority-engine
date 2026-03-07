@@ -1,4 +1,4 @@
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtml from 'sanitize-html'
 import type { StructuredContent } from '@/types/content'
 
 export function ContentBody({ content }: { content: StructuredContent }) {
@@ -8,7 +8,7 @@ export function ContentBody({ content }: { content: StructuredContent }) {
       {content.sections.map((section, i) => (
         <section key={i}>
           <h2>{section.title}</h2>
-          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(section.body) }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.body) }} />
         </section>
       ))}
     </div>
