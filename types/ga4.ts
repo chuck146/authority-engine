@@ -17,6 +17,19 @@ export type Ga4AccountSummary = {
   propertySummaries: Ga4PropertySummary[]
 }
 
+// Admin API — Data Streams
+export type Ga4WebStreamData = {
+  measurementId: string
+  defaultUri: string
+}
+
+export type Ga4DataStream = {
+  name: string
+  type: 'WEB_DATA_STREAM' | 'ANDROID_APP_DATA_STREAM' | 'IOS_APP_DATA_STREAM'
+  displayName: string
+  webStreamData?: Ga4WebStreamData
+}
+
 // Data API — Report Request/Response
 export type Ga4DateRange = {
   startDate: string // YYYY-MM-DD or relative (e.g. "28daysAgo")

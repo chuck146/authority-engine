@@ -9,6 +9,7 @@ type Ga4Property = {
   propertyId: string
   displayName: string
   accountName: string
+  websiteUrl: string | null
 }
 
 export function Ga4PropertySelector() {
@@ -89,7 +90,9 @@ export function Ga4PropertySelector() {
           <option value="">Select a property...</option>
           {properties.map((p) => (
             <option key={p.propertyId} value={p.propertyId}>
-              {p.displayName} ({p.accountName})
+              {p.websiteUrl
+                ? `${p.displayName} — ${p.websiteUrl} (${p.accountName})`
+                : `${p.displayName} (${p.accountName})`}
             </option>
           ))}
         </select>

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { getValidToken } from '@/lib/google/token-manager'
-import { listAccountSummaries } from '@/lib/google/analytics'
+import { listAccountSummaries, listDataStreams } from '@/lib/google/analytics'
 
 export async function GET() {
   try {
@@ -9,12 +9,30 @@ export async function GET() {
     const { accessToken } = await getValidToken(auth.organizationId, 'analytics')
     const accounts = await listAccountSummaries({ accessToken })
 
-    const properties = accounts.flatMap((account) =>
-      (account.propertySummaries ?? []).map((prop) => ({
-        propertyId: prop.property,
-        displayName: prop.displayName,
-        accountName: account.displayName,
-      })),
+    const flatProperties = accounts.flatMap((account) =>
+      (account.propertySummaries ?? [])
+        .filter((prop) => prop.propertyType !== 'PROPERTY_TYPE_ROLLUP')
+        .map((prop) => ({
+          propertyId: prop.property,
+          displayName: prop.displayName,
+          accountName: account.displayName,
+        })),
+    )
+
+    const properties = await Promise.all(
+      flatProperties.map(async (prop) => {
+        let websiteUrl: string | null = null
+        try {
+          const streams = await listDataStreams(prop.propertyId, { accessToken })
+          const webStream = streams.find(
+            (s) => s.type === 'WEB_DATA_STREAM' && s.webStreamData?.defaultUri,
+          )
+          websiteUrl = webStream?.webStreamData?.defaultUri ?? null
+        } catch {
+          // Graceful degradation — show property without URL
+        }
+        return { ...prop, websiteUrl }
+      }),
     )
 
     return NextResponse.json({ properties })
