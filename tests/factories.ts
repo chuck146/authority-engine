@@ -669,6 +669,7 @@ export function buildVideoLibraryItem(overrides?: Partial<VideoLibraryItem>): Vi
   return {
     id: 'video-1',
     videoType: 'cinematic_reel',
+    engine: null,
     filename: 'reel-freshly-painted-living-room.mp4',
     publicUrl:
       'https://example.supabase.co/storage/v1/object/public/media/org-456/videos/cinematic_reel/abc123.mp4',

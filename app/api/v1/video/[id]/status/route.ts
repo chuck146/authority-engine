@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { getVideoJobStatus } from '@/lib/queue/video-scheduler'
+import { getRemotionJobStatus } from '@/lib/queue/remotion-scheduler'
 import type { VideoJobStatus } from '@/types/video'
 
 type RouteContext = { params: Promise<{ id: string }> }
@@ -10,7 +11,15 @@ export async function GET(_request: Request, context: RouteContext) {
     await requireApiAuth()
     const { id: jobId } = await context.params
 
-    const status = await getVideoJobStatus(jobId)
+    // Try both queues — job ID prefix determines which to try first
+    const isRemotionJob = jobId.startsWith('remotion-')
+    const primaryFn = isRemotionJob ? getRemotionJobStatus : getVideoJobStatus
+    const fallbackFn = isRemotionJob ? getVideoJobStatus : getRemotionJobStatus
+
+    let status = await primaryFn(jobId)
+    if (!status) {
+      status = await fallbackFn(jobId)
+    }
 
     if (!status) {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 })

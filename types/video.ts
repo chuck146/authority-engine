@@ -1,12 +1,24 @@
 import { z } from 'zod'
 
+// --- Video Engine Discriminator ---
+
+export const videoEngineSchema = z.enum(['veo', 'remotion'])
+export type VideoEngine = z.infer<typeof videoEngineSchema>
+
 // --- Video Type Discriminator ---
 
 export const videoTypeSchema = z.enum([
+  // Veo types
   'cinematic_reel',
   'project_showcase',
   'testimonial_scene',
   'brand_story',
+  // Remotion types
+  'testimonial_quote',
+  'tip_video',
+  'before_after_reveal',
+  'branded_intro',
+  'branded_outro',
 ])
 export type VideoType = z.infer<typeof videoTypeSchema>
 
@@ -22,7 +34,7 @@ export type VeoModel = z.infer<typeof veoModelSchema>
 export const aspectRatioSchema = z.enum(['9:16', '1:1', '16:9']).default('9:16')
 export type AspectRatio = z.infer<typeof aspectRatioSchema>
 
-// --- Per-Type Input Schemas ---
+// --- Veo Per-Type Input Schemas ---
 
 export const cinematicReelInputSchema = z.object({
   videoType: z.literal('cinematic_reel'),
@@ -55,20 +67,106 @@ export const brandStoryInputSchema = z.object({
   model: veoModelSchema,
 })
 
-// --- Discriminated Union Request ---
+// --- Veo Discriminated Union Request ---
 
-export const generateVideoRequestSchema = z.discriminatedUnion('videoType', [
+export const generateVeoRequestSchema = z.discriminatedUnion('videoType', [
   cinematicReelInputSchema,
   projectShowcaseInputSchema,
   testimonialSceneInputSchema,
   brandStoryInputSchema,
 ])
 
+// --- Remotion Per-Type Input Schemas ---
+
+const remotionTipItemSchema = z.object({
+  number: z.number(),
+  text: z.string(),
+})
+
+export const testimonialQuoteInputSchema = z.object({
+  videoType: z.literal('testimonial_quote'),
+  quote: z.string().min(5).max(500),
+  customerName: z.string().min(1).max(100),
+  starRating: z.number().min(1).max(5).optional(),
+})
+
+export const tipVideoInputSchema = z.object({
+  videoType: z.literal('tip_video'),
+  title: z.string().min(3).max(200),
+  tips: z.array(remotionTipItemSchema).min(1).max(7),
+})
+
+export const beforeAfterRevealInputSchema = z.object({
+  videoType: z.literal('before_after_reveal'),
+  beforeImageUrl: z.string().url(),
+  afterImageUrl: z.string().url(),
+  location: z.string().max(200).optional(),
+})
+
+export const brandedIntroInputSchema = z.object({
+  videoType: z.literal('branded_intro'),
+})
+
+export const brandedOutroInputSchema = z.object({
+  videoType: z.literal('branded_outro'),
+  ctaText: z.string().max(100).optional(),
+  ctaUrl: z.string().max(200).optional(),
+})
+
+export const generateRemotionRequestSchema = z.discriminatedUnion('videoType', [
+  testimonialQuoteInputSchema,
+  tipVideoInputSchema,
+  beforeAfterRevealInputSchema,
+  brandedIntroInputSchema,
+  brandedOutroInputSchema,
+])
+
+// --- Combined Request Schema (engine-aware) ---
+
+export const generateVideoRequestSchema = z.union([
+  generateVeoRequestSchema,
+  generateRemotionRequestSchema,
+])
+
 export type CinematicReelInput = z.infer<typeof cinematicReelInputSchema>
 export type ProjectShowcaseInput = z.infer<typeof projectShowcaseInputSchema>
 export type TestimonialSceneInput = z.infer<typeof testimonialSceneInputSchema>
 export type BrandStoryInput = z.infer<typeof brandStoryInputSchema>
+export type GenerateVeoRequest = z.infer<typeof generateVeoRequestSchema>
+
+export type TestimonialQuoteInput = z.infer<typeof testimonialQuoteInputSchema>
+export type TipVideoInput = z.infer<typeof tipVideoInputSchema>
+export type BeforeAfterRevealInput = z.infer<typeof beforeAfterRevealInputSchema>
+export type BrandedIntroInput = z.infer<typeof brandedIntroInputSchema>
+export type BrandedOutroInput = z.infer<typeof brandedOutroInputSchema>
+export type GenerateRemotionRequest = z.infer<typeof generateRemotionRequestSchema>
+
 export type GenerateVideoRequest = z.infer<typeof generateVideoRequestSchema>
+
+// --- Remotion Video Types (for UI labels) ---
+
+export const REMOTION_VIDEO_TYPES = [
+  'testimonial_quote',
+  'tip_video',
+  'before_after_reveal',
+  'branded_intro',
+  'branded_outro',
+] as const
+
+export const VEO_VIDEO_TYPES = [
+  'cinematic_reel',
+  'project_showcase',
+  'testimonial_scene',
+  'brand_story',
+] as const
+
+export function isRemotionVideoType(type: string): boolean {
+  return (REMOTION_VIDEO_TYPES as readonly string[]).includes(type)
+}
+
+export function isVeoVideoType(type: string): boolean {
+  return (VEO_VIDEO_TYPES as readonly string[]).includes(type)
+}
 
 // --- API Response ---
 
@@ -88,6 +186,7 @@ export type GenerateVideoResponse = {
 export type VideoLibraryItem = {
   id: string
   videoType: VideoType | null
+  engine: VideoEngine | null
   filename: string
   publicUrl: string
   mimeType: string

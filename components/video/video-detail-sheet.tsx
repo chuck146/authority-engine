@@ -10,20 +10,14 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Trash2, Download } from 'lucide-react'
-import type { VideoLibraryItem, VideoType } from '@/types/video'
+import { VIDEO_TYPE_LABELS } from './video-generate-form'
+import type { VideoLibraryItem } from '@/types/video'
 
 type VideoDetailSheetProps = {
   item: VideoLibraryItem | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onDelete: (id: string) => void
-}
-
-const VIDEO_TYPE_LABELS: Record<VideoType, string> = {
-  cinematic_reel: 'Cinematic Reel',
-  project_showcase: 'Project Showcase',
-  testimonial_scene: 'Testimonial',
-  brand_story: 'Brand Story',
 }
 
 export function VideoDetailSheet({ item, open, onOpenChange, onDelete }: VideoDetailSheetProps) {
@@ -44,6 +38,11 @@ export function VideoDetailSheet({ item, open, onOpenChange, onDelete }: VideoDe
 
           <div className="space-y-3">
             <div className="flex items-center gap-2">
+              {item.engine && (
+                <Badge variant={item.engine === 'remotion' ? 'default' : 'secondary'}>
+                  {item.engine === 'remotion' ? 'Remotion' : 'Veo 3.1'}
+                </Badge>
+              )}
               {item.videoType && (
                 <Badge variant="outline">
                   {VIDEO_TYPE_LABELS[item.videoType] ?? item.videoType}
@@ -57,6 +56,16 @@ export function VideoDetailSheet({ item, open, onOpenChange, onDelete }: VideoDe
                 <dt className="text-muted-foreground">Format</dt>
                 <dd>{item.mimeType}</dd>
               </div>
+              {item.engine && (
+                <div className="flex justify-between py-1">
+                  <dt className="text-muted-foreground">Engine</dt>
+                  <dd>
+                    {item.engine === 'remotion'
+                      ? 'Remotion (Motion Graphics)'
+                      : 'Veo 3.1 (Cinematic AI)'}
+                  </dd>
+                </div>
+              )}
               {item.sizeBytes && (
                 <div className="flex justify-between py-1">
                   <dt className="text-muted-foreground">Size</dt>

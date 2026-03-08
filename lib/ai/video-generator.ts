@@ -9,11 +9,11 @@ import {
   formatVeoPrompt,
 } from '@/packages/ai/prompts/videos'
 import type { OrgContext } from '@/packages/ai/prompts/content/shared'
-import type { GenerateVideoRequest, GenerateVideoResponse } from '@/types/video'
+import type { GenerateVeoRequest, GenerateVideoResponse } from '@/types/video'
 import type { Json } from '@/types'
 
 export async function generateAndStoreVideo(
-  input: GenerateVideoRequest,
+  input: GenerateVeoRequest,
   orgContext: OrgContext,
   orgId: string,
   userId: string,
@@ -58,6 +58,7 @@ export async function generateAndStoreVideo(
       duration_seconds: result.durationSeconds,
       metadata: {
         videoType: input.videoType,
+        engine: 'veo',
         model: input.model ?? 'veo-3.1-fast-generate-preview',
         promptUsed: prompt,
       } as unknown as Json,
@@ -81,7 +82,7 @@ export async function generateAndStoreVideo(
 }
 
 function buildVideoPrompt(
-  input: GenerateVideoRequest,
+  input: GenerateVeoRequest,
   org: OrgContext,
 ): { visual: string; audio: string } {
   switch (input.videoType) {
@@ -96,7 +97,7 @@ function buildVideoPrompt(
   }
 }
 
-function buildStartingFramePrompt(input: GenerateVideoRequest, org: OrgContext): string {
+function buildStartingFramePrompt(input: GenerateVeoRequest, org: OrgContext): string {
   const companyCtx = `for ${org.orgName}`
   switch (input.videoType) {
     case 'cinematic_reel':
@@ -108,7 +109,7 @@ function buildStartingFramePrompt(input: GenerateVideoRequest, org: OrgContext):
   }
 }
 
-function buildFilename(input: GenerateVideoRequest): string {
+function buildFilename(input: GenerateVeoRequest): string {
   const slug = (text: string) =>
     text
       .toLowerCase()

@@ -1,14 +1,8 @@
 import { NextResponse } from 'next/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
-import type { VideoType, VideoLibraryItem } from '@/types/video'
-
-const VALID_VIDEO_TYPES: VideoType[] = [
-  'cinematic_reel',
-  'project_showcase',
-  'testimonial_scene',
-  'brand_story',
-]
+import type { VideoType, VideoEngine, VideoLibraryItem } from '@/types/video'
+import { videoTypeSchema, videoEngineSchema } from '@/types/video'
 
 export async function GET(request: Request) {
   try {
@@ -17,6 +11,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url)
     const videoTypeFilter = searchParams.get('videoType')
+    const engineFilter = searchParams.get('engine')
 
     let query = supabase
       .from('media_assets')
@@ -27,8 +22,12 @@ export async function GET(request: Request) {
       .eq('type', 'video')
       .order('created_at', { ascending: false })
 
-    if (videoTypeFilter && VALID_VIDEO_TYPES.includes(videoTypeFilter as VideoType)) {
+    if (videoTypeFilter && videoTypeSchema.safeParse(videoTypeFilter).success) {
       query = query.eq('metadata->>videoType', videoTypeFilter)
+    }
+
+    if (engineFilter && videoEngineSchema.safeParse(engineFilter).success) {
+      query = query.eq('metadata->>engine', engineFilter)
     }
 
     const { data, error } = await query
@@ -42,6 +41,7 @@ export async function GET(request: Request) {
       return {
         id: row.id,
         videoType: (metadata?.videoType as VideoType) ?? null,
+        engine: (metadata?.engine as VideoEngine) ?? null,
         filename: row.filename,
         publicUrl: `${bucketUrl.publicUrl}${row.storage_path}`,
         mimeType: row.mime_type,

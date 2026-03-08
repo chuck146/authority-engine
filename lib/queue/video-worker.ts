@@ -1,13 +1,13 @@
 import { Worker, type Job } from 'bullmq'
 import { getRedisConnection } from './connection'
 import { generateAndStoreVideo } from '@/lib/ai/video-generator'
-import type { GenerateVideoRequest, GenerateVideoResponse } from '@/types/video'
+import type { GenerateVeoRequest, GenerateVideoResponse } from '@/types/video'
 import type { OrgContext } from '@/packages/ai/prompts/content/shared'
 
 export type VideoJobData = {
   orgId: string
   userId: string
-  input: GenerateVideoRequest
+  input: GenerateVeoRequest
   orgContext: OrgContext
 }
 

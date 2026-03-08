@@ -1,16 +1,16 @@
 import { Queue } from 'bullmq'
 import { getRedisConnection } from './connection'
-import type { VideoJobData } from './video-worker'
-import type { GenerateVeoRequest, GenerateVideoResponse } from '@/types/video'
-import type { OrgContext } from '@/packages/ai/prompts/content/shared'
+import type { RemotionJobData } from './remotion-worker'
+import type { GenerateVideoResponse } from '@/types/video'
+import type { CompositionId } from '@/services/video/src/types'
 
 const REDIS_TIMEOUT_MS = 5_000
 
 let queueInstance: Queue | null = null
 
-function getVideoQueue(): Queue {
+function getRemotionQueue(): Queue {
   if (!queueInstance) {
-    queueInstance = new Queue('video-generation', {
+    queueInstance = new Queue('remotion-rendering', {
       connection: getRedisConnection(),
     })
   }
@@ -24,35 +24,46 @@ function withTimeout<T>(promise: Promise<T>, ms = REDIS_TIMEOUT_MS): Promise<T> 
   ])
 }
 
-export async function enqueueVideoJob(
+export async function enqueueRemotionJob(
   orgId: string,
   userId: string,
-  input: GenerateVeoRequest,
-  orgContext: OrgContext,
+  compositionId: CompositionId,
+  inputProps: Record<string, unknown>,
+  remotionVideoType: string,
 ): Promise<string> {
-  const queue = getVideoQueue()
+  const queue = getRemotionQueue()
   const job = await withTimeout(
-    queue.add('generate-video', { orgId, userId, input, orgContext } satisfies VideoJobData, {
-      jobId: `video-${orgId}-${Date.now()}`,
-      removeOnComplete: false, // Keep result for status polling
-      removeOnFail: false,
-      attempts: 2,
-      backoff: {
-        type: 'exponential',
-        delay: 10_000,
+    queue.add(
+      'render-remotion',
+      {
+        orgId,
+        userId,
+        compositionId,
+        inputProps,
+        remotionVideoType,
+      } satisfies RemotionJobData,
+      {
+        jobId: `remotion-${orgId}-${Date.now()}`,
+        removeOnComplete: false,
+        removeOnFail: false,
+        attempts: 2,
+        backoff: {
+          type: 'exponential',
+          delay: 10_000,
+        },
       },
-    }),
+    ),
   )
-  return job.id ?? `video-${orgId}-${Date.now()}`
+  return job.id ?? `remotion-${orgId}-${Date.now()}`
 }
 
-export async function getVideoJobStatus(jobId: string): Promise<{
+export async function getRemotionJobStatus(jobId: string): Promise<{
   state: 'queued' | 'processing' | 'completed' | 'failed'
   progress: number | null
   result?: GenerateVideoResponse
   error?: string
 } | null> {
-  const queue = getVideoQueue()
+  const queue = getRemotionQueue()
   const job = await withTimeout(queue.getJob(jobId))
 
   if (!job) return null

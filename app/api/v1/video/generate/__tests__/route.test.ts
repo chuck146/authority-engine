@@ -23,6 +23,10 @@ vi.mock('@/lib/queue/video-scheduler', () => ({
   enqueueVideoJob: (...args: unknown[]) => mockEnqueueVideoJob(...args),
 }))
 
+vi.mock('@/lib/queue/remotion-scheduler', () => ({
+  enqueueRemotionJob: vi.fn(),
+}))
+
 const { POST } = await import('../route')
 const { AuthError } = await import('@/lib/auth/api-guard')
 
@@ -174,8 +178,21 @@ describe('POST /api/v1/video/generate', () => {
   })
 
   describe('validation', () => {
-    it('returns 400 for invalid videoType', async () => {
+    function setupOrgMock() {
       mockRequireApiRole.mockResolvedValue(defaultAuth)
+      mockSupabase.single.mockResolvedValueOnce({
+        data: {
+          name: 'Cleanest Painting LLC',
+          domain: 'cleanestpainting.com',
+          branding: null,
+          settings: null,
+        },
+        error: null,
+      })
+    }
+
+    it('returns 400 for invalid videoType', async () => {
+      setupOrgMock()
 
       const res = await POST(makeRequest({ videoType: 'invalid_type' }))
 
@@ -185,7 +202,7 @@ describe('POST /api/v1/video/generate', () => {
     })
 
     it('returns 400 for missing required fields', async () => {
-      mockRequireApiRole.mockResolvedValue(defaultAuth)
+      setupOrgMock()
 
       const res = await POST(
         makeRequest({
@@ -198,7 +215,7 @@ describe('POST /api/v1/video/generate', () => {
     })
 
     it('returns 400 for short scene description', async () => {
-      mockRequireApiRole.mockResolvedValue(defaultAuth)
+      setupOrgMock()
 
       const res = await POST(
         makeRequest({

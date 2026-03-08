@@ -32,6 +32,7 @@ export function VideoGenerationStatus({ jobId, onComplete, onError }: VideoGener
           onComplete({
             id: data.result.id,
             videoType: data.result.videoType,
+            engine: null,
             filename: data.result.filename,
             publicUrl: data.result.publicUrl,
             mimeType: data.result.mimeType,

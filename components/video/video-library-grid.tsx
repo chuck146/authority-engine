@@ -3,19 +3,13 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Video } from 'lucide-react'
-import type { VideoLibraryItem, VideoType } from '@/types/video'
+import { VIDEO_TYPE_LABELS } from './video-generate-form'
+import type { VideoLibraryItem } from '@/types/video'
 
 type VideoLibraryGridProps = {
   items: VideoLibraryItem[]
   loading: boolean
   onSelectItem: (item: VideoLibraryItem) => void
-}
-
-const VIDEO_TYPE_LABELS: Record<VideoType, string> = {
-  cinematic_reel: 'Cinematic Reel',
-  project_showcase: 'Project Showcase',
-  testimonial_scene: 'Testimonial',
-  brand_story: 'Brand Story',
 }
 
 export function VideoLibraryGrid({ items, loading, onSelectItem }: VideoLibraryGridProps) {
@@ -66,6 +60,14 @@ export function VideoLibraryGrid({ items, loading, onSelectItem }: VideoLibraryG
             <div className="p-3">
               <p className="truncate text-sm font-medium">{item.filename}</p>
               <div className="mt-1 flex items-center gap-2">
+                {item.engine && (
+                  <Badge
+                    variant={item.engine === 'remotion' ? 'default' : 'secondary'}
+                    className="text-xs"
+                  >
+                    {item.engine === 'remotion' ? 'Remotion' : 'Veo'}
+                  </Badge>
+                )}
                 {item.videoType && (
                   <Badge variant="outline" className="text-xs">
                     {VIDEO_TYPE_LABELS[item.videoType] ?? item.videoType}
