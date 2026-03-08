@@ -2,7 +2,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { BrandedBackground } from '../components/BrandedBackground'
 import { Logo } from '../components/Logo'
 import { fadeIn, fadeOut, slideUp, scaleIn } from '../lib/animations'
-import { ensureFontsLoaded } from '../lib/fonts'
+import { getFontFamily } from '../lib/fonts'
 import type { BrandedIntroOutroProps } from '../types'
 
 /**
@@ -23,17 +23,19 @@ import type { BrandedIntroOutroProps } from '../types'
  */
 export function BrandedIntroOutro({ brand, mode, ctaText, ctaUrl }: BrandedIntroOutroProps) {
   const frame = useCurrentFrame()
-  const { dmSans, montserrat } = ensureFontsLoaded()
+  const headingFamily = getFontFamily(brand.headingFont ?? 'Montserrat')
+  const bodyFamily = getFontFamily(brand.bodyFont ?? 'DMSans')
 
   if (mode === 'intro') {
-    return <IntroMode brand={brand} frame={frame} dmSans={dmSans} montserrat={montserrat} />
+    return <IntroMode brand={brand} frame={frame} bodyFamily={bodyFamily} headingFamily={headingFamily} />
   }
 
   return (
     <OutroMode
       brand={brand}
       frame={frame}
-      dmSans={dmSans}
+      bodyFamily={bodyFamily}
+      headingFamily={headingFamily}
       ctaText={ctaText ?? 'Get Your Free Estimate'}
       ctaUrl={ctaUrl}
     />
@@ -43,13 +45,13 @@ export function BrandedIntroOutro({ brand, mode, ctaText, ctaUrl }: BrandedIntro
 function IntroMode({
   brand,
   frame,
-  dmSans,
-  montserrat,
+  bodyFamily,
+  headingFamily,
 }: {
   brand: BrandedIntroOutroProps['brand']
   frame: number
-  dmSans: string
-  montserrat: string
+  bodyFamily: string
+  headingFamily: string
 }) {
   const logoScale = scaleIn(frame, 5, 20, 0.3)
   const logoOpacity = fadeIn(frame, 5, 12)
@@ -74,7 +76,7 @@ function IntroMode({
       >
         {/* Logo */}
         <div style={{ opacity: logoOpacity, transform: `scale(${logoScale})` }}>
-          <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={0} size={160} />
+          <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={0} size={160} fontFamily={headingFamily} />
         </div>
 
         {/* Tagline */}
@@ -83,7 +85,7 @@ function IntroMode({
             style={{
               opacity: taglineOpacity,
               transform: `translateY(${taglineY}px)`,
-              fontFamily: montserrat,
+              fontFamily: headingFamily,
               fontSize: 28,
               fontWeight: 300,
               color: 'rgba(255,255,255,0.85)',
@@ -102,7 +104,7 @@ function IntroMode({
           <div
             style={{
               opacity: taglineOpacity,
-              fontFamily: dmSans,
+              fontFamily: bodyFamily,
               fontSize: 36,
               fontWeight: 600,
               color: 'white',
@@ -120,13 +122,15 @@ function IntroMode({
 function OutroMode({
   brand,
   frame,
-  dmSans,
+  bodyFamily,
+  headingFamily,
   ctaText,
   ctaUrl,
 }: {
   brand: BrandedIntroOutroProps['brand']
   frame: number
-  dmSans: string
+  bodyFamily: string
+  headingFamily: string
   ctaText: string
   ctaUrl?: string
 }) {
@@ -156,7 +160,7 @@ function OutroMode({
             backgroundColor: brand.accentColor,
             padding: '20px 60px',
             borderRadius: 16,
-            fontFamily: dmSans,
+            fontFamily: bodyFamily,
             fontSize: 34,
             fontWeight: 700,
             color: 'white',
@@ -167,7 +171,7 @@ function OutroMode({
 
         {/* Logo */}
         <div style={{ opacity: logoOpacity }}>
-          <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={0} size={100} />
+          <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={0} size={100} fontFamily={headingFamily} />
         </div>
 
         {/* URL */}
@@ -175,7 +179,7 @@ function OutroMode({
           <div
             style={{
               opacity: urlOpacity,
-              fontFamily: dmSans,
+              fontFamily: bodyFamily,
               fontSize: 24,
               color: 'rgba(255,255,255,0.6)',
               letterSpacing: 2,

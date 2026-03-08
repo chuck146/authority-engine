@@ -17,6 +17,8 @@ const DEFAULT_BRAND = {
   primaryColor: '#1B2B5B',
   secondaryColor: '#fbbf24',
   accentColor: '#1e3a5f',
+  headingFont: 'Montserrat',
+  bodyFont: 'DMSans',
 }
 
 export function Root() {

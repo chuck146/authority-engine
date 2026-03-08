@@ -3,7 +3,7 @@ import { BrandedBackground } from '../components/BrandedBackground'
 import { Logo } from '../components/Logo'
 import { CtaOverlay } from '../components/CtaOverlay'
 import { fadeIn, slideUp, scaleIn } from '../lib/animations'
-import { ensureFontsLoaded } from '../lib/fonts'
+import { getFontFamily } from '../lib/fonts'
 import type { TipVideoProps } from '../types'
 
 /**
@@ -18,7 +18,8 @@ import type { TipVideoProps } from '../types'
  */
 export function TipVideo({ brand, title, tips }: TipVideoProps) {
   const frame = useCurrentFrame()
-  const { dmSans, montserrat } = ensureFontsLoaded()
+  const headingFamily = getFontFamily(brand.headingFont ?? 'Montserrat')
+  const bodyFamily = getFontFamily(brand.bodyFont ?? 'DMSans')
 
   // Title animation
   const titleOpacity = fadeIn(frame, 5, 15)
@@ -44,7 +45,7 @@ export function TipVideo({ brand, title, tips }: TipVideoProps) {
           style={{
             opacity: titleOpacity,
             transform: `translateY(${titleY}px)`,
-            fontFamily: montserrat,
+            fontFamily: headingFamily,
             fontSize: 52,
             fontWeight: 700,
             color: 'white',
@@ -97,7 +98,7 @@ export function TipVideo({ brand, title, tips }: TipVideoProps) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontFamily: dmSans,
+                    fontFamily: bodyFamily,
                     fontSize: 24,
                     fontWeight: 700,
                     color: 'white',
@@ -110,7 +111,7 @@ export function TipVideo({ brand, title, tips }: TipVideoProps) {
                 {/* Tip text */}
                 <div
                   style={{
-                    fontFamily: dmSans,
+                    fontFamily: bodyFamily,
                     fontSize: 30,
                     fontWeight: 400,
                     color: 'white',
@@ -137,13 +138,14 @@ export function TipVideo({ brand, title, tips }: TipVideoProps) {
           justifyContent: 'center',
         }}
       >
-        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={240} size={60} />
+        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={240} size={60} fontFamily={headingFamily} />
       </div>
 
       <CtaOverlay
         ctaText="Get Your Free Estimate"
         startFrame={250}
         accentColor={brand.accentColor}
+        fontFamily={bodyFamily}
       />
     </AbsoluteFill>
   )

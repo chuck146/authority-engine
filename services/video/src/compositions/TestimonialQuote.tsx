@@ -5,7 +5,7 @@ import { TextReveal } from '../components/TextReveal'
 import { StarRating } from '../components/StarRating'
 import { CtaOverlay } from '../components/CtaOverlay'
 import { fadeIn, slideUp } from '../lib/animations'
-import { ensureFontsLoaded } from '../lib/fonts'
+import { getFontFamily } from '../lib/fonts'
 import type { TestimonialQuoteProps } from '../types'
 
 /**
@@ -27,7 +27,8 @@ export function TestimonialQuote({
   starRating,
 }: TestimonialQuoteProps) {
   const frame = useCurrentFrame()
-  const { dmSans } = ensureFontsLoaded()
+  const headingFamily = getFontFamily(brand.headingFont ?? 'Montserrat')
+  const bodyFamily = getFontFamily(brand.bodyFont ?? 'DMSans')
 
   // Quote mark opacity
   const quoteMarkOpacity = fadeIn(frame, 10, 10)
@@ -70,6 +71,7 @@ export function TestimonialQuote({
             startFrame={15}
             fontSize={44}
             fontWeight={500}
+            fontFamily={bodyFamily}
             lineHeight={1.4}
             stagger={3}
           />
@@ -81,7 +83,7 @@ export function TestimonialQuote({
             marginTop: 40,
             opacity: nameOpacity,
             transform: `translateY(${nameY}px)`,
-            fontFamily: dmSans,
+            fontFamily: bodyFamily,
             fontSize: 28,
             fontWeight: 600,
             color: brand.secondaryColor,
@@ -110,13 +112,14 @@ export function TestimonialQuote({
           justifyContent: 'center',
         }}
       >
-        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={120} size={80} />
+        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={120} size={80} fontFamily={headingFamily} />
       </div>
 
       <CtaOverlay
         ctaText="Get Your Free Estimate"
         startFrame={130}
         accentColor={brand.accentColor}
+        fontFamily={bodyFamily}
       />
     </AbsoluteFill>
   )

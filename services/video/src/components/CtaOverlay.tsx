@@ -1,6 +1,6 @@
 import { useCurrentFrame } from 'remotion'
 import { fadeIn, slideUp } from '../lib/animations'
-import { ensureFontsLoaded } from '../lib/fonts'
+import { getFontFamily } from '../lib/fonts'
 
 type CtaOverlayProps = {
   ctaText: string
@@ -8,6 +8,7 @@ type CtaOverlayProps = {
   startFrame: number
   accentColor: string
   textColor?: string
+  fontFamily?: string
 }
 
 export function CtaOverlay({
@@ -16,9 +17,10 @@ export function CtaOverlay({
   startFrame,
   accentColor,
   textColor = 'white',
+  fontFamily,
 }: CtaOverlayProps) {
   const frame = useCurrentFrame()
-  const { dmSans } = ensureFontsLoaded()
+  const resolvedFamily = fontFamily ?? getFontFamily('DMSans')
   const opacity = fadeIn(frame, startFrame, 12)
   const y = slideUp(frame, startFrame, 15, 30)
 
@@ -42,7 +44,7 @@ export function CtaOverlay({
           backgroundColor: accentColor,
           padding: '16px 48px',
           borderRadius: 12,
-          fontFamily: dmSans,
+          fontFamily: resolvedFamily,
           fontSize: 28,
           fontWeight: 700,
           color: textColor,
@@ -54,7 +56,7 @@ export function CtaOverlay({
       {ctaUrl && (
         <div
           style={{
-            fontFamily: dmSans,
+            fontFamily: resolvedFamily,
             fontSize: 20,
             color: 'rgba(255,255,255,0.7)',
             letterSpacing: 1,

@@ -9,6 +9,8 @@ export const remotionBrandConfigSchema = z.object({
   secondaryColor: z.string(),
   accentColor: z.string(),
   logoUrl: z.string().url().optional(),
+  headingFont: z.string().default('Montserrat'),
+  bodyFont: z.string().default('DMSans'),
 })
 
 export type RemotionBrandConfig = z.infer<typeof remotionBrandConfigSchema>

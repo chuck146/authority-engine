@@ -15,6 +15,12 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { VideoGenerationStatus } from './video-generation-status'
 import type { VideoType, VideoEngine, VideoLibraryItem } from '@/types/video'
+import {
+  FONT_CATALOG,
+  FONT_CATEGORY_LABELS,
+  getFontsByCategory,
+  type FontCategory,
+} from '@/lib/video/fonts'
 
 type VideoGenerateFormProps = {
   onJobComplete: (item: VideoLibraryItem) => void
@@ -35,9 +41,14 @@ const REMOTION_TYPE_LABELS: Record<string, string> = {
   branded_outro: 'Branded Outro',
 }
 
+const COMPOSITE_TYPE_LABELS: Record<string, string> = {
+  composite_reel: 'Composite Reel',
+}
+
 export const VIDEO_TYPE_LABELS: Record<VideoType, string> = {
   ...VEO_TYPE_LABELS,
   ...REMOTION_TYPE_LABELS,
+  ...COMPOSITE_TYPE_LABELS,
 } as Record<VideoType, string>
 
 export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
@@ -61,6 +72,11 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
   const [narrative, setNarrative] = useState('')
   const [style, setStyle] = useState('cinematic')
 
+  // Composite fields
+  const [includeIntro, setIncludeIntro] = useState(true)
+  const [includeOutro, setIncludeOutro] = useState(true)
+  const [useStartingFrame, setUseStartingFrame] = useState(true)
+
   // Remotion fields
   const [tipTitle, setTipTitle] = useState('')
   const [tips, setTips] = useState([{ number: 1, text: '' }])
@@ -69,11 +85,15 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
   const [afterImageUrl, setAfterImageUrl] = useState('')
   const [ctaText, setCtaText] = useState('')
   const [ctaUrl, setCtaUrl] = useState('')
+  const [headingFont, setHeadingFont] = useState('')
+  const [bodyFont, setBodyFont] = useState('')
 
   const handleEngineChange = (newEngine: VideoEngine) => {
     setEngine(newEngine)
     if (newEngine === 'veo') {
       setVideoType('cinematic_reel')
+    } else if (newEngine === 'composite') {
+      setVideoType('composite_reel')
     } else {
       setVideoType('testimonial_quote')
     }
@@ -108,6 +128,25 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
   }
 
   const buildRequestBody = (): Record<string, unknown> => {
+    const fontOverrides: Record<string, string> = {}
+    if (headingFont) fontOverrides.headingFont = headingFont
+    if (bodyFont) fontOverrides.bodyFont = bodyFont
+
+    if (engine === 'composite') {
+      return {
+        videoType: 'composite_reel',
+        sceneDescription,
+        audioMood,
+        model,
+        includeIntro,
+        includeOutro,
+        useStartingFrame,
+        ...(ctaText ? { ctaText } : {}),
+        ...(ctaUrl ? { ctaUrl } : {}),
+        ...fontOverrides,
+      }
+    }
+
     if (engine === 'veo') {
       const base = { videoType, model }
       switch (videoType) {
@@ -125,28 +164,31 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
     }
 
     // Remotion
+    const remotionBase = fontOverrides
     switch (videoType) {
       case 'testimonial_quote':
-        return { videoType, quote, customerName, starRating }
+        return { videoType, quote, customerName, starRating, ...remotionBase }
       case 'tip_video':
-        return { videoType, title: tipTitle, tips }
+        return { videoType, title: tipTitle, tips, ...remotionBase }
       case 'before_after_reveal':
         return {
           videoType,
           beforeImageUrl,
           afterImageUrl,
           ...(location ? { location } : {}),
+          ...remotionBase,
         }
       case 'branded_intro':
-        return { videoType }
+        return { videoType, ...remotionBase }
       case 'branded_outro':
         return {
           videoType,
           ...(ctaText ? { ctaText } : {}),
           ...(ctaUrl ? { ctaUrl } : {}),
+          ...remotionBase,
         }
       default:
-        return { videoType }
+        return { videoType, ...remotionBase }
     }
   }
 
@@ -184,7 +226,12 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
     )
   }
 
-  const typeLabels = engine === 'veo' ? VEO_TYPE_LABELS : REMOTION_TYPE_LABELS
+  const typeLabels =
+    engine === 'veo'
+      ? VEO_TYPE_LABELS
+      : engine === 'composite'
+        ? COMPOSITE_TYPE_LABELS
+        : REMOTION_TYPE_LABELS
 
   return (
     <Card>
@@ -193,7 +240,9 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
         <CardDescription>
           {engine === 'veo'
             ? 'Create AI-powered cinematic video content using Veo 3.1.'
-            : 'Create branded motion graphics using Remotion.'}
+            : engine === 'composite'
+              ? 'Create a polished reel: branded intro + cinematic clip + branded outro.'
+              : 'Create branded motion graphics using Remotion.'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -208,11 +257,12 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
               <SelectContent>
                 <SelectItem value="remotion">Remotion (Motion Graphics)</SelectItem>
                 <SelectItem value="veo">Veo 3.1 (Cinematic AI)</SelectItem>
+                <SelectItem value="composite">Composite (Pipeline B)</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className={engine === 'veo' ? 'grid grid-cols-2 gap-4' : ''}>
+          <div className={engine === 'veo' || engine === 'composite' ? 'grid grid-cols-2 gap-4' : ''}>
             <div className="space-y-2">
               <Label htmlFor="videoType">Video Type</Label>
               <Select value={videoType} onValueChange={setVideoType}>
@@ -229,7 +279,7 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
               </Select>
             </div>
 
-            {engine === 'veo' && (
+            {(engine === 'veo' || engine === 'composite') && (
               <div className="space-y-2">
                 <Label htmlFor="model">Model</Label>
                 <Select value={model} onValueChange={setModel}>
@@ -557,6 +607,140 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
               Generates a branded intro using your organization&apos;s logo, name, and tagline. No
               additional input needed.
             </p>
+          )}
+
+          {/* --- Composite fields --- */}
+          {engine === 'composite' && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="cSceneDescription">Scene Description</Label>
+                <Textarea
+                  id="cSceneDescription"
+                  value={sceneDescription}
+                  onChange={(e) => setSceneDescription(e.target.value)}
+                  placeholder="Describe the cinematic scene for Veo to animate..."
+                  rows={4}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cAudioMood">Audio Mood</Label>
+                <Input
+                  id="cAudioMood"
+                  value={audioMood}
+                  onChange={(e) => setAudioMood(e.target.value)}
+                  placeholder="Warm, uplifting orchestral..."
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cCtaText">CTA Text (optional)</Label>
+                  <Input
+                    id="cCtaText"
+                    value={ctaText}
+                    onChange={(e) => setCtaText(e.target.value)}
+                    placeholder="Get Your Free Estimate"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cCtaUrl">CTA URL (optional)</Label>
+                  <Input
+                    id="cCtaUrl"
+                    value={ctaUrl}
+                    onChange={(e) => setCtaUrl(e.target.value)}
+                    placeholder="cleanestpainting.com"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={includeIntro}
+                    onChange={(e) => setIncludeIntro(e.target.checked)}
+                    className="rounded"
+                  />
+                  Include branded intro (3s)
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={includeOutro}
+                    onChange={(e) => setIncludeOutro(e.target.checked)}
+                    className="rounded"
+                  />
+                  Include branded outro (3s)
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={useStartingFrame}
+                    onChange={(e) => setUseStartingFrame(e.target.checked)}
+                    className="rounded"
+                  />
+                  Generate starting frame
+                </label>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                Pipeline B: Branded intro + Veo 3.1 cinematic clip + branded outro. Est. cost:
+                $1.50-$3.00
+              </p>
+            </>
+          )}
+
+          {/* --- Font selectors (Remotion + Composite only) --- */}
+          {(engine === 'remotion' || engine === 'composite') && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="headingFont">Heading Font</Label>
+                <Select value={headingFont} onValueChange={setHeadingFont}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Default (Montserrat)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(Object.entries(getFontsByCategory()) as [FontCategory, typeof FONT_CATALOG][]).map(
+                      ([category, fonts]) => (
+                        <div key={category}>
+                          <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
+                            {FONT_CATEGORY_LABELS[category]}
+                          </div>
+                          {fonts.map((font) => (
+                            <SelectItem key={font.id} value={font.id}>
+                              {font.name}
+                            </SelectItem>
+                          ))}
+                        </div>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bodyFont">Body Font</Label>
+                <Select value={bodyFont} onValueChange={setBodyFont}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Default (DM Sans)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(Object.entries(getFontsByCategory()) as [FontCategory, typeof FONT_CATALOG][]).map(
+                      ([category, fonts]) => (
+                        <div key={category}>
+                          <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
+                            {FONT_CATEGORY_LABELS[category]}
+                          </div>
+                          {fonts.map((font) => (
+                            <SelectItem key={font.id} value={font.id}>
+                              {font.name}
+                            </SelectItem>
+                          ))}
+                        </div>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           )}
 
           {error && <p className="text-destructive text-sm">{error}</p>}

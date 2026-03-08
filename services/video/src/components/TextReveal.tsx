@@ -1,6 +1,6 @@
 import { useCurrentFrame } from 'remotion'
 import { fadeIn, slideUp } from '../lib/animations'
-import { ensureFontsLoaded } from '../lib/fonts'
+import { getFontFamily } from '../lib/fonts'
 
 type TextRevealProps = {
   text: string
@@ -8,6 +8,7 @@ type TextRevealProps = {
   color?: string
   fontSize?: number
   fontWeight?: number
+  fontFamily?: string
   lineHeight?: number
   /** Frames between each word appearing */
   stagger?: number
@@ -19,11 +20,12 @@ export function TextReveal({
   color = 'white',
   fontSize = 48,
   fontWeight = 600,
+  fontFamily,
   lineHeight = 1.3,
   stagger = 3,
 }: TextRevealProps) {
   const frame = useCurrentFrame()
-  const { dmSans } = ensureFontsLoaded()
+  const resolvedFamily = fontFamily ?? getFontFamily('DMSans')
   const words = text.split(' ')
 
   return (
@@ -33,7 +35,7 @@ export function TextReveal({
         flexWrap: 'wrap',
         gap: fontSize * 0.2,
         justifyContent: 'center',
-        fontFamily: dmSans,
+        fontFamily: resolvedFamily,
         fontSize,
         fontWeight,
         lineHeight,

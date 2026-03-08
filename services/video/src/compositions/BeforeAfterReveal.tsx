@@ -3,7 +3,7 @@ import { BrandedBackground } from '../components/BrandedBackground'
 import { Logo } from '../components/Logo'
 import { CtaOverlay } from '../components/CtaOverlay'
 import { fadeIn, slideUp, wipeReveal } from '../lib/animations'
-import { ensureFontsLoaded } from '../lib/fonts'
+import { getFontFamily } from '../lib/fonts'
 import type { BeforeAfterRevealProps } from '../types'
 
 /**
@@ -27,7 +27,8 @@ export function BeforeAfterReveal({
   location,
 }: BeforeAfterRevealProps) {
   const frame = useCurrentFrame()
-  const { dmSans, montserrat } = ensureFontsLoaded()
+  const headingFamily = getFontFamily(brand.headingFont ?? 'Montserrat')
+  const bodyFamily = getFontFamily(brand.bodyFont ?? 'DMSans')
 
   // Before image + label
   const beforeOpacity = fadeIn(frame, 10, 15)
@@ -116,7 +117,7 @@ export function BeforeAfterReveal({
             backgroundColor: 'rgba(0,0,0,0.7)',
             padding: '8px 20px',
             borderRadius: 8,
-            fontFamily: montserrat,
+            fontFamily: headingFamily,
             fontSize: 24,
             fontWeight: 700,
             color: 'white',
@@ -138,7 +139,7 @@ export function BeforeAfterReveal({
             backgroundColor: brand.accentColor,
             padding: '8px 20px',
             borderRadius: 8,
-            fontFamily: montserrat,
+            fontFamily: headingFamily,
             fontSize: 24,
             fontWeight: 700,
             color: 'white',
@@ -160,7 +161,7 @@ export function BeforeAfterReveal({
             right: 0,
             textAlign: 'center',
             opacity: locationOpacity,
-            fontFamily: dmSans,
+            fontFamily: bodyFamily,
             fontSize: 28,
             fontWeight: 500,
             color: 'rgba(255,255,255,0.8)',
@@ -181,13 +182,14 @@ export function BeforeAfterReveal({
           justifyContent: 'center',
         }}
       >
-        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={180} size={60} />
+        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={180} size={60} fontFamily={headingFamily} />
       </div>
 
       <CtaOverlay
         ctaText="Get Your Free Estimate"
         startFrame={190}
         accentColor={brand.accentColor}
+        fontFamily={bodyFamily}
       />
     </AbsoluteFill>
   )
