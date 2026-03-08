@@ -17,12 +17,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Engine selector extended:** Three-way toggle (Remotion / Veo / Composite) with composite-specific fields — scene description, audio mood, CTA text/URL, includeIntro/includeOutro/useStartingFrame checkboxes (components/video/video-generate-form.tsx)
 - **Composite status UI:** Five-step progress indicator (Intro → Cinematic → Outro → Stitch → Upload) with active step highlighting, step labels from compositeStep, 5–10 min estimate (components/video/video-generation-status.tsx)
 - **Composite test suite:** 74 new tests across 5 files — scheduler (13), generate API (16), status API (10), generate form (19), generation status (16) (tests/queue/, tests/api/, tests/components/)
+- **Expanded font library (12 Google Fonts):** 5 categories — Sans (DM Sans, Montserrat), Serif (Playfair Display, Cormorant Garamond, Italiana), Script (Pacifico, Satisfy), Display (Anton, Bebas Neue, Oswald, Barlow Condensed), Mono (Space Mono) (services/video/src/lib/fonts.ts)
+- **Per-video font selection:** Optional headingFont/bodyFont fields on all Remotion + composite video input schemas, heading/body font dropdowns grouped by category on generate form (components/video/video-generate-form.tsx, types/video.ts)
+- **Lazy font loading:** getFontFamily() loads @remotion/google-fonts on demand, AVAILABLE_FONTS catalog shared between Remotion compositions and frontend (services/video/src/lib/fonts.ts, lib/video/fonts.ts)
+- **Composition font support:** All 4 Remotion compositions (TestimonialQuote, TipVideo, BeforeAfterReveal, BrandedIntroOutro) + shared components (TextReveal, CtaOverlay, Logo) accept brand font overrides via RemotionBrandConfig (services/video/src/)
 - **Remotion integration (Tier 1 programmatic video):** Full branded motion graphics pipeline alongside Veo 3.1 — Pipeline A from video guidelines (~$0.05–$0.15/video)
 - **Remotion project (services/video/):** Isolated React composition project with tsconfig, registerRoot, 4 Composition definitions with Zod-validated props
 - **Remotion compositions (4):** TestimonialQuote (6s, quote + stars + CTA), TipVideo (10s, numbered tips with kinetic text), BeforeAfterReveal (8s, wipe transition), BrandedIntroOutro (3s, intro/outro mode) — all 1080×1920 @ 30fps
 - **Remotion shared components (5):** BrandedBackground (gradient/solid/radial), Logo (animated with <Img /> for SSR), TextReveal (word-by-word), StarRating (animated), CtaOverlay
 - **Remotion animation library:** fadeIn, fadeOut, slideUp, scaleIn, wipeReveal utilities (services/video/src/lib/animations.ts)
-- **Remotion font system:** DM Sans + Montserrat via @remotion/google-fonts (services/video/src/lib/fonts.ts)
+- **Remotion font system:** 12 Google Fonts via @remotion/google-fonts with lazy loading (services/video/src/lib/fonts.ts)
 - **Remotion BullMQ worker:** remotion-rendering queue with bundle caching, bundle() → selectComposition() → renderMedia() → Supabase upload → DB insert (lib/queue/remotion-worker.ts)
 - **Remotion scheduler:** enqueueRemotionJob() + getRemotionJobStatus() (lib/queue/remotion-scheduler.ts)
 - **VideoEngine enum:** veo | remotion | composite — engine discrimination via video type value (types/video.ts)
@@ -72,6 +76,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Video worker + scheduler:** Scoped to Veo only (GenerateVeoRequest) (lib/queue/video-worker.ts, lib/queue/video-scheduler.ts)
 - **Video list API:** Added engine=composite filter alongside remotion|veo (app/api/v1/video/route.ts)
 - **Worker registration:** createCompositeWorker() registered in lib/worker.ts with event handlers and shutdown handling (8 workers total)
+- **Generate API:** Merges headingFont/bodyFont overrides into brand config for Remotion + composite engine routing (app/api/v1/video/generate/route.ts)
+- **Composite worker:** Passes font overrides through CompositeJobData and buildBrandProps() (lib/queue/composite-worker.ts)
+- **RemotionBrandConfig:** Added headingFont/bodyFont to Zod schema (services/video/src/types.ts)
 - **Test suite expanded:** 1029+ tests across 140+ files (74 new composite tests, all existing tests passing)
 
 ---

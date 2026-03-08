@@ -192,7 +192,7 @@ _Last Updated: March 2026_
 - [x] Remotion compositions (4): TestimonialQuote (6s), TipVideo (10s), BeforeAfterReveal (8s), BrandedIntroOutro (3s) — all 1080×1920 @ 30fps
 - [x] Shared components (5): BrandedBackground, Logo (<Img /> for SSR), TextReveal (word-by-word kinetic text), StarRating (animated), CtaOverlay
 - [x] Animation library: fadeIn, fadeOut, slideUp, scaleIn, wipeReveal (services/video/src/lib/animations.ts)
-- [x] Font system: DM Sans + Montserrat via @remotion/google-fonts (services/video/src/lib/fonts.ts)
+- [x] Font system: 12 Google Fonts across 5 categories (Sans, Serif, Script, Display, Mono) via @remotion/google-fonts with lazy loading (services/video/src/lib/fonts.ts)
 - [x] Remotion BullMQ worker: remotion-rendering queue with bundle caching, bundle() → selectComposition() → renderMedia() → Supabase upload → DB insert (lib/queue/remotion-worker.ts)
 - [x] Remotion scheduler: enqueueRemotionJob() + getRemotionJobStatus() (lib/queue/remotion-scheduler.ts)
 - [x] VideoEngine enum: veo | remotion with isRemotionVideoType() helper (types/video.ts)
@@ -201,6 +201,8 @@ _Last Updated: March 2026_
 - [x] Dual-queue status polling: checks both remotion-rendering and video-generation queues with prefix-based routing (app/api/v1/video/[id]/status/route.ts)
 - [x] Video library engine filter: ?engine=remotion|veo query param, engine badge on cards (app/api/v1/video/route.ts, components/video/)
 - [x] Engine selector UI: Remotion/Veo toggle with dynamic type-specific fields — tip builder, star picker, image URL inputs (components/video/video-generate-form.tsx)
+- [x] Per-video font selection: heading/body font dropdowns grouped by category on generate form, optional headingFont/bodyFont on all Remotion + composite schemas (components/video/video-generate-form.tsx, types/video.ts)
+- [x] Shared font catalog: lib/video/fonts.ts for frontend (no Remotion imports), composition font support in all 4 compositions + shared components
 - [x] Worker registration: createRemotionWorker() registered in lib/worker.ts with shutdown handling
 - [x] Dependencies: 6 Remotion packages + dev:remotion script added to package.json
 - [x] Test suite: 974/974 passing (all existing tests updated for new engine field)

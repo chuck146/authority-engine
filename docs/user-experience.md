@@ -441,6 +441,25 @@ The generate form starts with an engine selector:
 
 The video type dropdown updates based on the selected engine.
 
+### Font Selection
+
+For Remotion and Composite engines, the generate form includes two optional font dropdowns:
+
+- **Heading Font** — used for titles, headers, and prominent text in the video
+- **Body Font** — used for body copy, descriptions, and supporting text
+
+Fonts are organized into 5 categories in the dropdown:
+
+| Category | Fonts |
+| -------- | ----- |
+| Sans     | DM Sans (default body), Montserrat (default heading) |
+| Serif    | Playfair Display, Cormorant Garamond, Italiana |
+| Script   | Pacifico, Satisfy |
+| Display  | Anton, Bebas Neue, Oswald, Barlow Condensed |
+| Mono     | Space Mono |
+
+If no fonts are selected, videos use the brand defaults (Montserrat for headings, DM Sans for body). Font choices are passed through to all Remotion compositions and shared components (TextReveal, CtaOverlay, Logo).
+
 ### Remotion Video Types
 
 Five programmatic video types rendered via React compositions at 1080×1920 (9:16):
@@ -452,7 +471,7 @@ Five programmatic video types rendered via React compositions at 1080×1920 (9:1
 - **Branded Outro** — CTA with logo and contact info for video endings (3s @ 30fps)
 
 Remotion form fields vary by type:
-- All types: topic field
+- All types: topic field, optional heading font and body font dropdowns
 - Testimonial Quote: customer name, quote text, star rating (interactive picker)
 - Tip Video: title, dynamic tip list with add/remove buttons
 - Before/After Reveal: before image URL, after image URL, before/after labels
@@ -483,6 +502,7 @@ Composite form fields:
 - **Scene description** (textarea) — describes the cinematic center clip for Veo generation
 - **Audio mood** — mood/style directive for Veo's synchronized audio (e.g., "warm and inspiring", "energetic")
 - **CTA text and URL** (optional) — displayed in the Remotion outro overlay
+- **Heading font and body font** (optional dropdowns) — override brand defaults for the intro/outro segments
 - **Include Intro** (checkbox, default checked) — renders a branded Remotion intro before the cinematic clip
 - **Include Outro** (checkbox, default checked) — renders a branded Remotion outro with CTA after the cinematic clip
 - **Use Starting Frame** (checkbox, default checked) — generates a Nano Banana 2 image as the visual anchor for the Veo clip
