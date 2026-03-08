@@ -143,7 +143,7 @@ The left sidebar displays the organization logo, name, and the user's role. Belo
 | SEO          | `/seo`       | SEO scoring and Google integrations  |
 | Reviews      | `/reviews`   | Review management and responses      |
 | Community    | `/community` | (Not yet implemented)                |
-| Analytics    | `/analytics` | (Not yet implemented)                |
+| Analytics    | `/analytics` | Unified GA4 + GSC analytics          |
 
 A **Settings** link appears at the bottom of the sidebar.
 
@@ -727,11 +727,76 @@ No OAuth flow — configured via environment variables (`SALESMESSAGE_API_KEY`, 
 
 ---
 
+## Analytics
+
+**Route:** `/analytics`
+
+A unified analytics dashboard combining Google Analytics 4 and Google Search Console data with keyword rank tracking.
+
+### Date Range Picker
+
+A persistent control at the top of the page. Users select a time window for all analytics data:
+
+- **Preset buttons:** Last 7 days, Last 28 days (default), Last 90 days
+- **Custom range:** Native date inputs for start and end dates
+- Date range is stored in URL search params (`?range=28d`) so links are shareable
+
+### Tab Navigation
+
+Three tabs:
+
+- **Overview** — unified metrics from GA4 + GSC + keyword summary
+- **Keywords** — keyword rankings table with search and sorting
+- **Search Performance** — reuses existing GSC components from /seo page
+
+### Overview Tab
+
+Combines data from GA4 and GSC into a single view:
+
+- **GA4 metrics:** Sessions, users, pageviews, bounce rate (with comparison to previous period)
+- **GSC metrics:** Total clicks, impressions, average CTR, average position
+- **Keyword summary:** Total tracked keywords, average position, keywords improved vs. declined
+
+Reuses existing GA4 and GSC sub-components (from `/seo` page) — no duplication.
+
+If GA4 or GSC is not connected, those sections gracefully fall back with a connect prompt.
+
+### Keywords Tab
+
+A sortable, searchable table of keyword rankings populated by the daily GSC sync worker (no live API calls).
+
+**Table columns:**
+
+- Query (keyword text)
+- Position (average, with up/down arrow indicating change vs. previous period)
+- Clicks
+- Impressions
+- CTR
+
+**Features:**
+
+- **Search:** Filter keywords by text
+- **Sort:** Click column headers to sort by any metric
+- **Pagination:** Navigate through large keyword sets
+- **Trend detail:** Click any keyword row to open a detail sheet
+
+### Keyword Trend Detail Sheet
+
+A right-side panel showing historical performance for a single keyword:
+
+- **Summary cards:** Current position, position change, total clicks, total impressions
+- **Chart:** Daily position and clicks plotted as a bar chart over the selected date range
+
+### Search Performance Tab
+
+Reuses the existing GSC dashboard components from the `/seo` page — top queries table, top pages table, and indexing coverage.
+
+---
+
 ## Modules Not Yet Implemented
 
-Two sidebar items link to placeholder pages:
+One sidebar item links to a placeholder page:
 
-- **Analytics** (`/analytics`) — will provide a unified GA4 + GSC analytics dashboard, keyword rank tracking, and advanced reporting (planned for V2)
 - **Community** (`/community`) — will monitor Facebook groups for lead intent and enable community posting (planned for Later milestone, post-V2)
 
 ---
