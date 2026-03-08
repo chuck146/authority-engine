@@ -13,6 +13,7 @@ import {
   Users,
   BarChart3,
   Settings,
+  Video,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -27,13 +28,13 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import type { Organization, UserRole } from '@/types'
-import type { OrgBranding } from '@/types'
 
 const navItems = [
   { title: 'Dashboard', href: '/dashboard' as const, icon: LayoutDashboard },
   { title: 'Content', href: '/content' as const, icon: FileText },
   { title: 'Calendar', href: '/calendar' as const, icon: CalendarDays },
   { title: 'Media', href: '/media' as const, icon: ImageIcon },
+  { title: 'Video', href: '/video' as const, icon: Video },
   { title: 'Social & GBP', href: '/social' as const, icon: Share2 },
   { title: 'SEO', href: '/seo' as const, icon: Search },
   { title: 'Reviews', href: '/reviews' as const, icon: Star },
@@ -48,15 +49,16 @@ type AppSidebarProps = {
 
 export function AppSidebar({ organization, userRole }: AppSidebarProps) {
   const pathname = usePathname()
-  const branding = organization.branding as OrgBranding | null
 
   return (
     <Sidebar>
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center gap-2">
-          <div
-            className="h-8 w-8 rounded-lg"
-            style={{ backgroundColor: branding?.primary ?? '#1a472a' }}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt={organization.name}
+            className="h-8 w-8 rounded-lg object-cover"
           />
           <div>
             <p className="text-sm font-semibold">{organization.name}</p>

@@ -67,7 +67,9 @@ export async function processSmsJob(job: Job<SmsJobData>): Promise<void> {
     customerName: request.customer_name,
     orgName,
     reviewUrl: request.review_url,
-    customMessage: (request.metadata as Record<string, unknown>)?.customMessage as string | undefined,
+    customMessage: (request.metadata as Record<string, unknown>)?.customMessage as
+      | string
+      | undefined,
   })
 
   // Send SMS

@@ -4,10 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { enqueueSmsJob } from '@/lib/queue/sms-scheduler'
 
 // POST /api/v1/reviews/requests/[id]/send — Trigger SMS send
-export async function POST(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await requireApiRole('editor')
     const { id } = await params
@@ -30,7 +27,9 @@ export async function POST(
     // Only allow sending pending or failed requests
     if (row.status !== 'pending' && row.status !== 'failed') {
       return NextResponse.json(
-        { error: `Cannot send request with status "${row.status}". Only pending or failed requests can be sent.` },
+        {
+          error: `Cannot send request with status "${row.status}". Only pending or failed requests can be sent.`,
+        },
         { status: 400 },
       )
     }

@@ -52,7 +52,7 @@ describe('Ga4Dashboard', () => {
   })
 
   it('shows error state on fetch failure', async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, status: 500 })
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 500, json: () => Promise.resolve({}) })
 
     render(<Ga4Dashboard />)
 
@@ -68,6 +68,26 @@ describe('Ga4Dashboard', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Network error')).toBeInTheDocument()
+    })
+  })
+
+  it('shows property selection prompt when property not selected', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      json: () =>
+        Promise.resolve({
+          error:
+            'GA4 property not selected. Go to Settings > Integrations to select your property.',
+        }),
+    })
+
+    render(<Ga4Dashboard />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/property not selected/i)).toBeInTheDocument()
+      expect(screen.getByText('Go to Settings')).toBeInTheDocument()
+      expect(screen.getByText('Go to Settings').closest('a')).toHaveAttribute('href', '/settings')
     })
   })
 })

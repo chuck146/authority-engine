@@ -64,7 +64,10 @@ describe('GET /api/v1/integrations/ga4/properties', () => {
           name: 'properties/333/dataStreams/2',
           type: 'WEB_DATA_STREAM',
           displayName: 'Blog Stream',
-          webStreamData: { measurementId: 'G-DEF', defaultUri: 'https://blog.cleanestpainting.com' },
+          webStreamData: {
+            measurementId: 'G-DEF',
+            defaultUri: 'https://blog.cleanestpainting.com',
+          },
         },
       ])
 

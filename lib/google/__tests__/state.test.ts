@@ -15,7 +15,11 @@ describe('createOAuthState / validateOAuthState', () => {
   it('creates a valid state and validates it', () => {
     const state = createOAuthState('org-123', 'user-456')
     const result = validateOAuthState(state)
-    expect(result).toEqual({ organizationId: 'org-123', userId: 'user-456', provider: 'search_console' })
+    expect(result).toEqual({
+      organizationId: 'org-123',
+      userId: 'user-456',
+      provider: 'search_console',
+    })
   })
 
   it('produces different states each time (random nonce)', () => {

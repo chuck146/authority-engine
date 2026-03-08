@@ -50,7 +50,11 @@ export function validateOAuthState(state: string): OAuthStateResult | null {
     const nonce = parts[3]!
     signature = parts[4]!
     if (!organizationId || !userId || !provider || !nonce || !signature) return null
-    if (provider !== 'search_console' && provider !== 'analytics' && provider !== 'business_profile')
+    if (
+      provider !== 'search_console' &&
+      provider !== 'analytics' &&
+      provider !== 'business_profile'
+    )
       return null
     payload = `${organizationId}.${userId}.${provider}.${nonce}`
   } else {

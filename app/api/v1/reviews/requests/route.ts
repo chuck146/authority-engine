@@ -101,7 +101,9 @@ export async function POST(request: Request) {
         channel: input.channel,
         review_url: input.reviewUrl,
         status: 'pending',
-        metadata: input.message ? ({ customMessage: input.message } as unknown as Json) : ({} as unknown as Json),
+        metadata: input.message
+          ? ({ customMessage: input.message } as unknown as Json)
+          : ({} as unknown as Json),
         created_by: auth.userId,
       } as never)
       .select('id')

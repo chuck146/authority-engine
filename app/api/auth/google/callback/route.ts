@@ -64,9 +64,19 @@ export async function GET(request: NextRequest) {
   try {
     // Exchange code for tokens
     const tokens = await exchangeCodeForTokens(code)
+    console.log(`[Google Callback] Token exchange succeeded for provider=${stateData.provider}`)
 
-    // Resolve site_url / property ID based on provider
-    const siteUrl = await resolveSiteUrl(stateData.provider, tokens.access_token)
+    // Resolve site_url / property ID based on provider (non-fatal — user can select later)
+    let siteUrl = ''
+    try {
+      siteUrl = await resolveSiteUrl(stateData.provider, tokens.access_token)
+      console.log(`[Google Callback] resolveSiteUrl result: "${siteUrl}"`)
+    } catch (resolveErr) {
+      console.warn(
+        '[Google Callback] resolveSiteUrl failed (non-fatal):',
+        resolveErr instanceof Error ? resolveErr.message : resolveErr,
+      )
+    }
 
     const supabase = getAdminClient()
     const expiresAt = new Date(Date.now() + tokens.expires_in * 1000).toISOString()
@@ -100,9 +110,10 @@ export async function GET(request: NextRequest) {
       `${origin}/settings?tab=integrations&status=connected&provider=${stateData.provider}`,
     )
   } catch (err) {
-    console.error('[Google Callback Error]', err)
+    const detail = err instanceof Error ? err.message : String(err)
+    console.error('[Google Callback] Token exchange failed:', detail)
     return NextResponse.redirect(
-      `${origin}/settings?tab=integrations&status=error&message=token_exchange_failed`,
+      `${origin}/settings?tab=integrations&status=error&message=token_exchange_failed&detail=${encodeURIComponent(detail.slice(0, 200))}`,
     )
   }
 }

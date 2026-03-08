@@ -7,13 +7,30 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **UI rebrand (Navy):** Complete color system overhaul from green (#1a472a) to navy (#1B2B5B) with 30+ CSS custom properties for full Shadcn/ui theming, light/dark mode support
+- **Font rebrand:** Replaced Inter with DM Sans (weights 300–700) for improved typography hierarchy (app/layout.tsx)
+- **Logo integration:** Auth page and sidebar now display logo image instead of dynamic colored box (app/(auth)/layout.tsx, components/dashboard/app-sidebar.tsx)
+- **Video types:** Zod discriminated union for cinematic_reel, project_showcase, testimonial_scene, brand_story with Veo model selection and aspect ratio support (types/video.ts)
+- **Veo 3.1 integration:** Polling with exponential backoff (5–60s, 5-min timeout), starting frame → Veo handoff, Fast + Standard model support (lib/ai/veo.ts)
+- **Video generator pipeline:** Orchestrates prompt → starting frame (optional) → Veo → Supabase Storage → media_assets DB insert (lib/ai/video-generator.ts)
+- **Video prompt templates:** 4 video-type-specific builders (cinematic reel, project showcase, testimonial scene, brand story) with Veo Visual+Audio format (packages/ai/prompts/videos/)
+- **Video BullMQ worker:** video-generation queue with concurrency=1 (Veo rate limits), exponential backoff retry (lib/queue/video-worker.ts)
+- **Video scheduler:** enqueueVideoJob() with 2 attempts + backoff, getVideoJobStatus() for polling (lib/queue/video-scheduler.ts)
+- **Video APIs (6 routes):** POST generate (queues job, returns jobId), GET list with pagination, GET detail, GET status polling, DELETE, POST schedule for calendar (app/api/v1/video/)
+- **Video dashboard UI:** Page with tabs (All Videos, Generate, Status), dynamic generate form, library grid, detail sheet, generation status poller with progress bar (components/video/)
+- **Video sidebar nav:** "Video" module added to dashboard navigation (components/dashboard/app-sidebar.tsx)
+- **Storage extended:** uploadVideo() function for Supabase Storage with org-scoped paths (lib/storage/supabase-storage.ts)
+- **Progress component:** Radix UI progress bar used by video generation status display (components/ui/progress.tsx)
+
 ### Changed
 
 - **GA4 property selector improved:** Properties route now filters out rollup/sub-properties and enriches each property with its websiteUrl via Data Streams API (app/api/v1/integrations/ga4/properties/route.ts)
 - **GA4 service library:** Added listDataStreams() function to fetch web stream data including websiteUrl (lib/google/analytics.ts)
 - **GA4 types:** Added Ga4WebStreamData and Ga4DataStream types (types/ga4.ts)
 - **GA4 property selector UI:** Dropdown now displays website URL alongside property name for easier identification (components/settings/ga4-property-selector.tsx)
-- **Test suite expanded:** 933 tests across 126 files (6 new GA4 property/analytics tests)
+- **Test suite expanded:** 933+ tests across 126+ files (94+ new video tests, prompt builder tests)
 
 ---
 

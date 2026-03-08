@@ -106,20 +106,14 @@ export function ReviewRequestDetailSheet({
             {/* Status */}
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-sm">Status:</span>
-              <Badge variant={STATUS_VARIANTS[detail.status] ?? 'outline'}>
-                {detail.status}
-              </Badge>
+              <Badge variant={STATUS_VARIANTS[detail.status] ?? 'outline'}>{detail.status}</Badge>
             </div>
 
             {/* Contact Info */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium">Contact</h4>
-              {detail.customerPhone && (
-                <p className="text-sm">Phone: {detail.customerPhone}</p>
-              )}
-              {detail.customerEmail && (
-                <p className="text-sm">Email: {detail.customerEmail}</p>
-              )}
+              {detail.customerPhone && <p className="text-sm">Phone: {detail.customerPhone}</p>}
+              {detail.customerEmail && <p className="text-sm">Email: {detail.customerEmail}</p>}
               <p className="text-muted-foreground text-sm">
                 Channel: {detail.channel.toUpperCase()}
               </p>
@@ -132,7 +126,7 @@ export function ReviewRequestDetailSheet({
                 href={detail.reviewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-blue-600 underline break-all dark:text-blue-400"
+                className="text-sm break-all text-blue-600 underline dark:text-blue-400"
               >
                 {detail.reviewUrl}
               </a>
@@ -181,11 +175,7 @@ export function ReviewRequestDetailSheet({
             {/* Actions */}
             {canSend && (
               <Button onClick={handleSend} disabled={sending}>
-                {sending
-                  ? 'Sending...'
-                  : detail.status === 'failed'
-                    ? 'Resend SMS'
-                    : 'Send SMS'}
+                {sending ? 'Sending...' : detail.status === 'failed' ? 'Resend SMS' : 'Send SMS'}
               </Button>
             )}
           </div>

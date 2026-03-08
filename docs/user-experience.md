@@ -1,6 +1,6 @@
 # Authority Engine — User Experience Guide
 
-_Last Updated: March 2026_
+_Last Updated: March 8, 2026_
 
 This document describes the complete user experience of Authority Engine as it exists today — every page, flow, and interaction a user or visitor encounters.
 
@@ -17,10 +17,11 @@ This document describes the complete user experience of Authority Engine as it e
 7. [Content Calendar](#content-calendar)
 8. [Media Library](#media-library)
 9. [Social & GBP](#social--gbp)
-10. [SEO Command Center](#seo-command-center)
-11. [Review Command Center](#review-command-center)
-12. [Settings](#settings)
-13. [Modules Not Yet Implemented](#modules-not-yet-implemented)
+10. [Video Generation](#video-generation)
+11. [SEO Command Center](#seo-command-center)
+12. [Review Command Center](#review-command-center)
+13. [Settings](#settings)
+14. [Modules Not Yet Implemented](#modules-not-yet-implemented)
 
 ---
 
@@ -44,6 +45,7 @@ Public pages are server-side rendered (SSR) with Incremental Static Regeneration
 Displays AI-generated content for a specific service (e.g., "Exterior Painting", "Cabinet Refinishing").
 
 **Layout:**
+
 - Breadcrumbs: Home > Services > [Service Name]
 - Page title (h1)
 - Intro paragraph (lead text)
@@ -55,6 +57,7 @@ Displays AI-generated content for a specific service (e.g., "Exterior Painting",
 Displays AI-generated content for a specific service area (e.g., "Summit, NJ").
 
 **Layout:**
+
 - Breadcrumbs: Home > Locations > [City, State]
 - Page title with city/state
 - Subtitle: "Serving [City], [State]"
@@ -67,6 +70,7 @@ Displays AI-generated content for a specific service area (e.g., "Summit, NJ").
 Displays AI-generated blog articles.
 
 **Layout:**
+
 - Breadcrumbs: Home > Blog > [Post Title]
 - Page title
 - Metadata row: publication date, read time, category
@@ -86,6 +90,7 @@ Authority Engine uses passwordless magic link authentication via Supabase Auth. 
 
 1. **User visits any protected page** (e.g., `/dashboard`) — middleware redirects to `/login`
 2. **Login page** displays a centered card with:
+   - Cleanest Painting logo at the top
    - Title: "Sign in to Authority Engine"
    - Email input field
    - "Send Magic Link" button
@@ -125,25 +130,27 @@ The dashboard is the authenticated application where users manage all platform f
 
 ### Sidebar Navigation
 
-The left sidebar displays the organization name, a colored brand dot, and the user's role. Below that, nine navigation items:
+The left sidebar displays the organization logo, name, and the user's role. Below that, navigation items:
 
-| Item          | Route        | Description                          |
-|---------------|-------------|--------------------------------------|
-| Dashboard     | `/dashboard` | Overview metrics and activity        |
-| Content       | `/content`   | AI content generation and management |
-| Calendar      | `/calendar`  | Content scheduling                   |
-| Media         | `/media`     | Image generation and library         |
-| Social & GBP  | `/social`    | Social media post generation         |
-| SEO           | `/seo`       | SEO scoring and Google integrations  |
-| Reviews       | `/reviews`   | Review management and responses      |
-| Community     | `/community` | (Not yet implemented)                |
-| Analytics     | `/analytics` | (Not yet implemented)                |
+| Item         | Route        | Description                          |
+| ------------ | ------------ | ------------------------------------ |
+| Dashboard    | `/dashboard` | Overview metrics and activity        |
+| Content      | `/content`   | AI content generation and management |
+| Calendar     | `/calendar`  | Content scheduling                   |
+| Media        | `/media`     | Image generation and library         |
+| Social & GBP | `/social`    | Social media post generation         |
+| Video        | `/video`     | AI video generation (Veo 3.1)        |
+| SEO          | `/seo`       | SEO scoring and Google integrations  |
+| Reviews      | `/reviews`   | Review management and responses      |
+| Community    | `/community` | (Not yet implemented)                |
+| Analytics    | `/analytics` | (Not yet implemented)                |
 
 A **Settings** link appears at the bottom of the sidebar.
 
 ### User Menu
 
 The top-right avatar (showing the first two letters of the user's email) opens a dropdown with:
+
 - User's email address
 - Link to Settings
 - Sign out button
@@ -159,6 +166,7 @@ The landing page after login. Provides a high-level overview of platform activit
 ### Hero Metric Cards
 
 Four cards across the top:
+
 - **Total Content** — count of all content items (service pages, location pages, blog posts)
 - **Published** — count of published content
 - **Avg SEO Score** — average on-page SEO score across all content
@@ -183,6 +191,7 @@ The core module for generating AI-written content and managing it through a revi
 ### Content Listing
 
 A table of all content items across three types (service pages, location pages, blog posts). Each row shows:
+
 - Title
 - Content type badge
 - Status badge (draft / review / approved / published / archived)
@@ -206,6 +215,7 @@ Users click "Generate" to open the content generation form:
 ### Content Detail Sheet
 
 A right-side panel that opens when clicking a content item. Shows:
+
 - Full content preview (headline, intro, sections)
 - SEO score with rule-by-rule breakdown
 - Status and metadata
@@ -234,6 +244,7 @@ Role requirements: Editors can approve/reject. Admins can publish. Owners have f
 ### Editing Content
 
 Users with appropriate roles can edit:
+
 - Title and URL slug
 - Content body (headline, intro, sections, CTA)
 - Meta title and meta description
@@ -252,6 +263,7 @@ A scheduling interface for planning when content goes live.
 ### Month Grid View
 
 A traditional calendar grid showing the current month. Each day cell displays scheduled content entries as colored cards:
+
 - Color-coded by content type (service page, location page, blog post, social post)
 - Status dot with tooltip
 - Overflow entries show a "+N more" link that opens a popover
@@ -261,6 +273,7 @@ Navigation arrows move between months.
 ### List/Agenda View
 
 An alternative chronological view. Entries are grouped by date, showing:
+
 - Scheduled date
 - Content title
 - Content type and status badges
@@ -271,6 +284,7 @@ Users toggle between grid and list views.
 ### Scheduling Content
 
 Users click a "Schedule" button to open a dialog:
+
 1. **Select content** from a dropdown of approved (unpublished) items, filtered by content type
 2. **Pick a date and time**
 3. **Confirm** — creates a calendar entry
@@ -280,6 +294,7 @@ A background worker (BullMQ) automatically publishes content when its scheduled 
 ### Entry Detail Sheet
 
 Clicking a calendar entry opens a detail panel showing:
+
 - Content title and type
 - Scheduled date/time
 - Current status
@@ -290,6 +305,7 @@ Clicking a calendar entry opens a detail panel showing:
 ### Filters
 
 Dropdowns to filter the calendar by:
+
 - Content type (all, service page, location page, blog post, social post)
 - Status (all, scheduled, published, cancelled, failed)
 
@@ -316,6 +332,7 @@ Users fill out a form to generate images via Nano Banana 2 (Gemini Flash):
 ### Media Grid
 
 A grid of generated images showing:
+
 - Thumbnail preview
 - Image name/prompt
 - Template type badge
@@ -327,6 +344,7 @@ Clicking an image opens the detail sheet.
 ### Media Detail Sheet
 
 A right-side panel showing:
+
 - Full-size image preview
 - Metadata (dimensions, file size, type, creation date)
 - Associated content item (if linked)
@@ -344,6 +362,7 @@ Generate and manage social media posts for Google Business Profile, Instagram, a
 ### Tab Navigation
 
 Five tabs across the top:
+
 - **All Posts** — every social post regardless of platform
 - **GBP** — Google Business Profile posts only
 - **Instagram** — Instagram posts only
@@ -367,6 +386,7 @@ Generated posts enter **"review"** status.
 ### Post List
 
 Each platform tab shows posts filtered to that platform. Each post card shows:
+
 - Post body preview
 - Platform badge
 - Status badge
@@ -378,11 +398,13 @@ Clicking a post opens the detail sheet.
 ### Post Detail Sheet
 
 Shows the full post with a platform-appropriate preview:
+
 - **GBP:** Business post format with CTA button
 - **Instagram:** Square image frame with caption and hashtags
 - **Facebook:** Timeline post format
 
 Actions (based on status and role):
+
 - Approve / Reject
 - Publish (marks as published — user manually copies to platform)
 - Edit body, hashtags, CTA
@@ -392,6 +414,58 @@ Actions (based on status and role):
 ### Social Post Workflow
 
 Same lifecycle as content: review → approved → published → archived. Posts can also be scheduled through the content calendar for timed publishing.
+
+---
+
+## Video Generation
+
+**Route:** `/video`
+
+Generate AI-powered cinematic videos using Google Veo 3.1.
+
+### Tab Navigation
+
+Three tabs:
+
+- **All Videos** — library of all generated videos
+- **Generate** — video generation form
+- **Status** — track in-progress video generation jobs
+
+### Video Generation Form
+
+1. **Select video type:**
+   - **Cinematic Reel** — hero portfolio content, project transformations
+   - **Project Showcase** — before/after project videos
+   - **Testimonial Scene** — customer testimonial visualizations
+   - **Brand Story** — company narrative videos
+2. **Select Veo model:** Fast (default, $0.15/sec) or Standard (max fidelity, $0.40/sec)
+3. **Select aspect ratio:** 9:16 (vertical, default), 1:1 (square), 16:9 (landscape)
+4. **Fill type-specific fields** (topic, style, details vary per video type)
+5. **Optional:** Generate a starting frame via Nano Banana 2 for visual anchoring
+6. **Click "Generate"** — queues a background job via BullMQ
+
+Generation takes 1–5 minutes. The Status tab shows real-time progress with a progress bar.
+
+### Video Library Grid
+
+Grid display of generated videos showing:
+
+- Video thumbnail/preview
+- Video type badge
+- Model used (Fast/Standard)
+- Duration and file size
+- Creation date
+
+Clicking a video opens the detail sheet.
+
+### Video Detail Sheet
+
+A right-side panel showing:
+
+- Video preview/player
+- Metadata (type, model, aspect ratio, duration, file size)
+- Original prompt used
+- Actions: Schedule (via content calendar), Delete
 
 ---
 
@@ -406,6 +480,7 @@ Monitor and improve SEO performance across three tabs.
 Analyzes the SEO quality of all generated content using 10 built-in rules across 4 categories.
 
 **Overview Cards:**
+
 - Average SEO score (0–100)
 - Content count by score range (excellent / good / needs work / poor)
 
@@ -417,6 +492,7 @@ All content items with their SEO scores, sortable. Clicking an item opens the SE
 
 **SEO Detail Panel:**
 Rule-by-rule breakdown for a specific page:
+
 - Each rule shows: name, category, weight, pass/fail, points earned
 - Categories: Title & Meta, Content Quality, Structure, Keywords
 - Specific rules include: title length, meta description length, heading structure, keyword density, content length, internal links, image alt text, URL structure, readability, schema markup
@@ -432,6 +508,7 @@ Displays data from Google Search Console (requires GSC connection in Settings).
 **If connected:**
 
 **Overview Cards (28-day window):**
+
 - Total clicks (with trend vs. previous 28 days)
 - Total impressions
 - Average CTR
@@ -444,6 +521,7 @@ Keywords driving traffic — shows query, clicks, impressions, CTR, position, an
 Best-performing pages — shows URL (shortened), clicks, impressions, CTR, average position.
 
 **Indexing Coverage:**
+
 - Pages indexed vs. not indexed
 - Sitemap status (submitted, pending, errors/warnings)
 
@@ -456,6 +534,7 @@ Displays data from Google Analytics 4 (requires GA4 connection in Settings).
 **If connected:**
 
 **Overview Cards (28-day window):**
+
 - Sessions
 - Users
 - Pageviews
@@ -484,6 +563,7 @@ Manage customer reviews, generate AI responses, and request new reviews via SMS.
 ### Tab Navigation
 
 Seven tabs:
+
 - **All** — every review
 - **Google** — Google Business Profile reviews
 - **Yelp** — Yelp reviews
@@ -496,6 +576,7 @@ Seven tabs:
 ### Review List
 
 Each tab shows reviews filtered by platform. Each review card displays:
+
 - Reviewer name
 - Star rating (1–5 stars, visually rendered)
 - Platform badge (Google, Yelp, Angi's, Manual)
@@ -508,12 +589,14 @@ Clicking a review opens the detail sheet.
 ### Review Detail Sheet
 
 Full review display with:
+
 - Complete review text
 - Star rating
 - Reviewer info and platform
 - Date received
 
 **Response section:**
+
 - Current response draft (if any)
 - Response status
 - Action buttons based on status:
@@ -550,6 +633,7 @@ The AI considers the review's star rating and content to craft an appropriate re
 ### Overview Tab
 
 Aggregated metrics:
+
 - **Average rating** across all reviews
 - **Total review count**
 - **Pending responses** (reviews needing attention)
@@ -560,6 +644,7 @@ Aggregated metrics:
 ### Manual Review Entry
 
 A form for adding reviews that weren't automatically synced:
+
 - Reviewer name
 - Star rating (interactive star picker — click to set 1–5)
 - Platform selector
@@ -569,6 +654,7 @@ A form for adding reviews that weren't automatically synced:
 ### Google Business Profile Sync
 
 For organizations with GBP connected:
+
 - A **"Sync"** button on the Google tab triggers a manual pull of recent Google reviews
 - Reviews are deduplicated (won't create duplicates if already imported)
 - A daily background sync also runs automatically
@@ -578,6 +664,7 @@ For organizations with GBP connected:
 Send SMS messages to customers asking them to leave a review.
 
 **Review Request Form:**
+
 - Customer name
 - Phone number
 - Platform (Google, Yelp, Angi's)
@@ -586,6 +673,7 @@ Send SMS messages to customers asking them to leave a review.
 
 **Review Request List:**
 Shows all sent requests with:
+
 - Customer name and phone
 - Platform
 - Status badge (pending, sent, delivered, failed)
@@ -593,6 +681,7 @@ Shows all sent requests with:
 - Date sent
 
 **Request Detail Sheet:**
+
 - Full request details
 - Timestamps (created, sent, delivered)
 - Error info (if failed)
@@ -612,12 +701,12 @@ Platform configuration, primarily for connecting external integrations.
 
 Four integration rows:
 
-| Integration          | Auth Method | Status Display                              |
-|---------------------|------------|---------------------------------------------|
-| Google Search Console | OAuth 2.0  | Connected (site URL shown) or "Connect"     |
-| Google Analytics 4    | OAuth 2.0  | Connected (property shown) or "Connect"     |
-| Google Business Profile | OAuth 2.0 | Connected (location shown) or "Connect"    |
-| SalesMessage (SMS)    | API Key    | Configured or "Not configured" (env-var check) |
+| Integration             | Auth Method | Status Display                                 |
+| ----------------------- | ----------- | ---------------------------------------------- |
+| Google Search Console   | OAuth 2.0   | Connected (site URL shown) or "Connect"        |
+| Google Analytics 4      | OAuth 2.0   | Connected (property shown) or "Connect"        |
+| Google Business Profile | OAuth 2.0   | Connected (location shown) or "Connect"        |
+| SalesMessage (SMS)      | API Key     | Configured or "Not configured" (env-var check) |
 
 ### Google OAuth Flow (GSC, GA4, GBP)
 

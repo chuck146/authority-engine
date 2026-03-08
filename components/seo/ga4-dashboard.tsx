@@ -17,8 +17,11 @@ export function Ga4Dashboard() {
 
   useEffect(() => {
     fetch('/api/v1/ga4/overview')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load GA4 data')
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.error ?? 'Failed to load GA4 data')
+        }
         return res.json()
       })
       .then((data) => setOverview(data))
@@ -43,9 +46,22 @@ export function Ga4Dashboard() {
   }
 
   if (error || !overview) {
+    const needsProperty = error?.includes('property not selected')
     return (
-      <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-6 text-center">
-        <p className="text-destructive">{error ?? 'Failed to load GA4 data'}</p>
+      <div
+        className={`rounded-lg border p-6 text-center ${needsProperty ? 'border-amber-300 bg-amber-50' : 'border-destructive/50 bg-destructive/10'}`}
+      >
+        <p className={needsProperty ? 'text-amber-800' : 'text-destructive'}>
+          {error ?? 'Failed to load GA4 data'}
+        </p>
+        {needsProperty && (
+          <a
+            href="/settings"
+            className="mt-2 inline-block text-sm font-medium text-amber-700 underline"
+          >
+            Go to Settings
+          </a>
+        )}
       </div>
     )
   }

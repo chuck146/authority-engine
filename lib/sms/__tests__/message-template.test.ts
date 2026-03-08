@@ -34,9 +34,7 @@ describe('buildReviewRequestMessage', () => {
       customMessage: '{name}, {name} - visit {url}',
     })
 
-    expect(message).toBe(
-      'John Smith, John Smith - visit https://g.page/r/cleanest-painting/review',
-    )
+    expect(message).toBe('John Smith, John Smith - visit https://g.page/r/cleanest-painting/review')
   })
 
   it('returns custom message as-is when no variables used', () => {

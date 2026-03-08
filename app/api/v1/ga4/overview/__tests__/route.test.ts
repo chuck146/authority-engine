@@ -143,4 +143,20 @@ describe('GET /api/v1/ga4/overview', () => {
     const res = await GET()
     expect(res.status).toBe(500)
   })
+
+  it('returns 400 when propertyId is empty', async () => {
+    const { getValidToken } = await import('@/lib/google/token-manager')
+    vi.mocked(getValidToken).mockResolvedValueOnce({
+      accessToken: 'ya29.test',
+      siteUrl: '',
+    })
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(json.error).toContain('property not selected')
+    expect(mockBatchRunReports).not.toHaveBeenCalled()
+  })
 })

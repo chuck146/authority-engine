@@ -126,9 +126,7 @@ export async function replyToReview(
   return res.json()
 }
 
-export async function deleteReply(
-  options: FetchOptions & { reviewName: string },
-): Promise<void> {
+export async function deleteReply(options: FetchOptions & { reviewName: string }): Promise<void> {
   const { accessToken, reviewName } = options
   const res = await fetch(`${REVIEWS_API}/${reviewName}/reply`, {
     method: 'DELETE',

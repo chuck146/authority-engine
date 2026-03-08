@@ -1,10 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
+import { Ga4PropertySelector } from './ga4-property-selector'
 
 type ConnectionStatus = {
   isConnected: boolean
@@ -22,6 +24,7 @@ type IntegrationRowProps = {
   disconnectUrl: string
   connectUrl: string
   displayField: 'siteUrl' | 'propertyId' | 'locationName'
+  renderSetup?: (status: ConnectionStatus) => React.ReactNode
 }
 
 function IntegrationRow({
@@ -31,6 +34,7 @@ function IntegrationRow({
   disconnectUrl,
   connectUrl,
   displayField,
+  renderSetup,
 }: IntegrationRowProps) {
   const [status, setStatus] = useState<ConnectionStatus | null>(null)
   const [loading, setLoading] = useState(true)
@@ -86,35 +90,38 @@ function IntegrationRow({
         : status?.siteUrl
 
   return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{label}</span>
+    <>
+      <div className="flex items-center justify-between rounded-lg border p-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{label}</span>
+            {status?.isConnected ? (
+              <Badge variant="default" className="bg-green-600">
+                Connected
+              </Badge>
+            ) : (
+              <Badge variant="secondary">Not Connected</Badge>
+            )}
+          </div>
+          {status?.isConnected && displayValue && (
+            <p className="text-muted-foreground text-sm">{displayValue}</p>
+          )}
+          {!status?.isConnected && <p className="text-muted-foreground text-sm">{description}</p>}
+        </div>
+        <div>
           {status?.isConnected ? (
-            <Badge variant="default" className="bg-green-600">
-              Connected
-            </Badge>
+            <Button variant="outline" size="sm" onClick={handleDisconnect} disabled={disconnecting}>
+              {disconnecting ? 'Disconnecting...' : 'Disconnect'}
+            </Button>
           ) : (
-            <Badge variant="secondary">Not Connected</Badge>
+            <Button size="sm" onClick={handleConnect}>
+              Connect
+            </Button>
           )}
         </div>
-        {status?.isConnected && displayValue && (
-          <p className="text-muted-foreground text-sm">{displayValue}</p>
-        )}
-        {!status?.isConnected && <p className="text-muted-foreground text-sm">{description}</p>}
       </div>
-      <div>
-        {status?.isConnected ? (
-          <Button variant="outline" size="sm" onClick={handleDisconnect} disabled={disconnecting}>
-            {disconnecting ? 'Disconnecting...' : 'Disconnect'}
-          </Button>
-        ) : (
-          <Button size="sm" onClick={handleConnect}>
-            Connect
-          </Button>
-        )}
-      </div>
-    </div>
+      {status && renderSetup?.(status)}
+    </>
   )
 }
 
@@ -166,6 +173,21 @@ function SmsStatusRow() {
 }
 
 export function IntegrationsSection() {
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const status = searchParams.get('status')
+    const message = searchParams.get('message')
+    const detail = searchParams.get('detail')
+    const provider = searchParams.get('provider')
+
+    if (status === 'connected') {
+      toast.success(`${provider ?? 'Integration'} connected successfully`)
+    } else if (status === 'error') {
+      toast.error(`Connection failed: ${message ?? 'unknown error'}${detail ? ` — ${detail}` : ''}`)
+    }
+  }, [searchParams])
+
   return (
     <Card>
       <CardHeader>
@@ -188,6 +210,7 @@ export function IntegrationsSection() {
           disconnectUrl="/api/v1/integrations/ga4/disconnect"
           connectUrl="/api/auth/google?provider=analytics"
           displayField="propertyId"
+          renderSetup={(s) => (s.isConnected && !s.propertyId ? <Ga4PropertySelector /> : null)}
         />
         <IntegrationRow
           label="Google Business Profile"

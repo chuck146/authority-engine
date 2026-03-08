@@ -39,6 +39,7 @@ import type {
   ReviewRequestDetail,
   ReviewRequestOverview,
 } from '@/types/review-requests'
+import type { GenerateVideoResponse, VideoLibraryItem, VideoJobStatus } from '@/types/video'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -635,6 +636,51 @@ export function buildReviewRequestOverview(
     delivered: 1,
     completed: 1,
     failed: 1,
+    ...overrides,
+  }
+}
+
+// --- Video Factories ---
+
+export function buildGenerateVideoResponse(
+  overrides?: Partial<GenerateVideoResponse>,
+): GenerateVideoResponse {
+  return {
+    id: 'video-1',
+    videoType: 'cinematic_reel',
+    filename: 'reel-freshly-painted-living-room.mp4',
+    storagePath: 'org-456/videos/cinematic_reel/abc123.mp4',
+    publicUrl:
+      'https://example.supabase.co/storage/v1/object/public/media/org-456/videos/cinematic_reel/abc123.mp4',
+    mimeType: 'video/mp4',
+    sizeBytes: 5242880,
+    durationSeconds: 8,
+    ...overrides,
+  }
+}
+
+export function buildVideoLibraryItem(overrides?: Partial<VideoLibraryItem>): VideoLibraryItem {
+  return {
+    id: 'video-1',
+    videoType: 'cinematic_reel',
+    filename: 'reel-freshly-painted-living-room.mp4',
+    publicUrl:
+      'https://example.supabase.co/storage/v1/object/public/media/org-456/videos/cinematic_reel/abc123.mp4',
+    mimeType: 'video/mp4',
+    sizeBytes: 5242880,
+    durationSeconds: 8,
+    createdAt: '2026-03-07T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildVideoJobStatus(overrides?: Partial<VideoJobStatus>): VideoJobStatus {
+  return {
+    jobId: 'video-org-456-1709820000000',
+    status: 'queued',
+    progress: null,
+    result: null,
+    error: null,
     ...overrides,
   }
 }

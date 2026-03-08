@@ -6,7 +6,7 @@ type MessageTemplateParams = {
 }
 
 const DEFAULT_TEMPLATE =
-  'Hi {name}! Thank you for choosing {org}. We\'d love to hear about your experience. Please leave us a review: {url}'
+  "Hi {name}! Thank you for choosing {org}. We'd love to hear about your experience. Please leave us a review: {url}"
 
 /**
  * Build the SMS message for a review request.

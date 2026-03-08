@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 45%      |
+| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 65%      |
 | 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -152,9 +152,27 @@ _Last Updated: March 2026_
 - [x] Worker updated: SMS worker registered in lib/worker.ts with shutdown handling
 - [x] Test suite: ~81 new tests across 12 files (817+ total, up from 736)
 
+**Phase D: UI Rebrand (Navy) + Video Generation (Veo 3.1)** ✅
+
+- [x] UI rebrand: Green (#1a472a) → Navy (#1B2B5B) color system with full light/dark theme support
+- [x] Design token system: 30+ CSS custom properties for Shadcn/ui components (app/globals.css)
+- [x] Font rebrand: Inter → DM Sans (weights 300–700) for improved typography hierarchy
+- [x] Logo integration: auth page and sidebar display logo image instead of dynamic color box
+- [x] Video types: Zod discriminated union for cinematic_reel, project_showcase, testimonial_scene, brand_story (types/video.ts)
+- [x] Veo 3.1 integration: polling with exponential backoff, starting frame handoff, Fast + Standard models (lib/ai/veo.ts)
+- [x] Video generator pipeline: prompt → starting frame (optional) → Veo → Supabase Storage → DB insert (lib/ai/video-generator.ts)
+- [x] Video prompt templates: 4 video-type-specific prompt builders with Veo Visual+Audio format (packages/ai/prompts/videos/)
+- [x] Video BullMQ worker + scheduler: video-generation queue, concurrency=1, exponential backoff retry (lib/queue/video-worker.ts, lib/queue/video-scheduler.ts)
+- [x] Video APIs (6 routes): generate, list, detail, status polling, delete, schedule (app/api/v1/video/)
+- [x] Video dashboard UI: page with tabs, generate form with dynamic fields, library grid, detail sheet, generation status poller (components/video/)
+- [x] Video sidebar nav: "Video" module added to dashboard sidebar
+- [x] Storage extended: uploadVideo() for Supabase Storage (lib/storage/supabase-storage.ts)
+- [x] Progress component: Radix UI progress bar for video generation status (components/ui/progress.tsx)
+- [x] Test suite: 933+ tests across 126+ files (94+ video tests, prompt builder tests)
+
 ### What's Next
 
-1. Video generation (Remotion + Veo 3.1)
+1. Remotion integration (Tier 1 programmatic video — branded intros/outros, text overlays)
 2. Community module (Facebook group monitoring + lead capture)
 
 ### Blockers

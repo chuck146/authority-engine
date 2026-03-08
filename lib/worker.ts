@@ -6,12 +6,14 @@ import { scheduleDailyGa4Sync } from './queue/ga4-scheduler'
 import { createGbpSyncWorker } from './queue/gbp-sync-worker'
 import { scheduleDailyGbpSync } from './queue/gbp-scheduler'
 import { createSmsWorker } from './queue/sms-worker'
+import { createVideoWorker } from './queue/video-worker'
 
 const publishWorker = createPublishWorker()
 const gscSyncWorker = createGscSyncWorker()
 const ga4SyncWorker = createGa4SyncWorker()
 const gbpSyncWorker = createGbpSyncWorker()
 const smsWorker = createSmsWorker()
+const videoWorker = createVideoWorker()
 
 publishWorker.on('completed', (job) => {
   console.warn(`[worker] Publish job ${job.id} completed`)
@@ -58,6 +60,15 @@ console.warn('[worker] GSC sync worker started')
 console.warn('[worker] GA4 sync worker started')
 console.warn('[worker] GBP sync worker started')
 console.warn('[worker] SMS send worker started')
+console.warn('[worker] Video generation worker started')
+
+videoWorker.on('completed', (job) => {
+  console.warn(`[worker] Video job ${job.id} completed`)
+})
+
+videoWorker.on('failed', (job, error) => {
+  console.error(`[worker] Video job ${job?.id} failed:`, error.message)
+})
 
 // Schedule daily syncs for all active connections
 scheduleDailyGscSync()
@@ -80,6 +91,7 @@ function shutdown() {
     ga4SyncWorker.close(),
     gbpSyncWorker.close(),
     smsWorker.close(),
+    videoWorker.close(),
   ]).then(() => process.exit(0))
 }
 

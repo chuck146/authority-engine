@@ -146,6 +146,17 @@ export async function GET() {
       auth.organizationId,
       'analytics',
     )
+
+    if (!propertyId) {
+      return NextResponse.json(
+        {
+          error:
+            'GA4 property not selected. Go to Settings > Integrations to select your property.',
+        },
+        { status: 400 },
+      )
+    }
+
     const ranges = computeDateRanges()
 
     const dateRanges = [{ startDate: ranges.current.startDate, endDate: ranges.current.endDate }]

@@ -109,9 +109,9 @@ describe('listDataStreams', () => {
       text: () => Promise.resolve('Forbidden'),
     })
 
-    await expect(
-      listDataStreams('properties/456', { accessToken: 'ya29.test' }),
-    ).rejects.toThrow('GA4 Admin API error (403): Forbidden')
+    await expect(listDataStreams('properties/456', { accessToken: 'ya29.test' })).rejects.toThrow(
+      'GA4 Admin API error (403): Forbidden',
+    )
   })
 })
 
