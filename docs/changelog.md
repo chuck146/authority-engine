@@ -9,6 +9,20 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Remotion integration (Tier 1 programmatic video):** Full branded motion graphics pipeline alongside Veo 3.1 — Pipeline A from video guidelines (~$0.05–$0.15/video)
+- **Remotion project (services/video/):** Isolated React composition project with tsconfig, registerRoot, 4 Composition definitions with Zod-validated props
+- **Remotion compositions (4):** TestimonialQuote (6s, quote + stars + CTA), TipVideo (10s, numbered tips with kinetic text), BeforeAfterReveal (8s, wipe transition), BrandedIntroOutro (3s, intro/outro mode) — all 1080×1920 @ 30fps
+- **Remotion shared components (5):** BrandedBackground (gradient/solid/radial), Logo (animated with <Img /> for SSR), TextReveal (word-by-word), StarRating (animated), CtaOverlay
+- **Remotion animation library:** fadeIn, fadeOut, slideUp, scaleIn, wipeReveal utilities (services/video/src/lib/animations.ts)
+- **Remotion font system:** DM Sans + Montserrat via @remotion/google-fonts (services/video/src/lib/fonts.ts)
+- **Remotion BullMQ worker:** remotion-rendering queue with bundle caching, bundle() → selectComposition() → renderMedia() → Supabase upload → DB insert (lib/queue/remotion-worker.ts)
+- **Remotion scheduler:** enqueueRemotionJob() + getRemotionJobStatus() (lib/queue/remotion-scheduler.ts)
+- **VideoEngine enum:** veo | remotion — engine discrimination via video type value (types/video.ts)
+- **5 Remotion video types:** testimonial_quote, tip_video, before_after_reveal, branded_intro, branded_outro with Zod input schemas and isRemotionVideoType() helper (types/video.ts)
+- **Engine routing in generate API:** isRemotionVideoType() → Remotion schema validation → mapToRemotionComposition() → enqueueRemotionJob(); Veo path unchanged (app/api/v1/video/generate/route.ts)
+- **Dual-queue status polling:** Status route checks both remotion-rendering and video-generation queues with prefix-based routing and fallback (app/api/v1/video/[id]/status/route.ts)
+- **Video library engine filter:** Query param ?engine=remotion|veo, engine badge on cards (app/api/v1/video/route.ts, components/video/)
+- **Engine selector UI:** Remotion/Veo toggle on generate form with dynamic type-specific fields — tip builder with add/remove, star picker, image URL inputs (components/video/video-generate-form.tsx)
 - **UI rebrand (Navy):** Complete color system overhaul from green (#1a472a) to navy (#1B2B5B) with 30+ CSS custom properties for full Shadcn/ui theming, light/dark mode support
 - **Font rebrand:** Replaced Inter with DM Sans (weights 300–700) for improved typography hierarchy (app/layout.tsx)
 - **Logo integration:** Auth page and sidebar now display logo image instead of dynamic colored box (app/(auth)/layout.tsx, components/dashboard/app-sidebar.tsx)
@@ -43,7 +57,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **GA4 types:** Added Ga4WebStreamData and Ga4DataStream types (types/ga4.ts)
 - **GA4 property selector UI:** Dropdown now displays website URL alongside property name for easier identification (components/settings/ga4-property-selector.tsx)
 - **GA4 overview API:** Added optional startDate/endDate query params for date range filtering (backward-compatible) (app/api/v1/ga4/overview/route.ts)
-- **Test suite expanded:** 974+ tests across 135+ files (41 new analytics tests, up from 933)
+- **Video generate API refactored:** Engine routing — Remotion types validated with Remotion Zod schema, mapped to composition IDs; Veo types unchanged (app/api/v1/video/generate/route.ts)
+- **Video status API refactored:** Dual-queue polling with prefix-based routing (remotion-* → remotion queue first, else Veo first, with fallback) (app/api/v1/video/[id]/status/route.ts)
+- **Video list API:** Added engine query param filter + engine field in response items (app/api/v1/video/route.ts)
+- **Video generator pipeline:** Scoped to Veo only (GenerateVeoRequest), added engine: 'veo' to metadata (lib/ai/video-generator.ts)
+- **Video worker + scheduler:** Scoped to Veo only (GenerateVeoRequest) (lib/queue/video-worker.ts, lib/queue/video-scheduler.ts)
+- **Test suite expanded:** 974+ tests across 135+ files (all existing tests updated for Remotion engine field)
 
 ---
 

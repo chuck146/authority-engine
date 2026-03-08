@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 75%      |
+| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 85%      |
 | 🟣 Later — White-Label + Community      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -186,9 +186,28 @@ _Last Updated: March 2026_
 - [x] Analytics dashboard page: /analytics route with requireAuth() guard
 - [x] Test suite: 41 new tests across 9 files (974 total, up from 933)
 
+**Phase F: Remotion Integration (Tier 1 Programmatic Video)** ✅
+
+- [x] Remotion project: isolated services/video/ with tsconfig, registerRoot, Root.tsx with 4 Composition definitions, Zod-validated props (services/video/src/)
+- [x] Remotion compositions (4): TestimonialQuote (6s), TipVideo (10s), BeforeAfterReveal (8s), BrandedIntroOutro (3s) — all 1080×1920 @ 30fps
+- [x] Shared components (5): BrandedBackground, Logo (<Img /> for SSR), TextReveal (word-by-word kinetic text), StarRating (animated), CtaOverlay
+- [x] Animation library: fadeIn, fadeOut, slideUp, scaleIn, wipeReveal (services/video/src/lib/animations.ts)
+- [x] Font system: DM Sans + Montserrat via @remotion/google-fonts (services/video/src/lib/fonts.ts)
+- [x] Remotion BullMQ worker: remotion-rendering queue with bundle caching, bundle() → selectComposition() → renderMedia() → Supabase upload → DB insert (lib/queue/remotion-worker.ts)
+- [x] Remotion scheduler: enqueueRemotionJob() + getRemotionJobStatus() (lib/queue/remotion-scheduler.ts)
+- [x] VideoEngine enum: veo | remotion with isRemotionVideoType() helper (types/video.ts)
+- [x] 5 Remotion video types: testimonial_quote, tip_video, before_after_reveal, branded_intro, branded_outro with Zod input schemas (types/video.ts)
+- [x] Engine routing: generate API routes to Remotion or Veo queue based on video type (app/api/v1/video/generate/route.ts)
+- [x] Dual-queue status polling: checks both remotion-rendering and video-generation queues with prefix-based routing (app/api/v1/video/[id]/status/route.ts)
+- [x] Video library engine filter: ?engine=remotion|veo query param, engine badge on cards (app/api/v1/video/route.ts, components/video/)
+- [x] Engine selector UI: Remotion/Veo toggle with dynamic type-specific fields — tip builder, star picker, image URL inputs (components/video/video-generate-form.tsx)
+- [x] Worker registration: createRemotionWorker() registered in lib/worker.ts with shutdown handling
+- [x] Dependencies: 6 Remotion packages + dev:remotion script added to package.json
+- [x] Test suite: 974/974 passing (all existing tests updated for new engine field)
+
 ### What's Next
 
-1. Remotion integration (Tier 1 programmatic video — branded intros/outros, text overlays)
+1. Veo + Remotion composite pipeline (Pipeline B) — chain Veo cinematic clips with Remotion branded intros/outros
 
 ### Blockers
 

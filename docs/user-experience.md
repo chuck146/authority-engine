@@ -139,7 +139,7 @@ The left sidebar displays the organization logo, name, and the user's role. Belo
 | Calendar     | `/calendar`  | Content scheduling                   |
 | Media        | `/media`     | Image generation and library         |
 | Social & GBP | `/social`    | Social media post generation         |
-| Video        | `/video`     | AI video generation (Veo 3.1)        |
+| Video        | `/video`     | Video generation (Remotion + Veo 3.1)|
 | SEO          | `/seo`       | SEO scoring and Google integrations  |
 | Reviews      | `/reviews`   | Review management and responses      |
 | Community    | `/community` | (Not yet implemented)                |
@@ -421,30 +421,63 @@ Same lifecycle as content: review → approved → published → archived. Posts
 
 **Route:** `/video`
 
-Generate AI-powered cinematic videos using Google Veo 3.1.
+Generate videos using two engines: **Remotion** (programmatic motion graphics) and **Veo 3.1** (cinematic AI video).
 
 ### Tab Navigation
 
 Three tabs:
 
-- **All Videos** — library of all generated videos
-- **Generate** — video generation form
+- **All Videos** — library of all generated videos (filterable by engine)
+- **Generate** — video generation form with engine selection
 - **Status** — track in-progress video generation jobs
 
-### Video Generation Form
+### Engine Selection
 
-1. **Select video type:**
-   - **Cinematic Reel** — hero portfolio content, project transformations
-   - **Project Showcase** — before/after project videos
-   - **Testimonial Scene** — customer testimonial visualizations
-   - **Brand Story** — company narrative videos
-2. **Select Veo model:** Fast (default, $0.15/sec) or Standard (max fidelity, $0.40/sec)
-3. **Select aspect ratio:** 9:16 (vertical, default), 1:1 (square), 16:9 (landscape)
-4. **Fill type-specific fields** (topic, style, details vary per video type)
-5. **Optional:** Generate a starting frame via Nano Banana 2 for visual anchoring
-6. **Click "Generate"** — queues a background job via BullMQ
+The generate form starts with an engine selector:
 
-Generation takes 1–5 minutes. The Status tab shows real-time progress with a progress bar.
+- **Remotion** — branded motion graphics, text animations, data-driven video. Fast, low-cost (~$0.05–$0.15/video). Best for recurring social content.
+- **Veo 3.1** — cinematic AI-generated video with synchronized audio. Higher cost ($0.15–$0.40/sec). Best for hero content and portfolio pieces.
+
+The video type dropdown updates based on the selected engine.
+
+### Remotion Video Types
+
+Five programmatic video types rendered via React compositions at 1080×1920 (9:16):
+
+- **Testimonial Quote** — animated customer review with star rating, branded background, and CTA overlay (6s @ 30fps)
+- **Tip Video** — numbered tips with kinetic text reveal, title card, and branded styling (10s @ 30fps). Users add/remove tip items dynamically in the form.
+- **Before/After Reveal** — wipe transition between two images with labels (8s @ 30fps). Users provide before/after image URLs.
+- **Branded Intro** — logo animation with tagline for video openings (3s @ 30fps)
+- **Branded Outro** — CTA with logo and contact info for video endings (3s @ 30fps)
+
+Remotion form fields vary by type:
+- All types: topic field
+- Testimonial Quote: customer name, quote text, star rating (interactive picker)
+- Tip Video: title, dynamic tip list with add/remove buttons
+- Before/After Reveal: before image URL, after image URL, before/after labels
+
+### Veo 3.1 Video Types
+
+Four cinematic AI video types:
+
+- **Cinematic Reel** — hero portfolio content, project transformations
+- **Project Showcase** — before/after project videos
+- **Testimonial Scene** — customer testimonial visualizations
+- **Brand Story** — company narrative videos
+
+Veo form fields:
+1. **Select model:** Fast (default, $0.15/sec) or Standard (max fidelity, $0.40/sec)
+2. **Select aspect ratio:** 9:16 (vertical, default), 1:1 (square), 16:9 (landscape)
+3. **Fill type-specific fields** (topic, style, details vary per video type)
+4. **Optional:** Generate a starting frame via Nano Banana 2 for visual anchoring
+
+### Generation Process
+
+Clicking "Generate" queues a background job via BullMQ:
+- **Remotion jobs** go to the `remotion-rendering` queue — bundles the React composition, renders to MP4, uploads to Supabase Storage
+- **Veo jobs** go to the `video-generation` queue — calls Veo API with polling, downloads result, uploads to storage
+
+Generation takes 30 seconds–5 minutes depending on engine and complexity. The Status tab shows real-time progress with a progress bar.
 
 ### Video Library Grid
 
@@ -452,9 +485,12 @@ Grid display of generated videos showing:
 
 - Video thumbnail/preview
 - Video type badge
-- Model used (Fast/Standard)
+- **Engine badge** ("Remotion" or "Veo") for quick identification
+- Model used (Fast/Standard — Veo only)
 - Duration and file size
 - Creation date
+
+Users can filter by engine using a query parameter.
 
 Clicking a video opens the detail sheet.
 
@@ -463,7 +499,7 @@ Clicking a video opens the detail sheet.
 A right-side panel showing:
 
 - Video preview/player
-- Metadata (type, model, aspect ratio, duration, file size)
+- Metadata (type, engine, model, aspect ratio, duration, file size)
 - Original prompt used
 - Actions: Schedule (via content calendar), Delete
 
