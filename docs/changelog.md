@@ -26,6 +26,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- **Roadmap swap:** Moved Analytics from Later into V2 milestone; moved Community from V2 to Later milestone. Analytics has ~30% existing infrastructure (GA4 + GSC service libs, 14 UI components, 8 API endpoints, 5 DB tables, 4 background workers) making it a natural V2 fit.
 - **GA4 property selector improved:** Properties route now filters out rollup/sub-properties and enriches each property with its websiteUrl via Data Streams API (app/api/v1/integrations/ga4/properties/route.ts)
 - **GA4 service library:** Added listDataStreams() function to fetch web stream data including websiteUrl (lib/google/analytics.ts)
 - **GA4 types:** Added Ga4WebStreamData and Ga4DataStream types (types/ga4.ts)

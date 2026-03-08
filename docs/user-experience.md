@@ -731,10 +731,8 @@ No OAuth flow — configured via environment variables (`SALESMESSAGE_API_KEY`, 
 
 Two sidebar items link to placeholder pages:
 
-- **Community** (`/community`) — will monitor Facebook groups for lead intent and enable community posting
-- **Analytics** (`/analytics`) — will provide advanced reporting, competitor tracking, and custom report building
-
-These modules are planned for V2 (Community) and Later (Analytics) milestones.
+- **Analytics** (`/analytics`) — will provide a unified GA4 + GSC analytics dashboard, keyword rank tracking, and advanced reporting (planned for V2)
+- **Community** (`/community`) — will monitor Facebook groups for lead intent and enable community posting (planned for Later milestone, post-V2)
 
 ---
 

@@ -10,8 +10,8 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 65%      |
-| 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
+| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 65%      |
+| 🟣 Later — White-Label + Community      | 🔲 Not Started | TBD            | 0%       |
 
 ---
 
@@ -107,7 +107,7 @@ _Last Updated: March 2026_
 
 ---
 
-## 🟡 V2 — Reviews + Video + Community
+## 🟡 V2 — Reviews + Video + Analytics
 
 ### What's Been Accomplished
 
@@ -173,7 +173,7 @@ _Last Updated: March 2026_
 ### What's Next
 
 1. Remotion integration (Tier 1 programmatic video — branded intros/outros, text overlays)
-2. Community module (Facebook group monitoring + lead capture)
+2. Analytics module (dedicated /analytics page — unified GA4 + GSC dashboard, keyword rank tracking)
 
 ### Blockers
 
@@ -181,9 +181,11 @@ _Last Updated: March 2026_
 
 ---
 
-## 🟣 Later — White-Label + Advanced Analytics
+## 🟣 Later — White-Label + Community
 
 _Not started — waiting on V2 completion_
+
+**Planned scope:** White-label admin, Stripe billing, Facebook group monitoring (Brand24 + Graph API), lead intent classifier, Slack lead alerts, A/B testing, email marketing (Resend), competitor tracking, custom report builder.
 
 ---
 
