@@ -79,7 +79,7 @@ _Last Updated: March 2026_
 - [x] Test suite expanded to 440+ tests
 - [x] Google Analytics 4 integration: service library, OAuth flow, integration APIs, data API, background sync, dashboard UI, property selector
 - [x] GA4 database migration: ga4_page_metrics + ga4_snapshots (with RLS)
-- [x] GA4 Settings UI: property selector, connect/disconnect for GA4 alongside GSC
+- [x] GA4 Settings UI: property selector (with website URL display, rollup filtering), connect/disconnect for GA4 alongside GSC
 - [x] GA4 Dashboard: "Analytics" tab with overview cards, traffic trend, top pages, traffic sources, device breakdown
 - [x] OAuth state format extended to 4-part (integration type + org_id + user_id + HMAC)
 - [x] Test suite expanded to 507+ tests across 71 files
@@ -90,7 +90,7 @@ _Last Updated: March 2026_
 - [x] Publish worker extended for social_post content type
 - [x] Social dashboard UI: /social page with platform tabs, generate form, post previews, approval actions
 - [x] Database migration: social_posts table with RLS policies
-- [x] Test suite expanded to 568 tests across 79 files
+- [x] Test suite expanded to 933 tests across 126 files
 - [x] Calendar enhancements: entry detail sheet, list/agenda view, content type + status filters
 - [x] Approved-content API (GET /api/v1/content/approved) for schedule dialog picker
 - [x] Schedule dialog UX: select dropdown for approved content instead of raw ID input

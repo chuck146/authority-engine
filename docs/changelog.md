@@ -7,7 +7,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-_No unreleased changes._
+### Changed
+
+- **GA4 property selector improved:** Properties route now filters out rollup/sub-properties and enriches each property with its websiteUrl via Data Streams API (app/api/v1/integrations/ga4/properties/route.ts)
+- **GA4 service library:** Added listDataStreams() function to fetch web stream data including websiteUrl (lib/google/analytics.ts)
+- **GA4 types:** Added Ga4WebStreamData and Ga4DataStream types (types/ga4.ts)
+- **GA4 property selector UI:** Dropdown now displays website URL alongside property name for easier identification (components/settings/ga4-property-selector.tsx)
+- **Test suite expanded:** 933 tests across 126 files (6 new GA4 property/analytics tests)
 
 ---
 
