@@ -23,6 +23,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Video sidebar nav:** "Video" module added to dashboard navigation (components/dashboard/app-sidebar.tsx)
 - **Storage extended:** uploadVideo() function for Supabase Storage with org-scoped paths (lib/storage/supabase-storage.ts)
 - **Progress component:** Radix UI progress bar used by video generation status display (components/ui/progress.tsx)
+- **Analytics types:** DateRangePreset, KeywordRankingListItem, KeywordTrendPoint, AnalyticsOverview with Zod schemas (types/analytics.ts)
+- **Date range service:** resolveDateRange() with presets (7d/28d/90d) + custom ranges, automatic comparison period calculation (lib/analytics/date-range.ts)
+- **Keyword rankings service:** getKeywordRankings() with pagination/sort/search, getKeywordTrend() for daily position tracking (lib/analytics/keyword-rankings.ts)
+- **Analytics overview API:** GET /api/v1/analytics/overview — unified GA4 + GSC + keyword summary with parallel fetch and graceful fallback
+- **Keywords API:** GET /api/v1/analytics/keywords — paginated keyword rankings with date range, sort, and search filters
+- **Keyword trend API:** GET /api/v1/analytics/keywords/[query]/trend — daily position trend for a single keyword
+- **Date range picker:** URL-param-driven preset selector + native date inputs for custom ranges (components/analytics/date-range-picker.tsx)
+- **Analytics page client:** 3 tabs (Overview, Keywords, Search Performance), reuses existing GA4/GSC components (components/analytics/analytics-page-client.tsx)
+- **Keyword rankings table:** Sortable table with pagination, search, position change arrows, row click opens trend sheet (components/analytics/keyword-rankings-table.tsx)
+- **Keyword trend detail:** Sheet with summary cards + position/clicks bar chart (components/analytics/keyword-trend-detail.tsx)
+- **Analytics dashboard page:** /analytics route with requireAuth() guard (app/(dashboard)/analytics/page.tsx)
 
 ### Changed
 
@@ -31,7 +42,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **GA4 service library:** Added listDataStreams() function to fetch web stream data including websiteUrl (lib/google/analytics.ts)
 - **GA4 types:** Added Ga4WebStreamData and Ga4DataStream types (types/ga4.ts)
 - **GA4 property selector UI:** Dropdown now displays website URL alongside property name for easier identification (components/settings/ga4-property-selector.tsx)
-- **Test suite expanded:** 933+ tests across 126+ files (94+ new video tests, prompt builder tests)
+- **GA4 overview API:** Added optional startDate/endDate query params for date range filtering (backward-compatible) (app/api/v1/ga4/overview/route.ts)
+- **Test suite expanded:** 974+ tests across 135+ files (41 new analytics tests, up from 933)
 
 ---
 

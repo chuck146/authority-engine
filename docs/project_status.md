@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 65%      |
+| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 75%      |
 | 🟣 Later — White-Label + Community      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -170,10 +170,25 @@ _Last Updated: March 2026_
 - [x] Progress component: Radix UI progress bar for video generation status (components/ui/progress.tsx)
 - [x] Test suite: 933+ tests across 126+ files (94+ video tests, prompt builder tests)
 
+**Phase E: Analytics Module** ✅
+
+- [x] Analytics types: DateRangePreset, KeywordRankingListItem, KeywordTrendPoint, AnalyticsOverview with Zod schemas (types/analytics.ts)
+- [x] Date range service: resolveDateRange() with presets (7d/28d/90d) + custom, comparison period calculation (lib/analytics/date-range.ts)
+- [x] Keyword rankings service: getKeywordRankings() paginated/sortable/searchable, getKeywordTrend() daily (lib/analytics/keyword-rankings.ts)
+- [x] Analytics overview API: GET /api/v1/analytics/overview — unified GA4 + GSC + keyword summary, parallel fetch, graceful fallback
+- [x] Keywords API: GET /api/v1/analytics/keywords — paginated rankings with date range + sort + search
+- [x] Keyword trend API: GET /api/v1/analytics/keywords/[query]/trend — daily position trend
+- [x] Date range picker: URL-param-driven preset selector + native date inputs (components/analytics/date-range-picker.tsx)
+- [x] Analytics page client: 3 tabs (Overview, Keywords, Search Performance), reuses GA4/GSC components (components/analytics/analytics-page-client.tsx)
+- [x] Keyword rankings table: sortable with pagination, search, position change arrows, trend sheet (components/analytics/keyword-rankings-table.tsx)
+- [x] Keyword trend detail: sheet with summary cards + position/clicks bar chart (components/analytics/keyword-trend-detail.tsx)
+- [x] GA4 overview API extended with optional startDate/endDate query params (backward-compatible)
+- [x] Analytics dashboard page: /analytics route with requireAuth() guard
+- [x] Test suite: 41 new tests across 9 files (974 total, up from 933)
+
 ### What's Next
 
 1. Remotion integration (Tier 1 programmatic video — branded intros/outros, text overlays)
-2. Analytics module (dedicated /analytics page — unified GA4 + GSC dashboard, keyword rank tracking)
 
 ### Blockers
 
