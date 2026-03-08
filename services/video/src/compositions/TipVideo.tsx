@@ -138,7 +138,13 @@ export function TipVideo({ brand, title, tips }: TipVideoProps) {
           justifyContent: 'center',
         }}
       >
-        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={240} size={60} fontFamily={headingFamily} />
+        <Logo
+          logoUrl={brand.logoUrl}
+          orgName={brand.orgName}
+          startFrame={240}
+          size={60}
+          fontFamily={headingFamily}
+        />
       </div>
 
       <CtaOverlay

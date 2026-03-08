@@ -5,9 +5,13 @@ import type { GenerateContentRequest } from '@/types/content'
 
 const mockCallClaude = vi.fn()
 
-vi.mock('../claude', () => ({
-  callClaude: (...args: unknown[]) => mockCallClaude(...args),
-}))
+vi.mock('../claude', async (importActual) => {
+  const actual = await importActual<typeof import('../claude')>()
+  return {
+    ...actual,
+    callClaude: (...args: unknown[]) => mockCallClaude(...args),
+  }
+})
 
 // Import after mock
 const { generateContent } = await import('../content-generator')

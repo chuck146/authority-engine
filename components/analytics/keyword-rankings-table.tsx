@@ -49,7 +49,7 @@ function SortableHeader({
   const arrow = isActive ? (currentOrder === 'desc' ? ' ↓' : ' ↑') : ''
   return (
     <TableHead
-      className="cursor-pointer select-none text-right hover:underline"
+      className="cursor-pointer text-right select-none hover:underline"
       onClick={() => onSort(field)}
     >
       {label}
@@ -150,9 +150,7 @@ export function KeywordRankingsTable() {
             </div>
           )}
 
-          {error && (
-            <p className="text-destructive text-sm">{error}</p>
-          )}
+          {error && <p className="text-destructive text-sm">{error}</p>}
 
           {!loading && !error && data && data.items.length === 0 && (
             <p className="text-muted-foreground text-sm">
@@ -207,7 +205,7 @@ export function KeywordRankingsTable() {
                   {data.items.map((item: KeywordRankingListItem) => (
                     <TableRow
                       key={item.query}
-                      className="cursor-pointer hover:bg-muted/50"
+                      className="hover:bg-muted/50 cursor-pointer"
                       onClick={() => setSelectedKeyword(item.query)}
                     >
                       <TableCell className="font-medium">{item.query}</TableCell>
@@ -258,10 +256,7 @@ export function KeywordRankingsTable() {
         </CardContent>
       </Card>
 
-      <KeywordTrendDetail
-        query={selectedKeyword}
-        onClose={() => setSelectedKeyword(null)}
-      />
+      <KeywordTrendDetail query={selectedKeyword} onClose={() => setSelectedKeyword(null)} />
     </>
   )
 }

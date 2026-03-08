@@ -53,15 +53,30 @@ const FONT_FAMILIES: Record<string, string> = {
 export const AVAILABLE_FONTS: FontInfo[] = [
   { id: 'DMSans', name: 'DM Sans', family: 'DM Sans', category: 'sans' },
   { id: 'Montserrat', name: 'Montserrat', family: 'Montserrat', category: 'sans' },
-  { id: 'PlayfairDisplay', name: 'Playfair Display', family: 'Playfair Display', category: 'serif' },
-  { id: 'CormorantGaramond', name: 'Cormorant Garamond', family: 'Cormorant Garamond', category: 'serif' },
+  {
+    id: 'PlayfairDisplay',
+    name: 'Playfair Display',
+    family: 'Playfair Display',
+    category: 'serif',
+  },
+  {
+    id: 'CormorantGaramond',
+    name: 'Cormorant Garamond',
+    family: 'Cormorant Garamond',
+    category: 'serif',
+  },
   { id: 'Italiana', name: 'Italiana', family: 'Italiana', category: 'serif' },
   { id: 'Pacifico', name: 'Pacifico', family: 'Pacifico', category: 'script' },
   { id: 'Satisfy', name: 'Satisfy', family: 'Satisfy', category: 'script' },
   { id: 'Anton', name: 'Anton', family: 'Anton', category: 'display' },
   { id: 'BebasNeue', name: 'Bebas Neue', family: 'Bebas Neue', category: 'display' },
   { id: 'Oswald', name: 'Oswald', family: 'Oswald', category: 'display' },
-  { id: 'BarlowCondensed', name: 'Barlow Condensed', family: 'Barlow Condensed', category: 'display' },
+  {
+    id: 'BarlowCondensed',
+    name: 'Barlow Condensed',
+    family: 'Barlow Condensed',
+    category: 'display',
+  },
   { id: 'SpaceMono', name: 'Space Mono', family: 'Space Mono', category: 'mono' },
 ]
 

@@ -144,10 +144,8 @@ export async function GET(request: NextRequest) {
             },
           ],
         })
-        const getVal = (
-          row: { metricValues?: { value: string }[] },
-          i: number,
-        ): number => parseFloat(row.metricValues?.[i]?.value ?? '0') || 0
+        const getVal = (row: { metricValues?: { value: string }[] }, i: number): number =>
+          parseFloat(row.metricValues?.[i]?.value ?? '0') || 0
 
         const sumRows = (rows: { metricValues?: { value: string }[] }[]) =>
           rows.reduce(
@@ -169,12 +167,9 @@ export async function GET(request: NextRequest) {
             ? currentRows.reduce((s, r) => s + getVal(r, 3), 0) / currentRows.length
             : 0
         const prevBounce =
-          prevRows.length > 0
-            ? prevRows.reduce((s, r) => s + getVal(r, 3), 0) / prevRows.length
-            : 0
+          prevRows.length > 0 ? prevRows.reduce((s, r) => s + getVal(r, 3), 0) / prevRows.length : 0
 
-        const pct = (c: number, p: number) =>
-          p === 0 ? 0 : Math.round(((c - p) / p) * 100)
+        const pct = (c: number, p: number) => (p === 0 ? 0 : Math.round(((c - p) / p) * 100))
 
         return {
           sessions: cur.sessions,
@@ -235,12 +230,9 @@ export async function GET(request: NextRequest) {
             : 0
         const prevCtr = prev.impressions > 0 ? prev.clicks / prev.impressions : 0
         const prevPosition =
-          prevRows.length > 0
-            ? prevRows.reduce((s, r) => s + r.position, 0) / prevRows.length
-            : 0
+          prevRows.length > 0 ? prevRows.reduce((s, r) => s + r.position, 0) / prevRows.length : 0
 
-        const pct = (c: number, p: number) =>
-          p === 0 ? 0 : Math.round(((c - p) / p) * 100)
+        const pct = (c: number, p: number) => (p === 0 ? 0 : Math.round(((c - p) / p) * 100))
 
         return {
           clicks: cur.clicks,

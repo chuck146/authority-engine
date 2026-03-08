@@ -1,6 +1,7 @@
 import { Worker, type Job } from 'bullmq'
 import { getRedisConnection } from './connection'
 import { processRemotionJob, type RemotionJobData } from './remotion-worker'
+import { downloadFromStorage, stitchClips, createMockJob, buildBrandProps } from './video-utils'
 import { generateAndStoreVideo } from '@/lib/ai/video-generator'
 import { uploadVideo } from '@/lib/storage/supabase-storage'
 import { createAdminClient } from '@/lib/supabase/admin'
@@ -50,21 +51,7 @@ function buildStepProgress(step: CompositeJobStep, overallProgress: number) {
   })
 }
 
-function buildBrandProps(data: CompositeJobData) {
-  return {
-    orgName: data.orgContext.orgName,
-    tagline: data.branding?.tagline ?? undefined,
-    primaryColor: data.branding?.primary ?? '#1B2B5B',
-    secondaryColor: data.branding?.secondary ?? '#fbbf24',
-    accentColor: data.branding?.accent ?? '#1e3a5f',
-    headingFont: data.headingFont ?? 'Montserrat',
-    bodyFont: data.bodyFont ?? 'DMSans',
-  }
-}
-
-export async function processCompositeJob(
-  job: Job<CompositeJobData>,
-): Promise<CompositeJobResult> {
+export async function processCompositeJob(job: Job<CompositeJobData>): Promise<CompositeJobResult> {
   const data = job.data
   const clips: ClipInfo[] = []
   let totalDuration = 0
@@ -158,7 +145,10 @@ export async function processCompositeJob(
     await job.updateProgress(JSON.parse(buildStepProgress('stitch', 78)) as never)
 
     const outputPath = path.join(tmpDir, `composite-final-${job.id ?? Date.now()}.mp4`)
-    await stitchClips(clips.map((c) => c.path), outputPath)
+    await stitchClips(
+      clips.map((c) => c.path),
+      outputPath,
+    )
 
     await job.updateProgress(JSON.parse(buildStepProgress('stitch', 88)) as never)
 
@@ -231,82 +221,6 @@ export async function processCompositeJob(
       // Non-critical
     }
   }
-}
-
-/** Download a file from Supabase Storage by storage path */
-async function downloadFromStorage(storagePath: string): Promise<Buffer> {
-  const admin = createAdminClient()
-  const { data, error } = await admin.storage.from('media').download(storagePath)
-
-  if (error || !data) {
-    throw new Error(`Failed to download from storage: ${error?.message ?? 'no data'}`)
-  }
-
-  return Buffer.from(await data.arrayBuffer())
-}
-
-/** Stitch multiple MP4 clips together using FFmpeg concat demuxer */
-async function stitchClips(inputPaths: string[], outputPath: string): Promise<void> {
-  const fs = await import('fs')
-  const path = await import('path')
-  const os = await import('os')
-  const { execFile } = await import('child_process')
-  const { promisify } = await import('util')
-  const execFileAsync = promisify(execFile)
-
-  // Create a concat list file for FFmpeg
-  const concatListPath = path.join(os.tmpdir(), `composite-concat-${Date.now()}.txt`)
-  const concatContent = inputPaths.map((p) => `file '${p}'`).join('\n')
-  fs.writeFileSync(concatListPath, concatContent)
-
-  try {
-    await execFileAsync('ffmpeg', [
-      '-y',
-      '-f', 'concat',
-      '-safe', '0',
-      '-i', concatListPath,
-      '-c', 'copy',
-      '-movflags', '+faststart',
-      outputPath,
-    ])
-  } catch (err) {
-    // If stream copy fails (different codecs/params), re-encode
-    try {
-      await execFileAsync('ffmpeg', [
-        '-y',
-        '-f', 'concat',
-        '-safe', '0',
-        '-i', concatListPath,
-        '-c:v', 'libx264',
-        '-preset', 'fast',
-        '-crf', '23',
-        '-c:a', 'aac',
-        '-b:a', '128k',
-        '-movflags', '+faststart',
-        '-pix_fmt', 'yuv420p',
-        outputPath,
-      ])
-    } catch (reencodeErr) {
-      throw new Error(
-        `FFmpeg stitching failed: ${reencodeErr instanceof Error ? reencodeErr.message : String(reencodeErr)}`,
-      )
-    }
-  } finally {
-    try {
-      fs.unlinkSync(concatListPath)
-    } catch {
-      // Non-critical
-    }
-  }
-}
-
-/** Create a mock Job object for running Remotion sub-renders inline */
-function createMockJob<T>(data: T): Job<T> {
-  return {
-    data,
-    id: `sub-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    updateProgress: async () => {},
-  } as unknown as Job<T>
 }
 
 export function createCompositeWorker(): Worker<CompositeJobData, CompositeJobResult> {

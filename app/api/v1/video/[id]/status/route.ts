@@ -3,6 +3,7 @@ import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { getVideoJobStatus } from '@/lib/queue/video-scheduler'
 import { getRemotionJobStatus } from '@/lib/queue/remotion-scheduler'
 import { getCompositeJobStatus } from '@/lib/queue/composite-scheduler'
+import { getPremiumJobStatus } from '@/lib/queue/premium-scheduler'
 import type { VideoJobStatus } from '@/types/video'
 
 type RouteContext = { params: Promise<{ id: string }> }
@@ -11,6 +12,25 @@ export async function GET(_request: Request, context: RouteContext) {
   try {
     await requireApiAuth()
     const { id: jobId } = await context.params
+
+    // Premium jobs have their own queue with multi-step + scene progress
+    if (jobId.startsWith('premium-')) {
+      const premiumStatus = await getPremiumJobStatus(jobId)
+      if (!premiumStatus) {
+        return NextResponse.json({ error: 'Job not found' }, { status: 404 })
+      }
+
+      const response: VideoJobStatus = {
+        jobId,
+        status: premiumStatus.state,
+        progress: premiumStatus.progress,
+        result: premiumStatus.result ?? null,
+        error: premiumStatus.error ?? null,
+        premiumStep: premiumStatus.premiumStep,
+      }
+
+      return NextResponse.json(response)
+    }
 
     // Composite jobs have their own queue with sub-step progress
     if (jobId.startsWith('composite-')) {

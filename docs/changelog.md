@@ -9,6 +9,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Pipeline C full premium video (Claude + Nano Banana + Veo Standard + Remotion):** Seven-step orchestration pipeline — Claude script → Nano Banana key frames → Veo Standard scenes → Remotion intro/outro → FFmpeg stitch → Supabase upload (~$3.00–$6.00/video)
+- **Premium worker:** BullMQ `premium-rendering` queue with concurrency=1, seven-step progress tracking (script/keyframes/scenes/intro/outro/stitch/upload), scene-level sub-progress, temp file cleanup (lib/queue/premium-worker.ts)
+- **Premium scheduler:** enqueuePremiumJob() with `premium-${orgId}-${timestamp}` job IDs, 2 retry attempts with exponential backoff, getPremiumJobStatus() with premiumStep detail (lib/queue/premium-scheduler.ts)
+- **Premium script generator:** Claude API → JSON → Zod validation pipeline, returns title + scenes array with sceneNumber/description/audio/imagePrompt (lib/ai/premium-script-generator.ts)
+- **Premium prompt template:** Video script prompt builder with org context, topic, style, scene count (packages/ai/prompts/videos/premium-script.ts)
+- **Premium video type:** `premium_reel` added to Zod discriminated union with generatePremiumRequestSchema (types/video.ts)
+- **PremiumJobStep type:** `'script' | 'keyframes' | 'scenes' | 'intro' | 'outro' | 'stitch' | 'upload'` with PremiumJobProgress (currentStep, stepLabel, overallProgress, sceneProgress) (types/video.ts)
+- **VideoEngine extended:** `'veo' | 'remotion' | 'composite' | 'premium'` with isPremiumVideoType() helper (types/video.ts)
+- **Engine selector extended:** Four-way toggle (Remotion / Veo / Composite / Premium) with premium-specific fields — topic, style, scene count, Veo model selector (components/video/video-generate-form.tsx)
+- **Premium status UI:** Seven-step progress indicator with scene sub-progress, step labels from premiumStep, 10–20 min estimate (components/video/video-generation-status.tsx)
+- **Shared parseClaudeJsonResponse:** Extracted from content-generator, social-generator, review-response-generator into lib/ai/claude.ts (DRY refactor)
+- **Shared video-utils.ts:** Extracted downloadFromStorage, stitchClips, buildBrandProps from composite-worker into lib/queue/video-utils.ts (DRY refactor)
+- **Premium test suite:** 52 new tests across 6 files — script generator (7), scheduler (9), generate API (6), status API (4), generate form (17), generation status (9) (tests/ai/, tests/queue/, tests/api/, tests/components/)
 - **Pipeline B composite video (Veo + Remotion):** Five-step orchestration pipeline — Remotion intro → Veo 3.1 cinematic → Remotion outro → FFmpeg stitch → Supabase upload (~$1.50–$3.00/video)
 - **Composite worker:** BullMQ `composite-rendering` queue with concurrency=1, sub-step progress tracking (intro/veo/outro/stitch/upload), FFmpeg concat demuxer with h264/aac fallback, temp file cleanup (lib/queue/composite-worker.ts)
 - **Composite scheduler:** enqueueCompositeJob() with `composite-${orgId}-${timestamp}` job IDs, 2 retry attempts with exponential backoff, getCompositeJobStatus() with compositeStep detail (lib/queue/composite-scheduler.ts)
@@ -70,7 +83,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **GA4 property selector UI:** Dropdown now displays website URL alongside property name for easier identification (components/settings/ga4-property-selector.tsx)
 - **GA4 overview API:** Added optional startDate/endDate query params for date range filtering (backward-compatible) (app/api/v1/ga4/overview/route.ts)
 - **Video generate API refactored:** Three-way engine routing — composite_reel → composite queue, Remotion types → remotion queue, Veo types → video queue; each with Zod schema validation (app/api/v1/video/generate/route.ts)
-- **Video status API refactored:** Tri-queue polling with prefix-based routing (composite-* → composite queue, remotion-* → remotion queue, else Veo; with fallback). Composite jobs include compositeStep in response (app/api/v1/video/[id]/status/route.ts)
+- **Video status API refactored:** Tri-queue polling with prefix-based routing (composite-_ → composite queue, remotion-_ → remotion queue, else Veo; with fallback). Composite jobs include compositeStep in response (app/api/v1/video/[id]/status/route.ts)
 - **Video list API:** Added engine query param filter + engine field in response items (app/api/v1/video/route.ts)
 - **Video generator pipeline:** Scoped to Veo only (GenerateVeoRequest), added engine: 'veo' to metadata (lib/ai/video-generator.ts)
 - **Video worker + scheduler:** Scoped to Veo only (GenerateVeoRequest) (lib/queue/video-worker.ts, lib/queue/video-scheduler.ts)
@@ -79,6 +92,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Generate API:** Merges headingFont/bodyFont overrides into brand config for Remotion + composite engine routing (app/api/v1/video/generate/route.ts)
 - **Composite worker:** Passes font overrides through CompositeJobData and buildBrandProps() (lib/queue/composite-worker.ts)
 - **RemotionBrandConfig:** Added headingFont/bodyFont to Zod schema (services/video/src/types.ts)
+- **Video generate API refactored:** Four-way engine routing — premium_reel → premium queue, composite_reel → composite queue, Remotion types → remotion queue, Veo types → video queue (app/api/v1/video/generate/route.ts)
+- **Video status API refactored:** Quad-queue polling with prefix-based routing (premium-_ → premium queue, composite-_ → composite queue, remotion-\* → remotion queue, else Veo). Premium jobs include premiumStep in response (app/api/v1/video/[id]/status/route.ts)
+- **Worker registration:** createPremiumWorker() registered in lib/worker.ts with event handlers and shutdown handling (9 workers total)
+- **Composite worker refactored:** Extracted downloadFromStorage, stitchClips, buildBrandProps into shared video-utils.ts (lib/queue/composite-worker.ts)
+- **AI generators refactored:** Extracted parseClaudeJsonResponse into shared claude.ts, used by content-generator, social-generator, review-response-generator (lib/ai/claude.ts)
 - **Test suite expanded:** 1029+ tests across 140+ files (74 new composite tests, all existing tests passing)
 
 ---

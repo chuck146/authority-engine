@@ -39,7 +39,13 @@ import type {
   ReviewRequestDetail,
   ReviewRequestOverview,
 } from '@/types/review-requests'
-import type { GenerateVideoResponse, VideoLibraryItem, VideoJobStatus } from '@/types/video'
+import type {
+  GenerateVideoResponse,
+  VideoLibraryItem,
+  VideoJobStatus,
+  PremiumScript,
+} from '@/types/video'
+import type { PremiumJobData } from '@/lib/queue/premium-worker'
 import type {
   KeywordRankingListItem,
   KeywordTrendPoint,
@@ -708,6 +714,66 @@ export function buildCompositeJobData() {
     useStartingFrame: true,
     orgContext: buildOrgContext(),
     branding: { primary: '#1B2B5B', secondary: '#fbbf24', accent: '#1e3a5f' } as OrgBranding,
+  }
+}
+
+// --- Premium Pipeline Factories ---
+
+export function buildPremiumJobData(overrides?: Partial<PremiumJobData>): PremiumJobData {
+  return {
+    orgId: 'org-456',
+    userId: 'user-123',
+    topic: 'Spring exterior painting transformation in Summit, NJ',
+    style: 'cinematic',
+    targetAudience: 'Homeowners in northern NJ',
+    sceneCount: 3,
+    model: 'veo-3.1-generate-preview',
+    includeIntro: true,
+    includeOutro: true,
+    ctaText: 'Get Your Free Estimate',
+    ctaUrl: 'cleanestpainting.com',
+    orgContext: buildOrgContext(),
+    branding: { primary: '#1B2B5B', secondary: '#fbbf24', accent: '#1e3a5f' } as OrgBranding,
+    ...overrides,
+  }
+}
+
+export function buildPremiumScript(overrides?: Partial<PremiumScript>): PremiumScript {
+  return {
+    title: 'Spring Painting Transformation',
+    scenes: [
+      {
+        sceneNumber: 1,
+        description:
+          'Wide establishing shot of a beautiful colonial home in Summit, NJ. The exterior shows faded, peeling paint.',
+        audio: 'Soft ambient morning sounds, gentle birdsong, subtle piano melody beginning.',
+        imagePrompt:
+          'A colonial home in Summit NJ with faded peeling exterior paint, morning light, photorealistic, 1280x720.',
+        durationHint: 8,
+      },
+      {
+        sceneNumber: 2,
+        description:
+          'Medium shot of professional painters carefully applying fresh Benjamin Moore paint with precision brushwork.',
+        audio:
+          'Rhythmic brush strokes, ambient work sounds, uplifting orchestral strings building.',
+        imagePrompt:
+          'Professional painters applying fresh white paint to a colonial home exterior, close-up of brushwork, 1280x720.',
+        durationHint: 8,
+      },
+      {
+        sceneNumber: 3,
+        description:
+          'Slow cinematic reveal of the completed transformation — pristine white exterior glowing in golden hour light.',
+        audio: 'Full orchestral crescendo, warm and satisfying, subtle wind chimes.',
+        imagePrompt:
+          'A pristine freshly painted white colonial home in golden hour light, Summit NJ, photorealistic, 1280x720.',
+        durationHint: 8,
+      },
+    ],
+    narration:
+      'From weathered to wonderful — Cleanest Painting transforms your home with expert craftsmanship.',
+    ...overrides,
   }
 }
 

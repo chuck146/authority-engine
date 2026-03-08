@@ -71,9 +71,7 @@ describe('GET /api/v1/analytics/keywords/[query]/trend', () => {
     vi.mocked(requireApiAuth).mockRejectedValueOnce(new AuthError('Unauthorized', 401))
 
     const { GET } = await import('../route')
-    const request = new NextRequest(
-      'http://localhost/api/v1/analytics/keywords/test/trend',
-    )
+    const request = new NextRequest('http://localhost/api/v1/analytics/keywords/test/trend')
     const response = await GET(request, {
       params: Promise.resolve({ query: 'test' }),
     })

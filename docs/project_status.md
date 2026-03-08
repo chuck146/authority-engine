@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 90%      |
+| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 95%      |
 | 🟣 Later — White-Label + Community      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -215,16 +215,33 @@ _Last Updated: March 2026_
 - [x] VideoEngine extended: `'veo' | 'remotion' | 'composite'` with isCompositeVideoType(), isVeoVideoType() helpers (types/video.ts)
 - [x] CompositeJobStep + CompositeJobProgress types for sub-step tracking (types/video.ts)
 - [x] Generate API: three-way engine routing — composite_reel → composite queue, Remotion types → remotion queue, Veo types → video queue (app/api/v1/video/generate/route.ts)
-- [x] Status API: tri-queue polling with prefix-based routing (composite-* prefix), compositeStep in response (app/api/v1/video/[id]/status/route.ts)
+- [x] Status API: tri-queue polling with prefix-based routing (composite-\* prefix), compositeStep in response (app/api/v1/video/[id]/status/route.ts)
 - [x] Engine selector UI: three-way toggle (Remotion / Veo / Composite) with composite-specific fields — scene description, audio mood, CTA, includeIntro/includeOutro/useStartingFrame checkboxes (components/video/video-generate-form.tsx)
 - [x] Composite status UI: five-step progress indicator with active step highlighting, step labels, 5–10 min estimate (components/video/video-generation-status.tsx)
 - [x] Worker registration: createCompositeWorker() registered in lib/worker.ts (8 workers total)
 - [x] Test suite: 74 new tests across 5 files (1029+ total, up from 974)
 
+**Phase H: Pipeline C — Full Premium Video (Claude + Nano Banana + Veo Standard + Remotion)** ✅
+
+- [x] Premium script generator: Claude API → JSON → Zod validation, returns title + scenes array with sceneNumber/description/audio/imagePrompt (lib/ai/premium-script-generator.ts)
+- [x] Premium prompt template: video script prompt builder with org context, topic, style, scene count (packages/ai/prompts/videos/premium-script.ts)
+- [x] Premium worker: BullMQ `premium-rendering` queue with concurrency=1, seven-step orchestration (script → keyframes → scenes → intro → outro → stitch → upload), scene-level sub-progress, temp file cleanup (lib/queue/premium-worker.ts)
+- [x] Premium scheduler: enqueuePremiumJob() with `premium-${orgId}-${timestamp}` job IDs, 2 retry attempts with exponential backoff, getPremiumJobStatus() with premiumStep detail (lib/queue/premium-scheduler.ts)
+- [x] Premium video type: `premium_reel` added to Zod discriminated union with generatePremiumRequestSchema (types/video.ts)
+- [x] VideoEngine extended: `'veo' | 'remotion' | 'composite' | 'premium'` with isPremiumVideoType() helper (types/video.ts)
+- [x] PremiumJobStep + PremiumJobProgress types for sub-step tracking with scene progress (types/video.ts)
+- [x] Generate API: four-way engine routing — premium_reel → premium queue, composite_reel → composite queue, Remotion types → remotion queue, Veo types → video queue (app/api/v1/video/generate/route.ts)
+- [x] Status API: quad-queue polling with prefix-based routing (premium-\* → premium queue), premiumStep in response (app/api/v1/video/[id]/status/route.ts)
+- [x] Engine selector UI: four-way toggle (Remotion / Veo / Composite / Premium) with premium-specific fields — topic, style, scene count, Veo model selector (components/video/video-generate-form.tsx)
+- [x] Premium status UI: seven-step progress indicator with scene sub-progress, step labels, 10–20 min estimate (components/video/video-generation-status.tsx)
+- [x] Shared parseClaudeJsonResponse extraction: DRY refactor from 3 generators into lib/ai/claude.ts
+- [x] Shared video-utils.ts extraction: DRY refactor from composite-worker — downloadFromStorage, stitchClips, buildBrandProps (lib/queue/video-utils.ts)
+- [x] Worker registration: createPremiumWorker() registered in lib/worker.ts (9 workers total)
+- [x] Test suite: 52 new tests across 6 files (1081+ total, up from 1029)
+
 ### What's Next
 
-1. Pipeline C — Full Premium (Claude script → Nano Banana key frames → Veo Standard → Remotion final edit)
-2. V2 completion — remaining integration testing and polish
+1. V2 completion — remaining integration testing and polish
 
 ### Blockers
 

@@ -112,7 +112,13 @@ export function TestimonialQuote({
           justifyContent: 'center',
         }}
       >
-        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={120} size={80} fontFamily={headingFamily} />
+        <Logo
+          logoUrl={brand.logoUrl}
+          orgName={brand.orgName}
+          startFrame={120}
+          size={80}
+          fontFamily={headingFamily}
+        />
       </div>
 
       <CtaOverlay

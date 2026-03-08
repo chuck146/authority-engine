@@ -45,10 +45,15 @@ const COMPOSITE_TYPE_LABELS: Record<string, string> = {
   composite_reel: 'Composite Reel',
 }
 
+const PREMIUM_TYPE_LABELS: Record<string, string> = {
+  premium_reel: 'Premium Reel',
+}
+
 export const VIDEO_TYPE_LABELS: Record<VideoType, string> = {
   ...VEO_TYPE_LABELS,
   ...REMOTION_TYPE_LABELS,
   ...COMPOSITE_TYPE_LABELS,
+  ...PREMIUM_TYPE_LABELS,
 } as Record<VideoType, string>
 
 export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
@@ -72,10 +77,16 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
   const [narrative, setNarrative] = useState('')
   const [style, setStyle] = useState('cinematic')
 
-  // Composite fields
+  // Composite + Premium fields
   const [includeIntro, setIncludeIntro] = useState(true)
   const [includeOutro, setIncludeOutro] = useState(true)
   const [useStartingFrame, setUseStartingFrame] = useState(true)
+
+  // Premium fields
+  const [topic, setTopic] = useState('')
+  const [premiumStyle, setPremiumStyle] = useState('cinematic')
+  const [targetAudience, setTargetAudience] = useState('')
+  const [sceneCount, setSceneCount] = useState(3)
 
   // Remotion fields
   const [tipTitle, setTipTitle] = useState('')
@@ -94,6 +105,9 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
       setVideoType('cinematic_reel')
     } else if (newEngine === 'composite') {
       setVideoType('composite_reel')
+    } else if (newEngine === 'premium') {
+      setVideoType('premium_reel')
+      setModel('veo-3.1-generate-preview')
     } else {
       setVideoType('testimonial_quote')
     }
@@ -131,6 +145,22 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
     const fontOverrides: Record<string, string> = {}
     if (headingFont) fontOverrides.headingFont = headingFont
     if (bodyFont) fontOverrides.bodyFont = bodyFont
+
+    if (engine === 'premium') {
+      return {
+        videoType: 'premium_reel',
+        topic,
+        style: premiumStyle,
+        ...(targetAudience ? { targetAudience } : {}),
+        sceneCount,
+        model,
+        includeIntro,
+        includeOutro,
+        ...(ctaText ? { ctaText } : {}),
+        ...(ctaUrl ? { ctaUrl } : {}),
+        ...fontOverrides,
+      }
+    }
 
     if (engine === 'composite') {
       return {
@@ -231,7 +261,9 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
       ? VEO_TYPE_LABELS
       : engine === 'composite'
         ? COMPOSITE_TYPE_LABELS
-        : REMOTION_TYPE_LABELS
+        : engine === 'premium'
+          ? PREMIUM_TYPE_LABELS
+          : REMOTION_TYPE_LABELS
 
   return (
     <Card>
@@ -242,7 +274,9 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
             ? 'Create AI-powered cinematic video content using Veo 3.1.'
             : engine === 'composite'
               ? 'Create a polished reel: branded intro + cinematic clip + branded outro.'
-              : 'Create branded motion graphics using Remotion.'}
+              : engine === 'premium'
+                ? 'Full premium pipeline: AI script + key frames + multi-scene cinematic + branded intro/outro.'
+                : 'Create branded motion graphics using Remotion.'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -258,11 +292,18 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
                 <SelectItem value="remotion">Remotion (Motion Graphics)</SelectItem>
                 <SelectItem value="veo">Veo 3.1 (Cinematic AI)</SelectItem>
                 <SelectItem value="composite">Composite (Pipeline B)</SelectItem>
+                <SelectItem value="premium">Premium (Pipeline C)</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className={engine === 'veo' || engine === 'composite' ? 'grid grid-cols-2 gap-4' : ''}>
+          <div
+            className={
+              engine === 'veo' || engine === 'composite' || engine === 'premium'
+                ? 'grid grid-cols-2 gap-4'
+                : ''
+            }
+          >
             <div className="space-y-2">
               <Label htmlFor="videoType">Video Type</Label>
               <Select value={videoType} onValueChange={setVideoType}>
@@ -279,7 +320,7 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
               </Select>
             </div>
 
-            {(engine === 'veo' || engine === 'composite') && (
+            {(engine === 'veo' || engine === 'composite' || engine === 'premium') && (
               <div className="space-y-2">
                 <Label htmlFor="model">Model</Label>
                 <Select value={model} onValueChange={setModel}>
@@ -609,6 +650,110 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
             </p>
           )}
 
+          {/* --- Premium fields --- */}
+          {engine === 'premium' && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="pTopic">Topic</Label>
+                <Textarea
+                  id="pTopic"
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  placeholder="Describe the video topic... e.g., 'Spring exterior painting transformation in Summit, NJ'"
+                  rows={3}
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="pStyle">Style</Label>
+                  <Select value={premiumStyle} onValueChange={setPremiumStyle}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="cinematic">Cinematic</SelectItem>
+                      <SelectItem value="documentary">Documentary</SelectItem>
+                      <SelectItem value="energetic">Energetic</SelectItem>
+                      <SelectItem value="elegant">Elegant</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pSceneCount">Scenes (2-5)</Label>
+                  <Select
+                    value={String(sceneCount)}
+                    onValueChange={(v) => setSceneCount(Number(v))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[2, 3, 4, 5].map((n) => (
+                        <SelectItem key={n} value={String(n)}>
+                          {n} scenes
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="pTargetAudience">Target Audience (optional)</Label>
+                <Input
+                  id="pTargetAudience"
+                  value={targetAudience}
+                  onChange={(e) => setTargetAudience(e.target.value)}
+                  placeholder="Homeowners in northern NJ considering exterior painting"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="pCtaText">CTA Text (optional)</Label>
+                  <Input
+                    id="pCtaText"
+                    value={ctaText}
+                    onChange={(e) => setCtaText(e.target.value)}
+                    placeholder="Get Your Free Estimate"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pCtaUrl">CTA URL (optional)</Label>
+                  <Input
+                    id="pCtaUrl"
+                    value={ctaUrl}
+                    onChange={(e) => setCtaUrl(e.target.value)}
+                    placeholder="cleanestpainting.com"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={includeIntro}
+                    onChange={(e) => setIncludeIntro(e.target.checked)}
+                    className="rounded"
+                  />
+                  Include branded intro (3s)
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={includeOutro}
+                    onChange={(e) => setIncludeOutro(e.target.checked)}
+                    className="rounded"
+                  />
+                  Include branded outro (3s)
+                </label>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                Pipeline C: AI script + key frames + multi-scene Veo Standard + branded intro/outro.
+                Est. cost: $3-6 per video. Takes 10-20 minutes.
+              </p>
+            </>
+          )}
+
           {/* --- Composite fields --- */}
           {engine === 'composite' && (
             <>
@@ -689,8 +834,8 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
             </>
           )}
 
-          {/* --- Font selectors (Remotion + Composite only) --- */}
-          {(engine === 'remotion' || engine === 'composite') && (
+          {/* --- Font selectors (Remotion + Composite + Premium) --- */}
+          {(engine === 'remotion' || engine === 'composite' || engine === 'premium') && (
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="headingFont">Heading Font</Label>
@@ -699,20 +844,20 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
                     <SelectValue placeholder="Default (Montserrat)" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(Object.entries(getFontsByCategory()) as [FontCategory, typeof FONT_CATALOG][]).map(
-                      ([category, fonts]) => (
-                        <div key={category}>
-                          <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
-                            {FONT_CATEGORY_LABELS[category]}
-                          </div>
-                          {fonts.map((font) => (
-                            <SelectItem key={font.id} value={font.id}>
-                              {font.name}
-                            </SelectItem>
-                          ))}
+                    {(
+                      Object.entries(getFontsByCategory()) as [FontCategory, typeof FONT_CATALOG][]
+                    ).map(([category, fonts]) => (
+                      <div key={category}>
+                        <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
+                          {FONT_CATEGORY_LABELS[category]}
                         </div>
-                      )
-                    )}
+                        {fonts.map((font) => (
+                          <SelectItem key={font.id} value={font.id}>
+                            {font.name}
+                          </SelectItem>
+                        ))}
+                      </div>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -723,20 +868,20 @@ export function VideoGenerateForm({ onJobComplete }: VideoGenerateFormProps) {
                     <SelectValue placeholder="Default (DM Sans)" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(Object.entries(getFontsByCategory()) as [FontCategory, typeof FONT_CATALOG][]).map(
-                      ([category, fonts]) => (
-                        <div key={category}>
-                          <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
-                            {FONT_CATEGORY_LABELS[category]}
-                          </div>
-                          {fonts.map((font) => (
-                            <SelectItem key={font.id} value={font.id}>
-                              {font.name}
-                            </SelectItem>
-                          ))}
+                    {(
+                      Object.entries(getFontsByCategory()) as [FontCategory, typeof FONT_CATALOG][]
+                    ).map(([category, fonts]) => (
+                      <div key={category}>
+                        <div className="text-muted-foreground px-2 py-1.5 text-xs font-semibold">
+                          {FONT_CATEGORY_LABELS[category]}
                         </div>
-                      )
-                    )}
+                        {fonts.map((font) => (
+                          <SelectItem key={font.id} value={font.id}>
+                            {font.name}
+                          </SelectItem>
+                        ))}
+                      </div>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

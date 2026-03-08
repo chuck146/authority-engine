@@ -29,7 +29,12 @@ export async function GET(
     const resolved = resolveDateRange(range as DateRangePreset, startDate, endDate)
 
     const supabase = await createClient()
-    const trend = await getKeywordTrend(supabase, auth.organizationId, decodedQuery, resolved.current)
+    const trend = await getKeywordTrend(
+      supabase,
+      auth.organizationId,
+      decodedQuery,
+      resolved.current,
+    )
 
     return NextResponse.json(trend)
   } catch (err) {

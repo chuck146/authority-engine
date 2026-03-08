@@ -5,12 +5,15 @@ import {
   generateVeoRequestSchema,
   generateRemotionRequestSchema,
   generateCompositeRequestSchema,
+  generatePremiumRequestSchema,
   isRemotionVideoType,
   isCompositeVideoType,
+  isPremiumVideoType,
 } from '@/types/video'
 import { enqueueVideoJob } from '@/lib/queue/video-scheduler'
 import { enqueueRemotionJob } from '@/lib/queue/remotion-scheduler'
 import { enqueueCompositeJob } from '@/lib/queue/composite-scheduler'
+import { enqueuePremiumJob } from '@/lib/queue/premium-scheduler'
 import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { OrgBranding } from '@/types'
 import type { CompositionId } from '@/services/video/src/types'
@@ -50,8 +53,38 @@ export async function POST(request: Request) {
       serviceAreaCounties: (settings?.service_area_counties as string[]) ?? undefined,
     }
 
-    // Route to correct engine based on videoType
-    if (isCompositeVideoType(videoType)) {
+    // Route to correct engine based on videoType (premium first, then composite, remotion, veo)
+    if (isPremiumVideoType(videoType)) {
+      // --- Premium engine (Pipeline C: Claude + NB2 + Veo Standard + Remotion) ---
+      const parseResult = generatePremiumRequestSchema.safeParse(body)
+      if (!parseResult.success) {
+        return NextResponse.json(
+          { error: 'Invalid request', details: parseResult.error.flatten().fieldErrors },
+          { status: 400 },
+        )
+      }
+
+      const input = parseResult.data
+      const jobId = await enqueuePremiumJob({
+        orgId: auth.organizationId,
+        userId: auth.userId,
+        topic: input.topic,
+        style: input.style,
+        targetAudience: input.targetAudience,
+        sceneCount: input.sceneCount,
+        model: input.model,
+        includeIntro: input.includeIntro,
+        includeOutro: input.includeOutro,
+        ctaText: input.ctaText,
+        ctaUrl: input.ctaUrl,
+        orgContext,
+        branding,
+        headingFont: input.headingFont,
+        bodyFont: input.bodyFont,
+      })
+
+      return NextResponse.json({ jobId, status: 'queued', engine: 'premium' }, { status: 202 })
+    } else if (isCompositeVideoType(videoType)) {
       // --- Composite engine (Pipeline B: Veo + Remotion) ---
       const parseResult = generateCompositeRequestSchema.safeParse(body)
       if (!parseResult.success) {

@@ -21,7 +21,8 @@ function computeDateRanges(customStart?: string, customEnd?: string) {
   if (customStart && customEnd) {
     const startDate = new Date(customStart)
     const endDate = new Date(customEnd)
-    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    const daysDiff =
+      Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
 
     const prevEndDate = new Date(startDate)
     prevEndDate.setDate(prevEndDate.getDate() - 1)

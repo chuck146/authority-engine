@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { callClaude } from './claude'
+import { callClaude, parseClaudeJsonResponse } from './claude'
 import {
   buildGbpPostPrompt,
   buildInstagramPostPrompt,
@@ -50,25 +50,5 @@ export async function generateSocialPost(
     cta_type: validated.cta_type ?? undefined,
     cta_url: validated.cta_url ?? undefined,
     image_prompt: validated.image_prompt ?? undefined,
-  }
-}
-
-function parseClaudeJsonResponse(raw: string): unknown {
-  let cleaned = raw.trim()
-
-  if (cleaned.startsWith('```')) {
-    const firstNewline = cleaned.indexOf('\n')
-    const lastFence = cleaned.lastIndexOf('```')
-    if (lastFence > firstNewline) {
-      cleaned = cleaned.slice(firstNewline + 1, lastFence).trim()
-    }
-  }
-
-  try {
-    return JSON.parse(cleaned)
-  } catch {
-    throw new Error(
-      `Failed to parse social post response as JSON. Raw response starts with: "${cleaned.slice(0, 100)}..."`,
-    )
   }
 }

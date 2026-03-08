@@ -86,9 +86,7 @@ function OverviewTab() {
   return (
     <div className="space-y-6">
       {/* GA4 Cards */}
-      {overview.ga4 && (
-        <Ga4OverviewCards summary={overview.ga4 as Ga4Summary} />
-      )}
+      {overview.ga4 && <Ga4OverviewCards summary={overview.ga4 as Ga4Summary} />}
 
       {/* GSC Cards */}
       {overview.gsc && (
@@ -125,9 +123,7 @@ function OverviewTab() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground text-sm font-medium">
-                Avg CTR
-              </CardTitle>
+              <CardTitle className="text-muted-foreground text-sm font-medium">Avg CTR</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-baseline gap-2">

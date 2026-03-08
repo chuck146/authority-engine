@@ -27,7 +27,14 @@ export function BrandedIntroOutro({ brand, mode, ctaText, ctaUrl }: BrandedIntro
   const bodyFamily = getFontFamily(brand.bodyFont ?? 'DMSans')
 
   if (mode === 'intro') {
-    return <IntroMode brand={brand} frame={frame} bodyFamily={bodyFamily} headingFamily={headingFamily} />
+    return (
+      <IntroMode
+        brand={brand}
+        frame={frame}
+        bodyFamily={bodyFamily}
+        headingFamily={headingFamily}
+      />
+    )
   }
 
   return (
@@ -76,7 +83,13 @@ function IntroMode({
       >
         {/* Logo */}
         <div style={{ opacity: logoOpacity, transform: `scale(${logoScale})` }}>
-          <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={0} size={160} fontFamily={headingFamily} />
+          <Logo
+            logoUrl={brand.logoUrl}
+            orgName={brand.orgName}
+            startFrame={0}
+            size={160}
+            fontFamily={headingFamily}
+          />
         </div>
 
         {/* Tagline */}
@@ -171,7 +184,13 @@ function OutroMode({
 
         {/* Logo */}
         <div style={{ opacity: logoOpacity }}>
-          <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={0} size={100} fontFamily={headingFamily} />
+          <Logo
+            logoUrl={brand.logoUrl}
+            orgName={brand.orgName}
+            startFrame={0}
+            size={100}
+            fontFamily={headingFamily}
+          />
         </div>
 
         {/* URL */}

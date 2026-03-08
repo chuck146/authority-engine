@@ -132,18 +132,18 @@ The dashboard is the authenticated application where users manage all platform f
 
 The left sidebar displays the organization logo, name, and the user's role. Below that, navigation items:
 
-| Item         | Route        | Description                          |
-| ------------ | ------------ | ------------------------------------ |
-| Dashboard    | `/dashboard` | Overview metrics and activity        |
-| Content      | `/content`   | AI content generation and management |
-| Calendar     | `/calendar`  | Content scheduling                   |
-| Media        | `/media`     | Image generation and library         |
-| Social & GBP | `/social`    | Social media post generation         |
-| Video        | `/video`     | Video generation (Remotion + Veo 3.1)|
-| SEO          | `/seo`       | SEO scoring and Google integrations  |
-| Reviews      | `/reviews`   | Review management and responses      |
-| Community    | `/community` | (Not yet implemented)                |
-| Analytics    | `/analytics` | Unified GA4 + GSC analytics          |
+| Item         | Route        | Description                           |
+| ------------ | ------------ | ------------------------------------- |
+| Dashboard    | `/dashboard` | Overview metrics and activity         |
+| Content      | `/content`   | AI content generation and management  |
+| Calendar     | `/calendar`  | Content scheduling                    |
+| Media        | `/media`     | Image generation and library          |
+| Social & GBP | `/social`    | Social media post generation          |
+| Video        | `/video`     | Video generation (Remotion + Veo 3.1) |
+| SEO          | `/seo`       | SEO scoring and Google integrations   |
+| Reviews      | `/reviews`   | Review management and responses       |
+| Community    | `/community` | (Not yet implemented)                 |
+| Analytics    | `/analytics` | Unified GA4 + GSC analytics           |
 
 A **Settings** link appears at the bottom of the sidebar.
 
@@ -450,13 +450,13 @@ For Remotion and Composite engines, the generate form includes two optional font
 
 Fonts are organized into 5 categories in the dropdown:
 
-| Category | Fonts |
-| -------- | ----- |
+| Category | Fonts                                                |
+| -------- | ---------------------------------------------------- |
 | Sans     | DM Sans (default body), Montserrat (default heading) |
-| Serif    | Playfair Display, Cormorant Garamond, Italiana |
-| Script   | Pacifico, Satisfy |
-| Display  | Anton, Bebas Neue, Oswald, Barlow Condensed |
-| Mono     | Space Mono |
+| Serif    | Playfair Display, Cormorant Garamond, Italiana       |
+| Script   | Pacifico, Satisfy                                    |
+| Display  | Anton, Bebas Neue, Oswald, Barlow Condensed          |
+| Mono     | Space Mono                                           |
 
 If no fonts are selected, videos use the brand defaults (Montserrat for headings, DM Sans for body). Font choices are passed through to all Remotion compositions and shared components (TextReveal, CtaOverlay, Logo).
 
@@ -471,6 +471,7 @@ Five programmatic video types rendered via React compositions at 1080×1920 (9:1
 - **Branded Outro** — CTA with logo and contact info for video endings (3s @ 30fps)
 
 Remotion form fields vary by type:
+
 - All types: topic field, optional heading font and body font dropdowns
 - Testimonial Quote: customer name, quote text, star rating (interactive picker)
 - Tip Video: title, dynamic tip list with add/remove buttons
@@ -486,6 +487,7 @@ Four cinematic AI video types:
 - **Brand Story** — company narrative videos
 
 Veo form fields:
+
 1. **Select model:** Fast (default, $0.15/sec) or Standard (max fidelity, $0.40/sec)
 2. **Select aspect ratio:** 9:16 (vertical, default), 1:1 (square), 16:9 (landscape)
 3. **Fill type-specific fields** (topic, style, details vary per video type)
@@ -510,6 +512,7 @@ Composite form fields:
 ### Generation Process
 
 Clicking "Generate" queues a background job via BullMQ:
+
 - **Remotion jobs** go to the `remotion-rendering` queue — bundles the React composition, renders to MP4, uploads to Supabase Storage
 - **Veo jobs** go to the `video-generation` queue — calls Veo API with polling, downloads result, uploads to storage
 - **Composite jobs** go to the `composite-rendering` queue — orchestrates five steps: Remotion intro render → Veo cinematic generation → Remotion outro render → FFmpeg stitch → Supabase upload

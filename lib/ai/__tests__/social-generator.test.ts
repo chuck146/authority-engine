@@ -5,9 +5,13 @@ import { buildOrgContext } from '@/tests/factories'
 
 const mockCallClaude = vi.fn()
 
-vi.mock('../claude', () => ({
-  callClaude: (...args: unknown[]) => mockCallClaude(...args),
-}))
+vi.mock('../claude', async (importActual) => {
+  const actual = await importActual<typeof import('../claude')>()
+  return {
+    ...actual,
+    callClaude: (...args: unknown[]) => mockCallClaude(...args),
+  }
+})
 
 vi.mock('@/packages/ai/prompts/social', () => ({
   buildGbpPostPrompt: vi.fn(() => ({ system: 'gbp system', user: 'gbp user' })),
@@ -158,7 +162,7 @@ describe('generateSocialPost', () => {
         },
         defaultOrg,
       ),
-    ).rejects.toThrow('Failed to parse social post response as JSON')
+    ).rejects.toThrow('Failed to parse Claude response as JSON')
   })
 
   it('throws on missing required body field', async () => {

@@ -182,7 +182,13 @@ export function BeforeAfterReveal({
           justifyContent: 'center',
         }}
       >
-        <Logo logoUrl={brand.logoUrl} orgName={brand.orgName} startFrame={180} size={60} fontFamily={headingFamily} />
+        <Logo
+          logoUrl={brand.logoUrl}
+          orgName={brand.orgName}
+          startFrame={180}
+          size={60}
+          fontFamily={headingFamily}
+        />
       </div>
 
       <CtaOverlay

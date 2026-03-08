@@ -20,11 +20,7 @@ vi.mock('@/components/ui/select', () => ({
     onValueChange?: (v: string) => void
     children: React.ReactNode
   }) => (
-    <select
-      data-testid="select"
-      value={value}
-      onChange={(e) => onValueChange?.(e.target.value)}
-    >
+    <select data-testid="select" value={value} onChange={(e) => onValueChange?.(e.target.value)}>
       {children}
     </select>
   ),
@@ -67,9 +63,7 @@ describe('VideoGenerateForm — composite engine', () => {
       fireEvent.change(getEngineSelect(), { target: { value: 'composite' } })
 
       expect(
-        screen.getByText(
-          'Create a polished reel: branded intro + cinematic clip + branded outro.',
-        ),
+        screen.getByText('Create a polished reel: branded intro + cinematic clip + branded outro.'),
       ).toBeDefined()
     })
 
@@ -162,7 +156,6 @@ describe('VideoGenerateForm — composite engine', () => {
     it('submits and shows status component on success', async () => {
       const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
-
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ jobId: 'composite-org-456-111', status: 'queued' }),
@@ -187,7 +180,6 @@ describe('VideoGenerateForm — composite engine', () => {
     it('sends composite_reel videoType in request body', async () => {
       const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
-
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ jobId: 'composite-org-456-111', status: 'queued' }),
@@ -217,7 +209,6 @@ describe('VideoGenerateForm — composite engine', () => {
     it('includes includeIntro and includeOutro in request body', async () => {
       const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
-
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ jobId: 'composite-org-456-111', status: 'queued' }),
@@ -234,9 +225,7 @@ describe('VideoGenerateForm — composite engine', () => {
       fireEvent.submit(screen.getByRole('button', { name: 'Generate Video' }).closest('form')!)
 
       await waitFor(() => {
-        const body = JSON.parse(
-          (global.fetch as ReturnType<typeof vi.fn>).mock.calls[0]![1].body,
-        )
+        const body = JSON.parse((global.fetch as ReturnType<typeof vi.fn>).mock.calls[0]![1].body)
         expect(body.includeIntro).toBe(true)
         expect(body.includeOutro).toBe(true)
         expect(body.useStartingFrame).toBe(true)
@@ -246,7 +235,6 @@ describe('VideoGenerateForm — composite engine', () => {
     it('shows error message when generation fails', async () => {
       const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
-
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: false,
         json: () => Promise.resolve({ error: 'Failed to start video generation' }),

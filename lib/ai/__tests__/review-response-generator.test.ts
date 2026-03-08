@@ -3,9 +3,13 @@ import { buildOrgContext } from '@/tests/factories'
 
 const mockCallClaude = vi.fn()
 
-vi.mock('../claude', () => ({
-  callClaude: (...args: unknown[]) => mockCallClaude(...args),
-}))
+vi.mock('../claude', async (importActual) => {
+  const actual = await importActual<typeof import('../claude')>()
+  return {
+    ...actual,
+    callClaude: (...args: unknown[]) => mockCallClaude(...args),
+  }
+})
 
 const { generateReviewResponse } = await import('../review-response-generator')
 
@@ -85,7 +89,7 @@ describe('generateReviewResponse', () => {
         defaultReviewContext,
         defaultOrgContext,
       ),
-    ).rejects.toThrow('Failed to parse review response as JSON')
+    ).rejects.toThrow('Failed to parse Claude response as JSON')
   })
 
   it('throws on missing required fields', async () => {

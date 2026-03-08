@@ -11,16 +11,12 @@ vi.mock('bullmq', () => ({
   })),
 }))
 
-vi.mock(
-  '/Applications/RCG/authority-engine/lib/queue/connection',
-  () => ({
-    getRedisConnection: vi.fn(() => ({})),
-  }),
-)
+vi.mock('/Applications/RCG/authority-engine/lib/queue/connection', () => ({
+  getRedisConnection: vi.fn(() => ({})),
+}))
 
-const { enqueueCompositeJob, getCompositeJobStatus } = await import(
-  '/Applications/RCG/authority-engine/lib/queue/composite-scheduler'
-)
+const { enqueueCompositeJob, getCompositeJobStatus } =
+  await import('/Applications/RCG/authority-engine/lib/queue/composite-scheduler')
 
 beforeEach(() => {
   vi.clearAllMocks()

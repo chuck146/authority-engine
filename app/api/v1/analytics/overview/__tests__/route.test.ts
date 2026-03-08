@@ -64,9 +64,7 @@ describe('GET /api/v1/analytics/overview', () => {
 
   it('returns 400 for invalid range', async () => {
     const { GET } = await import('../route')
-    const request = new NextRequest(
-      'http://localhost/api/v1/analytics/overview?range=invalid',
-    )
+    const request = new NextRequest('http://localhost/api/v1/analytics/overview?range=invalid')
     const response = await GET(request)
 
     expect(response.status).toBe(400)

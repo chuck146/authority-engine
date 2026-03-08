@@ -19,8 +19,18 @@ export const FONT_CATALOG: FontCatalogEntry[] = [
   { id: 'DMSans', name: 'DM Sans', category: 'sans', googleFamily: 'DM+Sans' },
   { id: 'Montserrat', name: 'Montserrat', category: 'sans', googleFamily: 'Montserrat' },
   // Serif
-  { id: 'PlayfairDisplay', name: 'Playfair Display', category: 'serif', googleFamily: 'Playfair+Display' },
-  { id: 'CormorantGaramond', name: 'Cormorant Garamond', category: 'serif', googleFamily: 'Cormorant+Garamond' },
+  {
+    id: 'PlayfairDisplay',
+    name: 'Playfair Display',
+    category: 'serif',
+    googleFamily: 'Playfair+Display',
+  },
+  {
+    id: 'CormorantGaramond',
+    name: 'Cormorant Garamond',
+    category: 'serif',
+    googleFamily: 'Cormorant+Garamond',
+  },
   { id: 'Italiana', name: 'Italiana', category: 'serif', googleFamily: 'Italiana' },
   // Script
   { id: 'Pacifico', name: 'Pacifico', category: 'script', googleFamily: 'Pacifico' },
@@ -29,7 +39,12 @@ export const FONT_CATALOG: FontCatalogEntry[] = [
   { id: 'Anton', name: 'Anton', category: 'display', googleFamily: 'Anton' },
   { id: 'BebasNeue', name: 'Bebas Neue', category: 'display', googleFamily: 'Bebas+Neue' },
   { id: 'Oswald', name: 'Oswald', category: 'display', googleFamily: 'Oswald' },
-  { id: 'BarlowCondensed', name: 'Barlow Condensed', category: 'display', googleFamily: 'Barlow+Condensed' },
+  {
+    id: 'BarlowCondensed',
+    name: 'Barlow Condensed',
+    category: 'display',
+    googleFamily: 'Barlow+Condensed',
+  },
   // Mono
   { id: 'SpaceMono', name: 'Space Mono', category: 'mono', googleFamily: 'Space+Mono' },
 ]

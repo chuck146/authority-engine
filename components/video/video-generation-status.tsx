@@ -59,32 +59,86 @@ export function VideoGenerationStatus({ jobId, onComplete, onError }: VideoGener
 
   const progress = status?.progress ?? 0
   const isComposite = jobId.startsWith('composite-')
+  const isPremium = jobId.startsWith('premium-')
   const compositeStep = status?.compositeStep
+  const premiumStep = status?.premiumStep
 
   const statusLabel =
-    isComposite && compositeStep
-      ? compositeStep.stepLabel
-      : status?.status === 'processing'
-        ? 'Generating video...'
-        : status?.status === 'queued'
-          ? 'Waiting in queue...'
-          : 'Starting...'
+    isPremium && premiumStep
+      ? premiumStep.sceneProgress
+        ? `${premiumStep.stepLabel} (${premiumStep.sceneProgress.currentScene}/${premiumStep.sceneProgress.totalScenes})`
+        : premiumStep.stepLabel
+      : isComposite && compositeStep
+        ? compositeStep.stepLabel
+        : status?.status === 'processing'
+          ? 'Generating video...'
+          : status?.status === 'queued'
+            ? 'Waiting in queue...'
+            : 'Starting...'
 
-  const timeEstimate = isComposite
-    ? 'Composite pipeline typically takes 5-10 minutes. You can navigate away and come back.'
-    : 'Video generation typically takes 2-5 minutes. You can navigate away and come back.'
+  const timeEstimate = isPremium
+    ? 'Premium pipeline typically takes 10-20 minutes. You can navigate away and come back.'
+    : isComposite
+      ? 'Composite pipeline typically takes 5-10 minutes. You can navigate away and come back.'
+      : 'Video generation typically takes 2-5 minutes. You can navigate away and come back.'
+
+  const title = isPremium
+    ? 'Premium Pipeline In Progress'
+    : isComposite
+      ? 'Composite Pipeline In Progress'
+      : 'Video Generation In Progress'
+
+  const PREMIUM_STEPS = [
+    'script',
+    'keyframes',
+    'scenes',
+    'intro',
+    'outro',
+    'stitch',
+    'upload',
+  ] as const
+  const PREMIUM_STEP_LABELS: Record<string, string> = {
+    script: 'Script',
+    keyframes: 'Key Frames',
+    scenes: 'Scenes',
+    intro: 'Intro',
+    outro: 'Outro',
+    stitch: 'Stitch',
+    upload: 'Upload',
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Loader2 className="h-5 w-5 animate-spin" />
-          {isComposite ? 'Composite Pipeline In Progress' : 'Video Generation In Progress'}
+          {title}
         </CardTitle>
         <CardDescription>{statusLabel}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Progress value={progress} />
+        {isPremium && premiumStep && (
+          <div className="flex gap-2 text-xs">
+            {PREMIUM_STEPS.map((step) => (
+              <span
+                key={step}
+                className={
+                  premiumStep.currentStep === step
+                    ? 'text-primary font-medium'
+                    : 'text-muted-foreground'
+                }
+              >
+                {PREMIUM_STEP_LABELS[step]}
+                {premiumStep.currentStep === step && premiumStep.sceneProgress
+                  ? ` (${premiumStep.sceneProgress.currentScene}/${premiumStep.sceneProgress.totalScenes})`
+                  : premiumStep.currentStep === step
+                    ? ' ...'
+                    : ''}
+              </span>
+            ))}
+          </div>
+        )}
         {isComposite && compositeStep && (
           <div className="flex gap-2 text-xs">
             {(['intro', 'veo', 'outro', 'stitch', 'upload'] as const).map((step) => (

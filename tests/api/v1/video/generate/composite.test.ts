@@ -31,9 +31,7 @@ vi.mock('@/lib/queue/remotion-scheduler', () => ({
   enqueueRemotionJob: vi.fn(),
 }))
 
-const { POST } = await import(
-  '/Applications/RCG/authority-engine/app/api/v1/video/generate/route'
-)
+const { POST } = await import('/Applications/RCG/authority-engine/app/api/v1/video/generate/route')
 const { AuthError } = await import('@/lib/auth/api-guard')
 
 function makeRequest(body: unknown): Request {

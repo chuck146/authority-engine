@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // --- Video Engine Discriminator ---
 
-export const videoEngineSchema = z.enum(['veo', 'remotion', 'composite'])
+export const videoEngineSchema = z.enum(['veo', 'remotion', 'composite', 'premium'])
 export type VideoEngine = z.infer<typeof videoEngineSchema>
 
 // --- Video Type Discriminator ---
@@ -21,6 +21,8 @@ export const videoTypeSchema = z.enum([
   'branded_outro',
   // Composite types (Pipeline B: Veo + Remotion)
   'composite_reel',
+  // Premium types (Pipeline C: Claude + Nano Banana + Veo Standard + Remotion)
+  'premium_reel',
 ])
 export type VideoType = z.infer<typeof videoTypeSchema>
 
@@ -151,12 +153,79 @@ export const compositeReelInputSchema = z.object({
 
 export const generateCompositeRequestSchema = compositeReelInputSchema
 
+// --- Premium Pipeline C Input Schema ---
+
+export const premiumStyleSchema = z
+  .enum(['cinematic', 'documentary', 'energetic', 'elegant'])
+  .default('cinematic')
+export type PremiumStyle = z.infer<typeof premiumStyleSchema>
+
+export const premiumReelInputSchema = z.object({
+  videoType: z.literal('premium_reel'),
+  topic: z.string().min(10).max(1000),
+  style: premiumStyleSchema,
+  targetAudience: z.string().max(200).optional(),
+  sceneCount: z.number().int().min(2).max(5).default(3),
+  model: z
+    .enum(['veo-3.1-fast-generate-preview', 'veo-3.1-generate-preview'])
+    .default('veo-3.1-generate-preview'),
+  includeIntro: z.boolean().default(true),
+  includeOutro: z.boolean().default(true),
+  ctaText: z.string().max(100).optional(),
+  ctaUrl: z.string().max(200).optional(),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
+})
+
+export const generatePremiumRequestSchema = premiumReelInputSchema
+
+// --- Premium Script (Claude output) ---
+
+export const premiumScriptSceneSchema = z.object({
+  sceneNumber: z.number().int().min(1),
+  description: z.string().min(10),
+  audio: z.string().min(5),
+  imagePrompt: z.string().min(10),
+  durationHint: z.number().min(4).max(10).default(8),
+})
+
+export const premiumScriptSchema = z.object({
+  title: z.string().min(1),
+  scenes: z.array(premiumScriptSceneSchema).min(1).max(5),
+  narration: z.string().optional(),
+})
+
+export type PremiumScript = z.infer<typeof premiumScriptSchema>
+export type PremiumScriptScene = z.infer<typeof premiumScriptSceneSchema>
+
+// --- Premium Job Sub-Step Progress ---
+
+export type PremiumJobStep =
+  | 'script'
+  | 'keyframes'
+  | 'scenes'
+  | 'intro'
+  | 'outro'
+  | 'stitch'
+  | 'upload'
+
+export type PremiumJobProgress = {
+  currentStep: PremiumJobStep
+  stepLabel: string
+  overallProgress: number
+  sceneProgress?: {
+    currentScene: number
+    totalScenes: number
+  }
+}
+
 // --- Combined Request Schema (engine-aware) ---
 
 export const generateVideoRequestSchema = z.union([
   generateVeoRequestSchema,
   generateRemotionRequestSchema,
   generateCompositeRequestSchema,
+  generatePremiumRequestSchema,
 ])
 
 export type CinematicReelInput = z.infer<typeof cinematicReelInputSchema>
@@ -174,6 +243,9 @@ export type GenerateRemotionRequest = z.infer<typeof generateRemotionRequestSche
 
 export type CompositeReelInput = z.infer<typeof compositeReelInputSchema>
 export type GenerateCompositeRequest = z.infer<typeof generateCompositeRequestSchema>
+
+export type PremiumReelInput = z.infer<typeof premiumReelInputSchema>
+export type GeneratePremiumRequest = z.infer<typeof generatePremiumRequestSchema>
 
 export type GenerateVideoRequest = z.infer<typeof generateVideoRequestSchema>
 
@@ -206,6 +278,12 @@ export const COMPOSITE_VIDEO_TYPES = ['composite_reel'] as const
 
 export function isCompositeVideoType(type: string): boolean {
   return (COMPOSITE_VIDEO_TYPES as readonly string[]).includes(type)
+}
+
+export const PREMIUM_VIDEO_TYPES = ['premium_reel'] as const
+
+export function isPremiumVideoType(type: string): boolean {
+  return (PREMIUM_VIDEO_TYPES as readonly string[]).includes(type)
 }
 
 // --- Composite Job Sub-Step Progress ---
@@ -254,4 +332,5 @@ export type VideoJobStatus = {
   result: GenerateVideoResponse | null
   error: string | null
   compositeStep?: CompositeJobProgress | null
+  premiumStep?: PremiumJobProgress | null
 }
