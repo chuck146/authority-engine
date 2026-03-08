@@ -4,36 +4,110 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-brand-primary: #1a472a;
-  --color-brand-secondary: #fbbf24;
-  --color-brand-accent: #1e3a5f;
-
+  --color-brand-primary: #1b2b5b;
+  --color-brand-secondary: #3b5998;
+  --color-brand-accent: #f0f2f5;
   --radius: 0.625rem;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Light Theme */
 :root {
-  --sidebar: hsl(0 0% 98%);
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(240 4.8% 95.9%);
-  --sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --background: #f0f2f5;
+  --foreground: #1b2b5b;
+  --card: #ffffff;
+  --card-foreground: #1b2b5b;
+  --popover: #ffffff;
+  --popover-foreground: #1b2b5b;
+  --primary: #1b2b5b;
+  --primary-foreground: #ffffff;
+  --secondary: #e8ebf0;
+  --secondary-foreground: #1b2b5b;
+  --muted: #e8ebf0;
+  --muted-foreground: #8b95a5;
+  --accent: #e8ebf0;
+  --accent-foreground: #1b2b5b;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e2e6ed;
+  --input: #e2e6ed;
+  --ring: #3b5998;
+  --chart-1: #1b2b5b;
+  --chart-2: #3b5998;
+  --chart-3: #6b7fa8;
+  --chart-4: #8b95a5;
+  --chart-5: #b8c1cc;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1b2b5b;
+  --sidebar-primary: #1b2b5b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f2f5;
+  --sidebar-accent-foreground: #1b2b5b;
+  --sidebar-border: #e2e6ed;
+  --sidebar-ring: #3b5998;
 }
 
+/* Dark Theme */
 .dark {
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --background: #0f1629;
+  --foreground: #e8ebf0;
+  --card: #1a2340;
+  --card-foreground: #e8ebf0;
+  --popover: #1a2340;
+  --popover-foreground: #e8ebf0;
+  --primary: #6b8fd4;
+  --primary-foreground: #0f1629;
+  --secondary: #1e2d50;
+  --secondary-foreground: #e8ebf0;
+  --muted: #1e2d50;
+  --muted-foreground: #8b95a5;
+  --accent: #1e2d50;
+  --accent-foreground: #e8ebf0;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #2a3a5c;
+  --input: #2a3a5c;
+  --ring: #6b8fd4;
+  --chart-1: #6b8fd4;
+  --chart-2: #8ba8e0;
+  --chart-3: #4a6fa5;
+  --chart-4: #a0b4d0;
+  --chart-5: #3b5998;
+  --sidebar: #0f1629;
+  --sidebar-foreground: #e8ebf0;
+  --sidebar-primary: #6b8fd4;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e2d50;
+  --sidebar-accent-foreground: #e8ebf0;
+  --sidebar-border: #2a3a5c;
+  --sidebar-ring: #6b8fd4;
 }
 
 @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);

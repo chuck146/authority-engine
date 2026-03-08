@@ -10,8 +10,8 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Community     | 🔄 In Progress | September 2026 | 45%      |
-| 🟣 Later — White-Label + Analytics      | 🔲 Not Started | TBD            | 0%       |
+| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 85%      |
+| 🟣 Later — White-Label + Community      | 🔲 Not Started | TBD            | 0%       |
 
 ---
 
@@ -79,7 +79,7 @@ _Last Updated: March 2026_
 - [x] Test suite expanded to 440+ tests
 - [x] Google Analytics 4 integration: service library, OAuth flow, integration APIs, data API, background sync, dashboard UI, property selector
 - [x] GA4 database migration: ga4_page_metrics + ga4_snapshots (with RLS)
-- [x] GA4 Settings UI: property selector, connect/disconnect for GA4 alongside GSC
+- [x] GA4 Settings UI: property selector (with website URL display, rollup filtering), connect/disconnect for GA4 alongside GSC
 - [x] GA4 Dashboard: "Analytics" tab with overview cards, traffic trend, top pages, traffic sources, device breakdown
 - [x] OAuth state format extended to 4-part (integration type + org_id + user_id + HMAC)
 - [x] Test suite expanded to 507+ tests across 71 files
@@ -90,7 +90,7 @@ _Last Updated: March 2026_
 - [x] Publish worker extended for social_post content type
 - [x] Social dashboard UI: /social page with platform tabs, generate form, post previews, approval actions
 - [x] Database migration: social_posts table with RLS policies
-- [x] Test suite expanded to 568 tests across 79 files
+- [x] Test suite expanded to 933 tests across 126 files
 - [x] Calendar enhancements: entry detail sheet, list/agenda view, content type + status filters
 - [x] Approved-content API (GET /api/v1/content/approved) for schedule dialog picker
 - [x] Schedule dialog UX: select dropdown for approved content instead of raw ID input
@@ -107,7 +107,7 @@ _Last Updated: March 2026_
 
 ---
 
-## 🟡 V2 — Reviews + Video + Community
+## 🟡 V2 — Reviews + Video + Analytics
 
 ### What's Been Accomplished
 
@@ -152,10 +152,62 @@ _Last Updated: March 2026_
 - [x] Worker updated: SMS worker registered in lib/worker.ts with shutdown handling
 - [x] Test suite: ~81 new tests across 12 files (817+ total, up from 736)
 
+**Phase D: UI Rebrand (Navy) + Video Generation (Veo 3.1)** ✅
+
+- [x] UI rebrand: Green (#1a472a) → Navy (#1B2B5B) color system with full light/dark theme support
+- [x] Design token system: 30+ CSS custom properties for Shadcn/ui components (app/globals.css)
+- [x] Font rebrand: Inter → DM Sans (weights 300–700) for improved typography hierarchy
+- [x] Logo integration: auth page and sidebar display logo image instead of dynamic color box
+- [x] Video types: Zod discriminated union for cinematic_reel, project_showcase, testimonial_scene, brand_story (types/video.ts)
+- [x] Veo 3.1 integration: polling with exponential backoff, starting frame handoff, Fast + Standard models (lib/ai/veo.ts)
+- [x] Video generator pipeline: prompt → starting frame (optional) → Veo → Supabase Storage → DB insert (lib/ai/video-generator.ts)
+- [x] Video prompt templates: 4 video-type-specific prompt builders with Veo Visual+Audio format (packages/ai/prompts/videos/)
+- [x] Video BullMQ worker + scheduler: video-generation queue, concurrency=1, exponential backoff retry (lib/queue/video-worker.ts, lib/queue/video-scheduler.ts)
+- [x] Video APIs (6 routes): generate, list, detail, status polling, delete, schedule (app/api/v1/video/)
+- [x] Video dashboard UI: page with tabs, generate form with dynamic fields, library grid, detail sheet, generation status poller (components/video/)
+- [x] Video sidebar nav: "Video" module added to dashboard sidebar
+- [x] Storage extended: uploadVideo() for Supabase Storage (lib/storage/supabase-storage.ts)
+- [x] Progress component: Radix UI progress bar for video generation status (components/ui/progress.tsx)
+- [x] Test suite: 933+ tests across 126+ files (94+ video tests, prompt builder tests)
+
+**Phase E: Analytics Module** ✅
+
+- [x] Analytics types: DateRangePreset, KeywordRankingListItem, KeywordTrendPoint, AnalyticsOverview with Zod schemas (types/analytics.ts)
+- [x] Date range service: resolveDateRange() with presets (7d/28d/90d) + custom, comparison period calculation (lib/analytics/date-range.ts)
+- [x] Keyword rankings service: getKeywordRankings() paginated/sortable/searchable, getKeywordTrend() daily (lib/analytics/keyword-rankings.ts)
+- [x] Analytics overview API: GET /api/v1/analytics/overview — unified GA4 + GSC + keyword summary, parallel fetch, graceful fallback
+- [x] Keywords API: GET /api/v1/analytics/keywords — paginated rankings with date range + sort + search
+- [x] Keyword trend API: GET /api/v1/analytics/keywords/[query]/trend — daily position trend
+- [x] Date range picker: URL-param-driven preset selector + native date inputs (components/analytics/date-range-picker.tsx)
+- [x] Analytics page client: 3 tabs (Overview, Keywords, Search Performance), reuses GA4/GSC components (components/analytics/analytics-page-client.tsx)
+- [x] Keyword rankings table: sortable with pagination, search, position change arrows, trend sheet (components/analytics/keyword-rankings-table.tsx)
+- [x] Keyword trend detail: sheet with summary cards + position/clicks bar chart (components/analytics/keyword-trend-detail.tsx)
+- [x] GA4 overview API extended with optional startDate/endDate query params (backward-compatible)
+- [x] Analytics dashboard page: /analytics route with requireAuth() guard
+- [x] Test suite: 41 new tests across 9 files (974 total, up from 933)
+
+**Phase F: Remotion Integration (Tier 1 Programmatic Video)** ✅
+
+- [x] Remotion project: isolated services/video/ with tsconfig, registerRoot, Root.tsx with 4 Composition definitions, Zod-validated props (services/video/src/)
+- [x] Remotion compositions (4): TestimonialQuote (6s), TipVideo (10s), BeforeAfterReveal (8s), BrandedIntroOutro (3s) — all 1080×1920 @ 30fps
+- [x] Shared components (5): BrandedBackground, Logo (<Img /> for SSR), TextReveal (word-by-word kinetic text), StarRating (animated), CtaOverlay
+- [x] Animation library: fadeIn, fadeOut, slideUp, scaleIn, wipeReveal (services/video/src/lib/animations.ts)
+- [x] Font system: DM Sans + Montserrat via @remotion/google-fonts (services/video/src/lib/fonts.ts)
+- [x] Remotion BullMQ worker: remotion-rendering queue with bundle caching, bundle() → selectComposition() → renderMedia() → Supabase upload → DB insert (lib/queue/remotion-worker.ts)
+- [x] Remotion scheduler: enqueueRemotionJob() + getRemotionJobStatus() (lib/queue/remotion-scheduler.ts)
+- [x] VideoEngine enum: veo | remotion with isRemotionVideoType() helper (types/video.ts)
+- [x] 5 Remotion video types: testimonial_quote, tip_video, before_after_reveal, branded_intro, branded_outro with Zod input schemas (types/video.ts)
+- [x] Engine routing: generate API routes to Remotion or Veo queue based on video type (app/api/v1/video/generate/route.ts)
+- [x] Dual-queue status polling: checks both remotion-rendering and video-generation queues with prefix-based routing (app/api/v1/video/[id]/status/route.ts)
+- [x] Video library engine filter: ?engine=remotion|veo query param, engine badge on cards (app/api/v1/video/route.ts, components/video/)
+- [x] Engine selector UI: Remotion/Veo toggle with dynamic type-specific fields — tip builder, star picker, image URL inputs (components/video/video-generate-form.tsx)
+- [x] Worker registration: createRemotionWorker() registered in lib/worker.ts with shutdown handling
+- [x] Dependencies: 6 Remotion packages + dev:remotion script added to package.json
+- [x] Test suite: 974/974 passing (all existing tests updated for new engine field)
+
 ### What's Next
 
-1. Video generation (Remotion + Veo 3.1)
-2. Community module (Facebook group monitoring + lead capture)
+1. Veo + Remotion composite pipeline (Pipeline B) — chain Veo cinematic clips with Remotion branded intros/outros
 
 ### Blockers
 
@@ -163,9 +215,11 @@ _Last Updated: March 2026_
 
 ---
 
-## 🟣 Later — White-Label + Advanced Analytics
+## 🟣 Later — White-Label + Community
 
 _Not started — waiting on V2 completion_
+
+**Planned scope:** White-label admin, Stripe billing, Facebook group monitoring (Brand24 + Graph API), lead intent classifier, Slack lead alerts, A/B testing, email marketing (Resend), competitor tracking, custom report builder.
 
 ---
 

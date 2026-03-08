@@ -19,7 +19,7 @@ describe('Ga4PropertySelector', () => {
     expect(skeletons.length).toBeGreaterThan(0)
   })
 
-  it('renders property options after loading', async () => {
+  it('renders property options with website URLs after loading', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () =>
@@ -29,8 +29,14 @@ describe('Ga4PropertySelector', () => {
               propertyId: 'properties/111',
               displayName: 'Main Site',
               accountName: 'Cleanest Painting',
+              websiteUrl: 'https://cleanestpainting.com',
             },
-            { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
+            {
+              propertyId: 'properties/222',
+              displayName: 'Blog',
+              accountName: 'Cleanest Painting',
+              websiteUrl: null,
+            },
           ],
         }),
     })
@@ -39,7 +45,9 @@ describe('Ga4PropertySelector', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Select GA4 Property')).toBeInTheDocument()
-      expect(screen.getByText('Main Site (Cleanest Painting)')).toBeInTheDocument()
+      expect(
+        screen.getByText('Main Site — https://cleanestpainting.com (Cleanest Painting)'),
+      ).toBeInTheDocument()
       expect(screen.getByText('Blog (Cleanest Painting)')).toBeInTheDocument()
     })
   })
@@ -54,6 +62,7 @@ describe('Ga4PropertySelector', () => {
               propertyId: 'properties/111',
               displayName: 'Main Site',
               accountName: 'Cleanest Painting',
+              websiteUrl: 'https://cleanestpainting.com',
             },
           ],
         }),
@@ -91,8 +100,14 @@ describe('Ga4PropertySelector', () => {
               propertyId: 'properties/111',
               displayName: 'Main Site',
               accountName: 'Cleanest Painting',
+              websiteUrl: 'https://cleanestpainting.com',
             },
-            { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
+            {
+              propertyId: 'properties/222',
+              displayName: 'Blog',
+              accountName: 'Cleanest Painting',
+              websiteUrl: null,
+            },
           ],
         }),
     })
@@ -137,8 +152,14 @@ describe('Ga4PropertySelector', () => {
               propertyId: 'properties/111',
               displayName: 'Main Site',
               accountName: 'Cleanest Painting',
+              websiteUrl: 'https://cleanestpainting.com',
             },
-            { propertyId: 'properties/222', displayName: 'Blog', accountName: 'Cleanest Painting' },
+            {
+              propertyId: 'properties/222',
+              displayName: 'Blog',
+              accountName: 'Cleanest Painting',
+              websiteUrl: null,
+            },
           ],
         }),
     })

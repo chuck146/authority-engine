@@ -1,4 +1,9 @@
-import type { Ga4AccountSummary, Ga4ReportRequest, Ga4ReportResponse } from '@/types/ga4'
+import type {
+  Ga4AccountSummary,
+  Ga4DataStream,
+  Ga4ReportRequest,
+  Ga4ReportResponse,
+} from '@/types/ga4'
 
 const ADMIN_API_BASE = 'https://analyticsadmin.googleapis.com/v1beta'
 const DATA_API_BASE = 'https://analyticsdata.googleapis.com/v1beta'
@@ -26,6 +31,30 @@ export async function listAccountSummaries(options: FetchOptions): Promise<Ga4Ac
 
   const data: AccountSummariesResponse = await res.json()
   return data.accountSummaries ?? []
+}
+
+// --- Admin API: Data Streams ---
+
+type DataStreamsResponse = {
+  dataStreams?: Ga4DataStream[]
+}
+
+export async function listDataStreams(
+  propertyId: string,
+  options: FetchOptions,
+): Promise<Ga4DataStream[]> {
+  const id = propertyId.replace('properties/', '')
+  const res = await fetch(`${ADMIN_API_BASE}/properties/${id}/dataStreams`, {
+    headers: { Authorization: `Bearer ${options.accessToken}` },
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`GA4 Admin API error (${res.status}): ${text}`)
+  }
+
+  const data: DataStreamsResponse = await res.json()
+  return data.dataStreams ?? []
 }
 
 // --- Data API ---

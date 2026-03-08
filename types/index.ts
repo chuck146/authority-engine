@@ -113,6 +113,15 @@ export type {
   ReviewRequestDetail,
   ReviewRequestOverview,
 } from './review-requests'
+export type {
+  VideoType,
+  VeoModel,
+  AspectRatio,
+  GenerateVideoRequest,
+  GenerateVideoResponse,
+  VideoLibraryItem,
+  VideoJobStatus,
+} from './video'
 
 // Convenience type aliases
 export type ContentStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived'

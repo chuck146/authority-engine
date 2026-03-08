@@ -27,10 +27,7 @@ type ReviewRequestDetailRow = {
 }
 
 // GET /api/v1/reviews/requests/[id]
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await requireApiAuth()
     const { id } = await params

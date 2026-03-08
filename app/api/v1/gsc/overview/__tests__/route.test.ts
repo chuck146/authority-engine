@@ -133,11 +133,76 @@ describe('GET /api/v1/gsc/overview', () => {
     expect(res.status).toBe(401)
   })
 
-  it('returns 500 when GSC API fails', async () => {
-    mockFetchSearchAnalytics.mockRejectedValueOnce(new Error('GSC API error (403): forbidden'))
+  it('returns partial data when some GSC API calls fail', async () => {
+    // First call (currentQueries) fails, but rest succeed
+    mockFetchSearchAnalytics
+      .mockRejectedValueOnce(new Error('GSC API error (403): forbidden'))
+      .mockResolvedValueOnce({ rows: [] }) // previousQueries
+      .mockResolvedValueOnce({ rows: [] }) // currentPages
+    mockFetchSitemaps.mockResolvedValueOnce([])
 
     const { GET } = await import('../route')
     const res = await GET()
-    expect(res.status).toBe(500)
+    const json = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(json.isConnected).toBe(true)
+    expect(json.summary).toBeDefined()
+    expect(json.summary.clicks).toBe(0)
+    expect(json.topQueries).toEqual([])
+  })
+
+  it('returns graceful response when all GSC API calls fail', async () => {
+    mockFetchSearchAnalytics.mockRejectedValue(new Error('GSC API error (403): forbidden'))
+    mockFetchSitemaps.mockRejectedValueOnce(new Error('GSC API error (403): forbidden'))
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(json.isConnected).toBe(true)
+    expect(json.summary.clicks).toBe(0)
+    expect(json.topQueries).toEqual([])
+    expect(json.sitemaps).toEqual([])
+  })
+
+  it('returns graceful response when siteUrl is empty', async () => {
+    const { getValidToken } = await import('@/lib/google/token-manager')
+    vi.mocked(getValidToken).mockResolvedValueOnce({
+      accessToken: 'ya29.test',
+      siteUrl: '',
+    })
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(json.isConnected).toBe(true)
+    expect(json.siteUrl).toBe('')
+    expect(json.summary).toBeNull()
+    expect(json.message).toContain('No verified site found')
+    expect(mockFetchSearchAnalytics).not.toHaveBeenCalled()
+  })
+
+  it('returns isConnected false when no active GSC connection exists', async () => {
+    const { getValidToken } = await import('@/lib/google/token-manager')
+    vi.mocked(getValidToken).mockRejectedValueOnce(
+      new Error('No active Google Search Console connection found'),
+    )
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(json.isConnected).toBe(false)
+    expect(json.siteUrl).toBeNull()
+    expect(json.summary).toBeNull()
+    expect(json.topQueries).toEqual([])
+    expect(json.topPages).toEqual([])
+    expect(json.sitemaps).toEqual([])
+    expect(json.indexingCoverage).toBeNull()
   })
 })

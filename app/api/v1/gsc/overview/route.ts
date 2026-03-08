@@ -175,36 +175,97 @@ function computeIndexingCoverage(sitemaps: GscSitemap[]): IndexingCoverage | nul
   }
 }
 
+const emptyAnalytics = { rows: [] }
+
 export async function GET() {
   try {
     const auth = await requireApiAuth()
-    const { accessToken, siteUrl } = await getValidToken(auth.organizationId)
+
+    let accessToken: string
+    let siteUrl: string
+    try {
+      const token = await getValidToken(auth.organizationId)
+      accessToken = token.accessToken
+      siteUrl = token.siteUrl
+    } catch {
+      // No active GSC connection — return disconnected state
+      return NextResponse.json({
+        isConnected: false,
+        siteUrl: null,
+        lastSyncedAt: null,
+        summary: null,
+        topQueries: [],
+        topPages: [],
+        sitemaps: [],
+        indexingCoverage: null,
+      } satisfies GscOverview)
+    }
+
+    // Empty site_url means OAuth succeeded but no verified site was found
+    if (!siteUrl) {
+      return NextResponse.json({
+        isConnected: true,
+        siteUrl: '',
+        lastSyncedAt: null,
+        summary: null,
+        topQueries: [],
+        topPages: [],
+        sitemaps: [],
+        indexingCoverage: null,
+        message: 'No verified site found in Google Search Console. Please verify your domain.',
+      })
+    }
+
     const ranges = computeDateRanges()
 
-    const [currentQueries, previousQueries, currentPages, rawSitemaps] = await Promise.all([
-      fetchSearchAnalytics({
-        accessToken,
-        siteUrl,
-        ...ranges.current,
-        dimensions: ['query'],
-        rowLimit: 1000,
-      }),
-      fetchSearchAnalytics({
-        accessToken,
-        siteUrl,
-        ...ranges.previous,
-        dimensions: ['query'],
-        rowLimit: 1000,
-      }),
-      fetchSearchAnalytics({
-        accessToken,
-        siteUrl,
-        ...ranges.current,
-        dimensions: ['page'],
-        rowLimit: 100,
-      }),
-      fetchSitemaps({ accessToken, siteUrl }),
-    ])
+    // Use allSettled so partial failures don't break the entire response
+    const [currentQueriesResult, previousQueriesResult, currentPagesResult, sitemapsResult] =
+      await Promise.allSettled([
+        fetchSearchAnalytics({
+          accessToken,
+          siteUrl,
+          ...ranges.current,
+          dimensions: ['query'],
+          rowLimit: 1000,
+        }),
+        fetchSearchAnalytics({
+          accessToken,
+          siteUrl,
+          ...ranges.previous,
+          dimensions: ['query'],
+          rowLimit: 1000,
+        }),
+        fetchSearchAnalytics({
+          accessToken,
+          siteUrl,
+          ...ranges.current,
+          dimensions: ['page'],
+          rowLimit: 100,
+        }),
+        fetchSitemaps({ accessToken, siteUrl }),
+      ])
+
+    const currentQueries =
+      currentQueriesResult.status === 'fulfilled' ? currentQueriesResult.value : emptyAnalytics
+    const previousQueries =
+      previousQueriesResult.status === 'fulfilled' ? previousQueriesResult.value : emptyAnalytics
+    const currentPages =
+      currentPagesResult.status === 'fulfilled' ? currentPagesResult.value : emptyAnalytics
+    const rawSitemaps = sitemapsResult.status === 'fulfilled' ? sitemapsResult.value : []
+
+    // Log any partial failures for diagnostics
+    const failures = [
+      currentQueriesResult,
+      previousQueriesResult,
+      currentPagesResult,
+      sitemapsResult,
+    ].filter((r) => r.status === 'rejected')
+    if (failures.length > 0) {
+      console.warn(
+        '[GSC Overview] Partial API failures:',
+        failures.map((f) => (f as PromiseRejectedResult).reason?.message ?? 'Unknown error'),
+      )
+    }
 
     const currentRows = currentQueries.rows ?? []
     const previousRows = previousQueries.rows ?? []
@@ -228,7 +289,8 @@ export async function GET() {
     if (err instanceof AuthError) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode })
     }
-    console.error('[GSC Overview Error]', err)
-    return NextResponse.json({ error: 'Failed to fetch GSC overview' }, { status: 500 })
+    const detail = err instanceof Error ? err.message : 'Unknown error'
+    console.error('[GSC Overview Error]', detail)
+    return NextResponse.json({ error: 'Failed to fetch GSC overview', detail }, { status: 500 })
   }
 }

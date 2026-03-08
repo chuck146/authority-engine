@@ -41,9 +41,7 @@ describe('listAccounts', () => {
 
     const [url, opts] = vi.mocked(global.fetch).mock.calls[0]!
     expect(url).toContain('mybusinessaccountmanagement.googleapis.com/v1/accounts')
-    expect(opts?.headers).toEqual(
-      expect.objectContaining({ Authorization: 'Bearer ya29.test' }),
-    )
+    expect(opts?.headers).toEqual(expect.objectContaining({ Authorization: 'Bearer ya29.test' }))
   })
 
   it('returns empty array when no accounts', async () => {
@@ -56,9 +54,7 @@ describe('listAccounts', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Unauthorized', { status: 401 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Unauthorized', { status: 401 }))
 
     await expect(listAccounts({ accessToken: 'bad' })).rejects.toThrow(
       'GBP Accounts API error (401)',
@@ -68,19 +64,14 @@ describe('listAccounts', () => {
 
 describe('listLocations', () => {
   it('returns locations with pagination', async () => {
-    const page1Locations = [
-      { name: 'locations/111', title: 'Main Office' },
-    ]
-    const page2Locations = [
-      { name: 'locations/222', title: 'Branch Office' },
-    ]
+    const page1Locations = [{ name: 'locations/111', title: 'Main Office' }]
+    const page2Locations = [{ name: 'locations/222', title: 'Branch Office' }]
 
     vi.spyOn(global, 'fetch')
       .mockResolvedValueOnce(
-        new Response(
-          JSON.stringify({ locations: page1Locations, nextPageToken: 'page2token' }),
-          { status: 200 },
-        ),
+        new Response(JSON.stringify({ locations: page1Locations, nextPageToken: 'page2token' }), {
+          status: 200,
+        }),
       )
       .mockResolvedValueOnce(
         new Response(JSON.stringify({ locations: page2Locations }), { status: 200 }),
@@ -97,7 +88,9 @@ describe('listLocations', () => {
 
     // Verify first request has readMask and no pageToken
     const [url1] = vi.mocked(global.fetch).mock.calls[0]!
-    expect(String(url1)).toContain('mybusinessbusinessinformation.googleapis.com/v1/accounts/123/locations')
+    expect(String(url1)).toContain(
+      'mybusinessbusinessinformation.googleapis.com/v1/accounts/123/locations',
+    )
     expect(String(url1)).toContain('readMask=')
     expect(String(url1)).not.toContain('pageToken=')
 
@@ -107,13 +100,11 @@ describe('listLocations', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Forbidden', { status: 403 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Forbidden', { status: 403 }))
 
-    await expect(
-      listLocations({ accessToken: 'bad', accountId: 'accounts/123' }),
-    ).rejects.toThrow('GBP Locations API error (403)')
+    await expect(listLocations({ accessToken: 'bad', accountId: 'accounts/123' })).rejects.toThrow(
+      'GBP Locations API error (403)',
+    )
   })
 })
 
@@ -177,10 +168,9 @@ describe('listReviews', () => {
 
   it('passes pageToken when provided', async () => {
     vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response(
-        JSON.stringify({ reviews: [], totalReviewCount: 0, averageRating: 0 }),
-        { status: 200 },
-      ),
+      new Response(JSON.stringify({ reviews: [], totalReviewCount: 0, averageRating: 0 }), {
+        status: 200,
+      }),
     )
 
     await listReviews({
@@ -232,9 +222,7 @@ describe('replyToReview', () => {
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Not Found', { status: 404 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Not Found', { status: 404 }))
 
     await expect(
       replyToReview({
@@ -248,9 +236,7 @@ describe('replyToReview', () => {
 
 describe('deleteReply', () => {
   it('sends DELETE request', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response(null, { status: 200 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response(null, { status: 200 }))
 
     await deleteReply({
       accessToken: 'ya29.test',
@@ -262,15 +248,11 @@ describe('deleteReply', () => {
       'mybusiness.googleapis.com/v4/accounts/123/locations/456/reviews/abc/reply',
     )
     expect(opts?.method).toBe('DELETE')
-    expect(opts?.headers).toEqual(
-      expect.objectContaining({ Authorization: 'Bearer ya29.test' }),
-    )
+    expect(opts?.headers).toEqual(expect.objectContaining({ Authorization: 'Bearer ya29.test' }))
   })
 
   it('throws on API error', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response('Server Error', { status: 500 }),
-    )
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce(new Response('Server Error', { status: 500 }))
 
     await expect(
       deleteReply({

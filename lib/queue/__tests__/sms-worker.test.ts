@@ -88,9 +88,7 @@ describe('processSmsJob', () => {
       message: 'Test review request message',
     })
     // Status should be updated to 'sent'
-    expect(mockUpdate).toHaveBeenCalledWith(
-      expect.objectContaining({ status: 'sent' }),
-    )
+    expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({ status: 'sent' }))
   })
 
   it('updates status to failed when SMS fails', async () => {
@@ -186,9 +184,7 @@ describe('processSmsJob', () => {
     await processSmsJob(makeJob(jobData))
 
     expect(mockSend).toHaveBeenCalled()
-    expect(mockUpdate).toHaveBeenCalledWith(
-      expect.objectContaining({ status: 'sent' }),
-    )
+    expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({ status: 'sent' }))
   })
 
   it('passes custom message from metadata', async () => {

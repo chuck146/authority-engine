@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { listAccountSummaries, runReport, batchRunReports } from '../analytics'
+import { listAccountSummaries, listDataStreams, runReport, batchRunReports } from '../analytics'
 
 const mockFetch = vi.fn()
 
@@ -60,6 +60,56 @@ describe('listAccountSummaries', () => {
     })
 
     await expect(listAccountSummaries({ accessToken: 'ya29.test' })).rejects.toThrow(
+      'GA4 Admin API error (403): Forbidden',
+    )
+  })
+})
+
+describe('listDataStreams', () => {
+  it('returns data streams for a property', async () => {
+    const streams = [
+      {
+        name: 'properties/456/dataStreams/789',
+        type: 'WEB_DATA_STREAM',
+        displayName: 'Main Site Stream',
+        webStreamData: {
+          measurementId: 'G-ABC123',
+          defaultUri: 'https://cleanestpainting.com',
+        },
+      },
+    ]
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ dataStreams: streams }),
+    })
+
+    const result = await listDataStreams('properties/456', { accessToken: 'ya29.test' })
+    expect(result).toEqual(streams)
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://analyticsadmin.googleapis.com/v1beta/properties/456/dataStreams',
+      { headers: { Authorization: 'Bearer ya29.test' } },
+    )
+  })
+
+  it('returns empty array when no dataStreams field', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({}),
+    })
+
+    const result = await listDataStreams('properties/456', { accessToken: 'ya29.test' })
+    expect(result).toEqual([])
+  })
+
+  it('throws on API error', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      text: () => Promise.resolve('Forbidden'),
+    })
+
+    await expect(listDataStreams('properties/456', { accessToken: 'ya29.test' })).rejects.toThrow(
       'GA4 Admin API error (403): Forbidden',
     )
   })

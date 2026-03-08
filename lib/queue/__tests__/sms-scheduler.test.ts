@@ -61,9 +61,7 @@ describe('enqueueSmsJob', () => {
   })
 
   it('rejects on Redis timeout', { timeout: 10_000 }, async () => {
-    mockAdd.mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 10_000)),
-    )
+    mockAdd.mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 10_000)))
 
     await expect(enqueueSmsJob('req-4', 'org-1')).rejects.toThrow('Redis timeout')
   })

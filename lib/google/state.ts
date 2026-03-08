@@ -9,55 +9,54 @@ function getSecret(): string {
 
 /**
  * Create an HMAC-signed state parameter for OAuth.
- * Format: orgId.provider.nonce.signature
+ * Format: orgId.userId.provider.nonce.signature
  */
 export function createOAuthState(
   organizationId: string,
+  userId: string,
   provider: GoogleProvider = 'search_console',
 ): string {
   const nonce = randomBytes(16).toString('hex')
-  const payload = `${organizationId}.${provider}.${nonce}`
+  const payload = `${organizationId}.${userId}.${provider}.${nonce}`
   const signature = createHmac('sha256', getSecret()).update(payload).digest('hex')
   return `${payload}.${signature}`
 }
 
 type OAuthStateResult = {
   organizationId: string
+  userId: string
   provider: GoogleProvider
 }
 
 /**
- * Validate and extract orgId + provider from a signed state parameter.
- * Supports both legacy 3-part (orgId.nonce.sig) and new 4-part (orgId.provider.nonce.sig) formats.
+ * Validate and extract orgId + userId + provider from a signed state parameter.
+ * Supports 5-part (orgId.userId.provider.nonce.sig) format.
  * Returns null if signature is invalid.
  */
 export function validateOAuthState(state: string): OAuthStateResult | null {
   const parts = state.split('.')
 
   let organizationId: string
+  let userId: string
   let provider: GoogleProvider
-  let nonce: string
   let signature: string
   let payload: string
 
-  if (parts.length === 4) {
-    // New format: orgId.provider.nonce.signature
+  if (parts.length === 5) {
+    // Current format: orgId.userId.provider.nonce.signature
     organizationId = parts[0]!
-    provider = parts[1] as GoogleProvider
-    nonce = parts[2]!
-    signature = parts[3]!
-    if (!organizationId || !provider || !nonce || !signature) return null
-    if (provider !== 'search_console' && provider !== 'analytics' && provider !== 'business_profile')
+    userId = parts[1]!
+    provider = parts[2] as GoogleProvider
+    const nonce = parts[3]!
+    signature = parts[4]!
+    if (!organizationId || !userId || !provider || !nonce || !signature) return null
+    if (
+      provider !== 'search_console' &&
+      provider !== 'analytics' &&
+      provider !== 'business_profile'
+    )
       return null
-    payload = `${organizationId}.${provider}.${nonce}`
-  } else if (parts.length === 3) {
-    // Legacy format: orgId.nonce.signature (defaults to search_console)
-    organizationId = parts[0]!
-    nonce = parts[1]!
-    signature = parts[2]!
-    provider = 'search_console'
-    if (!organizationId || !nonce || !signature) return null
-    payload = `${organizationId}.${nonce}`
+    payload = `${organizationId}.${userId}.${provider}.${nonce}`
   } else {
     return null
   }
@@ -72,5 +71,5 @@ export function validateOAuthState(state: string): OAuthStateResult | null {
   }
   if (mismatch !== 0) return null
 
-  return { organizationId, provider }
+  return { organizationId, userId, provider }
 }

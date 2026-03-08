@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { buildAuthContext } from '@/tests/factories'
 
 const mockAuth = buildAuthContext({ role: 'admin' })
@@ -62,7 +63,7 @@ describe('GET /api/v1/ga4/overview', () => {
     ])
 
     const { GET } = await import('../route')
-    const res = await GET()
+    const res = await GET(new NextRequest('http://localhost/api/v1/ga4/overview'))
     const json = await res.json()
 
     expect(res.status).toBe(200)
@@ -104,7 +105,7 @@ describe('GET /api/v1/ga4/overview', () => {
     ])
 
     const { GET } = await import('../route')
-    const res = await GET()
+    const res = await GET(new NextRequest('http://localhost/api/v1/ga4/overview'))
     const json = await res.json()
 
     expect(res.status).toBe(200)
@@ -119,7 +120,7 @@ describe('GET /api/v1/ga4/overview', () => {
     mockBatchRunReports.mockResolvedValueOnce([])
 
     const { GET } = await import('../route')
-    const res = await GET()
+    const res = await GET(new NextRequest('http://localhost/api/v1/ga4/overview'))
     const json = await res.json()
 
     expect(res.status).toBe(200)
@@ -132,7 +133,7 @@ describe('GET /api/v1/ga4/overview', () => {
     vi.mocked(requireApiAuth).mockRejectedValueOnce(new AuthError('Unauthorized', 401))
 
     const { GET } = await import('../route')
-    const res = await GET()
+    const res = await GET(new NextRequest('http://localhost/api/v1/ga4/overview'))
     expect(res.status).toBe(401)
   })
 
@@ -140,7 +141,23 @@ describe('GET /api/v1/ga4/overview', () => {
     mockBatchRunReports.mockRejectedValueOnce(new Error('GA4 API error (403): forbidden'))
 
     const { GET } = await import('../route')
-    const res = await GET()
+    const res = await GET(new NextRequest('http://localhost/api/v1/ga4/overview'))
     expect(res.status).toBe(500)
+  })
+
+  it('returns 400 when propertyId is empty', async () => {
+    const { getValidToken } = await import('@/lib/google/token-manager')
+    vi.mocked(getValidToken).mockResolvedValueOnce({
+      accessToken: 'ya29.test',
+      siteUrl: '',
+    })
+
+    const { GET } = await import('../route')
+    const res = await GET(new NextRequest('http://localhost/api/v1/ga4/overview'))
+    const json = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(json.error).toContain('property not selected')
+    expect(mockBatchRunReports).not.toHaveBeenCalled()
   })
 })

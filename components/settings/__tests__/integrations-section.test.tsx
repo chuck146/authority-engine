@@ -2,6 +2,21 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntegrationsSection } from '../integrations-section'
+import { toast } from 'sonner'
+
+vi.mock('sonner', () => ({
+  toast: { success: vi.fn(), error: vi.fn() },
+}))
+
+const mockUseSearchParams = vi.fn()
+
+vi.mock('next/navigation', async (importActual) => {
+  const actual = await importActual<typeof import('next/navigation')>()
+  return {
+    ...actual,
+    useSearchParams: () => mockUseSearchParams(),
+  }
+})
 
 const mockFetch = vi.fn()
 
@@ -54,6 +69,7 @@ function mockStatuses(
 beforeEach(() => {
   vi.clearAllMocks()
   global.fetch = mockFetch
+  mockUseSearchParams.mockReturnValue(new URLSearchParams())
 })
 
 describe('IntegrationsSection', () => {
@@ -167,6 +183,32 @@ describe('IntegrationsSection', () => {
 
     await waitFor(() => {
       expect(screen.getAllByText('Not Connected')).toHaveLength(3)
+    })
+  })
+
+  it('shows success toast when URL has status=connected', async () => {
+    mockUseSearchParams.mockReturnValue(new URLSearchParams('status=connected&provider=analytics'))
+    mockStatuses(notConnected, notConnected, notConnected)
+
+    render(<IntegrationsSection />)
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalledWith('analytics connected successfully')
+    })
+  })
+
+  it('shows error toast with detail when URL has status=error', async () => {
+    mockUseSearchParams.mockReturnValue(
+      new URLSearchParams('status=error&message=token_exchange_failed&detail=API+not+enabled'),
+    )
+    mockStatuses(notConnected, notConnected, notConnected)
+
+    render(<IntegrationsSection />)
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Connection failed: token_exchange_failed — API not enabled',
+      )
     })
   })
 })

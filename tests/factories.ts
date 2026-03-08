@@ -39,6 +39,13 @@ import type {
   ReviewRequestDetail,
   ReviewRequestOverview,
 } from '@/types/review-requests'
+import type { GenerateVideoResponse, VideoLibraryItem, VideoJobStatus } from '@/types/video'
+import type {
+  KeywordRankingListItem,
+  KeywordTrendPoint,
+  AnalyticsOverview,
+  KeywordSummary,
+} from '@/types/analytics'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -635,6 +642,119 @@ export function buildReviewRequestOverview(
     delivered: 1,
     completed: 1,
     failed: 1,
+    ...overrides,
+  }
+}
+
+// --- Video Factories ---
+
+export function buildGenerateVideoResponse(
+  overrides?: Partial<GenerateVideoResponse>,
+): GenerateVideoResponse {
+  return {
+    id: 'video-1',
+    videoType: 'cinematic_reel',
+    filename: 'reel-freshly-painted-living-room.mp4',
+    storagePath: 'org-456/videos/cinematic_reel/abc123.mp4',
+    publicUrl:
+      'https://example.supabase.co/storage/v1/object/public/media/org-456/videos/cinematic_reel/abc123.mp4',
+    mimeType: 'video/mp4',
+    sizeBytes: 5242880,
+    durationSeconds: 8,
+    ...overrides,
+  }
+}
+
+export function buildVideoLibraryItem(overrides?: Partial<VideoLibraryItem>): VideoLibraryItem {
+  return {
+    id: 'video-1',
+    videoType: 'cinematic_reel',
+    engine: null,
+    filename: 'reel-freshly-painted-living-room.mp4',
+    publicUrl:
+      'https://example.supabase.co/storage/v1/object/public/media/org-456/videos/cinematic_reel/abc123.mp4',
+    mimeType: 'video/mp4',
+    sizeBytes: 5242880,
+    durationSeconds: 8,
+    createdAt: '2026-03-07T12:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildVideoJobStatus(overrides?: Partial<VideoJobStatus>): VideoJobStatus {
+  return {
+    jobId: 'video-org-456-1709820000000',
+    status: 'queued',
+    progress: null,
+    result: null,
+    error: null,
+    ...overrides,
+  }
+}
+
+// --- Analytics Factories ---
+
+export function buildKeywordRankingListItem(
+  overrides?: Partial<KeywordRankingListItem>,
+): KeywordRankingListItem {
+  return {
+    query: 'interior painting nj',
+    avgPosition: 8.2,
+    totalClicks: 85,
+    totalImpressions: 2400,
+    avgCtr: 0.035,
+    positionChange: 1.3,
+    ...overrides,
+  }
+}
+
+export function buildKeywordTrendPoint(overrides?: Partial<KeywordTrendPoint>): KeywordTrendPoint {
+  return {
+    date: '2026-03-04',
+    position: 8.2,
+    clicks: 12,
+    impressions: 340,
+    ...overrides,
+  }
+}
+
+export function buildKeywordSummary(overrides?: Partial<KeywordSummary>): KeywordSummary {
+  return {
+    totalTracked: 45,
+    avgPosition: 15.3,
+    topMovers: [
+      { query: 'interior painting nj', change: 3.2 },
+      { query: 'house painting summit', change: -1.5 },
+    ],
+    ...overrides,
+  }
+}
+
+export function buildAnalyticsOverview(overrides?: Partial<AnalyticsOverview>): AnalyticsOverview {
+  return {
+    ga4Connected: true,
+    gscConnected: true,
+    ga4: {
+      sessions: 3200,
+      users: 2100,
+      pageviews: 8500,
+      bounceRate: 0.42,
+      sessionsTrend: 15,
+      usersTrend: 12,
+      pageviewsTrend: 18,
+      bounceRateTrend: -3,
+    },
+    gsc: {
+      clicks: 1250,
+      impressions: 45000,
+      ctr: 0.028,
+      position: 18.3,
+      clicksTrend: 12,
+      impressionsTrend: 8,
+      ctrTrend: 4,
+      positionTrend: -5,
+    },
+    keywords: buildKeywordSummary(),
     ...overrides,
   }
 }

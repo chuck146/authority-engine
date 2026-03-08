@@ -275,9 +275,9 @@ describe('processGbpSyncJob', () => {
 
     const { processGbpSyncJob } = await import('../gbp-sync-worker')
 
-    await expect(
-      processGbpSyncJob(makeJob({ organizationId: 'org-123' })),
-    ).rejects.toThrow('GBP API rate limited')
+    await expect(processGbpSyncJob(makeJob({ organizationId: 'org-123' }))).rejects.toThrow(
+      'GBP API rate limited',
+    )
 
     // Should record the error on the connection
     expect(mockUpdate).toHaveBeenCalledWith(
@@ -299,8 +299,8 @@ describe('processGbpSyncJob', () => {
 
     const { processGbpSyncJob } = await import('../gbp-sync-worker')
 
-    await expect(
-      processGbpSyncJob(makeJob({ organizationId: 'org-123' })),
-    ).rejects.toThrow('Network timeout')
+    await expect(processGbpSyncJob(makeJob({ organizationId: 'org-123' }))).rejects.toThrow(
+      'Network timeout',
+    )
   })
 })

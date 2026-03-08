@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { getValidToken } from '@/lib/google/token-manager'
 import { batchRunReports } from '@/lib/google/analytics'
@@ -17,7 +17,23 @@ function formatDate(d: Date): string {
   return d.toISOString().split('T')[0]!
 }
 
-function computeDateRanges() {
+function computeDateRanges(customStart?: string, customEnd?: string) {
+  if (customStart && customEnd) {
+    const startDate = new Date(customStart)
+    const endDate = new Date(customEnd)
+    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+
+    const prevEndDate = new Date(startDate)
+    prevEndDate.setDate(prevEndDate.getDate() - 1)
+    const prevStartDate = new Date(prevEndDate)
+    prevStartDate.setDate(prevStartDate.getDate() - daysDiff + 1)
+
+    return {
+      current: { startDate: customStart, endDate: customEnd },
+      previous: { startDate: formatDate(prevStartDate), endDate: formatDate(prevEndDate) },
+    }
+  }
+
   const now = new Date()
   const endDate = new Date(now)
   endDate.setDate(endDate.getDate() - 1) // yesterday
@@ -139,14 +155,27 @@ function buildDeviceBreakdown(rows: Ga4ReportRow[]): Ga4DeviceBreakdown[] {
   })
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const auth = await requireApiAuth()
     const { accessToken, siteUrl: propertyId } = await getValidToken(
       auth.organizationId,
       'analytics',
     )
-    const ranges = computeDateRanges()
+
+    if (!propertyId) {
+      return NextResponse.json(
+        {
+          error:
+            'GA4 property not selected. Go to Settings > Integrations to select your property.',
+        },
+        { status: 400 },
+      )
+    }
+
+    const customStart = request.nextUrl.searchParams.get('startDate') ?? undefined
+    const customEnd = request.nextUrl.searchParams.get('endDate') ?? undefined
+    const ranges = computeDateRanges(customStart, customEnd)
 
     const dateRanges = [{ startDate: ranges.current.startDate, endDate: ranges.current.endDate }]
     const prevDateRanges = [

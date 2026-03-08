@@ -67,9 +67,9 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 
 ---
 
-#### 🟡 V2 — Reviews + Video + Community
+#### 🟡 V2 — Reviews + Video + Analytics
 
-**Goal:** Automate review management, add video content, capture leads from Facebook groups.
+**Goal:** Automate review management, add video content, build unified analytics dashboard.
 
 **Scope:**
 
@@ -78,26 +78,28 @@ Five modules: SEO Command Center, AI Content Engine, Review Command Center, Comm
 - AI review response drafts
 - Remotion video generation (testimonial reels, project showcases, tip videos)
 - Veo 3.1 for cinematic hero content
-- Facebook group monitoring and posting (Brand24 + Graph API)
-- Lead intent classifier for community posts
-- Slack notifications for lead alerts
+- Unified analytics dashboard (GA4 + GSC data on dedicated /analytics page)
+- Keyword rank tracking with historical trends
+- Advanced reporting (traffic, content performance, SEO metrics)
 
-**Success Criteria:** Reviews monitored, 4+ videos/month auto-generated, community leads captured.
+**Success Criteria:** Reviews monitored, 4+ videos/month auto-generated, unified analytics dashboard live with keyword tracking.
 
 ---
 
-#### 🟣 Later — White-Label + Advanced Analytics + Marketplace
+#### 🟣 Later — White-Label + Community + Marketplace
 
-**Goal:** Multi-tenant admin for Rodas Consulting clients. Advanced reporting.
+**Goal:** Multi-tenant admin for Rodas Consulting clients. Community lead capture.
 
 **Scope:**
 
 - White-label admin panel (onboard new orgs, configure branding)
 - Billing integration (Stripe) for subscription management
-- Advanced analytics (competitor tracking, market share estimates)
-- Keyword rank tracking with historical trends
+- Facebook group monitoring and posting (Brand24 + Graph API)
+- Lead intent classifier for community posts
+- Slack notifications for lead alerts
 - A/B testing for content variations
 - Email marketing integration (Resend)
+- Competitor tracking and market share estimates
 - Custom report builder
 
 ---

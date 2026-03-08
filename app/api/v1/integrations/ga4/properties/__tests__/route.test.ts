@@ -16,8 +16,10 @@ vi.mock('@/lib/google/token-manager', () => ({
 }))
 
 const mockListAccountSummaries = vi.fn()
+const mockListDataStreams = vi.fn()
 vi.mock('@/lib/google/analytics', () => ({
   listAccountSummaries: mockListAccountSummaries,
+  listDataStreams: mockListDataStreams,
 }))
 
 describe('GET /api/v1/integrations/ga4/properties', () => {
@@ -25,7 +27,7 @@ describe('GET /api/v1/integrations/ga4/properties', () => {
     vi.clearAllMocks()
   })
 
-  it('returns flattened list of GA4 properties', async () => {
+  it('returns flattened list of GA4 properties with website URLs', async () => {
     mockListAccountSummaries.mockResolvedValueOnce([
       {
         name: 'accountSummaries/111',
@@ -48,6 +50,27 @@ describe('GET /api/v1/integrations/ga4/properties', () => {
       },
     ])
 
+    mockListDataStreams
+      .mockResolvedValueOnce([
+        {
+          name: 'properties/222/dataStreams/1',
+          type: 'WEB_DATA_STREAM',
+          displayName: 'Main Stream',
+          webStreamData: { measurementId: 'G-ABC', defaultUri: 'https://cleanestpainting.com' },
+        },
+      ])
+      .mockResolvedValueOnce([
+        {
+          name: 'properties/333/dataStreams/2',
+          type: 'WEB_DATA_STREAM',
+          displayName: 'Blog Stream',
+          webStreamData: {
+            measurementId: 'G-DEF',
+            defaultUri: 'https://blog.cleanestpainting.com',
+          },
+        },
+      ])
+
     const { GET } = await import('../route')
     const res = await GET()
     const json = await res.json()
@@ -57,12 +80,107 @@ describe('GET /api/v1/integrations/ga4/properties', () => {
       propertyId: 'properties/222',
       displayName: 'Main Site',
       accountName: 'Cleanest Painting',
+      websiteUrl: 'https://cleanestpainting.com',
     })
     expect(json.properties[1]).toEqual({
       propertyId: 'properties/333',
       displayName: 'Blog',
       accountName: 'Cleanest Painting',
+      websiteUrl: 'https://blog.cleanestpainting.com',
     })
+  })
+
+  it('filters out PROPERTY_TYPE_ROLLUP properties', async () => {
+    mockListAccountSummaries.mockResolvedValueOnce([
+      {
+        name: 'accountSummaries/111',
+        account: 'accounts/111',
+        displayName: 'Cleanest Painting',
+        propertySummaries: [
+          {
+            property: 'properties/222',
+            displayName: 'Main Site',
+            propertyType: 'PROPERTY_TYPE_ORDINARY',
+            parent: 'accounts/111',
+          },
+          {
+            property: 'properties/444',
+            displayName: 'Rollup Property',
+            propertyType: 'PROPERTY_TYPE_ROLLUP',
+            parent: 'accounts/111',
+          },
+        ],
+      },
+    ])
+
+    mockListDataStreams.mockResolvedValueOnce([])
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(json.properties).toHaveLength(1)
+    expect(json.properties[0].displayName).toBe('Main Site')
+    expect(mockListDataStreams).toHaveBeenCalledTimes(1)
+  })
+
+  it('returns websiteUrl null when no WEB data stream', async () => {
+    mockListAccountSummaries.mockResolvedValueOnce([
+      {
+        name: 'accountSummaries/111',
+        account: 'accounts/111',
+        displayName: 'Cleanest Painting',
+        propertySummaries: [
+          {
+            property: 'properties/222',
+            displayName: 'App Only',
+            propertyType: 'PROPERTY_TYPE_ORDINARY',
+            parent: 'accounts/111',
+          },
+        ],
+      },
+    ])
+
+    mockListDataStreams.mockResolvedValueOnce([
+      {
+        name: 'properties/222/dataStreams/1',
+        type: 'ANDROID_APP_DATA_STREAM',
+        displayName: 'Android App',
+      },
+    ])
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(json.properties[0].websiteUrl).toBeNull()
+  })
+
+  it('returns websiteUrl null when listDataStreams throws', async () => {
+    mockListAccountSummaries.mockResolvedValueOnce([
+      {
+        name: 'accountSummaries/111',
+        account: 'accounts/111',
+        displayName: 'Cleanest Painting',
+        propertySummaries: [
+          {
+            property: 'properties/222',
+            displayName: 'Main Site',
+            propertyType: 'PROPERTY_TYPE_ORDINARY',
+            parent: 'accounts/111',
+          },
+        ],
+      },
+    ])
+
+    mockListDataStreams.mockRejectedValueOnce(new Error('API error'))
+
+    const { GET } = await import('../route')
+    const res = await GET()
+    const json = await res.json()
+
+    expect(json.properties).toHaveLength(1)
+    expect(json.properties[0].websiteUrl).toBeNull()
   })
 
   it('returns empty array when no accounts', async () => {
