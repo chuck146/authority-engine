@@ -9,6 +9,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Pipeline B composite video (Veo + Remotion):** Five-step orchestration pipeline — Remotion intro → Veo 3.1 cinematic → Remotion outro → FFmpeg stitch → Supabase upload (~$1.50–$3.00/video)
+- **Composite worker:** BullMQ `composite-rendering` queue with concurrency=1, sub-step progress tracking (intro/veo/outro/stitch/upload), FFmpeg concat demuxer with h264/aac fallback, temp file cleanup (lib/queue/composite-worker.ts)
+- **Composite scheduler:** enqueueCompositeJob() with `composite-${orgId}-${timestamp}` job IDs, 2 retry attempts with exponential backoff, getCompositeJobStatus() with compositeStep detail (lib/queue/composite-scheduler.ts)
+- **Composite video type:** `composite_reel` added to Zod discriminated union with generateCompositeRequestSchema (types/video.ts)
+- **CompositeJobStep type:** `'intro' | 'veo' | 'outro' | 'stitch' | 'upload'` with CompositeJobProgress (currentStep, stepLabel, overallProgress) (types/video.ts)
+- **Engine selector extended:** Three-way toggle (Remotion / Veo / Composite) with composite-specific fields — scene description, audio mood, CTA text/URL, includeIntro/includeOutro/useStartingFrame checkboxes (components/video/video-generate-form.tsx)
+- **Composite status UI:** Five-step progress indicator (Intro → Cinematic → Outro → Stitch → Upload) with active step highlighting, step labels from compositeStep, 5–10 min estimate (components/video/video-generation-status.tsx)
+- **Composite test suite:** 74 new tests across 5 files — scheduler (13), generate API (16), status API (10), generate form (19), generation status (16) (tests/queue/, tests/api/, tests/components/)
 - **Remotion integration (Tier 1 programmatic video):** Full branded motion graphics pipeline alongside Veo 3.1 — Pipeline A from video guidelines (~$0.05–$0.15/video)
 - **Remotion project (services/video/):** Isolated React composition project with tsconfig, registerRoot, 4 Composition definitions with Zod-validated props
 - **Remotion compositions (4):** TestimonialQuote (6s, quote + stars + CTA), TipVideo (10s, numbered tips with kinetic text), BeforeAfterReveal (8s, wipe transition), BrandedIntroOutro (3s, intro/outro mode) — all 1080×1920 @ 30fps
@@ -17,7 +25,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Remotion font system:** DM Sans + Montserrat via @remotion/google-fonts (services/video/src/lib/fonts.ts)
 - **Remotion BullMQ worker:** remotion-rendering queue with bundle caching, bundle() → selectComposition() → renderMedia() → Supabase upload → DB insert (lib/queue/remotion-worker.ts)
 - **Remotion scheduler:** enqueueRemotionJob() + getRemotionJobStatus() (lib/queue/remotion-scheduler.ts)
-- **VideoEngine enum:** veo | remotion — engine discrimination via video type value (types/video.ts)
+- **VideoEngine enum:** veo | remotion | composite — engine discrimination via video type value (types/video.ts)
 - **5 Remotion video types:** testimonial_quote, tip_video, before_after_reveal, branded_intro, branded_outro with Zod input schemas and isRemotionVideoType() helper (types/video.ts)
 - **Engine routing in generate API:** isRemotionVideoType() → Remotion schema validation → mapToRemotionComposition() → enqueueRemotionJob(); Veo path unchanged (app/api/v1/video/generate/route.ts)
 - **Dual-queue status polling:** Status route checks both remotion-rendering and video-generation queues with prefix-based routing and fallback (app/api/v1/video/[id]/status/route.ts)
@@ -57,12 +65,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **GA4 types:** Added Ga4WebStreamData and Ga4DataStream types (types/ga4.ts)
 - **GA4 property selector UI:** Dropdown now displays website URL alongside property name for easier identification (components/settings/ga4-property-selector.tsx)
 - **GA4 overview API:** Added optional startDate/endDate query params for date range filtering (backward-compatible) (app/api/v1/ga4/overview/route.ts)
-- **Video generate API refactored:** Engine routing — Remotion types validated with Remotion Zod schema, mapped to composition IDs; Veo types unchanged (app/api/v1/video/generate/route.ts)
-- **Video status API refactored:** Dual-queue polling with prefix-based routing (remotion-* → remotion queue first, else Veo first, with fallback) (app/api/v1/video/[id]/status/route.ts)
+- **Video generate API refactored:** Three-way engine routing — composite_reel → composite queue, Remotion types → remotion queue, Veo types → video queue; each with Zod schema validation (app/api/v1/video/generate/route.ts)
+- **Video status API refactored:** Tri-queue polling with prefix-based routing (composite-* → composite queue, remotion-* → remotion queue, else Veo; with fallback). Composite jobs include compositeStep in response (app/api/v1/video/[id]/status/route.ts)
 - **Video list API:** Added engine query param filter + engine field in response items (app/api/v1/video/route.ts)
 - **Video generator pipeline:** Scoped to Veo only (GenerateVeoRequest), added engine: 'veo' to metadata (lib/ai/video-generator.ts)
 - **Video worker + scheduler:** Scoped to Veo only (GenerateVeoRequest) (lib/queue/video-worker.ts, lib/queue/video-scheduler.ts)
-- **Test suite expanded:** 974+ tests across 135+ files (all existing tests updated for Remotion engine field)
+- **Video list API:** Added engine=composite filter alongside remotion|veo (app/api/v1/video/route.ts)
+- **Worker registration:** createCompositeWorker() registered in lib/worker.ts with event handlers and shutdown handling (8 workers total)
+- **Test suite expanded:** 1029+ tests across 140+ files (74 new composite tests, all existing tests passing)
 
 ---
 

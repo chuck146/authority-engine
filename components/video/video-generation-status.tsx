@@ -58,27 +58,55 @@ export function VideoGenerationStatus({ jobId, onComplete, onError }: VideoGener
   }, [jobId, onComplete, onError])
 
   const progress = status?.progress ?? 0
+  const isComposite = jobId.startsWith('composite-')
+  const compositeStep = status?.compositeStep
+
   const statusLabel =
-    status?.status === 'processing'
-      ? 'Generating video...'
-      : status?.status === 'queued'
-        ? 'Waiting in queue...'
-        : 'Starting...'
+    isComposite && compositeStep
+      ? compositeStep.stepLabel
+      : status?.status === 'processing'
+        ? 'Generating video...'
+        : status?.status === 'queued'
+          ? 'Waiting in queue...'
+          : 'Starting...'
+
+  const timeEstimate = isComposite
+    ? 'Composite pipeline typically takes 5-10 minutes. You can navigate away and come back.'
+    : 'Video generation typically takes 2-5 minutes. You can navigate away and come back.'
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Loader2 className="h-5 w-5 animate-spin" />
-          Video Generation In Progress
+          {isComposite ? 'Composite Pipeline In Progress' : 'Video Generation In Progress'}
         </CardTitle>
         <CardDescription>{statusLabel}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Progress value={progress} />
-        <p className="text-muted-foreground text-sm">
-          Video generation typically takes 2-5 minutes. You can navigate away and come back.
-        </p>
+        {isComposite && compositeStep && (
+          <div className="flex gap-2 text-xs">
+            {(['intro', 'veo', 'outro', 'stitch', 'upload'] as const).map((step) => (
+              <span
+                key={step}
+                className={
+                  compositeStep.currentStep === step
+                    ? 'text-primary font-medium'
+                    : 'text-muted-foreground'
+                }
+              >
+                {step === 'intro' && 'Intro'}
+                {step === 'veo' && 'Cinematic'}
+                {step === 'outro' && 'Outro'}
+                {step === 'stitch' && 'Stitch'}
+                {step === 'upload' && 'Upload'}
+                {compositeStep.currentStep === step && ' ...'}
+              </span>
+            ))}
+          </div>
+        )}
+        <p className="text-muted-foreground text-sm">{timeEstimate}</p>
       </CardContent>
     </Card>
   )

@@ -8,6 +8,7 @@ import { scheduleDailyGbpSync } from './queue/gbp-scheduler'
 import { createSmsWorker } from './queue/sms-worker'
 import { createVideoWorker } from './queue/video-worker'
 import { createRemotionWorker } from './queue/remotion-worker'
+import { createCompositeWorker } from './queue/composite-worker'
 
 const publishWorker = createPublishWorker()
 const gscSyncWorker = createGscSyncWorker()
@@ -16,6 +17,7 @@ const gbpSyncWorker = createGbpSyncWorker()
 const smsWorker = createSmsWorker()
 const videoWorker = createVideoWorker()
 const remotionWorker = createRemotionWorker()
+const compositeWorker = createCompositeWorker()
 
 publishWorker.on('completed', (job) => {
   console.warn(`[worker] Publish job ${job.id} completed`)
@@ -64,6 +66,7 @@ console.warn('[worker] GBP sync worker started')
 console.warn('[worker] SMS send worker started')
 console.warn('[worker] Video generation worker started')
 console.warn('[worker] Remotion rendering worker started')
+console.warn('[worker] Composite rendering worker started')
 
 videoWorker.on('completed', (job) => {
   console.warn(`[worker] Video job ${job.id} completed`)
@@ -79,6 +82,14 @@ remotionWorker.on('completed', (job) => {
 
 remotionWorker.on('failed', (job, error) => {
   console.error(`[worker] Remotion job ${job?.id} failed:`, error.message)
+})
+
+compositeWorker.on('completed', (job) => {
+  console.warn(`[worker] Composite job ${job.id} completed`)
+})
+
+compositeWorker.on('failed', (job, error) => {
+  console.error(`[worker] Composite job ${job?.id} failed:`, error.message)
 })
 
 // Schedule daily syncs for all active connections
@@ -104,6 +115,7 @@ function shutdown() {
     smsWorker.close(),
     videoWorker.close(),
     remotionWorker.close(),
+    compositeWorker.close(),
   ]).then(() => process.exit(0))
 }
 

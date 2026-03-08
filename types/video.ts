@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // --- Video Engine Discriminator ---
 
-export const videoEngineSchema = z.enum(['veo', 'remotion'])
+export const videoEngineSchema = z.enum(['veo', 'remotion', 'composite'])
 export type VideoEngine = z.infer<typeof videoEngineSchema>
 
 // --- Video Type Discriminator ---
@@ -19,6 +19,8 @@ export const videoTypeSchema = z.enum([
   'before_after_reveal',
   'branded_intro',
   'branded_outro',
+  // Composite types (Pipeline B: Veo + Remotion)
+  'composite_reel',
 ])
 export type VideoType = z.infer<typeof videoTypeSchema>
 
@@ -88,12 +90,16 @@ export const testimonialQuoteInputSchema = z.object({
   quote: z.string().min(5).max(500),
   customerName: z.string().min(1).max(100),
   starRating: z.number().min(1).max(5).optional(),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
 })
 
 export const tipVideoInputSchema = z.object({
   videoType: z.literal('tip_video'),
   title: z.string().min(3).max(200),
   tips: z.array(remotionTipItemSchema).min(1).max(7),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
 })
 
 export const beforeAfterRevealInputSchema = z.object({
@@ -101,16 +107,22 @@ export const beforeAfterRevealInputSchema = z.object({
   beforeImageUrl: z.string().url(),
   afterImageUrl: z.string().url(),
   location: z.string().max(200).optional(),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
 })
 
 export const brandedIntroInputSchema = z.object({
   videoType: z.literal('branded_intro'),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
 })
 
 export const brandedOutroInputSchema = z.object({
   videoType: z.literal('branded_outro'),
   ctaText: z.string().max(100).optional(),
   ctaUrl: z.string().max(200).optional(),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
 })
 
 export const generateRemotionRequestSchema = z.discriminatedUnion('videoType', [
@@ -121,11 +133,30 @@ export const generateRemotionRequestSchema = z.discriminatedUnion('videoType', [
   brandedOutroInputSchema,
 ])
 
+// --- Composite Pipeline B Input Schema ---
+
+export const compositeReelInputSchema = z.object({
+  videoType: z.literal('composite_reel'),
+  sceneDescription: z.string().min(10).max(1000),
+  audioMood: z.string().min(3).max(200),
+  model: veoModelSchema,
+  includeIntro: z.boolean().default(true),
+  includeOutro: z.boolean().default(true),
+  ctaText: z.string().max(100).optional(),
+  ctaUrl: z.string().max(200).optional(),
+  useStartingFrame: z.boolean().default(true),
+  headingFont: z.string().optional(),
+  bodyFont: z.string().optional(),
+})
+
+export const generateCompositeRequestSchema = compositeReelInputSchema
+
 // --- Combined Request Schema (engine-aware) ---
 
 export const generateVideoRequestSchema = z.union([
   generateVeoRequestSchema,
   generateRemotionRequestSchema,
+  generateCompositeRequestSchema,
 ])
 
 export type CinematicReelInput = z.infer<typeof cinematicReelInputSchema>
@@ -140,6 +171,9 @@ export type BeforeAfterRevealInput = z.infer<typeof beforeAfterRevealInputSchema
 export type BrandedIntroInput = z.infer<typeof brandedIntroInputSchema>
 export type BrandedOutroInput = z.infer<typeof brandedOutroInputSchema>
 export type GenerateRemotionRequest = z.infer<typeof generateRemotionRequestSchema>
+
+export type CompositeReelInput = z.infer<typeof compositeReelInputSchema>
+export type GenerateCompositeRequest = z.infer<typeof generateCompositeRequestSchema>
 
 export type GenerateVideoRequest = z.infer<typeof generateVideoRequestSchema>
 
@@ -166,6 +200,22 @@ export function isRemotionVideoType(type: string): boolean {
 
 export function isVeoVideoType(type: string): boolean {
   return (VEO_VIDEO_TYPES as readonly string[]).includes(type)
+}
+
+export const COMPOSITE_VIDEO_TYPES = ['composite_reel'] as const
+
+export function isCompositeVideoType(type: string): boolean {
+  return (COMPOSITE_VIDEO_TYPES as readonly string[]).includes(type)
+}
+
+// --- Composite Job Sub-Step Progress ---
+
+export type CompositeJobStep = 'intro' | 'veo' | 'outro' | 'stitch' | 'upload'
+
+export type CompositeJobProgress = {
+  currentStep: CompositeJobStep
+  stepLabel: string
+  overallProgress: number
 }
 
 // --- API Response ---
@@ -203,4 +253,5 @@ export type VideoJobStatus = {
   progress: number | null
   result: GenerateVideoResponse | null
   error: string | null
+  compositeStep?: CompositeJobProgress | null
 }

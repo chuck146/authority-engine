@@ -692,6 +692,25 @@ export function buildVideoJobStatus(overrides?: Partial<VideoJobStatus>): VideoJ
   }
 }
 
+// --- Composite Pipeline Factories ---
+
+export function buildCompositeJobData() {
+  return {
+    orgId: 'org-456',
+    userId: 'user-123',
+    sceneDescription: 'A freshly painted living room with warm afternoon light',
+    audioMood: 'Warm, uplifting orchestral',
+    model: 'veo-3.1-fast-generate-preview',
+    includeIntro: true,
+    includeOutro: true,
+    ctaText: 'Get Your Free Estimate',
+    ctaUrl: 'cleanestpainting.com',
+    useStartingFrame: true,
+    orgContext: buildOrgContext(),
+    branding: { primary: '#1B2B5B', secondary: '#fbbf24', accent: '#1e3a5f' } as OrgBranding,
+  }
+}
+
 // --- Analytics Factories ---
 
 export function buildKeywordRankingListItem(

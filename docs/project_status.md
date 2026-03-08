@@ -10,7 +10,7 @@ _Last Updated: March 2026_
 | --------------------------------------- | -------------- | -------------- | -------- |
 | 🟢 MVP — Content Generator + Auth + DB  | ✅ Complete    | April 2026     | 100%     |
 | 🔵 V1 — SEO Scoring + Images + Calendar | ✅ Complete    | June 2026      | 100%     |
-| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 85%      |
+| 🟡 V2 — Reviews + Video + Analytics     | 🔄 In Progress | September 2026 | 90%      |
 | 🟣 Later — White-Label + Community      | 🔲 Not Started | TBD            | 0%       |
 
 ---
@@ -205,9 +205,24 @@ _Last Updated: March 2026_
 - [x] Dependencies: 6 Remotion packages + dev:remotion script added to package.json
 - [x] Test suite: 974/974 passing (all existing tests updated for new engine field)
 
+**Phase G: Pipeline B — Composite Video (Veo + Remotion)** ✅
+
+- [x] Composite worker: BullMQ `composite-rendering` queue with concurrency=1, five-step orchestration (intro → veo → outro → stitch → upload), FFmpeg concat demuxer with h264/aac fallback, temp file cleanup (lib/queue/composite-worker.ts)
+- [x] Composite scheduler: enqueueCompositeJob() with `composite-${orgId}-${timestamp}` job IDs, 2 retry attempts with exponential backoff, getCompositeJobStatus() with compositeStep detail (lib/queue/composite-scheduler.ts)
+- [x] Composite video type: `composite_reel` added to Zod discriminated union with generateCompositeRequestSchema (types/video.ts)
+- [x] VideoEngine extended: `'veo' | 'remotion' | 'composite'` with isCompositeVideoType(), isVeoVideoType() helpers (types/video.ts)
+- [x] CompositeJobStep + CompositeJobProgress types for sub-step tracking (types/video.ts)
+- [x] Generate API: three-way engine routing — composite_reel → composite queue, Remotion types → remotion queue, Veo types → video queue (app/api/v1/video/generate/route.ts)
+- [x] Status API: tri-queue polling with prefix-based routing (composite-* prefix), compositeStep in response (app/api/v1/video/[id]/status/route.ts)
+- [x] Engine selector UI: three-way toggle (Remotion / Veo / Composite) with composite-specific fields — scene description, audio mood, CTA, includeIntro/includeOutro/useStartingFrame checkboxes (components/video/video-generate-form.tsx)
+- [x] Composite status UI: five-step progress indicator with active step highlighting, step labels, 5–10 min estimate (components/video/video-generation-status.tsx)
+- [x] Worker registration: createCompositeWorker() registered in lib/worker.ts (8 workers total)
+- [x] Test suite: 74 new tests across 5 files (1029+ total, up from 974)
+
 ### What's Next
 
-1. Veo + Remotion composite pipeline (Pipeline B) — chain Veo cinematic clips with Remotion branded intros/outros
+1. Pipeline C — Full Premium (Claude script → Nano Banana key frames → Veo Standard → Remotion final edit)
+2. V2 completion — remaining integration testing and polish
 
 ### Blockers
 

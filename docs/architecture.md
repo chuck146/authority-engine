@@ -220,6 +220,51 @@ Post marked "published" → ready for manual copy to platform
 
 ---
 
+## Data Flow: Composite Video (Pipeline B)
+
+```
+User selects "Composite" engine on Video → Generate tab
+    │ Configures: scene description, audio mood, CTA, intro/outro toggles
+    │ POST /api/v1/video/generate
+    ▼
+API Route (auth → org scope → Zod validation → isCompositeVideoType())
+    │ enqueueCompositeJob() → composite-rendering queue
+    │ Returns 202 { jobId: "composite-{orgId}-{ts}", engine: "composite" }
+    ▼
+Composite Worker: 5-step orchestration (concurrency=1)
+    │
+    ├─► Step 1: INTRO (5% progress)
+    │   Remotion bundle() → renderMedia() BrandedIntroOutro (3s, intro mode)
+    │   → temp file: /tmp/intro-{jobId}.mp4
+    │
+    ├─► Step 2: VEO (60% progress)
+    │   Veo 3.1 Fast: scene description + audio mood → 8s cinematic clip
+    │   Optional: Nano Banana 2 starting frame → Veo handoff
+    │   → temp file: /tmp/veo-{jobId}.mp4
+    │
+    ├─► Step 3: OUTRO (75% progress)
+    │   Remotion renderMedia() BrandedIntroOutro (3s, outro mode + CTA)
+    │   → temp file: /tmp/outro-{jobId}.mp4
+    │
+    ├─► Step 4: STITCH (88% progress)
+    │   FFmpeg concat demuxer: intro + veo + outro
+    │   Stream copy first, h264/aac re-encode fallback
+    │   → temp file: /tmp/composite-{jobId}.mp4
+    │
+    ├─► Step 5: UPLOAD (100% progress)
+    │   Supabase Storage: uploadVideo() → media_assets DB insert
+    │   Temp files cleaned up
+    │
+    ▼
+Status polling: GET /api/v1/video/{jobId}/status
+    │ Prefix-based routing: composite-* → composite-rendering queue
+    │ Response includes compositeStep: { currentStep, stepLabel, overallProgress }
+    ▼
+Video library: composite_reel with engine badge
+```
+
+---
+
 ## Integration Adapters
 
 | Category      | Interface             | Implementations                                            |
@@ -237,13 +282,14 @@ Factory pattern: `CRMAdapterFactory.create(org.crmType)`
 
 ## AI Stack
 
-| Engine               | Provider  | Model                         | Use                               |
-| -------------------- | --------- | ----------------------------- | --------------------------------- |
-| Text                 | Anthropic | claude-sonnet-4-5             | Content gen, SEO analysis         |
-| Text (complex)       | Anthropic | claude-opus-4-6               | Deep analysis only                |
-| Images               | Google    | gemini-3.1-flash-image        | Graphics, thumbnails, heroes      |
-| Video (programmatic) | Remotion  | React compositions            | Branded reels, tips, testimonials |
-| Video (cinematic)    | Google    | veo-3.1-fast-generate-preview | Hero content, ads                 |
+| Engine               | Provider  | Model                         | Use                                    |
+| -------------------- | --------- | ----------------------------- | -------------------------------------- |
+| Text                 | Anthropic | claude-sonnet-4-5             | Content gen, SEO analysis              |
+| Text (complex)       | Anthropic | claude-opus-4-6               | Deep analysis only                     |
+| Images               | Google    | gemini-3.1-flash-image        | Graphics, thumbnails, heroes           |
+| Video (programmatic) | Remotion  | React compositions            | Branded reels, tips, testimonials      |
+| Video (cinematic)    | Google    | veo-3.1-fast-generate-preview | Hero content, ads                      |
+| Video (composite)    | Multi     | Remotion + Veo + FFmpeg       | Branded intro/outro + cinematic center |
 
 See @docs/video-guidelines.md for full decision logic and combination pipelines.
 

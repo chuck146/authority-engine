@@ -4,10 +4,13 @@ import { createClient } from '@/lib/supabase/server'
 import {
   generateVeoRequestSchema,
   generateRemotionRequestSchema,
+  generateCompositeRequestSchema,
   isRemotionVideoType,
+  isCompositeVideoType,
 } from '@/types/video'
 import { enqueueVideoJob } from '@/lib/queue/video-scheduler'
 import { enqueueRemotionJob } from '@/lib/queue/remotion-scheduler'
+import { enqueueCompositeJob } from '@/lib/queue/composite-scheduler'
 import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { OrgBranding } from '@/types'
 import type { CompositionId } from '@/services/video/src/types'
@@ -48,7 +51,36 @@ export async function POST(request: Request) {
     }
 
     // Route to correct engine based on videoType
-    if (isRemotionVideoType(videoType)) {
+    if (isCompositeVideoType(videoType)) {
+      // --- Composite engine (Pipeline B: Veo + Remotion) ---
+      const parseResult = generateCompositeRequestSchema.safeParse(body)
+      if (!parseResult.success) {
+        return NextResponse.json(
+          { error: 'Invalid request', details: parseResult.error.flatten().fieldErrors },
+          { status: 400 },
+        )
+      }
+
+      const input = parseResult.data
+      const jobId = await enqueueCompositeJob({
+        orgId: auth.organizationId,
+        userId: auth.userId,
+        sceneDescription: input.sceneDescription,
+        audioMood: input.audioMood,
+        model: input.model,
+        includeIntro: input.includeIntro,
+        includeOutro: input.includeOutro,
+        ctaText: input.ctaText,
+        ctaUrl: input.ctaUrl,
+        useStartingFrame: input.useStartingFrame,
+        orgContext,
+        branding,
+        headingFont: input.headingFont,
+        bodyFont: input.bodyFont,
+      })
+
+      return NextResponse.json({ jobId, status: 'queued', engine: 'composite' }, { status: 202 })
+    } else if (isRemotionVideoType(videoType)) {
       // --- Remotion engine ---
       const parseResult = generateRemotionRequestSchema.safeParse(body)
       if (!parseResult.success) {
@@ -110,6 +142,8 @@ function mapToRemotionComposition(
     primaryColor: branding?.primary ?? '#1B2B5B',
     secondaryColor: branding?.secondary ?? '#fbbf24',
     accentColor: branding?.accent ?? '#1e3a5f',
+    headingFont: (input.headingFont as string) || 'Montserrat',
+    bodyFont: (input.bodyFont as string) || 'DMSans',
   }
 
   switch (input.videoType) {

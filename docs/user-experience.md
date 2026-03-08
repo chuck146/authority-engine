@@ -421,7 +421,7 @@ Same lifecycle as content: review → approved → published → archived. Posts
 
 **Route:** `/video`
 
-Generate videos using two engines: **Remotion** (programmatic motion graphics) and **Veo 3.1** (cinematic AI video).
+Generate videos using three engines: **Remotion** (programmatic motion graphics), **Veo 3.1** (cinematic AI video), and **Composite** (Remotion + Veo combined pipeline).
 
 ### Tab Navigation
 
@@ -437,6 +437,7 @@ The generate form starts with an engine selector:
 
 - **Remotion** — branded motion graphics, text animations, data-driven video. Fast, low-cost (~$0.05–$0.15/video). Best for recurring social content.
 - **Veo 3.1** — cinematic AI-generated video with synchronized audio. Higher cost ($0.15–$0.40/sec). Best for hero content and portfolio pieces.
+- **Composite** — chains a Remotion branded intro with a Veo 3.1 cinematic center clip and a Remotion branded outro, stitched together via FFmpeg (~$1.50–$3.00/video). Best for monthly project showcases, seasonal promos, and transformation reels.
 
 The video type dropdown updates based on the selected engine.
 
@@ -471,13 +472,32 @@ Veo form fields:
 3. **Fill type-specific fields** (topic, style, details vary per video type)
 4. **Optional:** Generate a starting frame via Nano Banana 2 for visual anchoring
 
+### Composite Video Type
+
+One video type available when the Composite engine is selected:
+
+- **Composite Reel** — branded intro (3s) + cinematic Veo 3.1 center clip (8s) + branded outro with CTA (3s), stitched into a single MP4
+
+Composite form fields:
+
+- **Scene description** (textarea) — describes the cinematic center clip for Veo generation
+- **Audio mood** — mood/style directive for Veo's synchronized audio (e.g., "warm and inspiring", "energetic")
+- **CTA text and URL** (optional) — displayed in the Remotion outro overlay
+- **Include Intro** (checkbox, default checked) — renders a branded Remotion intro before the cinematic clip
+- **Include Outro** (checkbox, default checked) — renders a branded Remotion outro with CTA after the cinematic clip
+- **Use Starting Frame** (checkbox, default checked) — generates a Nano Banana 2 image as the visual anchor for the Veo clip
+
 ### Generation Process
 
 Clicking "Generate" queues a background job via BullMQ:
 - **Remotion jobs** go to the `remotion-rendering` queue — bundles the React composition, renders to MP4, uploads to Supabase Storage
 - **Veo jobs** go to the `video-generation` queue — calls Veo API with polling, downloads result, uploads to storage
+- **Composite jobs** go to the `composite-rendering` queue — orchestrates five steps: Remotion intro render → Veo cinematic generation → Remotion outro render → FFmpeg stitch → Supabase upload
 
-Generation takes 30 seconds–5 minutes depending on engine and complexity. The Status tab shows real-time progress with a progress bar.
+Generation takes 30 seconds–5 minutes for Remotion and Veo jobs. Composite jobs take 5–10 minutes due to the multi-step pipeline. The Status tab shows real-time progress:
+
+- **Remotion and Veo:** a progress bar with percentage
+- **Composite:** a five-step progress indicator (**Intro → Cinematic → Outro → Stitch → Upload**) with the active step highlighted and a label describing the current operation
 
 ### Video Library Grid
 
@@ -485,12 +505,12 @@ Grid display of generated videos showing:
 
 - Video thumbnail/preview
 - Video type badge
-- **Engine badge** ("Remotion" or "Veo") for quick identification
+- **Engine badge** ("Remotion", "Veo", or "Composite") for quick identification
 - Model used (Fast/Standard — Veo only)
 - Duration and file size
 - Creation date
 
-Users can filter by engine using a query parameter.
+Users can filter by engine (`?engine=remotion|veo|composite`) using a query parameter.
 
 Clicking a video opens the detail sheet.
 
