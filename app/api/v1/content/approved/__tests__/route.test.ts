@@ -17,6 +17,7 @@ vi.mock('@/lib/auth/api-guard', async (importActual) => {
 // Mock Supabase
 const mockSelect = vi.fn()
 const mockEq = vi.fn()
+const mockLike = vi.fn()
 const mockOrder = vi.fn()
 const mockLimit = vi.fn()
 const mockReturns = vi.fn()
@@ -118,5 +119,52 @@ describe('GET /api/v1/content/approved', () => {
     const res = await GET(req)
 
     expect(res.status).toBe(401)
+  })
+
+  it('returns videos from media_assets for type=video', async () => {
+    // Video path uses: select → eq(org) → like(mime) → order → limit → returns
+    // Clear stale beforeEach chain setup
+    mockEq.mockReset()
+    mockSelect.mockReturnValue({ eq: mockEq })
+    mockEq.mockReturnValueOnce({ like: mockLike })
+    mockLike.mockReturnValue({ order: mockOrder })
+    mockOrder.mockReturnValue({ limit: mockLimit })
+    mockLimit.mockReturnValue({ returns: mockReturns })
+    mockReturns.mockResolvedValue({
+      data: [
+        { id: 'vid-1', filename: 'cinematic_reel-org-123.mp4' },
+        { id: 'vid-2', filename: 'testimonial_quote-org-123.mp4' },
+      ],
+      error: null,
+    })
+
+    const { GET } = await import('../route')
+    const req = new NextRequest('http://localhost/api/v1/content/approved?type=video')
+    const res = await GET(req)
+
+    expect(res.status).toBe(200)
+    const data = await res.json()
+    expect(data).toEqual([
+      { id: 'vid-1', title: 'cinematic_reel-org-123.mp4' },
+      { id: 'vid-2', title: 'testimonial_quote-org-123.mp4' },
+    ])
+  })
+
+  it('returns empty array when no videos exist', async () => {
+    mockEq.mockReset()
+    mockSelect.mockReturnValue({ eq: mockEq })
+    mockEq.mockReturnValueOnce({ like: mockLike })
+    mockLike.mockReturnValue({ order: mockOrder })
+    mockOrder.mockReturnValue({ limit: mockLimit })
+    mockLimit.mockReturnValue({ returns: mockReturns })
+    mockReturns.mockResolvedValue({ data: [], error: null })
+
+    const { GET } = await import('../route')
+    const req = new NextRequest('http://localhost/api/v1/content/approved?type=video')
+    const res = await GET(req)
+
+    expect(res.status).toBe(200)
+    const data = await res.json()
+    expect(data).toEqual([])
   })
 })

@@ -51,6 +51,7 @@ import type {
   KeywordTrendPoint,
   AnalyticsOverview,
   KeywordSummary,
+  ContentPerformanceItem,
 } from '@/types/analytics'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
@@ -840,6 +841,28 @@ export function buildAnalyticsOverview(overrides?: Partial<AnalyticsOverview>): 
       positionTrend: -5,
     },
     keywords: buildKeywordSummary(),
+    ...overrides,
+  }
+}
+
+export function buildContentPerformanceItem(
+  overrides?: Partial<ContentPerformanceItem>,
+): ContentPerformanceItem {
+  return {
+    id: 'sp-001',
+    title: 'Interior Painting Services',
+    slug: 'interior-painting',
+    contentType: 'service_page',
+    seoScore: 82,
+    publishedAt: '2026-02-15T10:00:00Z',
+    sessions: 450,
+    users: 380,
+    pageviews: 620,
+    bounceRate: 0.42,
+    avgSessionDuration: 125,
+    engagementRate: 0.58,
+    topKeyword: 'interior painting nj',
+    keywordCount: 12,
     ...overrides,
   }
 }

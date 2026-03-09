@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Trash2, Download } from 'lucide-react'
+import { Trash2, Download, CalendarClock } from 'lucide-react'
 import { VIDEO_TYPE_LABELS } from './video-generate-form'
 import type { VideoLibraryItem } from '@/types/video'
 
@@ -18,9 +18,10 @@ type VideoDetailSheetProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   onDelete: (id: string) => void
+  onSchedule?: (item: VideoLibraryItem) => void
 }
 
-export function VideoDetailSheet({ item, open, onOpenChange, onDelete }: VideoDetailSheetProps) {
+export function VideoDetailSheet({ item, open, onOpenChange, onDelete, onSchedule }: VideoDetailSheetProps) {
   if (!item) return null
 
   return (
@@ -86,6 +87,16 @@ export function VideoDetailSheet({ item, open, onOpenChange, onDelete }: VideoDe
                 Download
               </a>
             </Button>
+            {onSchedule && (
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Schedule video"
+                onClick={() => onSchedule(item)}
+              >
+                <CalendarClock className="h-4 w-4" />
+              </Button>
+            )}
             <Button variant="destructive" size="icon" onClick={() => onDelete(item.id)}>
               <Trash2 className="h-4 w-4" />
             </Button>

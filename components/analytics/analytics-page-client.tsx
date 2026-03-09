@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DateRangePicker } from './date-range-picker'
 import { KeywordRankingsTable } from './keyword-rankings-table'
+import { ContentPerformanceTable } from './content-performance-table'
 import { Ga4OverviewCards } from '@/components/seo/ga4-overview-cards'
 import { GscTopQueries } from '@/components/seo/gsc-top-queries'
 import { GscTopPages } from '@/components/seo/gsc-top-pages'
@@ -307,6 +308,7 @@ function AnalyticsPageInner() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="keywords">Keywords</TabsTrigger>
           <TabsTrigger value="search-performance">Search Performance</TabsTrigger>
+          <TabsTrigger value="content-performance">Content Performance</TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
           <OverviewTab />
@@ -316,6 +318,9 @@ function AnalyticsPageInner() {
         </TabsContent>
         <TabsContent value="search-performance">
           <SearchPerformanceTab />
+        </TabsContent>
+        <TabsContent value="content-performance">
+          <ContentPerformanceTable />
         </TabsContent>
       </Tabs>
     </div>

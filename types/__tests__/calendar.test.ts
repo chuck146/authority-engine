@@ -12,7 +12,7 @@ describe('scheduleContentSchema', () => {
   })
 
   it('accepts all content types', () => {
-    for (const type of ['service_page', 'location_page', 'blog_post']) {
+    for (const type of ['service_page', 'location_page', 'blog_post', 'social_post', 'video']) {
       const result = scheduleContentSchema.safeParse({
         contentType: type,
         contentId: '00000000-0000-0000-0000-000000000001',
@@ -20,6 +20,15 @@ describe('scheduleContentSchema', () => {
       })
       expect(result.success).toBe(true)
     }
+  })
+
+  it('accepts video content type', () => {
+    const result = scheduleContentSchema.safeParse({
+      contentType: 'video',
+      contentId: '00000000-0000-0000-0000-000000000001',
+      scheduledAt: '2026-04-01T10:00:00Z',
+    })
+    expect(result.success).toBe(true)
   })
 
   it('rejects invalid content type', () => {

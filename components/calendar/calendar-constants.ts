@@ -21,6 +21,7 @@ export const contentTypeLabels: Record<CalendarContentType, string> = {
   location_page: 'Location',
   blog_post: 'Blog',
   social_post: 'Social',
+  video: 'Video',
 }
 
 export const contentTypeFullLabels: Record<CalendarContentType, string> = {
@@ -28,6 +29,7 @@ export const contentTypeFullLabels: Record<CalendarContentType, string> = {
   location_page: 'Location Page',
   blog_post: 'Blog Post',
   social_post: 'Social Post',
+  video: 'Video',
 }
 
 export const contentTypeBorderColors: Record<CalendarContentType, string> = {
@@ -35,6 +37,7 @@ export const contentTypeBorderColors: Record<CalendarContentType, string> = {
   location_page: 'border-l-emerald-500',
   blog_post: 'border-l-purple-500',
   social_post: 'border-l-orange-500',
+  video: 'border-l-pink-500',
 }
 
 export const ALL_CALENDAR_STATUSES: CalendarStatus[] = [
@@ -50,4 +53,5 @@ export const ALL_CONTENT_TYPES: CalendarContentType[] = [
   'location_page',
   'blog_post',
   'social_post',
+  'video',
 ]

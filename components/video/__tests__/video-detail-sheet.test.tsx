@@ -65,4 +65,43 @@ describe('VideoDetailSheet', () => {
 
     expect(screen.getByText('Download')).toBeDefined()
   })
+
+  it('renders schedule button when onSchedule is provided', () => {
+    const onSchedule = vi.fn()
+    const item = buildVideoLibraryItem()
+
+    render(
+      <VideoDetailSheet
+        item={item}
+        open={true}
+        onOpenChange={vi.fn()}
+        onDelete={vi.fn()}
+        onSchedule={onSchedule}
+      />,
+    )
+
+    // Schedule button should be present (CalendarClock icon button)
+    const buttons = screen.getAllByRole('button')
+    // Should have 3 buttons: download (link), schedule, delete
+    expect(buttons.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('calls onSchedule when schedule button clicked', () => {
+    const onSchedule = vi.fn()
+    const item = buildVideoLibraryItem()
+
+    render(
+      <VideoDetailSheet
+        item={item}
+        open={true}
+        onOpenChange={vi.fn()}
+        onDelete={vi.fn()}
+        onSchedule={onSchedule}
+      />,
+    )
+
+    const scheduleBtn = screen.getByLabelText('Schedule video')
+    fireEvent.click(scheduleBtn)
+    expect(onSchedule).toHaveBeenCalledWith(item)
+  })
 })

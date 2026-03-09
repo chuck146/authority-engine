@@ -178,4 +178,56 @@ describe('POST /api/v1/calendar', () => {
     const res = await POST(req)
     expect(res.status).toBe(400)
   })
+
+  it('schedules video without approval check', async () => {
+    const futureDate = new Date(Date.now() + 86400000).toISOString()
+
+    // Video asset lookup (no status check)
+    mockSupabase.single.mockResolvedValueOnce({
+      data: { id: '00000000-0000-0000-0000-000000000001' },
+      error: null,
+    })
+
+    // Insert calendar entry
+    const entry = buildCalendarEntry({
+      content_type: 'video',
+      scheduled_at: futureDate,
+    })
+    mockSupabase.single.mockResolvedValueOnce({ data: entry, error: null })
+
+    const req = makeRequest('/api/v1/calendar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contentType: 'video',
+        contentId: '00000000-0000-0000-0000-000000000001',
+        scheduledAt: futureDate,
+      }),
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(201)
+  })
+
+  it('returns 404 when video does not exist', async () => {
+    const futureDate = new Date(Date.now() + 86400000).toISOString()
+
+    mockSupabase.single.mockResolvedValueOnce({
+      data: null,
+      error: { message: 'Not found', code: 'PGRST116' },
+    })
+
+    const req = makeRequest('/api/v1/calendar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contentType: 'video',
+        contentId: '00000000-0000-0000-0000-000000000099',
+        scheduledAt: futureDate,
+      }),
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(404)
+  })
 })

@@ -11,9 +11,11 @@ const tableMap: Record<CalendarContentType, string> = {
   location_page: 'location_pages',
   blog_post: 'blog_posts',
   social_post: 'social_posts',
+  video: 'media_assets',
 }
 
 type ContentRow = { id: string; title: string | null; body?: string }
+type MediaRow = { id: string; filename: string }
 
 export default async function CalendarPage() {
   const auth = await requireAuth()
@@ -48,15 +50,28 @@ export default async function CalendarPage() {
 
   for (const [type, typeEntries] of entriesByType) {
     const contentIds = typeEntries.map((e) => e.content_id)
-    const selectFields = type === 'social_post' ? 'id, title, body' : 'id, title'
-    const { data: rows } = await supabase
-      .from(tableMap[type] as never)
-      .select(selectFields)
-      .in('id', contentIds)
-      .returns<ContentRow[]>()
 
-    for (const row of rows ?? []) {
-      titleMap.set(row.id, row.title ?? row.body?.slice(0, 80) ?? 'Untitled')
+    if (type === 'video') {
+      const { data: rows } = await supabase
+        .from('media_assets')
+        .select('id, filename')
+        .in('id', contentIds)
+        .returns<MediaRow[]>()
+
+      for (const row of rows ?? []) {
+        titleMap.set(row.id, row.filename)
+      }
+    } else {
+      const selectFields = type === 'social_post' ? 'id, title, body' : 'id, title'
+      const { data: rows } = await supabase
+        .from(tableMap[type] as never)
+        .select(selectFields)
+        .in('id', contentIds)
+        .returns<ContentRow[]>()
+
+      for (const row of rows ?? []) {
+        titleMap.set(row.id, row.title ?? row.body?.slice(0, 80) ?? 'Untitled')
+      }
     }
   }
 

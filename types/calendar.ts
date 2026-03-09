@@ -7,6 +7,7 @@ export const calendarContentTypeSchema = z.enum([
   'location_page',
   'blog_post',
   'social_post',
+  'video',
 ])
 export type CalendarContentType = z.infer<typeof calendarContentTypeSchema>
 
@@ -19,7 +20,7 @@ export type CalendarStatus = 'scheduled' | 'publishing' | 'published' | 'failed'
 export type CalendarEntry = {
   id: string
   organization_id: string
-  content_type: 'service_page' | 'location_page' | 'blog_post' | 'social_post'
+  content_type: 'service_page' | 'location_page' | 'blog_post' | 'social_post' | 'video'
   content_id: string
   scheduled_at: string
   published_at: string | null
@@ -34,7 +35,7 @@ export type CalendarEntry = {
 
 export type CalendarViewItem = {
   id: string
-  contentType: 'service_page' | 'location_page' | 'blog_post' | 'social_post'
+  contentType: 'service_page' | 'location_page' | 'blog_post' | 'social_post' | 'video'
   contentId: string
   contentTitle: string
   scheduledAt: string

@@ -11,7 +11,7 @@ function getAdminClient() {
   )
 }
 
-type ContentTableName = 'service_pages' | 'location_pages' | 'blog_posts' | 'social_posts'
+type ContentTableName = 'service_pages' | 'location_pages' | 'blog_posts' | 'social_posts' | 'media_assets'
 
 function getTableName(contentType: string): ContentTableName {
   switch (contentType) {
@@ -23,6 +23,8 @@ function getTableName(contentType: string): ContentTableName {
       return 'blog_posts'
     case 'social_post':
       return 'social_posts'
+    case 'video':
+      return 'media_assets'
     default:
       throw new Error(`Unknown content type: ${contentType}`)
   }
@@ -52,10 +54,37 @@ async function processPublishJob(job: Job<PublishJobData>): Promise<void> {
 
   // Publish the content
   const table = getTableName(contentType)
-  const { error: publishError } = await supabase
-    .from(table as never)
-    .update({ status: 'published', published_at: new Date().toISOString() } as never)
-    .eq('id', contentId)
+  let publishError: { message: string } | null = null
+
+  if (contentType === 'video') {
+    // Videos use metadata JSONB — no status column on media_assets
+    const { data: asset } = await supabase
+      .from('media_assets')
+      .select('metadata')
+      .eq('id', contentId)
+      .single()
+
+    const existingMetadata = (asset?.metadata as Record<string, unknown>) ?? {}
+    const { error } = await supabase
+      .from('media_assets')
+      .update({
+        metadata: {
+          ...existingMetadata,
+          published: true,
+          published_at: new Date().toISOString(),
+        },
+      } as never)
+      .eq('id', contentId)
+
+    publishError = error
+  } else {
+    const { error } = await supabase
+      .from(table as never)
+      .update({ status: 'published', published_at: new Date().toISOString() } as never)
+      .eq('id', contentId)
+
+    publishError = error
+  }
 
   if (publishError) {
     await supabase

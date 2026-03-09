@@ -127,6 +127,7 @@ export function ScheduleDialog({
                 <SelectItem value="location_page">Location Page</SelectItem>
                 <SelectItem value="blog_post">Blog Post</SelectItem>
                 <SelectItem value="social_post">Social Post</SelectItem>
+                <SelectItem value="video">Video</SelectItem>
               </SelectContent>
             </Select>
           </div>

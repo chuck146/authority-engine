@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { calendarContentTypeSchema } from '@/types/calendar'
 import type { CalendarContentType } from '@/types/calendar'
 
-const tableMap: Record<CalendarContentType, string> = {
+const tableMap: Record<Exclude<CalendarContentType, 'video'>, string> = {
   service_page: 'service_pages',
   location_page: 'location_pages',
   blog_post: 'blog_posts',
@@ -12,6 +12,7 @@ const tableMap: Record<CalendarContentType, string> = {
 }
 
 type ContentRow = { id: string; title: string | null; body?: string }
+type MediaRow = { id: string; filename: string }
 
 // GET /api/v1/content/approved?type=service_page
 export async function GET(request: Request) {
@@ -28,6 +29,28 @@ export async function GET(request: Request) {
     }
 
     const contentType = parseResult.data
+
+    // Videos are stored in media_assets and don't go through approval flow
+    if (contentType === 'video') {
+      const { data: rows, error } = await supabase
+        .from('media_assets')
+        .select('id, filename')
+        .eq('organization_id', auth.organizationId)
+        .like('mime_type', 'video/%')
+        .order('created_at', { ascending: false })
+        .limit(50)
+        .returns<MediaRow[]>()
+
+      if (error) throw error
+
+      const items = (rows ?? []).map((row) => ({
+        id: row.id,
+        title: row.filename,
+      }))
+
+      return NextResponse.json(items)
+    }
+
     const table = tableMap[contentType]
 
     const selectFields = contentType === 'social_post' ? 'id, title, body' : 'id, title'

@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoGenerateForm } from '@/components/video/video-generate-form'
 import { VideoLibraryGrid } from '@/components/video/video-library-grid'
 import { VideoDetailSheet } from '@/components/video/video-detail-sheet'
+import { ScheduleDialog } from '@/components/calendar/schedule-dialog'
 import type { VideoLibraryItem } from '@/types/video'
 
 export function VideoPageClient() {
@@ -13,6 +14,8 @@ export function VideoPageClient() {
   const [activeTab, setActiveTab] = useState('library')
   const [selectedItem, setSelectedItem] = useState<VideoLibraryItem | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false)
+  const [scheduleItem, setScheduleItem] = useState<VideoLibraryItem | null>(null)
 
   useEffect(() => {
     async function fetchVideos() {
@@ -47,6 +50,11 @@ export function VideoPageClient() {
     setActiveTab('library')
   }
 
+  const handleSchedule = (item: VideoLibraryItem) => {
+    setScheduleItem(item)
+    setScheduleDialogOpen(true)
+  }
+
   return (
     <>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -67,6 +75,14 @@ export function VideoPageClient() {
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         onDelete={handleDelete}
+        onSchedule={handleSchedule}
+      />
+
+      <ScheduleDialog
+        open={scheduleDialogOpen}
+        onOpenChange={setScheduleDialogOpen}
+        defaultContentType="video"
+        defaultContentId={scheduleItem?.id}
       />
     </>
   )

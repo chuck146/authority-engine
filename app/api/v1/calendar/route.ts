@@ -11,9 +11,11 @@ const tableMap: Record<CalendarContentType, string> = {
   location_page: 'location_pages',
   blog_post: 'blog_posts',
   social_post: 'social_posts',
+  video: 'media_assets',
 }
 
 type ContentRow = { id: string; title: string }
+type MediaRow = { id: string; filename: string }
 
 // GET /api/v1/calendar?month=3&year=2026
 export async function GET(request: Request) {
@@ -65,14 +67,27 @@ export async function GET(request: Request) {
 
     for (const [type, typeEntries] of entriesByType) {
       const contentIds = typeEntries.map((e) => e.content_id)
-      const { data: rows } = await supabase
-        .from(tableMap[type] as never)
-        .select('id, title')
-        .in('id', contentIds)
-        .returns<ContentRow[]>()
 
-      for (const row of rows ?? []) {
-        titleMap.set(row.id, row.title)
+      if (type === 'video') {
+        const { data: rows } = await supabase
+          .from('media_assets')
+          .select('id, filename')
+          .in('id', contentIds)
+          .returns<MediaRow[]>()
+
+        for (const row of rows ?? []) {
+          titleMap.set(row.id, row.filename)
+        }
+      } else {
+        const { data: rows } = await supabase
+          .from(tableMap[type] as never)
+          .select('id, title')
+          .in('id', contentIds)
+          .returns<ContentRow[]>()
+
+        for (const row of rows ?? []) {
+          titleMap.set(row.id, row.title)
+        }
       }
     }
 
@@ -121,25 +136,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Scheduled time must be in the future' }, { status: 422 })
     }
 
-    // Verify content exists and is in approved status
-    const table = tableMap[contentType]
-    const { data: content, error: contentError } = await supabase
-      .from(table as never)
-      .select('id, status')
-      .eq('id', contentId)
-      .eq('organization_id', auth.organizationId)
-      .returns<{ id: string; status: string }[]>()
-      .single()
+    // Verify content exists and is in approved status (videos skip approval check)
+    if (contentType === 'video') {
+      const { data: asset, error: assetError } = await supabase
+        .from('media_assets')
+        .select('id')
+        .eq('id', contentId)
+        .eq('organization_id', auth.organizationId)
+        .single()
 
-    if (contentError || !content) {
-      return NextResponse.json({ error: 'Content not found' }, { status: 404 })
-    }
+      if (assetError || !asset) {
+        return NextResponse.json({ error: 'Video not found' }, { status: 404 })
+      }
+    } else {
+      const table = tableMap[contentType]
+      const { data: content, error: contentError } = await supabase
+        .from(table as never)
+        .select('id, status')
+        .eq('id', contentId)
+        .eq('organization_id', auth.organizationId)
+        .returns<{ id: string; status: string }[]>()
+        .single()
 
-    if (content.status !== 'approved') {
-      return NextResponse.json(
-        { error: 'Only approved content can be scheduled for publishing' },
-        { status: 422 },
-      )
+      if (contentError || !content) {
+        return NextResponse.json({ error: 'Content not found' }, { status: 404 })
+      }
+
+      if (content.status !== 'approved') {
+        return NextResponse.json(
+          { error: 'Only approved content can be scheduled for publishing' },
+          { status: 422 },
+        )
+      }
     }
 
     // Insert calendar entry

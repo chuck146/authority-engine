@@ -9,6 +9,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Content performance analytics service:** slug→page_path GA4 correlation, joins content tables (service_pages, location_pages, blog_posts) with ga4_page_metrics for unified performance view (lib/analytics/content-performance.ts)
+- **Content performance API:** GET /api/v1/analytics/content-performance — paginated, sortable by sessions/pageviews/bounce_rate/engagement/seo_score, filterable by content type, date range support via presets or custom dates (app/api/v1/analytics/content-performance/)
+- **Content performance table:** Sortable columns (title, type, SEO score, sessions, pageviews, bounce rate, engagement time), content type badges, SEO score color badges (green/yellow/red), pagination controls (components/analytics/content-performance-table.tsx)
+- **Analytics page extended:** 4th "Content Performance" tab added alongside Overview, Keywords, Search Performance (components/analytics/analytics-page-client.tsx)
+- **Content performance types:** ContentPerformanceItem, ContentPerformanceResponse, contentPerformanceQuerySchema Zod validation (types/analytics.ts)
+- **Content performance test suite:** 16 new tests across 2 files — 8 API route tests (auth, pagination, sorting, filtering, date range) + 8 component tests (rendering, sorting, type filter, empty state, pagination) (1151 total)
 - **Pipeline C full premium video (Claude + Nano Banana + Veo Standard + Remotion):** Seven-step orchestration pipeline — Claude script → Nano Banana key frames → Veo Standard scenes → Remotion intro/outro → FFmpeg stitch → Supabase upload (~$3.00–$6.00/video)
 - **Premium worker:** BullMQ `premium-rendering` queue with concurrency=1, seven-step progress tracking (script/keyframes/scenes/intro/outro/stitch/upload), scene-level sub-progress, temp file cleanup (lib/queue/premium-worker.ts)
 - **Premium scheduler:** enqueuePremiumJob() with `premium-${orgId}-${timestamp}` job IDs, 2 retry attempts with exponential backoff, getPremiumJobStatus() with premiumStep detail (lib/queue/premium-scheduler.ts)
@@ -97,7 +103,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Worker registration:** createPremiumWorker() registered in lib/worker.ts with event handlers and shutdown handling (9 workers total)
 - **Composite worker refactored:** Extracted downloadFromStorage, stitchClips, buildBrandProps into shared video-utils.ts (lib/queue/composite-worker.ts)
 - **AI generators refactored:** Extracted parseClaudeJsonResponse into shared claude.ts, used by content-generator, social-generator, review-response-generator (lib/ai/claude.ts)
-- **Test suite expanded:** 1029+ tests across 140+ files (74 new composite tests, all existing tests passing)
+- **Analytics page extended:** 4th "Content Performance" tab with content-performance-table component (components/analytics/analytics-page-client.tsx)
+- **Test suite expanded:** 1151+ tests across 152+ files (16 new content performance tests, all existing tests passing)
 
 ---
 

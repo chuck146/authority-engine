@@ -99,6 +99,63 @@ export const analyticsKeywordsQuerySchema = z.object({
   search: z.string().optional(),
 })
 
+// --- Content Performance ---
+
+export type ContentPerformanceItem = {
+  id: string
+  title: string
+  slug: string
+  contentType: 'service_page' | 'location_page' | 'blog_post'
+  seoScore: number | null
+  publishedAt: string | null
+  sessions: number
+  users: number
+  pageviews: number
+  bounceRate: number
+  avgSessionDuration: number
+  engagementRate: number
+  topKeyword: string | null
+  keywordCount: number
+}
+
+export type ContentPerformanceResponse = {
+  items: ContentPerformanceItem[]
+  total: number
+  page: number
+  pageSize: number
+}
+
+export const contentPerformanceQuerySchema = z.object({
+  range: z.enum(['7d', '28d', '90d', 'custom']).default('28d'),
+  startDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  endDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  type: z
+    .enum(['all', 'service_page', 'location_page', 'blog_post'])
+    .default('all'),
+  sort: z
+    .enum([
+      'title',
+      'seoScore',
+      'sessions',
+      'users',
+      'pageviews',
+      'bounceRate',
+      'engagementRate',
+      'publishedAt',
+    ])
+    .default('sessions'),
+  order: z.enum(['asc', 'desc']).default('desc'),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  search: z.string().optional(),
+})
+
 export const analyticsKeywordTrendQuerySchema = z.object({
   range: z.enum(['7d', '28d', '90d', 'custom']).default('28d'),
   startDate: z
