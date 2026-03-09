@@ -421,7 +421,7 @@ Same lifecycle as content: review → approved → published → archived. Posts
 
 **Route:** `/video`
 
-Generate videos using three engines: **Remotion** (programmatic motion graphics), **Veo 3.1** (cinematic AI video), and **Composite** (Remotion + Veo combined pipeline).
+Generate videos using four engines: **Remotion** (programmatic motion graphics), **Veo 3.1** (cinematic AI video), **Composite** (Remotion + Veo combined pipeline), and **Premium** (full Claude + Nano Banana + Veo Standard + Remotion pipeline).
 
 ### Tab Navigation
 
@@ -438,12 +438,13 @@ The generate form starts with an engine selector:
 - **Remotion** — branded motion graphics, text animations, data-driven video. Fast, low-cost (~$0.05–$0.15/video). Best for recurring social content.
 - **Veo 3.1** — cinematic AI-generated video with synchronized audio. Higher cost ($0.15–$0.40/sec). Best for hero content and portfolio pieces.
 - **Composite** — chains a Remotion branded intro with a Veo 3.1 cinematic center clip and a Remotion branded outro, stitched together via FFmpeg (~$1.50–$3.00/video). Best for monthly project showcases, seasonal promos, and transformation reels.
+- **Premium** — full seven-step pipeline: Claude generates a multi-scene script, Nano Banana 2 creates key frames for each scene, Veo 3.1 Standard animates each scene, Remotion renders branded intro/outro, FFmpeg stitches everything together (~$3.00–$6.00/video). Best for paid ad campaigns, portfolio hero pieces, and brand story videos.
 
 The video type dropdown updates based on the selected engine.
 
 ### Font Selection
 
-For Remotion and Composite engines, the generate form includes two optional font dropdowns:
+For Remotion, Composite, and Premium engines, the generate form includes two optional font dropdowns:
 
 - **Heading Font** — used for titles, headers, and prominent text in the video
 - **Body Font** — used for body copy, descriptions, and supporting text
@@ -509,6 +510,20 @@ Composite form fields:
 - **Include Outro** (checkbox, default checked) — renders a branded Remotion outro with CTA after the cinematic clip
 - **Use Starting Frame** (checkbox, default checked) — generates a Nano Banana 2 image as the visual anchor for the Veo clip
 
+### Premium Video Type
+
+One video type available when the Premium engine is selected:
+
+- **Premium Reel** — Claude-scripted multi-scene video with AI-generated key frames, Veo Standard cinematic footage, and Remotion branded intro/outro
+
+Premium form fields:
+
+- **Topic** — subject of the video (e.g., "Spring exterior painting tips")
+- **Style** — creative direction (e.g., "cinematic", "documentary", "energetic")
+- **Scene count** (number, 2–6) — how many cinematic scenes to generate
+- **Veo model** — Standard (default, max fidelity) or Fast (lower cost)
+- **Heading font and body font** (optional dropdowns) — override brand defaults for intro/outro segments
+
 ### Generation Process
 
 Clicking "Generate" queues a background job via BullMQ:
@@ -516,11 +531,13 @@ Clicking "Generate" queues a background job via BullMQ:
 - **Remotion jobs** go to the `remotion-rendering` queue — bundles the React composition, renders to MP4, uploads to Supabase Storage
 - **Veo jobs** go to the `video-generation` queue — calls Veo API with polling, downloads result, uploads to storage
 - **Composite jobs** go to the `composite-rendering` queue — orchestrates five steps: Remotion intro render → Veo cinematic generation → Remotion outro render → FFmpeg stitch → Supabase upload
+- **Premium jobs** go to the `premium-rendering` queue — orchestrates seven steps: Claude script generation → Nano Banana key frame generation → Veo Standard scene rendering → Remotion intro render → Remotion outro render → FFmpeg stitch → Supabase upload
 
-Generation takes 30 seconds–5 minutes for Remotion and Veo jobs. Composite jobs take 5–10 minutes due to the multi-step pipeline. The Status tab shows real-time progress:
+Generation takes 30 seconds–5 minutes for Remotion and Veo jobs. Composite jobs take 5–10 minutes. Premium jobs take 10–20 minutes due to the seven-step pipeline. The Status tab shows real-time progress:
 
 - **Remotion and Veo:** a progress bar with percentage
 - **Composite:** a five-step progress indicator (**Intro → Cinematic → Outro → Stitch → Upload**) with the active step highlighted and a label describing the current operation
+- **Premium:** a seven-step progress indicator (**Script → Key Frames → Scenes → Intro → Outro → Stitch → Upload**) with the active step highlighted, step labels, and scene-level sub-progress (e.g., "Rendering scene 2 of 4")
 
 ### Video Library Grid
 
@@ -528,12 +545,12 @@ Grid display of generated videos showing:
 
 - Video thumbnail/preview
 - Video type badge
-- **Engine badge** ("Remotion", "Veo", or "Composite") for quick identification
+- **Engine badge** ("Remotion", "Veo", "Composite", or "Premium") for quick identification
 - Model used (Fast/Standard — Veo only)
 - Duration and file size
 - Creation date
 
-Users can filter by engine (`?engine=remotion|veo|composite`) using a query parameter.
+Users can filter by engine (`?engine=remotion|veo|composite|premium`) using a query parameter.
 
 Clicking a video opens the detail sheet.
 
@@ -822,11 +839,12 @@ A persistent control at the top of the page. Users select a time window for all 
 
 ### Tab Navigation
 
-Three tabs:
+Four tabs:
 
 - **Overview** — unified metrics from GA4 + GSC + keyword summary
 - **Keywords** — keyword rankings table with search and sorting
 - **Search Performance** — reuses existing GSC components from /seo page
+- **Content Performance** — content items correlated with GA4 traffic metrics
 
 ### Overview Tab
 
@@ -869,6 +887,29 @@ A right-side panel showing historical performance for a single keyword:
 ### Search Performance Tab
 
 Reuses the existing GSC dashboard components from the `/seo` page — top queries table, top pages table, and indexing coverage.
+
+### Content Performance Tab
+
+Shows how individual content items (service pages, location pages, blog posts) are performing by correlating content slugs with GA4 page path metrics.
+
+**Table columns:**
+
+- Title (linked to the content item)
+- Content type badge (Service Page, Location Page, Blog Post)
+- SEO score with color badge (green ≥80, yellow ≥60, red <60)
+- Sessions
+- Pageviews
+- Bounce rate
+- Avg. engagement time
+
+**Features:**
+
+- **Filter:** Dropdown to filter by content type (all, service page, location page, blog post)
+- **Sort:** Click column headers to sort by any metric (default: sessions descending)
+- **Pagination:** Navigate through content items
+- **Date range:** Respects the page-level date range picker
+
+Content with no GA4 data (e.g., unpublished or newly published pages) shows zeros for traffic metrics.
 
 ---
 
