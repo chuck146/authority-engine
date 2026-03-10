@@ -9,6 +9,26 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Vercel cron jobs for GSC/GA4 sync:** Daily scheduled sync via Vercel cron (GSC at 6 AM UTC, GA4 at 7 AM UTC) replaces BullMQ scheduler on serverless — timing-safe CRON_SECRET auth, per-org sequential sync with error isolation (app/api/cron/sync-gsc/, app/api/cron/sync-ga4/, vercel.json)
+- **Manual sync API endpoints:** POST /api/v1/integrations/gsc/sync and /ga4/sync — admin-only manual trigger that calls extracted syncGscForOrg/syncGa4ForOrg directly (app/api/v1/integrations/gsc/sync/, app/api/v1/integrations/ga4/sync/)
+- **Sync Now buttons:** Settings integrations section and Analytics page header show "Sync Now" buttons for manual GSC/GA4 data refresh (components/settings/integrations-section.tsx, components/analytics/analytics-page-client.tsx)
+- **Cron + manual sync test suite:** 40 new tests across 4 files — cron auth/sync/error tests + manual sync auth/success/error tests (tests/api/cron/, tests/api/v1/integrations/)
+
+### Changed
+
+- **GSC/GA4 sync workers refactored:** Extracted standalone syncGscForOrg() and syncGa4ForOrg() functions from BullMQ worker callbacks — callable from both Vercel cron routes and manual sync endpoints without Redis dependency (lib/queue/gsc-sync-worker.ts, lib/queue/ga4-sync-worker.ts)
+- **.env.example updated:** Added CRON_SECRET for Vercel cron authentication
+
+### Fixed
+
+- **Analytics "not connected" false negative:** Decoupled connection status from data fetch success — checks google_connections DB directly instead of relying on getValidToken() which throws on token refresh issues. Analytics overview API now returns hasGscConnection/hasGa4Connection flags alongside data (app/api/v1/analytics/overview/route.ts, components/analytics/analytics-page-client.tsx)
+
+---
+
+## [V2.5] — 2026-03-08
+
+### Added
+
 - **Content performance analytics service:** slug→page_path GA4 correlation, joins content tables (service_pages, location_pages, blog_posts) with ga4_page_metrics for unified performance view (lib/analytics/content-performance.ts)
 - **Content performance API:** GET /api/v1/analytics/content-performance — paginated, sortable by sessions/pageviews/bounce_rate/engagement/seo_score, filterable by content type, date range support via presets or custom dates (app/api/v1/analytics/content-performance/)
 - **Content performance table:** Sortable columns (title, type, SEO score, sessions, pageviews, bounce rate, engagement time), content type badges, SEO score color badges (green/yellow/red), pagination controls (components/analytics/content-performance-table.tsx)

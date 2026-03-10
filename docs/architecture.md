@@ -139,11 +139,14 @@ API Route: /api/auth/google/callback
     ▼
 Supabase: google_connections (encrypted access/refresh tokens, site_url)
     │
-    ▼
-BullMQ Scheduler: daily cron at 6 AM (gsc-sync queue)
+    ├─► Vercel Cron: GET /api/cron/sync-gsc (daily at 6 AM UTC)
+    │   Authenticates via CRON_SECRET, iterates active connections
+    │
+    ├─► Manual: POST /api/v1/integrations/gsc/sync (admin-only)
+    │   "Sync Now" button in Settings + Analytics UI
     │
     ▼
-GSC Sync Worker: for each active connection
+syncGscForOrg(): standalone function (no Redis/BullMQ dependency)
     │ 1. Decrypt tokens, auto-refresh if expired
     │ 2. Fetch search analytics (query + page + date dimensions)
     │ 3. Upsert keyword_rankings in batches of 500
@@ -165,11 +168,15 @@ Admin connects GA4 via Settings → OAuth2 with scope=analytics.readonly
     ▼
 Property Selector UI → POST /api/v1/integrations/ga4/select-property
     │ Saves ga4_property_id to google_connections row
-    ▼
-BullMQ Scheduler: daily cron (ga4-sync queue)
+    │
+    ├─► Vercel Cron: GET /api/cron/sync-ga4 (daily at 7 AM UTC)
+    │   Authenticates via CRON_SECRET, iterates connections with ga4_property_id
+    │
+    ├─► Manual: POST /api/v1/integrations/ga4/sync (admin-only)
+    │   "Sync Now" button in Settings + Analytics UI
     │
     ▼
-GA4 Sync Worker: for each connection with ga4_property_id
+syncGa4ForOrg(): standalone function (no Redis/BullMQ dependency)
     │ 1. Decrypt tokens, auto-refresh if expired
     │ 2. Run GA4 Data API reports (page metrics, traffic sources, devices, daily totals)
     │ 3. Upsert ga4_page_metrics in batches

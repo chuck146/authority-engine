@@ -248,6 +248,15 @@ _Last Updated: March 2026_
 - [x] Types: ContentPerformanceItem, ContentPerformanceResponse, Zod query schema (types/analytics.ts)
 - [x] Test suite: 16 new tests across 2 files — 8 API route tests + 8 component tests (1151 total, up from 1081)
 
+**Post-V2: Serverless Infrastructure** ✅
+
+- [x] Vercel cron jobs for GSC/GA4 sync (replaces BullMQ scheduler on serverless)
+- [x] Manual sync API endpoints (admin-only POST /api/v1/integrations/gsc/sync, /ga4/sync)
+- [x] Sync Now buttons in Settings and Analytics UI
+- [x] Extracted standalone sync functions from BullMQ workers (no Redis dependency)
+- [x] Analytics "not connected" fix: decoupled connection status from token validation
+- [x] Test suite: 40 new cron + manual sync tests (1191+ total)
+
 ### What's Next
 
 - V2 complete — proceed to Later milestone (White-Label + Community)
