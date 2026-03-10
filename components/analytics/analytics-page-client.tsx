@@ -216,6 +216,28 @@ function OverviewTab() {
           </p>
         </div>
       )}
+
+      {overview.ga4Connected && !overview.ga4 && (
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-muted-foreground">
+              Google Analytics connected but no data available yet. Data syncs daily — check back
+              soon.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {overview.gscConnected && !overview.gsc && (
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-muted-foreground">
+              Google Search Console connected but no data available yet. Data syncs daily — check
+              back soon.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

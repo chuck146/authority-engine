@@ -102,6 +102,21 @@ export async function GET(request: NextRequest) {
     const { range, startDate, endDate } = parsed.data
     const resolved = resolveDateRange(range as DateRangePreset, startDate, endDate)
 
+    // Check connection status from DB (independent of token validity)
+    const supabase = await createClient()
+    const { data: connections } = await supabase
+      .from('google_connections')
+      .select('provider, status, site_url')
+      .eq('organization_id', auth.organizationId)
+      .in('provider', ['analytics', 'search_console'])
+
+    const ga4Conn = connections?.find(
+      (c) => c.provider === 'analytics' && c.status === 'active',
+    )
+    const gscConn = connections?.find(
+      (c) => c.provider === 'search_console' && c.status === 'active',
+    )
+
     // Fetch GA4 + GSC + Keywords in parallel
     const [ga4Result, gscResult, keywordsResult] = await Promise.allSettled([
       // GA4
@@ -256,8 +271,8 @@ export async function GET(request: NextRequest) {
     ])
 
     const overview: AnalyticsOverview = {
-      ga4Connected: ga4Result.status === 'fulfilled' && ga4Result.value !== null,
-      gscConnected: gscResult.status === 'fulfilled' && gscResult.value !== null,
+      ga4Connected: !!ga4Conn,
+      gscConnected: !!gscConn,
       ga4: ga4Result.status === 'fulfilled' ? ga4Result.value : null,
       gsc: gscResult.status === 'fulfilled' ? gscResult.value : null,
       keywords:

@@ -17,15 +17,27 @@ vi.mock('@/lib/google/token-manager', () => ({
   getValidToken: vi.fn().mockRejectedValue(new Error('No connection')),
 }))
 
-// Mock supabase for keyword summary
-const mockFrom = vi.fn().mockReturnValue({
-  select: vi.fn().mockReturnValue({
-    eq: vi.fn().mockReturnValue({
-      gte: vi.fn().mockReturnValue({
-        lte: vi.fn().mockResolvedValue({ data: [], error: null }),
+// Mock supabase for keyword summary + connection check
+const mockFrom = vi.fn().mockImplementation((table: string) => {
+  if (table === 'google_connections') {
+    return {
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          in: vi.fn().mockResolvedValue({ data: [], error: null }),
+        }),
+      }),
+    }
+  }
+  // keyword_rankings
+  return {
+    select: vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        gte: vi.fn().mockReturnValue({
+          lte: vi.fn().mockResolvedValue({ data: [], error: null }),
+        }),
       }),
     }),
-  }),
+  }
 })
 
 vi.mock('@/lib/supabase/server', () => ({
