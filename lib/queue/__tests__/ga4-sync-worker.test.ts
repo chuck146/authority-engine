@@ -1,6 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { Job } from 'bullmq'
-import type { Ga4SyncJobData } from '../ga4-sync-worker'
 
 // Mock token manager
 const mockGetValidToken = vi.fn()
@@ -40,20 +38,16 @@ vi.mock('../connection', () => ({
   getRedisConnection: vi.fn().mockReturnValue({}),
 }))
 
-describe('processGa4SyncJob', () => {
+describe('syncGa4ForOrg', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  function makeJob(data: Ga4SyncJobData): Job<Ga4SyncJobData> {
-    return { data } as Job<Ga4SyncJobData>
-  }
-
   it('skips silently when no active GA4 connection', async () => {
     mockGetValidToken.mockRejectedValueOnce(new Error('No active connection'))
 
-    const { processGa4SyncJob } = await import('../ga4-sync-worker')
-    await processGa4SyncJob(makeJob({ organizationId: 'org-123' }))
+    const { syncGa4ForOrg } = await import('../ga4-sync-worker')
+    await syncGa4ForOrg('org-123')
 
     expect(mockRunReport).not.toHaveBeenCalled()
   })
@@ -64,8 +58,8 @@ describe('processGa4SyncJob', () => {
       siteUrl: '', // empty property
     })
 
-    const { processGa4SyncJob } = await import('../ga4-sync-worker')
-    await processGa4SyncJob(makeJob({ organizationId: 'org-123' }))
+    const { syncGa4ForOrg } = await import('../ga4-sync-worker')
+    await syncGa4ForOrg('org-123')
 
     expect(mockRunReport).not.toHaveBeenCalled()
   })
@@ -110,8 +104,8 @@ describe('processGa4SyncJob', () => {
         ],
       })
 
-    const { processGa4SyncJob } = await import('../ga4-sync-worker')
-    await processGa4SyncJob(makeJob({ organizationId: 'org-123' }))
+    const { syncGa4ForOrg } = await import('../ga4-sync-worker')
+    await syncGa4ForOrg('org-123')
 
     // Should call runReport 3 times
     expect(mockRunReport).toHaveBeenCalledTimes(3)
@@ -147,7 +141,7 @@ describe('processGa4SyncJob', () => {
 
     mockRunReport.mockResolvedValue({ rows: [] })
 
-    const { processGa4SyncJob } = await import('../ga4-sync-worker')
-    await expect(processGa4SyncJob(makeJob({ organizationId: 'org-123' }))).resolves.toBeUndefined()
+    const { syncGa4ForOrg } = await import('../ga4-sync-worker')
+    await expect(syncGa4ForOrg('org-123')).resolves.toBeUndefined()
   })
 })

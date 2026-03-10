@@ -1,4 +1,4 @@
-import { Worker, type Job } from 'bullmq'
+import { Worker } from 'bullmq'
 import { createClient } from '@supabase/supabase-js'
 import { getRedisConnection } from './connection'
 import { getValidToken } from '@/lib/google/token-manager'
@@ -28,8 +28,10 @@ function getDateRange() {
   return { startDate: formatDate(startDate), endDate: formatDate(endDate) }
 }
 
-export async function processGscSyncJob(job: Job<GscSyncJobData>): Promise<void> {
-  const { organizationId } = job.data
+/**
+ * Core GSC sync logic — callable from BullMQ worker, API routes, or Vercel cron.
+ */
+export async function syncGscForOrg(organizationId: string): Promise<void> {
   const supabase = getAdminClient()
 
   let accessToken: string
@@ -116,7 +118,7 @@ export async function processGscSyncJob(job: Job<GscSyncJobData>): Promise<void>
 }
 
 export function createGscSyncWorker(): Worker<GscSyncJobData> {
-  return new Worker<GscSyncJobData>('gsc-sync', processGscSyncJob, {
+  return new Worker<GscSyncJobData>('gsc-sync', async (job) => syncGscForOrg(job.data.organizationId), {
     connection: getRedisConnection(),
     concurrency: 2,
   })

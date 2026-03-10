@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DateRangePicker } from './date-range-picker'
 import { KeywordRankingsTable } from './keyword-rankings-table'
@@ -11,6 +12,7 @@ import { Ga4OverviewCards } from '@/components/seo/ga4-overview-cards'
 import { GscTopQueries } from '@/components/seo/gsc-top-queries'
 import { GscTopPages } from '@/components/seo/gsc-top-pages'
 import { GscIndexingCoverage } from '@/components/seo/gsc-indexing-coverage'
+import { toast } from 'sonner'
 import type { AnalyticsOverview } from '@/types/analytics'
 import type { Ga4Summary } from '@/types/ga4'
 import type { GscSummary, KeywordRankingItem } from '@/types/gsc'
@@ -24,6 +26,50 @@ function TrendIndicator({ value, invertColor }: { value: number; invertColor?: b
     <span className={`text-xs ${color}`}>
       {arrow} {Math.abs(value)}%
     </span>
+  )
+}
+
+function NoDataSyncCard({
+  label,
+  syncUrl,
+  onSynced,
+}: {
+  label: string
+  syncUrl: string
+  onSynced: () => void
+}) {
+  const [syncing, setSyncing] = useState(false)
+
+  async function handleSync() {
+    setSyncing(true)
+    try {
+      const res = await fetch(syncUrl, { method: 'POST' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        toast.error(err.error ?? 'Sync failed')
+        return
+      }
+      toast.success(`${label} synced successfully`)
+      onSynced()
+    } catch {
+      toast.error('Sync failed')
+    } finally {
+      setSyncing(false)
+    }
+  }
+
+  return (
+    <Card>
+      <CardContent className="flex flex-col items-center gap-3 pt-6 text-center">
+        <p className="text-muted-foreground">
+          {label} connected but no data available yet. Click below to sync now, or data will sync
+          automatically on a daily schedule.
+        </p>
+        <Button variant="outline" size="sm" onClick={handleSync} disabled={syncing}>
+          {syncing ? 'Syncing...' : `Sync ${label}`}
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -218,25 +264,33 @@ function OverviewTab() {
       )}
 
       {overview.ga4Connected && !overview.ga4 && (
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <p className="text-muted-foreground">
-              Google Analytics connected but no data available yet. Data syncs daily — check back
-              soon.
-            </p>
-          </CardContent>
-        </Card>
+        <NoDataSyncCard
+          label="Google Analytics"
+          syncUrl="/api/v1/integrations/ga4/sync"
+          onSynced={() => {
+            const params = new URLSearchParams({ range })
+            if (startDate) params.set('startDate', startDate)
+            if (endDate) params.set('endDate', endDate)
+            fetch(`/api/v1/analytics/overview?${params}`)
+              .then((res) => res.json())
+              .then((data) => setOverview(data))
+          }}
+        />
       )}
 
       {overview.gscConnected && !overview.gsc && (
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <p className="text-muted-foreground">
-              Google Search Console connected but no data available yet. Data syncs daily — check
-              back soon.
-            </p>
-          </CardContent>
-        </Card>
+        <NoDataSyncCard
+          label="Google Search Console"
+          syncUrl="/api/v1/integrations/gsc/sync"
+          onSynced={() => {
+            const params = new URLSearchParams({ range })
+            if (startDate) params.set('startDate', startDate)
+            if (endDate) params.set('endDate', endDate)
+            fetch(`/api/v1/analytics/overview?${params}`)
+              .then((res) => res.json())
+              .then((data) => setOverview(data))
+          }}
+        />
       )}
     </div>
   )

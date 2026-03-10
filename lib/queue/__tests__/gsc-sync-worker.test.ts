@@ -1,6 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { Job } from 'bullmq'
-import type { GscSyncJobData } from '../gsc-sync-worker'
 
 // Mock token manager
 const mockGetValidToken = vi.fn()
@@ -42,20 +40,16 @@ vi.mock('../connection', () => ({
   getRedisConnection: vi.fn().mockReturnValue({}),
 }))
 
-describe('processGscSyncJob', () => {
+describe('syncGscForOrg', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  function makeJob(data: GscSyncJobData): Job<GscSyncJobData> {
-    return { data } as Job<GscSyncJobData>
-  }
-
   it('skips silently when no active GSC connection', async () => {
     mockGetValidToken.mockRejectedValueOnce(new Error('No active connection'))
 
-    const { processGscSyncJob } = await import('../gsc-sync-worker')
-    await processGscSyncJob(makeJob({ organizationId: 'org-123' }))
+    const { syncGscForOrg } = await import('../gsc-sync-worker')
+    await syncGscForOrg('org-123')
 
     expect(mockFetchSearchAnalytics).not.toHaveBeenCalled()
     expect(mockFetchSitemaps).not.toHaveBeenCalled()
@@ -89,8 +83,8 @@ describe('processGscSyncJob', () => {
       },
     ])
 
-    const { processGscSyncJob } = await import('../gsc-sync-worker')
-    await processGscSyncJob(makeJob({ organizationId: 'org-123' }))
+    const { syncGscForOrg } = await import('../gsc-sync-worker')
+    await syncGscForOrg('org-123')
 
     // Should call search analytics with correct params
     expect(mockFetchSearchAnalytics).toHaveBeenCalledWith(
@@ -121,7 +115,7 @@ describe('processGscSyncJob', () => {
     mockFetchSearchAnalytics.mockResolvedValueOnce({ rows: [] })
     mockFetchSitemaps.mockResolvedValueOnce([])
 
-    const { processGscSyncJob } = await import('../gsc-sync-worker')
-    await expect(processGscSyncJob(makeJob({ organizationId: 'org-123' }))).resolves.toBeUndefined()
+    const { syncGscForOrg } = await import('../gsc-sync-worker')
+    await expect(syncGscForOrg('org-123')).resolves.toBeUndefined()
   })
 })

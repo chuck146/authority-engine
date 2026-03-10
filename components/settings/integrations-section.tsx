@@ -24,6 +24,7 @@ type IntegrationRowProps = {
   disconnectUrl: string
   connectUrl: string
   displayField: 'siteUrl' | 'propertyId' | 'locationName'
+  syncUrl?: string
   renderSetup?: (status: ConnectionStatus) => React.ReactNode
 }
 
@@ -34,11 +35,13 @@ function IntegrationRow({
   disconnectUrl,
   connectUrl,
   displayField,
+  syncUrl,
   renderSetup,
 }: IntegrationRowProps) {
   const [status, setStatus] = useState<ConnectionStatus | null>(null)
   const [loading, setLoading] = useState(true)
   const [disconnecting, setDisconnecting] = useState(false)
+  const [syncing, setSyncing] = useState(false)
 
   useEffect(() => {
     fetch(statusUrl)
@@ -70,6 +73,24 @@ function IntegrationRow({
       toast.error('Failed to disconnect')
     } finally {
       setDisconnecting(false)
+    }
+  }
+
+  async function handleSync() {
+    if (!syncUrl) return
+    setSyncing(true)
+    try {
+      const res = await fetch(syncUrl, { method: 'POST' })
+      if (!res.ok) {
+        const err = await res.json()
+        toast.error(err.error ?? 'Sync failed')
+        return
+      }
+      toast.success(`${label} synced successfully`)
+    } catch {
+      toast.error('Sync failed')
+    } finally {
+      setSyncing(false)
     }
   }
 
@@ -108,11 +129,18 @@ function IntegrationRow({
           )}
           {!status?.isConnected && <p className="text-muted-foreground text-sm">{description}</p>}
         </div>
-        <div>
+        <div className="flex items-center gap-2">
           {status?.isConnected ? (
-            <Button variant="outline" size="sm" onClick={handleDisconnect} disabled={disconnecting}>
-              {disconnecting ? 'Disconnecting...' : 'Disconnect'}
-            </Button>
+            <>
+              {syncUrl && (
+                <Button variant="outline" size="sm" onClick={handleSync} disabled={syncing}>
+                  {syncing ? 'Syncing...' : 'Sync Now'}
+                </Button>
+              )}
+              <Button variant="outline" size="sm" onClick={handleDisconnect} disabled={disconnecting}>
+                {disconnecting ? 'Disconnecting...' : 'Disconnect'}
+              </Button>
+            </>
           ) : (
             <Button size="sm" onClick={handleConnect}>
               Connect
@@ -202,6 +230,7 @@ export function IntegrationsSection() {
           disconnectUrl="/api/v1/integrations/google/disconnect"
           connectUrl="/api/auth/google?provider=search_console"
           displayField="siteUrl"
+          syncUrl="/api/v1/integrations/gsc/sync"
         />
         <IntegrationRow
           label="Google Analytics"
@@ -210,6 +239,7 @@ export function IntegrationsSection() {
           disconnectUrl="/api/v1/integrations/ga4/disconnect"
           connectUrl="/api/auth/google?provider=analytics"
           displayField="propertyId"
+          syncUrl="/api/v1/integrations/ga4/sync"
           renderSetup={(s) => (s.isConnected && !s.propertyId ? <Ga4PropertySelector /> : null)}
         />
         <IntegrationRow
@@ -219,6 +249,7 @@ export function IntegrationsSection() {
           disconnectUrl="/api/v1/integrations/gbp/disconnect"
           connectUrl="/api/auth/google?provider=business_profile"
           displayField="locationName"
+          syncUrl="/api/v1/reviews/sync"
         />
         <SmsStatusRow />
       </CardContent>

@@ -1,4 +1,4 @@
-import { Worker, type Job } from 'bullmq'
+import { Worker } from 'bullmq'
 import { createClient } from '@supabase/supabase-js'
 import { getRedisConnection } from './connection'
 import { getValidToken } from '@/lib/google/token-manager'
@@ -28,8 +28,10 @@ function getDateRange() {
   return { startDate: formatDate(startDate), endDate: formatDate(endDate) }
 }
 
-export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void> {
-  const { organizationId } = job.data
+/**
+ * Core GA4 sync logic — callable from BullMQ worker, API routes, or Vercel cron.
+ */
+export async function syncGa4ForOrg(organizationId: string): Promise<void> {
   const supabase = getAdminClient()
 
   let accessToken: string
@@ -160,7 +162,7 @@ export async function processGa4SyncJob(job: Job<Ga4SyncJobData>): Promise<void>
 }
 
 export function createGa4SyncWorker(): Worker<Ga4SyncJobData> {
-  return new Worker<Ga4SyncJobData>('ga4-sync', processGa4SyncJob, {
+  return new Worker<Ga4SyncJobData>('ga4-sync', async (job) => syncGa4ForOrg(job.data.organizationId), {
     connection: getRedisConnection(),
     concurrency: 2,
   })
