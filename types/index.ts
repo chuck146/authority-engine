@@ -184,3 +184,30 @@ export type OrgBranding = {
     body: string
   }
 }
+
+// Contact info (stored in organizations.settings.contact_info JSONB)
+export type OrgContactInfo = {
+  phone?: string
+  email?: string
+  address?: {
+    streetAddress: string
+    city: string
+    state: string
+    postalCode: string
+    country?: string
+  }
+}
+
+// Organization settings (stored in organizations.settings JSONB)
+export type OrgSettings = {
+  service_area_states?: string[]
+  service_area_counties?: string[]
+  contact_info?: OrgContactInfo
+  hubspot_portal_id?: string
+  clickup_list_id?: string
+}
+
+// Related content link types (for cross-linking)
+export type RelatedServiceLink = { slug: string; title: string }
+export type RelatedLocationLink = { slug: string; title: string; city: string; state: string }
+export type RelatedBlogLink = { slug: string; title: string; excerpt: string | null }
