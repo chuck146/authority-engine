@@ -77,7 +77,18 @@ export async function getAllPublishedBlogSlugs(): Promise<ContentSlug[]> {
   return data ?? []
 }
 
-// --- Organization query ---
+// --- Organization queries ---
+
+export async function getOrganizationBySlug(slug: string): Promise<Organization | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('organizations')
+    .select('*')
+    .eq('slug', slug)
+    .returns<Organization[]>()
+    .single()
+  return data
+}
 
 export async function getOrganizationById(id: string): Promise<Organization | null> {
   const supabase = await createClient()
@@ -117,6 +128,30 @@ export async function getAllPublishedServiceLinks(orgId: string): Promise<Relate
     .eq('organization_id', orgId)
     .eq('status', 'published')
     .returns<RelatedServiceLink[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedLocationLinks(orgId: string): Promise<RelatedLocationLink[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('location_pages')
+    .select('slug, title, city, state')
+    .eq('organization_id', orgId)
+    .eq('status', 'published')
+    .order('city')
+    .returns<RelatedLocationLink[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedBlogLinks(orgId: string): Promise<RelatedBlogLink[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('blog_posts')
+    .select('slug, title, excerpt')
+    .eq('organization_id', orgId)
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .returns<RelatedBlogLink[]>()
   return data ?? []
 }
 
