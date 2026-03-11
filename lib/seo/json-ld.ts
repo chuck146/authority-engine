@@ -13,9 +13,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj
 
 type BreadcrumbItem = { label: string; href?: string }
 
-export function buildBreadcrumbSchema(
-  items: BreadcrumbItem[]
-): Record<string, unknown> {
+export function buildBreadcrumbSchema(items: BreadcrumbItem[]): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -28,9 +26,7 @@ export function buildBreadcrumbSchema(
   }
 }
 
-function buildBusinessSchema(
-  org: Organization
-): Record<string, unknown> {
+function buildBusinessSchema(org: Organization): Record<string, unknown> {
   const branding = org.branding as unknown as OrgBranding | null
   const settings = org.settings as unknown as OrgSettings | null
   const contact = settings?.contact_info as OrgContactInfo | undefined
@@ -69,7 +65,7 @@ function buildBusinessSchema(
 
 export function buildServicePageSchemas(
   page: ServicePage,
-  org: Organization
+  org: Organization,
 ): Record<string, unknown>[] {
   const content = page.content as unknown as StructuredContent
 
@@ -99,7 +95,7 @@ export function buildServicePageSchemas(
 
 export function buildLocationPageSchemas(
   page: LocationPage,
-  org: Organization
+  org: Organization,
 ): Record<string, unknown>[] {
   const content = page.content as unknown as StructuredContent
 
@@ -146,10 +142,7 @@ export function buildLocationPageSchemas(
   return [businessSchema, serviceSchema, breadcrumbSchema]
 }
 
-export function buildBlogPostSchemas(
-  post: BlogPost,
-  org: Organization
-): Record<string, unknown>[] {
+export function buildBlogPostSchemas(post: BlogPost, org: Organization): Record<string, unknown>[] {
   const content = post.content as unknown as StructuredContent
 
   const articleSchema: Record<string, unknown> = {

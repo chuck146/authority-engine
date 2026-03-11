@@ -51,10 +51,7 @@ export default async function LocationPageRoute({ params }: Props) {
     <>
       {org && <JsonLd data={buildLocationPageSchemas(page, org)} />}
       <LocationPageLayout page={page} />
-      <RelatedServices
-        services={allServices}
-        heading={`Services in ${page.city}`}
-      />
+      <RelatedServices services={allServices} heading={`Services in ${page.city}`} />
       <RelatedLocations locations={nearbyLocations} heading="Nearby Areas" />
     </>
   )

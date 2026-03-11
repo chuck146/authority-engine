@@ -140,7 +140,11 @@ describe('buildBreadcrumbSchema', () => {
     expect(result['@type']).toBe('BreadcrumbList')
     const items = result.itemListElement as Array<Record<string, unknown>>
     expect(items).toHaveLength(3)
-    expect(items[0]).toMatchObject({ position: 1, name: 'Home', item: 'https://cleanestpaintingnj.com/' })
+    expect(items[0]).toMatchObject({
+      position: 1,
+      name: 'Home',
+      item: 'https://cleanestpaintingnj.com/',
+    })
     expect(items[1]).toMatchObject({ position: 2, name: 'Services' })
     expect(items[2]).toMatchObject({ position: 3, name: 'Interior Painting' })
     // Last item (current page) should not have an item URL

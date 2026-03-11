@@ -95,7 +95,7 @@ export async function getOrganizationById(id: string): Promise<Organization | nu
 export async function getRelatedServicePages(
   orgId: string,
   excludeSlug: string,
-  limit = 3
+  limit = 3,
 ): Promise<RelatedServiceLink[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -109,9 +109,7 @@ export async function getRelatedServicePages(
   return data ?? []
 }
 
-export async function getAllPublishedServiceLinks(
-  orgId: string
-): Promise<RelatedServiceLink[]> {
+export async function getAllPublishedServiceLinks(orgId: string): Promise<RelatedServiceLink[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('service_pages')
@@ -125,7 +123,7 @@ export async function getAllPublishedServiceLinks(
 export async function getRelatedLocationPages(
   orgId: string,
   excludeSlug: string,
-  limit = 4
+  limit = 4,
 ): Promise<RelatedLocationLink[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -142,7 +140,7 @@ export async function getRelatedLocationPages(
 export async function getRelatedBlogPosts(
   orgId: string,
   excludeSlug: string,
-  limit = 2
+  limit = 2,
 ): Promise<RelatedBlogLink[]> {
   const supabase = await createClient()
   const { data } = await supabase

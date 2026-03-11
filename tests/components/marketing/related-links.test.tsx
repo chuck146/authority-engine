@@ -14,7 +14,7 @@ describe('RelatedServices', () => {
           { slug: 'interior-painting', title: 'Interior Painting' },
           { slug: 'exterior-painting', title: 'Exterior Painting' },
         ]}
-      />
+      />,
     )
 
     expect(screen.getByText('Related Services')).toBeInTheDocument()
@@ -22,7 +22,7 @@ describe('RelatedServices', () => {
     expect(screen.getByText('Exterior Painting')).toBeInTheDocument()
     expect(screen.getByText('Interior Painting').closest('a')).toHaveAttribute(
       'href',
-      '/services/interior-painting'
+      '/services/interior-painting',
     )
   })
 
@@ -31,7 +31,7 @@ describe('RelatedServices', () => {
       <RelatedServices
         services={[{ slug: 'interior-painting', title: 'Interior Painting' }]}
         heading="Our Services"
-      />
+      />,
     )
     expect(screen.getByText('Our Services')).toBeInTheDocument()
   })
@@ -48,9 +48,14 @@ describe('RelatedLocations', () => {
       <RelatedLocations
         locations={[
           { slug: 'summit-nj-painting', title: 'Summit Painting', city: 'Summit', state: 'NJ' },
-          { slug: 'cranford-nj-painting', title: 'Cranford Painting', city: 'Cranford', state: 'NJ' },
+          {
+            slug: 'cranford-nj-painting',
+            title: 'Cranford Painting',
+            city: 'Cranford',
+            state: 'NJ',
+          },
         ]}
-      />
+      />,
     )
 
     expect(screen.getByText('We Also Serve')).toBeInTheDocument()
@@ -58,7 +63,7 @@ describe('RelatedLocations', () => {
     expect(screen.getByText('Cranford, NJ')).toBeInTheDocument()
     expect(screen.getByText('Summit, NJ').closest('a')).toHaveAttribute(
       'href',
-      '/locations/summit-nj-painting'
+      '/locations/summit-nj-painting',
     )
   })
 
@@ -69,7 +74,7 @@ describe('RelatedLocations', () => {
           { slug: 'summit-nj-painting', title: 'Summit Painting', city: 'Summit', state: 'NJ' },
         ]}
         heading="Nearby Areas"
-      />
+      />,
     )
     expect(screen.getByText('Nearby Areas')).toBeInTheDocument()
   })
@@ -91,7 +96,7 @@ describe('RelatedBlogPosts', () => {
             excerpt: 'Expert tips for paint selection.',
           },
         ]}
-      />
+      />,
     )
 
     expect(screen.getByText('Related Articles')).toBeInTheDocument()
@@ -99,16 +104,12 @@ describe('RelatedBlogPosts', () => {
     expect(screen.getByText('Expert tips for paint selection.')).toBeInTheDocument()
     expect(screen.getByText('How to Choose Paint Colors').closest('a')).toHaveAttribute(
       'href',
-      '/blog/choose-right-paint-color'
+      '/blog/choose-right-paint-color',
     )
   })
 
   it('renders without excerpt when null', () => {
-    render(
-      <RelatedBlogPosts
-        posts={[{ slug: 'test-post', title: 'Test Post', excerpt: null }]}
-      />
-    )
+    render(<RelatedBlogPosts posts={[{ slug: 'test-post', title: 'Test Post', excerpt: null }]} />)
 
     expect(screen.getByText('Test Post')).toBeInTheDocument()
   })

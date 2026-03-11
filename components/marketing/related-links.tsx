@@ -18,7 +18,7 @@ export function RelatedServices({
           <Link
             key={service.slug}
             href={`/services/${service.slug}`}
-            className="rounded-lg border p-4 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg border p-4 transition-colors"
           >
             <span className="font-medium">{service.title}</span>
           </Link>
@@ -45,7 +45,7 @@ export function RelatedLocations({
           <Link
             key={location.slug}
             href={`/locations/${location.slug}`}
-            className="rounded-lg border p-4 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg border p-4 transition-colors"
           >
             <span className="font-medium">
               {location.city}, {location.state}
@@ -68,13 +68,11 @@ export function RelatedBlogPosts({ posts }: { posts: RelatedBlogLink[] }) {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="rounded-lg border p-4 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg border p-4 transition-colors"
           >
             <span className="font-medium">{post.title}</span>
             {post.excerpt && (
-              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                {post.excerpt}
-              </p>
+              <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">{post.excerpt}</p>
             )}
           </Link>
         ))}
