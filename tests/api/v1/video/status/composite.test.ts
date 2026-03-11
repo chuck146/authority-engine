@@ -27,8 +27,7 @@ vi.mock('@/lib/queue/remotion-scheduler', () => ({
   getRemotionJobStatus: (...args: unknown[]) => mockGetRemotionJobStatus(...args),
 }))
 
-const { GET } =
-  await import('@/app/api/v1/video/[id]/status/route')
+const { GET } = await import('@/app/api/v1/video/[id]/status/route')
 const defaultAuth = buildAuthContext()
 
 function makeContext(id: string) {
