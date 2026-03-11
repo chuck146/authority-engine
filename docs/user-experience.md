@@ -1,6 +1,6 @@
 # Authority Engine — User Experience Guide
 
-_Last Updated: March 8, 2026_
+_Last Updated: March 11, 2026_
 
 This document describes the complete user experience of Authority Engine as it exists today — every page, flow, and interaction a user or visitor encounters.
 
@@ -597,7 +597,7 @@ SEO scores are automatically calculated when content is generated or edited.
 
 ### Search Console Tab
 
-Displays data from Google Search Console (requires GSC connection in Settings).
+Displays data from Google Search Console (requires GSC connection in Settings). Data is populated by a daily automated sync (6 AM UTC via Vercel cron) and can be manually refreshed via the "Sync Now" button in Settings or Analytics.
 
 **If not connected:** Shows a prompt to connect GSC in Settings.
 
@@ -623,7 +623,7 @@ Best-performing pages — shows URL (shortened), clicks, impressions, CTR, avera
 
 ### Analytics Tab
 
-Displays data from Google Analytics 4 (requires GA4 connection in Settings).
+Displays data from Google Analytics 4 (requires GA4 connection in Settings). Data is populated by a daily automated sync (7 AM UTC via Vercel cron) and can be manually refreshed via the "Sync Now" button in Settings or Analytics.
 
 **If not connected:** Shows a prompt to connect GA4 in Settings.
 
@@ -811,11 +811,13 @@ Four integration rows:
 3. User grants permission
 4. Google redirects back to `/api/auth/google/callback`
 5. Tokens are encrypted (AES-256-GCM) and stored
-6. **For GA4:** A property selector appears — dropdown shows each GA4 property with its website URL (e.g., `cleanestpainting.com`) for easy identification. Rollup and sub-properties are filtered out so only usable properties appear. User picks which property to track.
+6. **For GA4:** A property selector appears — dropdown shows each GA4 property with its website URL (e.g., `cleanestpaintingnj.com`) for easy identification. Rollup and sub-properties are filtered out so only usable properties appear. User picks which property to track.
 7. **For GBP:** A location selector appears — user picks which business location to sync reviews from
 8. Status updates to "Connected" with the connected resource name
 
 Users can **disconnect** any integration, which removes stored tokens.
+
+**Manual Sync:** Connected GSC and GA4 integrations show a **"Sync Now"** button that triggers an immediate data refresh. Data also syncs automatically via daily Vercel cron jobs (GSC at 6 AM UTC, GA4 at 7 AM UTC).
 
 ### SalesMessage
 
@@ -827,7 +829,7 @@ No OAuth flow — configured via environment variables (`SALESMESSAGE_API_KEY`, 
 
 **Route:** `/analytics`
 
-A unified analytics dashboard combining Google Analytics 4 and Google Search Console data with keyword rank tracking.
+A unified analytics dashboard combining Google Analytics 4 and Google Search Console data with keyword rank tracking. A **"Sync Now"** button in the page header lets users trigger an immediate GSC/GA4 data refresh without navigating to Settings.
 
 ### Date Range Picker
 
