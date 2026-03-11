@@ -28,7 +28,7 @@ vi.mock('@/lib/queue/remotion-scheduler', () => ({
 }))
 
 const { GET } =
-  await import('/Applications/RCG/authority-engine/app/api/v1/video/[id]/status/route')
+  await import('@/app/api/v1/video/[id]/status/route')
 const defaultAuth = buildAuthContext()
 
 function makeContext(id: string) {
