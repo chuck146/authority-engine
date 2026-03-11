@@ -137,7 +137,12 @@ function IntegrationRow({
                   {syncing ? 'Syncing...' : 'Sync Now'}
                 </Button>
               )}
-              <Button variant="outline" size="sm" onClick={handleDisconnect} disabled={disconnecting}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDisconnect}
+                disabled={disconnecting}
+              >
                 {disconnecting ? 'Disconnecting...' : 'Disconnect'}
               </Button>
             </>

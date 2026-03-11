@@ -11,7 +11,12 @@ function getAdminClient() {
   )
 }
 
-type ContentTableName = 'service_pages' | 'location_pages' | 'blog_posts' | 'social_posts' | 'media_assets'
+type ContentTableName =
+  | 'service_pages'
+  | 'location_pages'
+  | 'blog_posts'
+  | 'social_posts'
+  | 'media_assets'
 
 function getTableName(contentType: string): ContentTableName {
   switch (contentType) {

@@ -4,7 +4,8 @@ const mockRequireApiRole = vi.fn()
 const mockSyncGscForOrg = vi.fn()
 
 vi.mock('@/lib/auth/api-guard', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
+  const actual =
+    await vi.importActual<typeof import('@/lib/auth/api-guard')>('@/lib/auth/api-guard')
   return {
     AuthError: actual.AuthError,
     requireApiRole: (...args: unknown[]) => mockRequireApiRole(...args),

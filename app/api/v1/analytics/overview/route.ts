@@ -110,9 +110,7 @@ export async function GET(request: NextRequest) {
       .eq('organization_id', auth.organizationId)
       .in('provider', ['analytics', 'search_console'])
 
-    const ga4Conn = connections?.find(
-      (c) => c.provider === 'analytics' && c.status === 'active',
-    )
+    const ga4Conn = connections?.find((c) => c.provider === 'analytics' && c.status === 'active')
     const gscConn = connections?.find(
       (c) => c.provider === 'search_console' && c.status === 'active',
     )

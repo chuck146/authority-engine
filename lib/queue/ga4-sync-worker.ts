@@ -162,8 +162,12 @@ export async function syncGa4ForOrg(organizationId: string): Promise<void> {
 }
 
 export function createGa4SyncWorker(): Worker<Ga4SyncJobData> {
-  return new Worker<Ga4SyncJobData>('ga4-sync', async (job) => syncGa4ForOrg(job.data.organizationId), {
-    connection: getRedisConnection(),
-    concurrency: 2,
-  })
+  return new Worker<Ga4SyncJobData>(
+    'ga4-sync',
+    async (job) => syncGa4ForOrg(job.data.organizationId),
+    {
+      connection: getRedisConnection(),
+      concurrency: 2,
+    },
+  )
 }

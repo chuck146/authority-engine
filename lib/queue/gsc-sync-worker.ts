@@ -124,8 +124,12 @@ export async function syncGscForOrg(organizationId: string): Promise<void> {
 }
 
 export function createGscSyncWorker(): Worker<GscSyncJobData> {
-  return new Worker<GscSyncJobData>('gsc-sync', async (job) => syncGscForOrg(job.data.organizationId), {
-    connection: getRedisConnection(),
-    concurrency: 2,
-  })
+  return new Worker<GscSyncJobData>(
+    'gsc-sync',
+    async (job) => syncGscForOrg(job.data.organizationId),
+    {
+      connection: getRedisConnection(),
+      concurrency: 2,
+    },
+  )
 }

@@ -20,8 +20,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { range, startDate, endDate, type, sort, order, page, pageSize, search } =
-      parsed.data
+    const { range, startDate, endDate, type, sort, order, page, pageSize, search } = parsed.data
     const resolved = resolveDateRange(range as DateRangePreset, startDate, endDate)
 
     const supabase = await createClient()
@@ -40,9 +39,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode })
     }
     console.error('[Content Performance Error]', err)
-    return NextResponse.json(
-      { error: 'Failed to fetch content performance' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to fetch content performance' }, { status: 500 })
   }
 }
