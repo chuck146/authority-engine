@@ -33,7 +33,7 @@ vi.mock('@/lib/queue/video-scheduler', () => ({
   enqueueVideoJob: (...args: unknown[]) => mockEnqueueVideoJob(...args),
 }))
 
-const { POST } = await import('/Applications/RCG/authority-engine/app/api/v1/video/generate/route')
+const { POST } = await import('@/app/api/v1/video/generate/route')
 
 function makeRequest(body: unknown): Request {
   return new Request('http://localhost/api/v1/video/generate', {

@@ -12,7 +12,10 @@ export async function POST() {
       return NextResponse.json({ error: err.message }, { status: err.statusCode })
     }
     const message = err instanceof Error ? err.message : 'Unknown error'
-    console.error('[GA4 Sync Error]', err instanceof Error ? { name: err.name, message } : 'Unknown error')
+    console.error(
+      '[GA4 Sync Error]',
+      err instanceof Error ? { name: err.name, message } : 'Unknown error',
+    )
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

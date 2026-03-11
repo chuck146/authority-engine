@@ -86,9 +86,7 @@ export async function getContentPerformance(
 
   // 1. Fetch published content from relevant tables
   const contentTypes: ContentType[] =
-    type === 'all'
-      ? ['service_page', 'location_page', 'blog_post']
-      : [type]
+    type === 'all' ? ['service_page', 'location_page', 'blog_post'] : [type]
 
   const contentResults = await Promise.all(
     contentTypes.map((ct) => fetchPublishedContent(supabase, orgId, ct, search)),
@@ -100,10 +98,7 @@ export async function getContentPerformance(
   }
 
   // 2. Build slug → page_path mapping
-  const pathToContent = new Map<
-    string,
-    ContentRow & { contentType: ContentType }
-  >()
+  const pathToContent = new Map<string, ContentRow & { contentType: ContentType }>()
   for (const content of allContent) {
     const pagePath = buildPagePath(content.contentType, content.slug)
     pathToContent.set(pagePath, content)
@@ -227,13 +222,9 @@ export async function getContentPerformance(
       users: ga4?.users ?? 0,
       pageviews: ga4?.pageviews ?? 0,
       bounceRate:
-        totalSessions > 0
-          ? Math.round((ga4!.bounceRateWeighted / totalSessions) * 1000) / 1000
-          : 0,
+        totalSessions > 0 ? Math.round((ga4!.bounceRateWeighted / totalSessions) * 1000) / 1000 : 0,
       avgSessionDuration:
-        totalSessions > 0
-          ? Math.round(ga4!.avgSessionDurationWeighted / totalSessions)
-          : 0,
+        totalSessions > 0 ? Math.round(ga4!.avgSessionDurationWeighted / totalSessions) : 0,
       engagementRate:
         totalSessions > 0
           ? Math.round((ga4!.engagementRateWeighted / totalSessions) * 1000) / 1000

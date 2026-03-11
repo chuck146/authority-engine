@@ -51,9 +51,7 @@ describe('ContentPerformanceTable', () => {
     render(<ContentPerformanceTable />)
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/No published content found/),
-      ).toBeInTheDocument()
+      expect(screen.getByText(/No published content found/)).toBeInTheDocument()
     })
   })
 

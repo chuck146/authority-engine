@@ -21,7 +21,13 @@ type VideoDetailSheetProps = {
   onSchedule?: (item: VideoLibraryItem) => void
 }
 
-export function VideoDetailSheet({ item, open, onOpenChange, onDelete, onSchedule }: VideoDetailSheetProps) {
+export function VideoDetailSheet({
+  item,
+  open,
+  onOpenChange,
+  onDelete,
+  onSchedule,
+}: VideoDetailSheetProps) {
   if (!item) return null
 
   return (

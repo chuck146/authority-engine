@@ -58,9 +58,7 @@ function SeoScoreBadge({ score }: { score: number | null }) {
       : score >= 60
         ? 'bg-yellow-100 text-yellow-800'
         : 'bg-red-100 text-red-800'
-  return (
-    <span className={`rounded px-2 py-0.5 text-xs font-medium ${className}`}>{score}</span>
-  )
+  return <span className={`rounded px-2 py-0.5 text-xs font-medium ${className}`}>{score}</span>
 }
 
 function SortableHeader({
@@ -294,12 +292,8 @@ export function ContentPerformanceTable() {
                       <TableCell className="text-right">
                         <SeoScoreBadge score={item.seoScore} />
                       </TableCell>
-                      <TableCell className="text-right">
-                        {item.sessions.toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {item.users.toLocaleString()}
-                      </TableCell>
+                      <TableCell className="text-right">{item.sessions.toLocaleString()}</TableCell>
+                      <TableCell className="text-right">{item.users.toLocaleString()}</TableCell>
                       <TableCell className="text-right">
                         {item.pageviews.toLocaleString()}
                       </TableCell>

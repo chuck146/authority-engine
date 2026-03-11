@@ -136,9 +136,7 @@ describe('GET /api/v1/analytics/content-performance', () => {
     vi.mocked(requireApiAuth).mockRejectedValueOnce(new AuthError('Unauthorized', 401))
 
     const { GET } = await import('../route')
-    const request = new NextRequest(
-      'http://localhost/api/v1/analytics/content-performance',
-    )
+    const request = new NextRequest('http://localhost/api/v1/analytics/content-performance')
     const response = await GET(request)
 
     expect(response.status).toBe(401)

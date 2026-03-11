@@ -135,9 +135,7 @@ export const contentPerformanceQuerySchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .optional(),
-  type: z
-    .enum(['all', 'service_page', 'location_page', 'blog_post'])
-    .default('all'),
+  type: z.enum(['all', 'service_page', 'location_page', 'blog_post']).default('all'),
   sort: z
     .enum([
       'title',
