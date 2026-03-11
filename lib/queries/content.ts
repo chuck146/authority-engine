@@ -36,3 +36,35 @@ export async function getPublishedBlogPost(slug: string): Promise<BlogPost | nul
     .single()
   return data
 }
+
+type ContentSlug = { slug: string; updated_at: string }
+
+export async function getAllPublishedServiceSlugs(): Promise<ContentSlug[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('service_pages')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+    .returns<ContentSlug[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedLocationSlugs(): Promise<ContentSlug[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('location_pages')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+    .returns<ContentSlug[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedBlogSlugs(): Promise<ContentSlug[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('blog_posts')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+    .returns<ContentSlug[]>()
+  return data ?? []
+}
