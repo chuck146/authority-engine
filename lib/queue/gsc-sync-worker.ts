@@ -45,6 +45,12 @@ export async function syncGscForOrg(organizationId: string): Promise<void> {
     return
   }
 
+  if (!siteUrl) {
+    throw new Error(
+      'No verified site URL found for this GSC connection. Disconnect and reconnect Google Search Console in Settings to select a verified property.',
+    )
+  }
+
   const { startDate, endDate } = getDateRange()
   const today = formatDate(new Date())
 

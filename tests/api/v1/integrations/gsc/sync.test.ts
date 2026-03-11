@@ -86,6 +86,6 @@ describe('POST /api/v1/integrations/gsc/sync', () => {
     const body = await res.json()
 
     expect(res.status).toBe(500)
-    expect(body.error).toBe('Failed to sync Google Search Console')
+    expect(body.error).toBe('Token expired')
   })
 })

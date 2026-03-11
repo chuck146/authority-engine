@@ -11,7 +11,8 @@ export async function POST() {
     if (err instanceof AuthError) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode })
     }
-    console.error('[GSC Sync Error]', err instanceof Error ? { name: err.name, message: err.message } : 'Unknown error')
-    return NextResponse.json({ error: 'Failed to sync Google Search Console' }, { status: 500 })
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    console.error('[GSC Sync Error]', err instanceof Error ? { name: err.name, message } : 'Unknown error')
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
