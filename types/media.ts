@@ -2,7 +2,12 @@ import { z } from 'zod'
 
 // --- Image Type Discriminator ---
 
-export const imageTypeSchema = z.enum(['blog_thumbnail', 'location_hero', 'service_hero', 'social_graphic'])
+export const imageTypeSchema = z.enum([
+  'blog_thumbnail',
+  'location_hero',
+  'service_hero',
+  'social_graphic',
+])
 export type ImageType = z.infer<typeof imageTypeSchema>
 
 // --- Style and Mood Options ---

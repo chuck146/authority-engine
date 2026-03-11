@@ -14,9 +14,7 @@ type LocationPageLayoutProps = {
 export function LocationPageLayout({ page, phone, estimateUrl }: LocationPageLayoutProps) {
   const content = page.content as unknown as StructuredContent
   const zipBadge =
-    page.zip_codes && page.zip_codes.length > 0
-      ? `ZIP: ${page.zip_codes.join(', ')}`
-      : undefined
+    page.zip_codes && page.zip_codes.length > 0 ? `ZIP: ${page.zip_codes.join(', ')}` : undefined
 
   return (
     <article>

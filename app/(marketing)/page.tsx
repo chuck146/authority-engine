@@ -83,7 +83,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.08),transparent_60%)]" />
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <span className="mb-4 inline-block rounded-full bg-amber-400/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-900">
+            <span className="mb-4 inline-block rounded-full bg-amber-400/90 px-4 py-1.5 text-xs font-semibold tracking-wider text-gray-900 uppercase">
               Northern New Jersey
             </span>
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -126,7 +126,11 @@ export default async function HomePage() {
             { icon: Star, label: '5-Star Rated', desc: 'Google Reviews' },
             { icon: Shield, label: 'Fully Insured', desc: 'Licensed & Bonded' },
             { icon: Clock, label: 'On-Time', desc: 'Every Project' },
-            { icon: Paintbrush, label: 'Premium Paints', desc: 'Benjamin Moore & Sherwin-Williams' },
+            {
+              icon: Paintbrush,
+              label: 'Premium Paints',
+              desc: 'Benjamin Moore & Sherwin-Williams',
+            },
           ].map((item) => (
             <div key={item.label} className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#1B2B5B]/10">
@@ -267,7 +271,7 @@ export default async function HomePage() {
       )}
 
       {/* Footer */}
-      <footer className="border-t bg-white px-4 py-12 dark:bg-gray-950 sm:px-6">
+      <footer className="border-t bg-white px-4 py-12 sm:px-6 dark:bg-gray-950">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {/* Brand */}
@@ -276,12 +280,12 @@ export default async function HomePage() {
                 <Image src={org.logo_url} alt={org.name} width={48} height={48} className="mb-3" />
               )}
               <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{org.name}</p>
-              <p className="mt-1 text-sm italic text-gray-500">{tagline}</p>
+              <p className="mt-1 text-sm text-gray-500 italic">{tagline}</p>
             </div>
 
             {/* Contact */}
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-500 uppercase">
                 Contact
               </h3>
               {phone && (
@@ -304,7 +308,7 @@ export default async function HomePage() {
 
             {/* Services */}
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-500 uppercase">
                 Services
               </h3>
               <ul className="space-y-1">
@@ -323,7 +327,7 @@ export default async function HomePage() {
 
             {/* Locations */}
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-500 uppercase">
                 Service Areas
               </h3>
               <ul className="space-y-1">

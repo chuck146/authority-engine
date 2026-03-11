@@ -157,7 +157,8 @@ async function main() {
   if (dryRun) console.log('  [DRY RUN — no images will be generated]')
   if (filterType) console.log(`  Filter: type=${filterType}`)
   if (filterSlug) console.log(`  Filter: slug=${filterSlug}`)
-  if (skipExisting) console.log('  Skipping pages that already have a hero image (use --force to override)')
+  if (skipExisting)
+    console.log('  Skipping pages that already have a hero image (use --force to override)')
   console.log()
 
   let generated = 0
