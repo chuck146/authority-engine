@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 2026_
+_Last Updated: March 11, 2026_
 
 ---
 
@@ -255,7 +255,18 @@ _Last Updated: March 2026_
 - [x] Sync Now buttons in Settings and Analytics UI
 - [x] Extracted standalone sync functions from BullMQ workers (no Redis dependency)
 - [x] Analytics "not connected" fix: decoupled connection status from token validation
+- [x] Empty siteUrl validation fix in GSC sync + actionable error messages
 - [x] Test suite: 40 new cron + manual sync tests (1191+ total)
+
+**Post-V2: Custom Domain Migration** ✅
+
+- [x] Custom domain `cleanestpaintingnj.com` configured in Vercel (apex, Production)
+- [x] DNS updated in SiteGround: A records for apex + www → Vercel IP (`216.150.1.1`), mail/FTP preserved
+- [x] Supabase Auth: `https://cleanestpaintingnj.com` added to redirect URLs
+- [x] Google Cloud OAuth consent screen pushed to Production mode (tokens won't expire)
+- [x] GSC disconnected/reconnected under new domain (`cleanestpaintingnj.com` as site_url)
+- [x] GA4 reconnected and property re-selected
+- [x] Manual sync verified working for both GSC and GA4
 
 ### What's Next
 

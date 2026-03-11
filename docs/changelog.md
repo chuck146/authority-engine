@@ -9,6 +9,23 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Custom domain migration:** Production app now served at `cleanestpaintingnj.com` (apex domain, no www redirect) via Vercel
+- **DNS configuration:** A records updated in SiteGround (apex + www → Vercel IP `216.150.1.1`), mail/FTP records preserved on SiteGround hosting
+- **Google Cloud OAuth production mode:** OAuth consent screen pushed to Production — tokens no longer expire after 7 days
+- **Supabase Auth redirect URL:** `https://cleanestpaintingnj.com` added to allowed redirect URLs
+- **GSC/GA4 reconnected:** Google Search Console and Google Analytics 4 re-authenticated under `cleanestpaintingnj.com` domain, manual sync verified working
+
+### Changed
+
+- **Production URL:** Moved from `authority-engine-rose.vercel.app` to `cleanestpaintingnj.com`
+- **Google integrations:** GSC site_url now stores `cleanestpaintingnj.com`, GA4 property re-selected
+
+---
+
+## [V2.6] — 2026-03-11
+
+### Added
+
 - **Vercel cron jobs for GSC/GA4 sync:** Daily scheduled sync via Vercel cron (GSC at 6 AM UTC, GA4 at 7 AM UTC) replaces BullMQ scheduler on serverless — timing-safe CRON_SECRET auth, per-org sequential sync with error isolation (app/api/cron/sync-gsc/, app/api/cron/sync-ga4/, vercel.json)
 - **Manual sync API endpoints:** POST /api/v1/integrations/gsc/sync and /ga4/sync — admin-only manual trigger that calls extracted syncGscForOrg/syncGa4ForOrg directly (app/api/v1/integrations/gsc/sync/, app/api/v1/integrations/ga4/sync/)
 - **Sync Now buttons:** Settings integrations section and Analytics page header show "Sync Now" buttons for manual GSC/GA4 data refresh (components/settings/integrations-section.tsx, components/analytics/analytics-page-client.tsx)
@@ -22,6 +39,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - **Analytics "not connected" false negative:** Decoupled connection status from data fetch success — checks google_connections DB directly instead of relying on getValidToken() which throws on token refresh issues. Analytics overview API now returns hasGscConnection/hasGa4Connection flags alongside data (app/api/v1/analytics/overview/route.ts, components/analytics/analytics-page-client.tsx)
+- **Empty siteUrl validation:** syncGscForOrg() now validates that site_url is non-empty before attempting sync, surfaces actionable error messages in GSC/GA4 sync endpoints
 
 ---
 
