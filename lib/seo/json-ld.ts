@@ -9,7 +9,9 @@ import type {
 } from '@/types'
 import type { StructuredContent } from '@/types/content'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
+function getBaseUrl(): string {
+  return process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
+}
 
 type BreadcrumbItem = { label: string; href?: string }
 
@@ -21,7 +23,7 @@ export function buildBreadcrumbSchema(items: BreadcrumbItem[]): Record<string, u
       '@type': 'ListItem',
       position: index + 1,
       name: item.label,
-      ...(item.href && { item: `${BASE_URL}${item.href}` }),
+      ...(item.href && { item: `${getBaseUrl()}${item.href}` }),
     })),
   }
 }
@@ -35,7 +37,7 @@ function buildBusinessSchema(org: Organization): Record<string, unknown> {
     '@context': 'https://schema.org',
     '@type': 'HomeAndConstructionBusiness',
     name: org.name,
-    url: BASE_URL,
+    url: getBaseUrl(),
     ...(org.logo_url && { logo: org.logo_url }),
     ...(branding?.tagline && { description: branding.tagline }),
     ...(contact?.phone && { telephone: contact.phone }),
@@ -76,11 +78,11 @@ export function buildServicePageSchemas(
     '@type': 'Service',
     name: page.title,
     description: content.meta_description,
-    url: `${BASE_URL}/services/${page.slug}`,
+    url: `${getBaseUrl()}/services/${page.slug}`,
     provider: {
       '@type': 'HomeAndConstructionBusiness',
       name: org.name,
-      url: BASE_URL,
+      url: getBaseUrl(),
     },
   }
 
@@ -121,7 +123,7 @@ export function buildLocationPageSchemas(
     '@type': 'Service',
     name: `Painting Services in ${page.city}, ${page.state}`,
     description: content.meta_description,
-    url: `${BASE_URL}/locations/${page.slug}`,
+    url: `${getBaseUrl()}/locations/${page.slug}`,
     areaServed: {
       '@type': 'City',
       name: `${page.city}, ${page.state}`,
@@ -129,7 +131,7 @@ export function buildLocationPageSchemas(
     provider: {
       '@type': 'HomeAndConstructionBusiness',
       name: org.name,
-      url: BASE_URL,
+      url: getBaseUrl(),
     },
   }
 
@@ -150,18 +152,18 @@ export function buildBlogPostSchemas(post: BlogPost, org: Organization): Record<
     '@type': 'Article',
     headline: content.headline ?? post.title,
     description: content.meta_description ?? post.excerpt,
-    url: `${BASE_URL}/blog/${post.slug}`,
+    url: `${getBaseUrl()}/blog/${post.slug}`,
     datePublished: post.published_at,
     dateModified: post.updated_at,
     author: {
       '@type': 'Organization',
       name: org.name,
-      url: BASE_URL,
+      url: getBaseUrl(),
     },
     publisher: {
       '@type': 'Organization',
       name: org.name,
-      url: BASE_URL,
+      url: getBaseUrl(),
       ...(org.logo_url && {
         logo: {
           '@type': 'ImageObject',
