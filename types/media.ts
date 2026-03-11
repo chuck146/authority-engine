@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // --- Image Type Discriminator ---
 
-export const imageTypeSchema = z.enum(['blog_thumbnail', 'location_hero', 'social_graphic'])
+export const imageTypeSchema = z.enum(['blog_thumbnail', 'location_hero', 'service_hero', 'social_graphic'])
 export type ImageType = z.infer<typeof imageTypeSchema>
 
 // --- Style and Mood Options ---
@@ -31,6 +31,13 @@ export const locationHeroInputSchema = z.object({
   style: imageStyleSchema,
 })
 
+export const serviceHeroInputSchema = z.object({
+  imageType: z.literal('service_hero'),
+  serviceName: z.string().min(2).max(200),
+  serviceDescription: z.string().max(500).optional(),
+  style: imageStyleSchema,
+})
+
 export const socialGraphicInputSchema = z.object({
   imageType: z.literal('social_graphic'),
   message: z.string().min(5).max(300),
@@ -43,11 +50,13 @@ export const socialGraphicInputSchema = z.object({
 export const generateImageRequestSchema = z.discriminatedUnion('imageType', [
   blogThumbnailInputSchema,
   locationHeroInputSchema,
+  serviceHeroInputSchema,
   socialGraphicInputSchema,
 ])
 
 export type BlogThumbnailInput = z.infer<typeof blogThumbnailInputSchema>
 export type LocationHeroInput = z.infer<typeof locationHeroInputSchema>
+export type ServiceHeroInput = z.infer<typeof serviceHeroInputSchema>
 export type SocialGraphicInput = z.infer<typeof socialGraphicInputSchema>
 export type GenerateImageRequest = z.infer<typeof generateImageRequestSchema>
 

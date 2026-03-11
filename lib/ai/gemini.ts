@@ -25,7 +25,7 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gemi
   const client = getGeminiClient()
 
   const response = await client.models.generateContent({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.5-flash-image',
     contents: options.prompt,
     config: {
       responseModalities: ['IMAGE'],

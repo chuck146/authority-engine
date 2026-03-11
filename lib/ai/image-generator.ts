@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import {
   buildBlogThumbnailPrompt,
   buildLocationHeroPrompt,
+  buildServiceHeroPrompt,
   buildSocialGraphicPrompt,
 } from '@/packages/ai/prompts/images'
 import type { OrgContext } from '@/packages/ai/prompts/content/shared'
@@ -70,6 +71,8 @@ function buildImagePrompt(input: GenerateImageRequest, org: OrgContext): string 
       return buildBlogThumbnailPrompt(input, org)
     case 'location_hero':
       return buildLocationHeroPrompt(input, org)
+    case 'service_hero':
+      return buildServiceHeroPrompt(input, org)
     case 'social_graphic':
       return buildSocialGraphicPrompt(input, org)
   }
@@ -81,6 +84,8 @@ function buildAltText(input: GenerateImageRequest, org: OrgContext): string {
       return `Blog thumbnail for "${input.topic}" — ${org.orgName}`
     case 'location_hero':
       return `${input.serviceName} in ${input.city}, ${input.state} — ${org.orgName}`
+    case 'service_hero':
+      return `Professional ${input.serviceName} — ${org.orgName}`
     case 'social_graphic':
       return `Social graphic: ${input.message.slice(0, 80)} — ${org.orgName}`
   }
@@ -99,6 +104,8 @@ function buildFilename(input: GenerateImageRequest): string {
       return `blog-${slug(input.topic)}.png`
     case 'location_hero':
       return `hero-${slug(input.city)}-${input.state.toLowerCase()}.png`
+    case 'service_hero':
+      return `service-hero-${slug(input.serviceName)}.png`
     case 'social_graphic':
       return `social-${slug(input.message)}.png`
   }

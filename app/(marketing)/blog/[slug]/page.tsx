@@ -11,6 +11,7 @@ import { BlogPostLayout } from '@/components/marketing/blog-post-layout'
 import { JsonLd } from '@/components/marketing/json-ld'
 import { RelatedBlogPosts, RelatedServices } from '@/components/marketing/related-links'
 import type { StructuredContent } from '@/types/content'
+import type { OrgSettings } from '@/types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 
@@ -51,10 +52,14 @@ export default async function BlogPostRoute({ params }: Props) {
     getRelatedServicePages(post.organization_id, '', 2),
   ])
 
+  const settings = org?.settings as OrgSettings | null
+  const phone = settings?.contact_info?.phone
+  const estimateUrl = settings?.estimate_url
+
   return (
     <>
       {org && <JsonLd data={buildBlogPostSchemas(post, org)} />}
-      <BlogPostLayout post={post} />
+      <BlogPostLayout post={post} phone={phone} estimateUrl={estimateUrl} />
       <RelatedBlogPosts posts={relatedPosts} />
       <RelatedServices services={relatedServices} />
     </>

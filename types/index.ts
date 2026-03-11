@@ -203,6 +203,7 @@ export type OrgSettings = {
   service_area_states?: string[]
   service_area_counties?: string[]
   contact_info?: OrgContactInfo
+  estimate_url?: string
   hubspot_portal_id?: string
   clickup_list_id?: string
 }
