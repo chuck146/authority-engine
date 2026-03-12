@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 type FooterLink = { slug: string; title: string; city?: string; state?: string }
 
@@ -38,7 +37,8 @@ export function SiteFooter({
           <div>
             <Link href="/" className="flex items-center gap-3">
               {logoUrl ? (
-                <Image src={logoUrl} alt={orgName} width={44} height={44} className="rounded-xl" />
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={logoUrl} alt={orgName} width={44} height={44} className="rounded-xl" />
               ) : (
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#4CB848]">
                   <svg viewBox="0 0 24 24" fill="white" className="h-6 w-6">
