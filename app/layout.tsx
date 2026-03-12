@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     template: '%s | Authority Engine',
   },
   description: 'SEO & Growth Platform for Home Improvement Companies',
+  icons: {
+    icon: '/favicon.png',
+    apple: '/logo.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
