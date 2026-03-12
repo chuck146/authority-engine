@@ -24,7 +24,9 @@ export default async function MarketingLayout({ children }: { children: React.Re
   const settings = org.settings as unknown as OrgSettings | null
   const phone = settings?.contact_info?.phone
   const email = settings?.contact_info?.email
-  const estimateUrl = settings?.estimate_url
+  const rawEstimateUrl = settings?.estimate_url
+  const estimateUrl =
+    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
   const tagline = branding?.tagline ?? 'Where Artistry Meets Craftsmanship'
 
   const [services, locations] = await Promise.all([

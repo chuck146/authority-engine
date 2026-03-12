@@ -52,7 +52,9 @@ export default async function ServicePageRoute({ params }: Props) {
 
   const settings = org?.settings as OrgSettings | null
   const phone = settings?.contact_info?.phone
-  const estimateUrl = settings?.estimate_url
+  const rawEstimateUrl = settings?.estimate_url
+  const estimateUrl =
+    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
 
   return (
     <>
