@@ -268,9 +268,30 @@ _Last Updated: March 11, 2026_
 - [x] GA4 reconnected and property re-selected
 - [x] Manual sync verified working for both GSC and GA4
 
+**Post-V2: Marketing Visual Overhaul** 🔄 In Progress
+
+- [x] Database migration: `hero_image_url TEXT` column on service_pages and location_pages
+- [x] Service hero image type: `service_hero` added to Nano Banana 2 pipeline with prompt template
+- [x] Hero image generation script: `scripts/generate-hero-images.ts` (batch CLI with --type, --slug, --dry-run, --force)
+- [x] Marketing layout components: HeroSection (full-width image/gradient fallback), BrandedCta (navy + gold CTA bar)
+- [x] Service/location/blog page layouts upgraded: HeroSection + BrandedCta, phone/estimateUrl props, og:image support
+- [x] Content body enhanced: larger h2, brand-colored links, amber list markers, section dividers
+- [x] Homepage redesigned: 7 modular section components (HeroSplit, TrustBar, AboutSection, ServicesDark, CtaBanner, Testimonials, ServiceAreas)
+- [x] Shared marketing components: SiteHeader (sticky nav + mobile menu), SiteFooter (multi-column with service/location links), ScrollReveal (intersection observer animations)
+- [x] Marketing layout refactored: fetches org data, renders shared header/footer for all public pages
+- [x] CSS utilities: brand color custom properties, font-display class, gradient/animation utilities
+- [x] Seed data updated: navy branding (#1B2B5B), DM Sans fonts, contact_info, estimate_url
+- [x] OrgSettings type extended with estimate_url field
+- [x] Typecheck + lint pass clean (0 errors, 0 warnings)
+- [ ] Migration not yet applied to live Supabase
+- [ ] Types not yet regenerated from schema
+- [ ] Hero images not yet generated
+- [ ] PR not yet created
+
 ### What's Next
 
-- V2 complete — proceed to Later milestone (White-Label + Community)
+- Complete marketing visual overhaul (apply migration, generate hero images, create PR)
+- Proceed to Later milestone (White-Label + Community)
 
 ### Blockers
 
