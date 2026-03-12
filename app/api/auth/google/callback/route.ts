@@ -64,13 +64,11 @@ export async function GET(request: NextRequest) {
   try {
     // Exchange code for tokens
     const tokens = await exchangeCodeForTokens(code)
-    console.log(`[Google Callback] Token exchange succeeded for provider=${stateData.provider}`)
 
     // Resolve site_url / property ID based on provider (non-fatal — user can select later)
     let siteUrl = ''
     try {
       siteUrl = await resolveSiteUrl(stateData.provider, tokens.access_token)
-      console.log(`[Google Callback] resolveSiteUrl result: "${siteUrl}"`)
     } catch (resolveErr) {
       console.warn(
         '[Google Callback] resolveSiteUrl failed (non-fatal):',

@@ -4,6 +4,7 @@ import type { ImageType } from '@/types/media'
 export const IMAGE_DIMENSIONS: Record<ImageType, { width: number; height: number }> = {
   blog_thumbnail: { width: 1200, height: 630 },
   location_hero: { width: 1920, height: 1080 },
+  service_hero: { width: 1920, height: 1080 },
   social_graphic: { width: 1080, height: 1080 },
 }
 

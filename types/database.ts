@@ -443,6 +443,7 @@ export type Database = {
           content: Json
           created_at: string
           created_by: string | null
+          hero_image_url: string | null
           id: string
           keywords: string[] | null
           latitude: number | null
@@ -467,6 +468,7 @@ export type Database = {
           content?: Json
           created_at?: string
           created_by?: string | null
+          hero_image_url?: string | null
           id?: string
           keywords?: string[] | null
           latitude?: number | null
@@ -491,6 +493,7 @@ export type Database = {
           content?: Json
           created_at?: string
           created_by?: string | null
+          hero_image_url?: string | null
           id?: string
           keywords?: string[] | null
           latitude?: number | null
@@ -784,6 +787,7 @@ export type Database = {
           content: Json
           created_at: string
           created_by: string | null
+          hero_image_url: string | null
           id: string
           keywords: string[] | null
           meta_description: string | null
@@ -803,6 +807,7 @@ export type Database = {
           content?: Json
           created_at?: string
           created_by?: string | null
+          hero_image_url?: string | null
           id?: string
           keywords?: string[] | null
           meta_description?: string | null
@@ -822,6 +827,7 @@ export type Database = {
           content?: Json
           created_at?: string
           created_by?: string | null
+          hero_image_url?: string | null
           id?: string
           keywords?: string[] | null
           meta_description?: string | null

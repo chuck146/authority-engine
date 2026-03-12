@@ -26,6 +26,7 @@ import {
 import {
   blogThumbnailInputSchema,
   locationHeroInputSchema,
+  serviceHeroInputSchema,
   socialGraphicInputSchema,
   type ImageType,
   type GenerateImageResponse,
@@ -38,6 +39,7 @@ type ImageGenerateFormProps = {
 const schemaMap = {
   blog_thumbnail: blogThumbnailInputSchema,
   location_hero: locationHeroInputSchema,
+  service_hero: serviceHeroInputSchema,
   social_graphic: socialGraphicInputSchema,
 } as const
 

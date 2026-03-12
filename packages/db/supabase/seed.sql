@@ -15,19 +15,30 @@ values (
   'Cleanest Painting LLC',
   'cleanest-painting',
   'cleanestpainting.com',
-  'https://placehold.co/400x400/1a472a/fbbf24?text=CP',
+  '/logo.png',
   '{
-    "primary": "#1a472a",
+    "primary": "#1B2B5B",
     "secondary": "#fbbf24",
     "accent": "#1e3a5f",
     "tagline": "Where Artistry Meets Craftsmanship",
-    "fonts": { "heading": "Montserrat", "body": "Open Sans" }
+    "fonts": { "heading": "DM Sans", "body": "DM Sans" }
   }'::jsonb,
   '{
     "hubspot_portal_id": "21546007",
     "clickup_list_id": "901320531655",
     "service_area_states": ["NJ"],
-    "service_area_counties": ["Union", "Essex", "Morris", "Somerset"]
+    "service_area_counties": ["Union", "Essex", "Morris", "Somerset"],
+    "contact_info": {
+      "phone": "(908) 361-4693",
+      "email": "info@cleanestpainting.com",
+      "address": {
+        "streetAddress": "123 Main St",
+        "city": "Summit",
+        "state": "NJ",
+        "postalCode": "07901"
+      }
+    },
+    "estimate_url": "https://cleanestpaintingnj.com/estimate"
   }'::jsonb,
   'pro'
 );

@@ -14,11 +14,37 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Google Cloud OAuth production mode:** OAuth consent screen pushed to Production — tokens no longer expire after 7 days
 - **Supabase Auth redirect URL:** `https://cleanestpaintingnj.com` added to allowed redirect URLs
 - **GSC/GA4 reconnected:** Google Search Console and Google Analytics 4 re-authenticated under `cleanestpaintingnj.com` domain, manual sync verified working
+- **Marketing visual overhaul — homepage redesign:** Full-width editorial homepage with 7 modular section components replacing the original placeholder page (app/(marketing)/page.tsx)
+  - **HeroSplit:** Split-layout hero with headline, tagline, phone/estimate CTAs, and decorative paint-stroke image (components/marketing/home/hero-split.tsx)
+  - **TrustBar:** Social proof strip with stats (years in business, 5-star reviews, projects completed, satisfaction rate) (components/marketing/home/trust-bar.tsx)
+  - **AboutSection:** Two-column about section with brand story and value highlights (components/marketing/home/about-section.tsx)
+  - **ServicesDark:** Dark-background services grid with icon cards linking to published service pages (components/marketing/home/services-dark.tsx)
+  - **CtaBanner:** Full-width branded CTA banner with estimate link (components/marketing/home/cta-banner.tsx)
+  - **Testimonials:** Customer testimonial cards with star ratings and brand accent colors (components/marketing/home/testimonials.tsx)
+  - **ServiceAreas:** Location grid linking to published location pages (components/marketing/home/service-areas.tsx)
+- **Shared marketing layout components:** SiteHeader (sticky nav with mobile menu) and SiteFooter (multi-column footer with services/locations links) rendered via marketing layout for all public pages (components/marketing/site-header.tsx, components/marketing/site-footer.tsx)
+- **SiteHeaderWrapper:** Client component wrapper for scroll-aware sticky header behavior (components/marketing/site-header-wrapper.tsx)
+- **ScrollReveal:** Intersection Observer animation component for scroll-triggered fade-in effects across marketing pages (components/marketing/scroll-reveal.tsx)
+- **Marketing CSS utilities:** Custom properties for brand colors (--color-brand-green, --color-brand-gold), font-display utility class, gradient/animation utilities (app/globals.css)
+- **Database migration:** `20260312000001_add_hero_image_columns.sql` — adds `hero_image_url TEXT` to service_pages and location_pages
+- **Service hero image type:** `service_hero` added to Nano Banana 2 pipeline with prompt template (types/media.ts, packages/ai/prompts/images/service-hero.ts)
+- **Hero image generation script:** `scripts/generate-hero-images.ts` — standalone CLI for batch-generating hero images via Gemini Flash Image + Supabase Storage (--type, --slug, --dry-run, --force flags)
+- **Marketing layout components:** HeroSection (full-width with image/gradient fallback), BrandedCta (navy + gold CTA bar) used by service/location/blog page layouts (components/marketing/hero-section.tsx, components/marketing/branded-cta.tsx)
 
 ### Changed
 
 - **Production URL:** Moved from `authority-engine-rose.vercel.app` to `cleanestpaintingnj.com`
 - **Google integrations:** GSC site_url now stores `cleanestpaintingnj.com`, GA4 property re-selected
+- **Marketing layout refactored:** Layout now fetches org data and renders shared SiteHeader + SiteFooter around children, removing per-page header/footer duplication (app/(marketing)/layout.tsx)
+- **Root layout updated:** Added DM Sans font-display CSS class and marketing-specific global styles (app/layout.tsx)
+- **Service/location/blog page layouts upgraded:** Use HeroSection + BrandedCta, accept phone/estimateUrl props, og:image from hero_image_url (components/marketing/service-page-layout.tsx, location-page-layout.tsx, blog-post-layout.tsx)
+- **Content body enhanced:** Improved prose styles — larger h2, brand-colored links, amber list markers, section dividers (components/marketing/content-body.tsx)
+- **Seed data updated:** Org branding navy (#1B2B5B), DM Sans fonts, contact_info (phone, email, address), estimate_url
+- **OrgSettings type extended:** Added `estimate_url` field
+
+### Fixed
+
+- **Google OAuth callback cleanup:** Removed 2 success-path `console.log` debug statements that triggered lint warnings (app/api/auth/google/callback/route.ts)
 
 ---
 

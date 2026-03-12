@@ -1,15 +1,22 @@
 import type { ServicePage } from '@/types'
 import type { StructuredContent } from '@/types/content'
-import { PageHeader } from './page-header'
+import { HeroSection } from './hero-section'
 import { ContentBody } from './content-body'
-import { PageFooterCta } from './page-footer-cta'
+import { BrandedCta } from './branded-cta'
 
-export function ServicePageLayout({ page }: { page: ServicePage }) {
+type ServicePageLayoutProps = {
+  page: ServicePage
+  phone?: string
+  estimateUrl?: string
+}
+
+export function ServicePageLayout({ page, phone, estimateUrl }: ServicePageLayoutProps) {
   const content = page.content as unknown as StructuredContent
 
   return (
     <article>
-      <PageHeader
+      <HeroSection
+        imageUrl={(page as Record<string, unknown>).hero_image_url as string | null}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Services', href: '/services' },
@@ -17,8 +24,10 @@ export function ServicePageLayout({ page }: { page: ServicePage }) {
         ]}
         title={content.headline}
       />
-      <ContentBody content={content} />
-      <PageFooterCta cta={content.cta} />
+      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+        <ContentBody content={content} />
+        <BrandedCta cta={content.cta} phone={phone} estimateUrl={estimateUrl} />
+      </div>
     </article>
   )
 }
