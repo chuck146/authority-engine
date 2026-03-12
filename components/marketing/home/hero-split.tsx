@@ -61,13 +61,7 @@ export function HeroSplit({ orgName, estimateUrl, phone, heroVideo }: HeroSplitP
           {/* Hero video / fallback */}
           <div className="relative z-10 h-[520px] overflow-hidden rounded-2xl bg-black shadow-xl">
             {heroVideo ? (
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="h-full w-full object-contain"
-              >
+              <video autoPlay muted loop playsInline className="h-full w-full object-contain">
                 <source src={heroVideo} type="video/quicktime" />
                 <source src={heroVideo} type="video/mp4" />
               </video>

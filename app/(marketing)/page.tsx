@@ -87,7 +87,12 @@ export default async function HomePage() {
     <>
       <JsonLd data={[businessSchema]} />
 
-      <HeroSplit orgName={org.name} estimateUrl={estimateUrl} phone={phone} heroVideo="/hero-video.mov" />
+      <HeroSplit
+        orgName={org.name}
+        estimateUrl={estimateUrl}
+        phone={phone}
+        heroVideo="/hero-video.mov"
+      />
 
       <TrustBar />
 
@@ -95,10 +100,26 @@ export default async function HomePage() {
 
       <ProjectGallery
         projects={[
-          { src: '/project-1.jpeg', alt: 'Exterior painting of a brick colonial home with green shutters and white trim', label: 'Exterior Painting' },
-          { src: '/project-2.jpeg', alt: 'Interior painting of a vaulted ceiling living room with scaffolding and recessed lighting', label: 'Interior Painting' },
-          { src: '/project-3.jpeg', alt: 'Interior painting with vibrant yellow accent walls and crisp white trim', label: 'Interior Painting' },
-          { src: '/project-4.jpeg', alt: 'Wallpaper installation with floral pattern and custom wainscoting in a powder room', label: 'Wallpaper & Wainscoting' },
+          {
+            src: '/project-1.jpeg',
+            alt: 'Exterior painting of a brick colonial home with green shutters and white trim',
+            label: 'Exterior Painting',
+          },
+          {
+            src: '/project-2.jpeg',
+            alt: 'Interior painting of a vaulted ceiling living room with scaffolding and recessed lighting',
+            label: 'Interior Painting',
+          },
+          {
+            src: '/project-3.jpeg',
+            alt: 'Interior painting with vibrant yellow accent walls and crisp white trim',
+            label: 'Interior Painting',
+          },
+          {
+            src: '/project-4.jpeg',
+            alt: 'Wallpaper installation with floral pattern and custom wainscoting in a powder room',
+            label: 'Wallpaper & Wainscoting',
+          },
         ]}
       />
 
