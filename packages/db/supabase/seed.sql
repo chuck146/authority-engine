@@ -15,7 +15,7 @@ values (
   'Cleanest Painting LLC',
   'cleanest-painting',
   'cleanestpainting.com',
-  'https://placehold.co/400x400/1a472a/fbbf24?text=CP',
+  '/logo.png',
   '{
     "primary": "#1B2B5B",
     "secondary": "#fbbf24",
