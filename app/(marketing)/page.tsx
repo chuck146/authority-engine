@@ -15,6 +15,7 @@ import { AboutSection } from '@/components/marketing/home/about-section'
 import { ServicesDark } from '@/components/marketing/home/services-dark'
 import { CtaBanner } from '@/components/marketing/home/cta-banner'
 import { Testimonials } from '@/components/marketing/home/testimonials'
+import { ProjectGallery } from '@/components/marketing/home/project-gallery'
 import { ServiceAreas } from '@/components/marketing/home/service-areas'
 import type { OrgBranding, OrgSettings } from '@/types'
 
@@ -86,11 +87,41 @@ export default async function HomePage() {
     <>
       <JsonLd data={[businessSchema]} />
 
-      <HeroSplit orgName={org.name} estimateUrl={estimateUrl} phone={phone} />
+      <HeroSplit
+        orgName={org.name}
+        estimateUrl={estimateUrl}
+        phone={phone}
+        heroVideo="/hero-video.mov"
+      />
 
       <TrustBar />
 
       <AboutSection />
+
+      <ProjectGallery
+        projects={[
+          {
+            src: '/project-1.jpeg',
+            alt: 'Exterior painting of a brick colonial home with green shutters and white trim',
+            label: 'Exterior Painting',
+          },
+          {
+            src: '/project-2.jpeg',
+            alt: 'Interior painting of a vaulted ceiling living room with scaffolding and recessed lighting',
+            label: 'Interior Painting',
+          },
+          {
+            src: '/project-3.jpeg',
+            alt: 'Interior painting with vibrant yellow accent walls and crisp white trim',
+            label: 'Interior Painting',
+          },
+          {
+            src: '/project-4.jpeg',
+            alt: 'Wallpaper installation with floral pattern and custom wainscoting in a powder room',
+            label: 'Wallpaper & Wainscoting',
+          },
+        ]}
+      />
 
       <ServicesDark services={services} />
 

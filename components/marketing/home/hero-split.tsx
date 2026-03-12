@@ -4,9 +4,10 @@ type HeroSplitProps = {
   orgName: string
   estimateUrl?: string | null
   phone?: string | null
+  heroVideo?: string | null
 }
 
-export function HeroSplit({ orgName, estimateUrl, phone }: HeroSplitProps) {
+export function HeroSplit({ orgName, estimateUrl, phone, heroVideo }: HeroSplitProps) {
   return (
     <section className="relative overflow-hidden bg-[var(--color-brand-cream)]">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-32">
@@ -57,14 +58,23 @@ export function HeroSplit({ orgName, estimateUrl, phone }: HeroSplitProps) {
             style={{ clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
           />
 
-          {/* Placeholder hero area */}
-          <div className="relative z-10 flex h-[420px] items-center justify-center rounded-2xl bg-white/80 shadow-xl backdrop-blur">
-            <div className="text-center text-gray-400">
-              <div className="text-5xl font-bold text-[var(--color-brand-green)]">
-                {orgName.charAt(0)}
+          {/* Hero video / fallback */}
+          <div className="relative z-10 h-[520px] overflow-hidden rounded-2xl bg-black shadow-xl">
+            {heroVideo ? (
+              <video autoPlay muted loop playsInline className="h-full w-full object-contain">
+                <source src={heroVideo} type="video/quicktime" />
+                <source src={heroVideo} type="video/mp4" />
+              </video>
+            ) : (
+              <div className="flex h-full items-center justify-center bg-white/80 backdrop-blur">
+                <div className="text-center text-gray-400">
+                  <div className="text-5xl font-bold text-[var(--color-brand-green)]">
+                    {orgName.charAt(0)}
+                  </div>
+                  <p className="mt-2 text-sm">{orgName}</p>
+                </div>
               </div>
-              <p className="mt-2 text-sm">{orgName}</p>
-            </div>
+            )}
           </div>
 
           {/* Floating rating card */}
