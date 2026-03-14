@@ -137,24 +137,24 @@
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
 .animate-fade-in-up {
   animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
 .font-display {
   font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* Header scroll color transitions — white text on dark hero, dark text on white bg */
+.header-scrolled .header-org-name {
+  color: #111827; /* gray-900 */
+}
+.header-scrolled .header-tagline {
+  color: #9ca3af; /* gray-400 */
+}
+.header-scrolled .header-nav-link {
+  color: #374151; /* gray-700 */
+}
+.header-scrolled .header-nav-link:hover {
+  color: #1b2b5b;
 }
