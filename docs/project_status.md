@@ -290,6 +290,13 @@ _Last Updated: March 14, 2026_
 - [x] Wrap-up slash command added (.claude/commands/wrap-up.md)
 - [x] SEO Growth Sprint CLI scripts: 6 phases (baseline, content gaps, SEO optimize, social posts, technical audit, sprint summary) in scripts/seo-sprint/
 
+**Post-V2: Technical SEO Fixes (Phase 4 Audit)** ✅
+
+- [x] Missing og:url: added explicit `url` to OpenGraph metadata on service, location, and blog page routes
+- [x] Missing Twitter Card meta tags: added `twitter:card`, `twitter:title`, `twitter:description` to all 5 marketing routes
+- [x] Dynamic OG image: created `opengraph-image.tsx` for homepage (1200×630 branded image via Next.js ImageResponse)
+- [x] Sitemap gap: added `/locations` hub page to sitemap.xml
+
 ### What's Next
 
 - Proceed to Later milestone (White-Label + Community)

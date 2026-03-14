@@ -9,6 +9,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Dynamic OG image generator:** `opengraph-image.tsx` for homepage — generates 1200×630 branded image with navy gradient, company name, and tagline (app/(marketing)/opengraph-image.tsx)
 - **SEO Growth Sprint scripts (6 phases):** Standalone CLI scripts for monthly SEO optimization sprints (scripts/seo-sprint/)
   - **Phase 0 — Baseline:** Queries Supabase for keyword rankings, GA4 metrics, GSC snapshots, content inventory with expansion opportunity analysis (00-baseline.ts)
   - **Phase 1 — Content Gaps:** Publishes review-ready pages (SEO >= 80), generates spring-themed blog posts for striking-distance keywords, creates location pages for expansion cities (01-content-gaps.ts)
@@ -55,6 +56,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Missing og:url on content pages:** Added explicit `url` field to OpenGraph metadata on service, location, and blog page routes
+- **Missing Twitter Card meta tags:** Added `twitter:card`, `twitter:title`, `twitter:description`, and `twitter:images` to all 5 marketing page routes (homepage, locations hub, service pages, location pages, blog posts)
+- **Sitemap gap:** Added `/locations` hub page to sitemap.xml (was missing from dynamic sitemap generation)
 - **Google OAuth callback cleanup:** Removed 2 success-path `console.log` debug statements that triggered lint warnings (app/api/auth/google/callback/route.ts)
 
 ---
