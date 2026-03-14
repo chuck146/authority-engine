@@ -32,6 +32,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Service hero image type:** `service_hero` added to Nano Banana 2 pipeline with prompt template (types/media.ts, packages/ai/prompts/images/service-hero.ts)
 - **Hero image generation script:** `scripts/generate-hero-images.ts` — standalone CLI for batch-generating hero images via Gemini Flash Image + Supabase Storage (--type, --slug, --dry-run, --force flags)
 - **Marketing layout components:** HeroSection (full-width with image/gradient fallback), BrandedCta (navy + gold CTA bar) used by service/location/blog page layouts (components/marketing/hero-section.tsx, components/marketing/branded-cta.tsx)
+- **Hero images generated:** All 20 published pages (8 service + 12 location) have AI-generated hero images via Gemini Flash Image, uploaded to Supabase Storage
+- **Migration applied:** `hero_image_url` columns live on production Supabase, types regenerated
 
 ### Changed
 

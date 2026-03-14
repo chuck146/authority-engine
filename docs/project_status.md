@@ -268,7 +268,7 @@ _Last Updated: March 14, 2026_
 - [x] GA4 reconnected and property re-selected
 - [x] Manual sync verified working for both GSC and GA4
 
-**Post-V2: Marketing Visual Overhaul** 🔄 In Progress
+**Post-V2: Marketing Visual Overhaul** ✅
 
 - [x] Database migration: `hero_image_url TEXT` column on service_pages and location_pages
 - [x] Service hero image type: `service_hero` added to Nano Banana 2 pipeline with prompt template
@@ -283,15 +283,16 @@ _Last Updated: March 14, 2026_
 - [x] Seed data updated: navy branding (#1B2B5B), DM Sans fonts, contact_info, estimate_url
 - [x] OrgSettings type extended with estimate_url field
 - [x] Typecheck + lint pass clean (0 errors, 0 warnings)
-- [ ] Migration not yet applied to live Supabase
-- [ ] Types not yet regenerated from schema
-- [ ] Hero images not yet generated
-- [ ] PR not yet created
+- [x] Migration applied to live Supabase
+- [x] Types regenerated from live schema (hero_image_url on service_pages + location_pages)
+- [x] Hero images generated for all 20 published pages (8 service + 12 location)
+- [x] SEO Growth Sprint team agent added (.claude/agents/team-seo-growth.md)
+- [x] Wrap-up slash command added (.claude/commands/wrap-up.md)
 
 ### What's Next
 
-- Complete marketing visual overhaul (apply migration, generate hero images, create PR)
 - Proceed to Later milestone (White-Label + Community)
+- Run monthly SEO Growth Sprint with fresh GSC/GA4 data
 
 ### Blockers
 
