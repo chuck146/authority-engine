@@ -81,7 +81,7 @@ type SocialRow = {
 type CalendarRow = {
   id: string
   content_type: string
-  title: string
+  content_id: string
   scheduled_at: string
   status: string
   created_at: string
@@ -158,7 +158,7 @@ async function fetchSocialPosts() {
 async function fetchCalendarEntries() {
   const { data, error } = await supabase
     .from('content_calendar')
-    .select('id, content_type, title, scheduled_at, status, created_at')
+    .select('id, content_type, content_id, scheduled_at, status, created_at')
     .eq('organization_id', ORG_ID)
     .gte('created_at', sinceDate)
     .order('scheduled_at', { ascending: true })

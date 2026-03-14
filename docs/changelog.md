@@ -9,6 +9,27 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **SEO Growth Sprint — March 2026 (first sprint):** Full 6-phase sprint executed against live cleanestpaintingnj.com domain
+  - **Phase 0 — Baseline:** Established starting metrics: 24 pages, 37 keywords, 18 GA4 sessions, 8 striking-distance keywords
+  - **Phase 1 — Content Gaps:** Published 1 blog from review, generated 5 spring-themed blog posts + 5 expansion location pages (Berkeley Heights, Millburn, Livingston, Springfield, Mountainside)
+  - **Phase 2 — SEO Optimize:** 17 pages optimized with Claude API (temp=0.3), average improvement +25 points, many location pages 70s → 98-100
+  - **Phase 3 — Social Posts:** 12 posts generated (6 GBP, 3 Instagram, 3 Facebook), all in review status, scheduled across 14-day window
+  - **Hero images:** 6 new location page hero images generated via Nano Banana 2 (5 expansion + Woodbridge)
+  - **Phase 4 — Technical Audit:** 33 issues found (1 high, 31 medium, 1 low) — missing og:image, long meta titles, missing alt text
+  - **Phase 5 — Sprint Summary:** 4/6 targets met, avg SEO score 96, content inventory 24 → 34 pages
+
+### Fixed
+
+- **Social post script `created_by`:** Phase 3 script now queries `user_organizations` for org user ID and includes `created_by` in social_posts insert (scripts/seo-sprint/03-social-posts.ts)
+- **Calendar schema mismatch:** Removed non-existent `title` column from content_calendar queries in Phase 3 and Phase 5 scripts (scripts/seo-sprint/03-social-posts.ts, scripts/seo-sprint/05-sprint-summary.ts)
+- **Hero image script status filter:** Updated `generate-hero-images.ts` to include `review` status pages alongside `published` for location page hero generation (scripts/generate-hero-images.ts)
+
+---
+
+## [Post-V2.1] — 2026-03-14
+
+### Added
+
 - **Dynamic OG image generator:** `opengraph-image.tsx` for homepage — generates 1200×630 branded image with navy gradient, company name, and tagline (app/(marketing)/opengraph-image.tsx)
 - **SEO Growth Sprint scripts (6 phases):** Standalone CLI scripts for monthly SEO optimization sprints (scripts/seo-sprint/)
   - **Phase 0 — Baseline:** Queries Supabase for keyword rankings, GA4 metrics, GSC snapshots, content inventory with expansion opportunity analysis (00-baseline.ts)

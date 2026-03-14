@@ -215,7 +215,7 @@ async function main() {
       .from('location_pages')
       .select('id, title, slug, city, state, hero_image_url')
       .eq('organization_id', ORG_ID)
-      .eq('status', 'published' as never)
+      .in('status', ['published', 'review'] as never)
       .order('city')
 
     if (filterSlug) query = query.eq('slug', filterSlug)

@@ -63,6 +63,21 @@ const supabase = createClient(
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
 
 // ---------------------------------------------------------------------------
+// Lookup org user for created_by
+// ---------------------------------------------------------------------------
+
+async function getOrgUserId(): Promise<string> {
+  const { data, error } = await supabase
+    .from('user_organizations')
+    .select('user_id')
+    .eq('organization_id', ORG_ID)
+    .limit(1)
+    .single()
+  if (error || !data) throw new Error(`No user found for org ${ORG_ID}: ${error?.message}`)
+  return data.user_id
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -282,6 +297,7 @@ const SPRING_ANGLES = [
 
 async function generateAndSavePosts(
   pages: ContentRow[],
+  userId: string,
 ): Promise<{ platform: string; topic: string; scheduled: string }[]> {
   const created: { platform: string; topic: string; scheduled: string }[] = []
   let angleIdx = 0
@@ -351,6 +367,7 @@ async function generateAndSavePosts(
             cta_type: content.cta_type ?? null,
             cta_url: content.cta_url ?? pageUrl(page),
             status: 'review',
+            created_by: userId,
           } as never)
           .select('id')
           .single()
@@ -362,7 +379,6 @@ async function generateAndSavePosts(
           organization_id: ORG_ID,
           content_type: 'social_post',
           content_id: post!.id,
-          title: `${platform.toUpperCase()}: ${page.title}`,
           scheduled_at: scheduledStr,
           status: 'scheduled',
         } as never)
@@ -406,8 +422,11 @@ async function main() {
     return
   }
 
+  // Get org user for created_by field
+  const userId = await getOrgUserId()
+
   // Generate posts
-  const created = await generateAndSavePosts(pages)
+  const created = await generateAndSavePosts(pages, userId)
 
   // Summary
   console.log('\n' + '='.repeat(60))
