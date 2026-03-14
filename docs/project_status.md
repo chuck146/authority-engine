@@ -296,6 +296,11 @@ _Last Updated: March 14, 2026_
 - [x] Missing Twitter Card meta tags: added `twitter:card`, `twitter:title`, `twitter:description` to all 5 marketing routes
 - [x] Dynamic OG image: created `opengraph-image.tsx` for homepage (1200×630 branded image via Next.js ImageResponse)
 - [x] Sitemap gap: added `/locations` hub page to sitemap.xml
+- [x] Hero image alt text: added `imageAlt` prop to HeroSection, descriptive alt text on all 20 service/location/blog hero images
+- [x] Meta title template fix: marketing layout overrides root `| Authority Engine` suffix with `template: '%s'`
+- [x] Homepage meta trimmed: title 62→56 chars, description 176→136 chars
+- [x] Blog og:image: generated featured image for `choose-right-paint-color` via Gemini Flash Image, `featured_image_url` updated in DB
+- [x] Blog thumbnail generation script: `scripts/generate-blog-thumbnail.ts` for future blog images
 
 ### What's Next
 

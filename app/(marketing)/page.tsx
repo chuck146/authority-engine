@@ -25,22 +25,22 @@ const ORG_SLUG = 'cleanest-painting'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Cleanest Painting LLC — Professional Painting Services in NJ',
+  title: 'Professional Painting Services in NJ | Cleanest Painting',
   description:
-    'Premium residential and commercial painting services in Northern New Jersey. Interior painting, exterior painting, cabinet refinishing, deck staining, and more. Free estimates.',
+    'Residential & commercial painting in Northern New Jersey. Interior, exterior, cabinet refinishing, deck staining & more. Free estimates.',
   alternates: { canonical: BASE_URL },
   openGraph: {
-    title: 'Cleanest Painting LLC — Professional Painting Services in NJ',
+    title: 'Professional Painting Services in NJ | Cleanest Painting',
     description:
-      'Premium residential and commercial painting services in Northern New Jersey. Free estimates.',
+      'Residential & commercial painting in Northern New Jersey. Interior, exterior, cabinet refinishing, deck staining & more. Free estimates.',
     type: 'website',
     url: BASE_URL,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cleanest Painting LLC — Professional Painting Services in NJ',
+    title: 'Professional Painting Services in NJ | Cleanest Painting',
     description:
-      'Premium residential and commercial painting services in Northern New Jersey. Free estimates.',
+      'Residential & commercial painting in Northern New Jersey. Interior, exterior, cabinet refinishing, deck staining & more. Free estimates.',
   },
 }
 

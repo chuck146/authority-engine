@@ -20,6 +20,7 @@ export function LocationPageLayout({ page, phone, estimateUrl }: LocationPageLay
     <article>
       <HeroSection
         imageUrl={(page as Record<string, unknown>).hero_image_url as string | null}
+        imageAlt={`Professional painting services in ${page.city}, ${page.state}`}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Locations', href: '/locations' },

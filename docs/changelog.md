@@ -10,6 +10,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - **Dynamic OG image generator:** `opengraph-image.tsx` for homepage — generates 1200×630 branded image with navy gradient, company name, and tagline (app/(marketing)/opengraph-image.tsx)
+- **Blog thumbnail generation script:** `scripts/generate-blog-thumbnail.ts` — standalone CLI for generating blog post featured images via Gemini Flash Image + Supabase Storage (--slug, --dry-run flags)
 - **SEO Growth Sprint scripts (6 phases):** Standalone CLI scripts for monthly SEO optimization sprints (scripts/seo-sprint/)
   - **Phase 0 — Baseline:** Queries Supabase for keyword rankings, GA4 metrics, GSC snapshots, content inventory with expansion opportunity analysis (00-baseline.ts)
   - **Phase 1 — Content Gaps:** Publishes review-ready pages (SEO >= 80), generates spring-themed blog posts for striking-distance keywords, creates location pages for expansion cities (01-content-gaps.ts)
@@ -45,6 +46,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- **Marketing layout title template:** Override root `template: '%s | Authority Engine'` with `template: '%s'` so public SEO pages render their own meta_title without suffix (app/(marketing)/layout.tsx)
+- **Homepage meta title trimmed:** 62 → 56 chars ("Professional Painting Services in NJ | Cleanest Painting")
+- **Homepage meta description trimmed:** 176 → 136 chars to fit ≤160 char SEO limit
 - **Production URL:** Moved from `authority-engine-rose.vercel.app` to `cleanestpaintingnj.com`
 - **Google integrations:** GSC site_url now stores `cleanestpaintingnj.com`, GA4 property re-selected
 - **Marketing layout refactored:** Layout now fetches org data and renders shared SiteHeader + SiteFooter around children, removing per-page header/footer duplication (app/(marketing)/layout.tsx)
@@ -59,6 +63,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Missing og:url on content pages:** Added explicit `url` field to OpenGraph metadata on service, location, and blog page routes
 - **Missing Twitter Card meta tags:** Added `twitter:card`, `twitter:title`, `twitter:description`, and `twitter:images` to all 5 marketing page routes (homepage, locations hub, service pages, location pages, blog posts)
 - **Sitemap gap:** Added `/locations` hub page to sitemap.xml (was missing from dynamic sitemap generation)
+- **Missing alt text on 20 hero images:** Added `imageAlt` prop to HeroSection component with descriptive text passed from service/location/blog layouts — service: "{title} by Cleanest Painting in New Jersey", location: "Professional painting services in {city}, {state}", blog: "{title} — Cleanest Painting blog" (components/marketing/hero-section.tsx)
+- **Meta titles exceeding 60 chars:** Root layout `| Authority Engine` suffix was appending 20 extra chars to all marketing page titles — fixed via marketing layout `template: '%s'` override
+- **Blog og:image missing:** Generated featured image for `choose-right-paint-color` via Gemini Flash Image, uploaded to Supabase Storage, updated `featured_image_url` in DB
 - **Google OAuth callback cleanup:** Removed 2 success-path `console.log` debug statements that triggered lint warnings (app/api/auth/google/callback/route.ts)
 
 ---

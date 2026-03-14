@@ -26,6 +26,7 @@ export function BlogPostLayout({ post, phone, estimateUrl }: BlogPostLayoutProps
     <article>
       <HeroSection
         imageUrl={post.featured_image_url}
+        imageAlt={`${post.title} — Cleanest Painting blog`}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Blog', href: '/blog' },
