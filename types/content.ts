@@ -42,6 +42,7 @@ export const locationPageInputSchema = z.object({
   contentType: z.literal('location_page'),
   city: z.string().min(2).max(100),
   state: z.string().length(2),
+  county: z.string().max(50).optional(),
   serviceName: z.string().min(2).max(100),
   targetKeywords: z.array(z.string().max(50)).max(5).optional(),
   tone: z.enum(['professional', 'friendly', 'authoritative']).default('professional'),

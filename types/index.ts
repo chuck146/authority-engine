@@ -210,5 +210,11 @@ export type OrgSettings = {
 
 // Related content link types (for cross-linking)
 export type RelatedServiceLink = { slug: string; title: string }
-export type RelatedLocationLink = { slug: string; title: string; city: string; state: string }
+export type RelatedLocationLink = {
+  slug: string
+  title: string
+  city: string
+  state: string
+  county?: string | null
+}
 export type RelatedBlogLink = { slug: string; title: string; excerpt: string | null }

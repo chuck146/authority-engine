@@ -441,6 +441,7 @@ export type Database = {
           approved_by: string | null
           city: string
           content: Json
+          county: string | null
           created_at: string
           created_by: string | null
           hero_image_url: string | null
@@ -466,6 +467,7 @@ export type Database = {
           approved_by?: string | null
           city: string
           content?: Json
+          county?: string | null
           created_at?: string
           created_by?: string | null
           hero_image_url?: string | null
@@ -491,6 +493,7 @@ export type Database = {
           approved_by?: string | null
           city?: string
           content?: Json
+          county?: string | null
           created_at?: string
           created_by?: string | null
           hero_image_url?: string | null
