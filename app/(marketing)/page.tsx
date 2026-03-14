@@ -13,10 +13,10 @@ import { HeroSplit } from '@/components/marketing/home/hero-split'
 import { TrustBar } from '@/components/marketing/home/trust-bar'
 import { AboutSection } from '@/components/marketing/home/about-section'
 import { ServicesDark } from '@/components/marketing/home/services-dark'
-import { CtaBanner } from '@/components/marketing/home/cta-banner'
 import { Testimonials } from '@/components/marketing/home/testimonials'
 import { ProjectGallery } from '@/components/marketing/home/project-gallery'
 import { ServiceAreas } from '@/components/marketing/home/service-areas'
+import { EstimateForm } from '@/components/marketing/home/estimate-form'
 import type { OrgBranding, OrgSettings } from '@/types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
@@ -125,11 +125,12 @@ export default async function HomePage() {
 
       <ServicesDark services={services} />
 
-      <CtaBanner estimateUrl={estimateUrl} />
+      <Testimonials />
 
       <ServiceAreas locations={locations} />
 
-      <Testimonials />
+      {/* Estimate Form — inline lead capture (replaces CtaBanner) */}
+      <EstimateForm organizationId={org.id} services={services} phone={phone} />
 
       {/* Blog Posts */}
       {blogPosts.length > 0 && (

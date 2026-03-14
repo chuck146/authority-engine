@@ -135,7 +135,7 @@ export async function getAllPublishedLocationLinks(orgId: string): Promise<Relat
   const supabase = await createClient()
   const { data } = await supabase
     .from('location_pages')
-    .select('slug, title, city, state')
+    .select('slug, title, city, state, county')
     .eq('organization_id', orgId)
     .eq('status', 'published')
     .order('city')

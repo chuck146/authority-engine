@@ -1,13 +1,15 @@
 import Link from 'next/link'
-import { MapPin } from 'lucide-react'
+import { ArrowRight, MapPin, Phone } from 'lucide-react'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
 import type { RelatedLocationLink } from '@/types'
 
 type ServiceAreasProps = {
   locations: RelatedLocationLink[]
+  phone?: string
+  estimateUrl?: string
 }
 
-export function ServiceAreas({ locations }: ServiceAreasProps) {
+export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProps) {
   if (locations.length === 0) return null
 
   return (
@@ -18,9 +20,7 @@ export function ServiceAreas({ locations }: ServiceAreasProps) {
             <h2 className="font-display text-3xl font-semibold text-gray-900 sm:text-4xl">
               Service <em className="text-[var(--color-brand-green)] not-italic">Areas</em>
             </h2>
-            <p className="mt-3 text-gray-500">
-              Proudly serving communities across Northern New Jersey
-            </p>
+            <p className="mt-3 text-gray-500">Proudly serving communities across New Jersey</p>
           </div>
         </ScrollReveal>
 
@@ -39,6 +39,45 @@ export function ServiceAreas({ locations }: ServiceAreasProps) {
             </ScrollReveal>
           ))}
         </div>
+
+        <ScrollReveal>
+          <div className="mt-8 text-center">
+            <Link
+              href="/locations"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-brand-green)] transition-colors hover:text-[var(--color-brand-green)]/80"
+            >
+              View all service areas
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <div className="mt-8 rounded-xl border border-gray-200 bg-white px-6 py-5 text-center">
+            <p className="text-sm font-medium text-gray-900">
+              Don&apos;t see your town? We service all of New Jersey.
+            </p>
+            <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              {estimateUrl && (
+                <a
+                  href={estimateUrl}
+                  className="inline-flex items-center rounded-lg bg-[var(--color-brand-green)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-brand-green)]/90"
+                >
+                  Get a Free Estimate
+                </a>
+              )}
+              {phone && (
+                <a
+                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  {phone}
+                </a>
+              )}
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   )

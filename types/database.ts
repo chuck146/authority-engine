@@ -435,12 +435,57 @@ export type Database = {
           },
         ]
       }
+      leads: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          organization_id: string
+          phone: string
+          service: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          organization_id: string
+          phone: string
+          service?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          organization_id?: string
+          phone?: string
+          service?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'leads_organization_id_fkey'
+            columns: ['organization_id']
+            isOneToOne: false
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       location_pages: {
         Row: {
           approved_at: string | null
           approved_by: string | null
           city: string
           content: Json
+          county: string | null
           created_at: string
           created_by: string | null
           hero_image_url: string | null
@@ -466,6 +511,7 @@ export type Database = {
           approved_by?: string | null
           city: string
           content?: Json
+          county?: string | null
           created_at?: string
           created_by?: string | null
           hero_image_url?: string | null
@@ -491,6 +537,7 @@ export type Database = {
           approved_by?: string | null
           city?: string
           content?: Json
+          county?: string | null
           created_at?: string
           created_by?: string | null
           hero_image_url?: string | null

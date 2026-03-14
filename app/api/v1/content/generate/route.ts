@@ -97,6 +97,7 @@ export async function POST(request: Request) {
             slug,
             city: input.city,
             state: input.state,
+            county: input.county ?? null,
             meta_title: structuredContent.meta_title,
             meta_description: structuredContent.meta_description,
             content: structuredContent as unknown as Json,

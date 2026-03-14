@@ -9,10 +9,10 @@ type SiteHeaderProps = {
 }
 
 const NAV_LINKS = [
+  { href: '/#work', label: 'Work' },
   { href: '/#services', label: 'Services' },
-  { href: '/#about', label: 'About' },
   { href: '/#testimonials', label: 'Reviews' },
-  { href: '/#contact', label: 'Contact' },
+  { href: '/locations', label: 'Areas' },
 ]
 
 export function SiteHeader({ orgName, logoUrl, estimateUrl, phone }: SiteHeaderProps) {
@@ -69,10 +69,10 @@ export function SiteHeader({ orgName, logoUrl, estimateUrl, phone }: SiteHeaderP
           </div>
         )}
         <div className="flex flex-col leading-tight">
-          <span className="font-display text-xl font-semibold text-gray-900">
+          <span className="header-org-name font-display text-xl font-semibold text-white transition-colors duration-400">
             {orgName.replace(' LLC', '')}
           </span>
-          <span className="text-[0.6rem] font-medium tracking-[0.15em] text-gray-400 uppercase">
+          <span className="header-tagline text-[0.6rem] font-medium tracking-[0.15em] text-white/60 uppercase transition-colors duration-400">
             Painting Beyond the Ordinary
           </span>
         </div>
@@ -84,7 +84,7 @@ export function SiteHeader({ orgName, logoUrl, estimateUrl, phone }: SiteHeaderP
           <li key={link.href}>
             <a
               href={link.href}
-              className="relative py-1 text-sm font-medium text-gray-700 transition-colors hover:text-[#1B2B5B]"
+              className="header-nav-link relative py-1 text-sm font-medium text-white/80 transition-colors duration-400 hover:text-white"
             >
               {link.label}
             </a>
@@ -94,7 +94,7 @@ export function SiteHeader({ orgName, logoUrl, estimateUrl, phone }: SiteHeaderP
           <li>
             <a
               href={estimateUrl}
-              className="rounded-full bg-[#1B2B5B] px-7 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#14204a] hover:shadow-lg hover:shadow-[#1B2B5B]/30"
+              className="rounded-full bg-[#1B2B5B] px-7 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#14204a]"
             >
               Free Estimate
             </a>
