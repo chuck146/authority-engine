@@ -25,6 +25,12 @@ export const metadata: Metadata = {
     type: 'website',
     url: `${BASE_URL}/locations`,
   },
+  twitter: {
+    card: 'summary',
+    title: 'Service Areas — Painting Services Across New Jersey',
+    description:
+      'Professional painting services across New Jersey. Find your town and get a free estimate.',
+  },
 }
 
 export default async function LocationsPage() {

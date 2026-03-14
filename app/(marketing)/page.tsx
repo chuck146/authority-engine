@@ -36,6 +36,12 @@ export const metadata: Metadata = {
     type: 'website',
     url: BASE_URL,
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cleanest Painting LLC — Professional Painting Services in NJ',
+    description:
+      'Premium residential and commercial painting services in Northern New Jersey. Free estimates.',
+  },
 }
 
 export default async function HomePage() {
