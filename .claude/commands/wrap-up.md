@@ -25,12 +25,14 @@ After completing a discrete feature, fix, or phase — commit the work, update d
 6. **If architecture changed** (new tables, services, integrations), update `docs/architecture.md`
 
 7. **Run lint and typecheck:**
+
    ```bash
    npm run lint
    npm run typecheck
    ```
 
 8. **Commit the doc updates:**
+
    ```bash
    git add docs/
    git commit -m "docs: update project status and changelog for [FEATURE]"

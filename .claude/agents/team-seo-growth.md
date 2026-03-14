@@ -168,15 +168,15 @@ For a typical monthly sprint (painting company, 8 services × 12 towns):
 
 ## Cost Estimate
 
-| Phase                    | Teammates | Est. Duration | Est. Cost   |
-| ------------------------ | --------- | ------------- | ----------- |
-| Baseline data gathering  | 1 (lead)  | 5 min         | $0.50       |
-| Content gap analysis     | 1         | 15-25 min     | $2-$3       |
-| On-page optimization     | 1         | 20-30 min     | $2-$4       |
-| Social distribution      | 1         | 10-15 min     | $1-$2       |
-| Technical audit          | 1         | 15-25 min     | $2-$3       |
-| Sprint summary           | 1 (lead)  | 5-10 min      | $0.50-$1    |
-| **Total**                |           | **~50-75 min**| **~$8-$13** |
+| Phase                   | Teammates | Est. Duration  | Est. Cost   |
+| ----------------------- | --------- | -------------- | ----------- |
+| Baseline data gathering | 1 (lead)  | 5 min          | $0.50       |
+| Content gap analysis    | 1         | 15-25 min      | $2-$3       |
+| On-page optimization    | 1         | 20-30 min      | $2-$4       |
+| Social distribution     | 1         | 10-15 min      | $1-$2       |
+| Technical audit         | 1         | 15-25 min      | $2-$3       |
+| Sprint summary          | 1 (lead)  | 5-10 min       | $0.50-$1    |
+| **Total**               |           | **~50-75 min** | **~$8-$13** |
 
 ---
 
