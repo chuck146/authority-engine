@@ -9,6 +9,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **SEO Growth Sprint scripts (6 phases):** Standalone CLI scripts for monthly SEO optimization sprints (scripts/seo-sprint/)
+  - **Phase 0 — Baseline:** Queries Supabase for keyword rankings, GA4 metrics, GSC snapshots, content inventory with expansion opportunity analysis (00-baseline.ts)
+  - **Phase 1 — Content Gaps:** Publishes review-ready pages (SEO >= 80), generates spring-themed blog posts for striking-distance keywords, creates location pages for expansion cities (01-content-gaps.ts)
+  - **Phase 2 — SEO Optimize:** Fetches pages scoring below threshold, uses Claude to optimize meta tags, content length, keyword density, recalculates scores (02-seo-optimize.ts)
+  - **Phase 3 — Social Posts:** Generates 12 social posts (6 GBP + 3 Instagram + 3 Facebook) promoting top content, schedules across 14-day calendar window (03-social-posts.ts)
+  - **Phase 4 — Technical Audit:** HTTP status checks, meta tag validation, Open Graph tags, schema markup (LocalBusiness/Service/BreadcrumbList), sitemap coverage, robots.txt, GSC indexing, heading structure, image alt text — severity-ranked report (04-technical-audit.ts)
+  - **Phase 5 — Sprint Summary:** Compiles all-phase results — content inventory, SEO score distribution, social post schedule, 28-day keyword comparison, sprint scorecard with targets, action items, next sprint preparation checklist (05-sprint-summary.ts)
 - **SEO Growth Sprint team agent:** `.claude/agents/team-seo-growth.md` — 4-teammate monthly SEO optimization sprint (content gap analysis, on-page SEO optimization, social distribution, technical audit + conversion path testing)
 - **Wrap-up slash command:** `.claude/commands/wrap-up.md` — post-task workflow for committing work, updating docs, and suggesting next steps
 - **Custom domain migration:** Production app now served at `cleanestpaintingnj.com` (apex domain, no www redirect) via Vercel

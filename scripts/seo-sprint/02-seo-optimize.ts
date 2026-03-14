@@ -41,7 +41,9 @@ for (const arg of args) {
   if (m?.[1]) flagMap.set(m[1], m[2] ?? 'true')
 }
 const dryRun = flagMap.has('dry-run')
-const threshold = flagMap.has('threshold') ? parseInt(flagMap.get('threshold')!, 10) : DEFAULT_THRESHOLD
+const threshold = flagMap.has('threshold')
+  ? parseInt(flagMap.get('threshold')!, 10)
+  : DEFAULT_THRESHOLD
 const filterType = flagMap.get('type') as 'service_page' | 'location_page' | 'blog_post' | undefined
 
 // ---------------------------------------------------------------------------
@@ -151,40 +153,91 @@ function scoreContent(
   const titleLen = content.meta_title.length
   let titleScore = 0
   let titleRec: string | null = null
-  if (titleLen === 0) { titleScore = 0; titleRec = 'Add a meta title (30–60 characters).' }
-  else if (titleLen >= 30 && titleLen <= 60) { titleScore = 100 }
-  else if (titleLen < 30) { titleScore = linearScale(titleLen, 0, 30); titleRec = `Meta title too short (${titleLen} chars). Aim for 30–60.` }
-  else { titleScore = Math.max(50, 100 - (titleLen - 60) * 2); titleRec = `Meta title too long (${titleLen} chars). Keep under 60.` }
-  rules.push({ id: 'meta-title-length', label: 'Meta Title Length', score: titleScore, weight: 15, passed: titleScore >= 70, recommendation: titleRec })
+  if (titleLen === 0) {
+    titleScore = 0
+    titleRec = 'Add a meta title (30–60 characters).'
+  } else if (titleLen >= 30 && titleLen <= 60) {
+    titleScore = 100
+  } else if (titleLen < 30) {
+    titleScore = linearScale(titleLen, 0, 30)
+    titleRec = `Meta title too short (${titleLen} chars). Aim for 30–60.`
+  } else {
+    titleScore = Math.max(50, 100 - (titleLen - 60) * 2)
+    titleRec = `Meta title too long (${titleLen} chars). Keep under 60.`
+  }
+  rules.push({
+    id: 'meta-title-length',
+    label: 'Meta Title Length',
+    score: titleScore,
+    weight: 15,
+    passed: titleScore >= 70,
+    recommendation: titleRec,
+  })
 
   // Meta description length (weight: 10)
   const descLen = content.meta_description.length
   let descScore = 0
   let descRec: string | null = null
-  if (descLen === 0) { descScore = 0; descRec = 'Add a meta description (120–160 characters).' }
-  else if (descLen >= 120 && descLen <= 160) { descScore = 100 }
-  else if (descLen < 120) { descScore = linearScale(descLen, 0, 120); descRec = `Meta description short (${descLen} chars). Aim for 120–160.` }
-  else { descScore = Math.max(50, 100 - (descLen - 160) * 2); descRec = `Meta description too long (${descLen} chars). Keep under 160.` }
-  rules.push({ id: 'meta-description-length', label: 'Meta Description Length', score: descScore, weight: 10, passed: descScore >= 70, recommendation: descRec })
+  if (descLen === 0) {
+    descScore = 0
+    descRec = 'Add a meta description (120–160 characters).'
+  } else if (descLen >= 120 && descLen <= 160) {
+    descScore = 100
+  } else if (descLen < 120) {
+    descScore = linearScale(descLen, 0, 120)
+    descRec = `Meta description short (${descLen} chars). Aim for 120–160.`
+  } else {
+    descScore = Math.max(50, 100 - (descLen - 160) * 2)
+    descRec = `Meta description too long (${descLen} chars). Keep under 160.`
+  }
+  rules.push({
+    id: 'meta-description-length',
+    label: 'Meta Description Length',
+    score: descScore,
+    weight: 10,
+    passed: descScore >= 70,
+    recommendation: descRec,
+  })
 
   // Heading structure (weight: 10)
   const sectionCount = content.sections.length
   const emptyTitles = content.sections.filter((s) => s.title.trim().length === 0).length
   let headingScore = sectionCount >= 3 ? 100 : sectionCount === 2 ? 70 : 40
   if (emptyTitles > 0) headingScore = Math.max(0, headingScore - emptyTitles * 15)
-  rules.push({ id: 'heading-structure', label: 'Heading Structure', score: headingScore, weight: 10, passed: headingScore >= 70, recommendation: headingScore < 100 ? `${sectionCount} sections (3+ recommended)` : null })
+  rules.push({
+    id: 'heading-structure',
+    label: 'Heading Structure',
+    score: headingScore,
+    weight: 10,
+    passed: headingScore >= 70,
+    recommendation: headingScore < 100 ? `${sectionCount} sections (3+ recommended)` : null,
+  })
 
   // Content length (weight: 15)
   const bodyText = getBodyText(content)
   const wordCount = countWords(bodyText)
   const wordTarget = contentType === 'blog_post' ? 600 : 300
   const lengthScore = wordCount >= wordTarget ? 100 : linearScale(wordCount, 0, wordTarget)
-  rules.push({ id: 'content-length', label: 'Content Length', score: lengthScore, weight: 15, passed: lengthScore >= 70, recommendation: lengthScore < 100 ? `${wordCount} words (target: ${wordTarget}+)` : null })
+  rules.push({
+    id: 'content-length',
+    label: 'Content Length',
+    score: lengthScore,
+    weight: 15,
+    passed: lengthScore >= 70,
+    recommendation: lengthScore < 100 ? `${wordCount} words (target: ${wordTarget}+)` : null,
+  })
 
   // Intro present (weight: 5)
   const introLen = content.intro.trim().length
   const introScore = introLen >= 50 ? 100 : introLen >= 20 ? 60 : introLen > 0 ? 20 : 0
-  rules.push({ id: 'intro-present', label: 'Introduction', score: introScore, weight: 5, passed: introScore >= 70, recommendation: introScore < 100 ? 'Expand intro to 50+ characters.' : null })
+  rules.push({
+    id: 'intro-present',
+    label: 'Introduction',
+    score: introScore,
+    weight: 5,
+    passed: introScore >= 70,
+    recommendation: introScore < 100 ? 'Expand intro to 50+ characters.' : null,
+  })
 
   // Keyword in title (weight: 10)
   let kwTitleScore = 50
@@ -194,7 +247,14 @@ function scoreContent(
     kwTitleScore = keywords.some((kw) => title.includes(kw.toLowerCase())) ? 100 : 0
     kwTitleRec = kwTitleScore === 100 ? null : 'Include a keyword in meta title.'
   }
-  rules.push({ id: 'keyword-in-title', label: 'Keyword in Title', score: kwTitleScore, weight: 10, passed: kwTitleScore >= 70, recommendation: kwTitleRec })
+  rules.push({
+    id: 'keyword-in-title',
+    label: 'Keyword in Title',
+    score: kwTitleScore,
+    weight: 10,
+    passed: kwTitleScore >= 70,
+    recommendation: kwTitleRec,
+  })
 
   // Keyword in content (weight: 10)
   let kwContentScore = 50
@@ -204,7 +264,14 @@ function scoreContent(
     kwContentScore = keywords.some((kw) => body.includes(kw.toLowerCase())) ? 100 : 0
     kwContentRec = kwContentScore === 100 ? null : 'Include keywords in page content.'
   }
-  rules.push({ id: 'keyword-in-content', label: 'Keyword in Content', score: kwContentScore, weight: 10, passed: kwContentScore >= 70, recommendation: kwContentRec })
+  rules.push({
+    id: 'keyword-in-content',
+    label: 'Keyword in Content',
+    score: kwContentScore,
+    weight: 10,
+    passed: kwContentScore >= 70,
+    recommendation: kwContentRec,
+  })
 
   // Keyword density (weight: 5)
   let densityScore = 50
@@ -214,16 +281,37 @@ function scoreContent(
     const kwWords = primary.split(/\s+/).length
     const occurrences = bodyText.toLowerCase().split(primary).length - 1
     const density = ((occurrences * kwWords) / wordCount) * 100
-    if (density >= 1 && density <= 3) { densityScore = 100; densityRec = null }
-    else if (density < 1) { densityScore = 50; densityRec = `Keyword density low (${density.toFixed(1)}%). Aim for 1–3%.` }
-    else { densityScore = 60; densityRec = `Keyword density high (${density.toFixed(1)}%). Keep 1–3%.` }
+    if (density >= 1 && density <= 3) {
+      densityScore = 100
+      densityRec = null
+    } else if (density < 1) {
+      densityScore = 50
+      densityRec = `Keyword density low (${density.toFixed(1)}%). Aim for 1–3%.`
+    } else {
+      densityScore = 60
+      densityRec = `Keyword density high (${density.toFixed(1)}%). Keep 1–3%.`
+    }
   }
-  rules.push({ id: 'keyword-density', label: 'Keyword Density', score: densityScore, weight: 5, passed: densityScore >= 70, recommendation: densityRec })
+  rules.push({
+    id: 'keyword-density',
+    label: 'Keyword Density',
+    score: densityScore,
+    weight: 5,
+    passed: densityScore >= 70,
+    recommendation: densityRec,
+  })
 
   // CTA present (weight: 5)
   const ctaLen = content.cta.trim().length
   const ctaScore = ctaLen >= 10 ? 100 : ctaLen > 0 ? 50 : 0
-  rules.push({ id: 'cta-present', label: 'Call to Action', score: ctaScore, weight: 5, passed: ctaScore >= 70, recommendation: ctaScore < 100 ? 'Add a CTA (10+ characters).' : null })
+  rules.push({
+    id: 'cta-present',
+    label: 'Call to Action',
+    score: ctaScore,
+    weight: 5,
+    passed: ctaScore >= 70,
+    recommendation: ctaScore < 100 ? 'Add a CTA (10+ characters).' : null,
+  })
 
   // Paragraph length (weight: 15)
   let paraScore = 0
@@ -231,11 +319,25 @@ function scoreContent(
   if (content.sections.length > 0) {
     const sentCounts = content.sections.map((s) => countSentences(s.body))
     const avg = sentCounts.reduce((a, b) => a + b, 0) / sentCounts.length
-    if (avg >= 2 && avg <= 6) { paraScore = 100; paraRec = null }
-    else if (avg < 2) { paraScore = 60; paraRec = 'Sections too short. Aim for 2–6 sentences each.' }
-    else { paraScore = 70; paraRec = `Sections avg ${Math.round(avg)} sentences. Consider shorter paragraphs (2–6).` }
+    if (avg >= 2 && avg <= 6) {
+      paraScore = 100
+      paraRec = null
+    } else if (avg < 2) {
+      paraScore = 60
+      paraRec = 'Sections too short. Aim for 2–6 sentences each.'
+    } else {
+      paraScore = 70
+      paraRec = `Sections avg ${Math.round(avg)} sentences. Consider shorter paragraphs (2–6).`
+    }
   }
-  rules.push({ id: 'paragraph-length', label: 'Paragraph Length', score: paraScore, weight: 15, passed: paraScore >= 70, recommendation: paraRec })
+  rules.push({
+    id: 'paragraph-length',
+    label: 'Paragraph Length',
+    score: paraScore,
+    weight: 15,
+    passed: paraScore >= 70,
+    recommendation: paraRec,
+  })
 
   // Compute weighted score
   const totalWeight = rules.reduce((s, r) => s + r.weight, 0)
@@ -366,7 +468,9 @@ async function optimizePage(
 
     if (updateErr) throw new Error(`DB update failed: ${updateErr.message}`)
 
-    console.log(`    After: ${afterScore}/100 (${afterScore > beforeScore ? '+' : ''}${afterScore - beforeScore})`)
+    console.log(
+      `    After: ${afterScore}/100 (${afterScore > beforeScore ? '+' : ''}${afterScore - beforeScore})`,
+    )
     return { before: beforeScore, after: afterScore }
   } catch (err) {
     console.error(`    Error: ${(err as Error).message}`)
@@ -449,22 +553,33 @@ async function main() {
 
   if (results.length > 0) {
     console.log('\n  Before/After comparison:')
-    console.log('    ' + 'Page'.padEnd(40) + 'Type'.padEnd(15) + 'Before'.padStart(8) + 'After'.padStart(8) + 'Change'.padStart(8))
+    console.log(
+      '    ' +
+        'Page'.padEnd(40) +
+        'Type'.padEnd(15) +
+        'Before'.padStart(8) +
+        'After'.padStart(8) +
+        'Change'.padStart(8),
+    )
     console.log('    ' + '-'.repeat(79))
     for (const r of results) {
       const change = r.after - r.before
       console.log(
         '    ' +
-        r.title.slice(0, 39).padEnd(40) +
-        r.type.padEnd(15) +
-        r.before.toString().padStart(8) +
-        r.after.toString().padStart(8) +
-        `${change >= 0 ? '+' : ''}${change}`.padStart(8),
+          r.title.slice(0, 39).padEnd(40) +
+          r.type.padEnd(15) +
+          r.before.toString().padStart(8) +
+          r.after.toString().padStart(8) +
+          `${change >= 0 ? '+' : ''}${change}`.padStart(8),
       )
     }
 
-    const avgImprovement = Math.round(results.reduce((s, r) => s + (r.after - r.before), 0) / results.length)
-    console.log(`\n  Average improvement: ${avgImprovement >= 0 ? '+' : ''}${avgImprovement} points`)
+    const avgImprovement = Math.round(
+      results.reduce((s, r) => s + (r.after - r.before), 0) / results.length,
+    )
+    console.log(
+      `\n  Average improvement: ${avgImprovement >= 0 ? '+' : ''}${avgImprovement} points`,
+    )
   }
 
   console.log('\n=== Phase 2 Complete ===\n')

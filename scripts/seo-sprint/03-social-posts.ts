@@ -164,9 +164,12 @@ async function fetchTopPages(): Promise<ContentRow[]> {
 }
 
 function pageUrl(page: ContentRow): string {
-  const prefix = page.content_type === 'service_page' ? 'services'
-    : page.content_type === 'location_page' ? 'locations'
-    : 'blog'
+  const prefix =
+    page.content_type === 'service_page'
+      ? 'services'
+      : page.content_type === 'location_page'
+        ? 'locations'
+        : 'blog'
   return `https://${DOMAIN}/${prefix}/${page.slug}`
 }
 
@@ -206,7 +209,10 @@ ${SOCIAL_JSON_FORMAT}`,
   }
 }
 
-function buildInstagramPrompt(page: ContentRow, springAngle: string): { system: string; user: string } {
+function buildInstagramPrompt(
+  page: ContentRow,
+  springAngle: string,
+): { system: string; user: string } {
   return {
     system: `You are a social media specialist writing Instagram posts for ${ORG_NAME} — "${TAGLINE}". You write engaging, visual-first captions.
 
@@ -227,7 +233,10 @@ ${SOCIAL_JSON_FORMAT}`,
   }
 }
 
-function buildFacebookPrompt(page: ContentRow, springAngle: string): { system: string; user: string } {
+function buildFacebookPrompt(
+  page: ContentRow,
+  springAngle: string,
+): { system: string; user: string } {
   return {
     system: `You are a social media manager writing Facebook posts for ${ORG_NAME} — "${TAGLINE}". Facebook posts should be conversational and community-focused.
 
@@ -257,7 +266,7 @@ const SPRING_ANGLES = [
   'Get ahead of summer — prepare your home exterior this spring',
   'Spring cleaning meets fresh paint for a complete home renewal',
   'Boost your curb appeal this spring before the neighborhood comes alive',
-  'NJ spring weather is ideal for exterior painting — don\'t miss the window',
+  "NJ spring weather is ideal for exterior painting — don't miss the window",
   'Transform your space before summer entertaining season',
   'Spring home improvement that adds real value to your property',
   'Fresh colors for a fresh season — spring painting inspiration',
@@ -315,7 +324,9 @@ async function generateAndSavePosts(
       dayOffset = (dayOffset + 1) % 14 // Spread across 14 days
       const scheduledStr = scheduledAt.toISOString()
 
-      console.log(`  [${i + 1}/${count}] ${platform.toUpperCase()}: "${page.title}" → ${scheduledAt.toISOString().slice(0, 10)}`)
+      console.log(
+        `  [${i + 1}/${count}] ${platform.toUpperCase()}: "${page.title}" → ${scheduledAt.toISOString().slice(0, 10)}`,
+      )
 
       if (dryRun) {
         console.log('    [dry run — skipped]')
@@ -347,16 +358,14 @@ async function generateAndSavePosts(
         if (postErr) throw new Error(`Social post insert failed: ${postErr.message}`)
 
         // Insert calendar entry
-        const { error: calErr } = await supabase
-          .from('content_calendar')
-          .insert({
-            organization_id: ORG_ID,
-            content_type: 'social_post',
-            content_id: post!.id,
-            title: `${platform.toUpperCase()}: ${page.title}`,
-            scheduled_at: scheduledStr,
-            status: 'scheduled',
-          } as never)
+        const { error: calErr } = await supabase.from('content_calendar').insert({
+          organization_id: ORG_ID,
+          content_type: 'social_post',
+          content_id: post!.id,
+          title: `${platform.toUpperCase()}: ${page.title}`,
+          scheduled_at: scheduledStr,
+          status: 'scheduled',
+        } as never)
 
         if (calErr) {
           console.log(`    ⚠ Calendar entry failed: ${calErr.message}`)
@@ -422,14 +431,16 @@ async function main() {
     for (const post of created.sort((a, b) => a.scheduled.localeCompare(b.scheduled))) {
       console.log(
         '    ' +
-        post.scheduled.padEnd(14) +
-        post.platform.toUpperCase().padEnd(12) +
-        post.topic.slice(0, 40),
+          post.scheduled.padEnd(14) +
+          post.platform.toUpperCase().padEnd(12) +
+          post.topic.slice(0, 40),
       )
     }
   }
 
-  console.log('\n  All posts created with status "review" — approve in dashboard before publishing.')
+  console.log(
+    '\n  All posts created with status "review" — approve in dashboard before publishing.',
+  )
   console.log('\n=== Phase 3 Complete ===\n')
 }
 

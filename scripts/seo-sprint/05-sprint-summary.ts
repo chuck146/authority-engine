@@ -24,7 +24,8 @@ import { createClient } from '@supabase/supabase-js'
 
 const ORG_ID = '00000000-0000-0000-0000-000000000001'
 const ORG_NAME = 'Cleanest Painting LLC'
-const DOMAIN = 'cleanestpaintingnj.com'
+// Domain used by other sprint phases; kept here for reference
+// const DOMAIN = 'cleanestpaintingnj.com'
 
 // ---------------------------------------------------------------------------
 // Arg parsing
@@ -38,11 +39,13 @@ for (const arg of args) {
 }
 
 // Default: look back 7 days for sprint activity
-const sinceDate = flagMap.get('since') ?? (() => {
-  const d = new Date()
-  d.setDate(d.getDate() - 7)
-  return d.toISOString().slice(0, 10)
-})()
+const sinceDate =
+  flagMap.get('since') ??
+  (() => {
+    const d = new Date()
+    d.setDate(d.getDate() - 7)
+    return d.toISOString().slice(0, 10)
+  })()
 
 // ---------------------------------------------------------------------------
 // Clients
@@ -134,9 +137,9 @@ async function fetchAllContent() {
   if (blogs.error) throw new Error(`Blog posts: ${blogs.error.message}`)
 
   return {
-    servicePages: (services.data ?? []).map(p => ({ ...p, type: 'service_page' })),
-    locationPages: (locations.data ?? []).map(p => ({ ...p, type: 'location_page' })),
-    blogPosts: (blogs.data ?? []).map(p => ({ ...p, type: 'blog_post' })),
+    servicePages: (services.data ?? []).map((p) => ({ ...p, type: 'service_page' })),
+    locationPages: (locations.data ?? []).map((p) => ({ ...p, type: 'location_page' })),
+    blogPosts: (blogs.data ?? []).map((p) => ({ ...p, type: 'blog_post' })),
   }
 }
 
@@ -238,12 +241,21 @@ function printDivider(title: string) {
   console.log('='.repeat(70))
 }
 
-function printChange(label: string, current: number, previous: number, unit = '', lowerIsBetter = false) {
+function printChange(
+  label: string,
+  current: number,
+  previous: number,
+  unit = '',
+  lowerIsBetter = false,
+) {
   const diff = current - previous
   const pct = previous > 0 ? Math.round((diff / previous) * 100) : 0
-  const arrow = diff > 0 ? (lowerIsBetter ? 'v' : '^') : diff < 0 ? (lowerIsBetter ? '^' : 'v') : '='
+  const arrow =
+    diff > 0 ? (lowerIsBetter ? 'v' : '^') : diff < 0 ? (lowerIsBetter ? '^' : 'v') : '='
   const sign = diff > 0 ? '+' : ''
-  console.log(`    ${label.padEnd(30)} ${current}${unit}  (${sign}${diff}${unit}, ${sign}${pct}%) ${arrow}`)
+  console.log(
+    `    ${label.padEnd(30)} ${current}${unit}  (${sign}${diff}${unit}, ${sign}${pct}%) ${arrow}`,
+  )
 }
 
 async function main() {
@@ -260,11 +272,7 @@ async function main() {
     fetchKeywordSummary(),
   ])
 
-  const allContent = [
-    ...content.servicePages,
-    ...content.locationPages,
-    ...content.blogPosts,
-  ]
+  const allContent = [...content.servicePages, ...content.locationPages, ...content.blogPosts]
 
   // -----------------------------------------------------------------------
   // Content overview
@@ -272,9 +280,9 @@ async function main() {
 
   printDivider('CONTENT INVENTORY')
 
-  const published = allContent.filter(p => p.status === 'published')
-  const inReview = allContent.filter(p => p.status === 'review')
-  const draft = allContent.filter(p => p.status === 'draft')
+  const published = allContent.filter((p) => p.status === 'published')
+  const inReview = allContent.filter((p) => p.status === 'review')
+  const draft = allContent.filter((p) => p.status === 'draft')
 
   console.log(`\n  Total content pages:  ${allContent.length}`)
   console.log(`    Published:          ${published.length}`)
@@ -282,15 +290,17 @@ async function main() {
   console.log(`    Draft:              ${draft.length}`)
 
   // New content created during sprint
-  const newContent = allContent.filter(p => p.created_at >= sinceDate)
+  const newContent = allContent.filter((p) => p.created_at >= sinceDate)
   const updatedContent = allContent.filter(
-    p => p.updated_at >= sinceDate && p.created_at < sinceDate,
+    (p) => p.updated_at >= sinceDate && p.created_at < sinceDate,
   )
 
   console.log(`\n  New content (since ${sinceDate}): ${newContent.length}`)
   if (newContent.length > 0) {
     for (const page of newContent) {
-      console.log(`    + ${page.title} (${page.type}, status: ${page.status}, SEO: ${page.seo_score ?? 'N/A'})`)
+      console.log(
+        `    + ${page.title} (${page.type}, status: ${page.status}, SEO: ${page.seo_score ?? 'N/A'})`,
+      )
     }
   }
 
@@ -310,14 +320,13 @@ async function main() {
 
   printDivider('SEO SCORE SUMMARY')
 
-  const scored = allContent.filter(p => p.seo_score != null)
-  const avgScore = scored.length > 0
-    ? Math.round(scored.reduce((a, b) => a + b.seo_score!, 0) / scored.length)
-    : 0
+  const scored = allContent.filter((p) => p.seo_score != null)
+  const avgScore =
+    scored.length > 0 ? Math.round(scored.reduce((a, b) => a + b.seo_score!, 0) / scored.length) : 0
 
-  const below70 = scored.filter(p => p.seo_score! < 70)
-  const between70and85 = scored.filter(p => p.seo_score! >= 70 && p.seo_score! < 85)
-  const above85 = scored.filter(p => p.seo_score! >= 85)
+  const below70 = scored.filter((p) => p.seo_score! < 70)
+  const between70and85 = scored.filter((p) => p.seo_score! >= 70 && p.seo_score! < 85)
+  const above85 = scored.filter((p) => p.seo_score! >= 85)
 
   console.log(`\n  Pages with SEO scores: ${scored.length}`)
   console.log(`  Average SEO score:     ${avgScore}`)
@@ -334,13 +343,13 @@ async function main() {
 
   console.log('\n  By content type:')
   for (const { label, items } of types) {
-    const s = items.filter(i => i.seo_score != null)
-    const avg = s.length > 0
-      ? Math.round(s.reduce((a, b) => a + b.seo_score!, 0) / s.length)
-      : 0
-    const min = s.length > 0 ? Math.min(...s.map(i => i.seo_score!)) : 0
-    const max = s.length > 0 ? Math.max(...s.map(i => i.seo_score!)) : 0
-    console.log(`    ${label.padEnd(18)} avg: ${avg}, min: ${min}, max: ${max} (${items.length} total)`)
+    const s = items.filter((i) => i.seo_score != null)
+    const avg = s.length > 0 ? Math.round(s.reduce((a, b) => a + b.seo_score!, 0) / s.length) : 0
+    const min = s.length > 0 ? Math.min(...s.map((i) => i.seo_score!)) : 0
+    const max = s.length > 0 ? Math.max(...s.map((i) => i.seo_score!)) : 0
+    console.log(
+      `    ${label.padEnd(18)} avg: ${avg}, min: ${min}, max: ${max} (${items.length} total)`,
+    )
   }
 
   // Lowest scoring pages
@@ -357,7 +366,7 @@ async function main() {
 
   printDivider('SOCIAL POST DISTRIBUTION')
 
-  const recentSocial = socialPosts.filter(p => p.created_at >= sinceDate)
+  const recentSocial = socialPosts.filter((p) => p.created_at >= sinceDate)
 
   console.log(`\n  Total social posts:    ${socialPosts.length}`)
   console.log(`  Created this sprint:   ${recentSocial.length}`)
@@ -374,7 +383,9 @@ async function main() {
 
   console.log('\n  By platform:')
   for (const [platform, counts] of [...byPlatform.entries()].sort()) {
-    console.log(`    ${platform.toUpperCase().padEnd(12)} ${counts.total} total, ${counts.review} in review, ${counts.published} published`)
+    console.log(
+      `    ${platform.toUpperCase().padEnd(12)} ${counts.total} total, ${counts.review} in review, ${counts.published} published`,
+    )
   }
 
   // Calendar entries
@@ -389,7 +400,7 @@ async function main() {
     }
 
     // Date range
-    const dates = calendarEntries.map(e => e.scheduled_at.slice(0, 10))
+    const dates = calendarEntries.map((e) => e.scheduled_at.slice(0, 10))
     const earliest = dates.sort()[0]
     const latest = dates.sort().reverse()[0]
     console.log(`\n  Schedule window: ${earliest} to ${latest}`)
@@ -410,7 +421,11 @@ async function main() {
     console.log('\n  Current period vs. previous 28 days:\n')
     printChange('Unique keywords', currentKeywords.uniqueQueries, previousKeywords.uniqueQueries)
     printChange('Total clicks', currentKeywords.totalClicks, previousKeywords.totalClicks)
-    printChange('Total impressions', currentKeywords.totalImpressions, previousKeywords.totalImpressions)
+    printChange(
+      'Total impressions',
+      currentKeywords.totalImpressions,
+      previousKeywords.totalImpressions,
+    )
     printChange('Avg position', currentKeywords.avgPosition, previousKeywords.avgPosition, '', true)
   }
 
@@ -428,7 +443,7 @@ async function main() {
   }
 
   // Social posts in review
-  const socialInReview = socialPosts.filter(p => p.status === 'review')
+  const socialInReview = socialPosts.filter((p) => p.status === 'review')
   if (socialInReview.length > 0) {
     actions.push(`Approve ${socialInReview.length} social post(s) awaiting review`)
   }
@@ -439,7 +454,7 @@ async function main() {
   }
 
   // Blog content
-  const publishedBlogs = content.blogPosts.filter(p => p.status === 'published')
+  const publishedBlogs = content.blogPosts.filter((p) => p.status === 'published')
   if (publishedBlogs.length < 5) {
     actions.push(`Generate more blog posts (only ${publishedBlogs.length} published — target 10+)`)
   }
@@ -481,14 +496,14 @@ async function main() {
     const status = met ? 'MET' : 'MISS'
     console.log(
       '  ' +
-      m.label.padEnd(30) +
-      `${m.value}`.padStart(8) +
-      `${m.target}`.padStart(8) +
-      `  ${status}`,
+        m.label.padEnd(30) +
+        `${m.value}`.padStart(8) +
+        `${m.target}`.padStart(8) +
+        `  ${status}`,
     )
   }
 
-  const metCount = metrics.filter(m => m.value >= m.target).length
+  const metCount = metrics.filter((m) => m.value >= m.target).length
   console.log(`\n  Score: ${metCount}/${metrics.length} targets met`)
 
   // -----------------------------------------------------------------------

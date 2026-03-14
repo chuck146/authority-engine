@@ -288,6 +288,7 @@ _Last Updated: March 14, 2026_
 - [x] Hero images generated for all 20 published pages (8 service + 12 location)
 - [x] SEO Growth Sprint team agent added (.claude/agents/team-seo-growth.md)
 - [x] Wrap-up slash command added (.claude/commands/wrap-up.md)
+- [x] SEO Growth Sprint CLI scripts: 6 phases (baseline, content gaps, SEO optimize, social posts, technical audit, sprint summary) in scripts/seo-sprint/
 
 ### What's Next
 

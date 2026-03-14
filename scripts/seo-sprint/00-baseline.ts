@@ -88,19 +88,25 @@ async function fetchContentPages() {
   const [services, locations, blogs] = await Promise.all([
     supabase
       .from('service_pages')
-      .select('id, title, slug, status, seo_score, keywords, published_at, meta_title, meta_description')
+      .select(
+        'id, title, slug, status, seo_score, keywords, published_at, meta_title, meta_description',
+      )
       .eq('organization_id', ORG_ID)
       .order('title')
       .returns<ContentRow[]>(),
     supabase
       .from('location_pages')
-      .select('id, title, slug, status, seo_score, keywords, published_at, meta_title, meta_description, city, state')
+      .select(
+        'id, title, slug, status, seo_score, keywords, published_at, meta_title, meta_description, city, state',
+      )
       .eq('organization_id', ORG_ID)
       .order('title')
       .returns<LocationRow[]>(),
     supabase
       .from('blog_posts')
-      .select('id, title, slug, status, seo_score, keywords, published_at, meta_title, meta_description')
+      .select(
+        'id, title, slug, status, seo_score, keywords, published_at, meta_title, meta_description',
+      )
       .eq('organization_id', ORG_ID)
       .order('title')
       .returns<ContentRow[]>(),
@@ -169,7 +175,10 @@ type AggregatedKeyword = {
 }
 
 function aggregateKeywords(rows: KeywordRow[]): AggregatedKeyword[] {
-  const map = new Map<string, { clicks: number; impressions: number; posSum: number; count: number }>()
+  const map = new Map<
+    string,
+    { clicks: number; impressions: number; posSum: number; count: number }
+  >()
 
   for (const row of rows) {
     const existing = map.get(row.query)
@@ -207,7 +216,10 @@ type AggregatedPage = {
 }
 
 function aggregateGa4(rows: Ga4Row[]): AggregatedPage[] {
-  const map = new Map<string, { sessions: number; pageviews: number; bounceSum: number; count: number }>()
+  const map = new Map<
+    string,
+    { sessions: number; pageviews: number; bounceSum: number; count: number }
+  >()
 
   for (const row of rows) {
     const existing = map.get(row.page_path)
@@ -267,12 +279,30 @@ function findMissingServiceLocationCombos(
 
   // Potential expansion cities in the NJ service area
   const potentialCities = [
-    'Bernardsville', 'Berkeley Heights', 'Clark', 'Fanwood',
-    'Garwood', 'Glen Ridge', 'Kenilworth', 'Livingston',
-    'Millburn', 'Mountain Lakes', 'Mountainside', 'North Caldwell',
-    'Nutley', 'Rahway', 'Roselle', 'South Orange',
-    'Springfield', 'Union', 'Verona', 'Wayne',
-    'West Caldwell', 'West Orange', 'Florham Park', 'Boonton',
+    'Bernardsville',
+    'Berkeley Heights',
+    'Clark',
+    'Fanwood',
+    'Garwood',
+    'Glen Ridge',
+    'Kenilworth',
+    'Livingston',
+    'Millburn',
+    'Mountain Lakes',
+    'Mountainside',
+    'North Caldwell',
+    'Nutley',
+    'Rahway',
+    'Roselle',
+    'South Orange',
+    'Springfield',
+    'Union',
+    'Verona',
+    'Wayne',
+    'West Caldwell',
+    'West Orange',
+    'Florham Park',
+    'Boonton',
   ]
 
   const missing: { service: string; city: string }[] = []
@@ -328,17 +358,20 @@ function printContentSummary(
   for (const { label, items } of types) {
     const pub = items.filter((i) => i.status === 'published')
     const pubScores = pub.filter((i) => i.seo_score != null).map((i) => i.seo_score!)
-    const avgScore = pubScores.length > 0
-      ? Math.round(pubScores.reduce((a, b) => a + b, 0) / pubScores.length)
-      : 0
-    console.log(`    ${label}: ${items.length} total, ${pub.length} published, avg SEO: ${avgScore}`)
+    const avgScore =
+      pubScores.length > 0 ? Math.round(pubScores.reduce((a, b) => a + b, 0) / pubScores.length) : 0
+    console.log(
+      `    ${label}: ${items.length} total, ${pub.length} published, avg SEO: ${avgScore}`,
+    )
   }
 
   // Pages in review — ACTION NEEDED
   if (review.length > 0) {
     console.log('\n  *** PAGES STUCK IN REVIEW (action needed): ***')
     for (const page of review) {
-      console.log(`    - ${page.title} (${page.type}, SEO: ${page.seo_score ?? 'N/A'}, slug: ${page.slug})`)
+      console.log(
+        `    - ${page.title} (${page.type}, SEO: ${page.seo_score ?? 'N/A'}, slug: ${page.slug})`,
+      )
     }
   }
 
@@ -350,7 +383,9 @@ function printContentSummary(
   if (lowScoring.length > 0) {
     console.log('\n  Pages with SEO score below 85:')
     for (const page of lowScoring) {
-      console.log(`    - ${page.title} (${page.type}, SEO: ${page.seo_score}, status: ${page.status})`)
+      console.log(
+        `    - ${page.title} (${page.type}, SEO: ${page.seo_score}, status: ${page.status})`,
+      )
     }
   } else {
     console.log('\n  All scored pages are 85+')
@@ -369,7 +404,8 @@ function printKeywordAnalysis(keywords: AggregatedKeyword[]) {
 
   const totalClicks = keywords.reduce((s, k) => s + k.totalClicks, 0)
   const totalImpressions = keywords.reduce((s, k) => s + k.totalImpressions, 0)
-  const overallCtr = totalImpressions > 0 ? Math.round((totalClicks / totalImpressions) * 10000) / 100 : 0
+  const overallCtr =
+    totalImpressions > 0 ? Math.round((totalClicks / totalImpressions) * 10000) / 100 : 0
 
   console.log(`  Total clicks:      ${totalClicks.toLocaleString()}`)
   console.log(`  Total impressions: ${totalImpressions.toLocaleString()}`)
@@ -377,16 +413,23 @@ function printKeywordAnalysis(keywords: AggregatedKeyword[]) {
 
   // Top 10 by clicks
   console.log('\n  Top 10 keywords by clicks:')
-  console.log('    ' + 'Query'.padEnd(45) + 'Pos'.padStart(6) + 'Clicks'.padStart(8) + 'Impr'.padStart(8) + 'CTR'.padStart(7))
+  console.log(
+    '    ' +
+      'Query'.padEnd(45) +
+      'Pos'.padStart(6) +
+      'Clicks'.padStart(8) +
+      'Impr'.padStart(8) +
+      'CTR'.padStart(7),
+  )
   console.log('    ' + '-'.repeat(74))
   for (const k of keywords.slice(0, 10)) {
     console.log(
       '    ' +
-      k.query.slice(0, 44).padEnd(45) +
-      k.avgPosition.toFixed(1).padStart(6) +
-      k.totalClicks.toString().padStart(8) +
-      k.totalImpressions.toString().padStart(8) +
-      `${k.avgCtr}%`.padStart(7),
+        k.query.slice(0, 44).padEnd(45) +
+        k.avgPosition.toFixed(1).padStart(6) +
+        k.totalClicks.toString().padStart(8) +
+        k.totalImpressions.toString().padStart(8) +
+        `${k.avgCtr}%`.padStart(7),
     )
   }
 
@@ -394,15 +437,17 @@ function printKeywordAnalysis(keywords: AggregatedKeyword[]) {
   const strikingDistance = findStrikingDistanceKeywords(keywords)
   console.log(`\n  Striking-distance keywords (positions 11-30): ${strikingDistance.length}`)
   if (strikingDistance.length > 0) {
-    console.log('    ' + 'Query'.padEnd(45) + 'Pos'.padStart(6) + 'Clicks'.padStart(8) + 'Impr'.padStart(8))
+    console.log(
+      '    ' + 'Query'.padEnd(45) + 'Pos'.padStart(6) + 'Clicks'.padStart(8) + 'Impr'.padStart(8),
+    )
     console.log('    ' + '-'.repeat(67))
     for (const k of strikingDistance.slice(0, 15)) {
       console.log(
         '    ' +
-        k.query.slice(0, 44).padEnd(45) +
-        k.avgPosition.toFixed(1).padStart(6) +
-        k.totalClicks.toString().padStart(8) +
-        k.totalImpressions.toString().padStart(8),
+          k.query.slice(0, 44).padEnd(45) +
+          k.avgPosition.toFixed(1).padStart(6) +
+          k.totalClicks.toString().padStart(8) +
+          k.totalImpressions.toString().padStart(8),
       )
     }
   }
@@ -411,15 +456,17 @@ function printKeywordAnalysis(keywords: AggregatedKeyword[]) {
   const lowCtr = findHighImpressionLowCtr(keywords)
   console.log(`\n  High-impression, low-CTR keywords (<2% CTR, >50 impressions): ${lowCtr.length}`)
   if (lowCtr.length > 0) {
-    console.log('    ' + 'Query'.padEnd(45) + 'Pos'.padStart(6) + 'Impr'.padStart(8) + 'CTR'.padStart(7))
+    console.log(
+      '    ' + 'Query'.padEnd(45) + 'Pos'.padStart(6) + 'Impr'.padStart(8) + 'CTR'.padStart(7),
+    )
     console.log('    ' + '-'.repeat(66))
     for (const k of lowCtr.slice(0, 10)) {
       console.log(
         '    ' +
-        k.query.slice(0, 44).padEnd(45) +
-        k.avgPosition.toFixed(1).padStart(6) +
-        k.totalImpressions.toString().padStart(8) +
-        `${k.avgCtr}%`.padStart(7),
+          k.query.slice(0, 44).padEnd(45) +
+          k.avgPosition.toFixed(1).padStart(6) +
+          k.totalImpressions.toString().padStart(8) +
+          `${k.avgCtr}%`.padStart(7),
       )
     }
   }
@@ -441,15 +488,21 @@ function printGa4Analysis(pages: AggregatedPage[]) {
   console.log(`  Total pageviews:      ${totalPageviews.toLocaleString()}`)
 
   console.log('\n  Top 15 pages by sessions:')
-  console.log('    ' + 'Page'.padEnd(45) + 'Sessions'.padStart(10) + 'Pageviews'.padStart(10) + 'Bounce'.padStart(8))
+  console.log(
+    '    ' +
+      'Page'.padEnd(45) +
+      'Sessions'.padStart(10) +
+      'Pageviews'.padStart(10) +
+      'Bounce'.padStart(8),
+  )
   console.log('    ' + '-'.repeat(73))
   for (const p of pages.slice(0, 15)) {
     console.log(
       '    ' +
-      p.pagePath.slice(0, 44).padEnd(45) +
-      p.totalSessions.toString().padStart(10) +
-      p.totalPageviews.toString().padStart(10) +
-      `${(p.avgBounceRate * 100).toFixed(0)}%`.padStart(8),
+        p.pagePath.slice(0, 44).padEnd(45) +
+        p.totalSessions.toString().padStart(10) +
+        p.totalPageviews.toString().padStart(10) +
+        `${(p.avgBounceRate * 100).toFixed(0)}%`.padStart(8),
     )
   }
 }
@@ -476,7 +529,9 @@ function printGscSnapshot(snapshot: GscSnapshot | null) {
   if (data.sitemaps && Array.isArray(data.sitemaps)) {
     console.log(`\n  Sitemaps: ${data.sitemaps.length}`)
     for (const sm of data.sitemaps as Record<string, unknown>[]) {
-      console.log(`    - ${sm.path ?? sm.url ?? 'unknown'} (submitted: ${sm.contents_submitted ?? '?'}, indexed: ${sm.contents_indexed ?? '?'})`)
+      console.log(
+        `    - ${sm.path ?? sm.url ?? 'unknown'} (submitted: ${sm.contents_submitted ?? '?'}, indexed: ${sm.contents_indexed ?? '?'})`,
+      )
     }
   }
 }
@@ -505,7 +560,7 @@ function printSummary(
   locationPages: LocationRow[],
   blogPosts: ContentRow[],
   keywords: AggregatedKeyword[],
-  ga4Pages: AggregatedPage[],
+  _ga4Pages: AggregatedPage[],
 ) {
   printDivider('SPRINT ACTION ITEMS')
 
@@ -529,7 +584,9 @@ function printSummary(
   console.log(`  2. Optimize ${lowScoring.length} pages with SEO score below 85`)
   console.log(`  3. Target ${strikingDistance.length} striking-distance keywords (positions 11-30)`)
   console.log(`  4. Improve CTR for ${lowCtr.length} high-impression, low-CTR keywords`)
-  console.log(`  5. Blog content critically thin — only ${blogPosts.filter((b) => b.status === 'published').length} published post(s)`)
+  console.log(
+    `  5. Blog content critically thin — only ${blogPosts.filter((b) => b.status === 'published').length} published post(s)`,
+  )
   console.log(`  6. Generate spring-themed content (exterior prep, deck staining, curb appeal)`)
   console.log(`  7. Distribute top content via 12 social posts (6 GBP, 3 IG, 3 FB)`)
 }

@@ -183,7 +183,9 @@ async function publishReviewPages(): Promise<{ published: string[]; skipped: str
         }
         published.push(page.title)
       } else {
-        console.log(`  ⏭ Skipping: ${page.title} (SEO: ${score} < ${PUBLISH_THRESHOLD}, needs optimization in Phase 2)`)
+        console.log(
+          `  ⏭ Skipping: ${page.title} (SEO: ${score} < ${PUBLISH_THRESHOLD}, needs optimization in Phase 2)`,
+        )
         skipped.push(page.title)
       }
     }
@@ -225,10 +227,7 @@ const SPRING_BLOG_TOPICS = [
   },
 ]
 
-function buildBlogPrompt(
-  topic: string,
-  keywords: string[],
-): { system: string; user: string } {
+function buildBlogPrompt(topic: string, keywords: string[]): { system: string; user: string } {
   return {
     system: `You are an expert SEO copywriter specializing in home improvement and painting contractor content. You write engaging, informative blog posts that rank well for target keywords while providing genuine value to homeowners.
 
@@ -315,7 +314,9 @@ async function generateBlogPosts(): Promise<string[]> {
     console.log(`  Found ${strikingKeywords.size} striking-distance keywords:`)
     const sorted = [...strikingKeywords.entries()].sort((a, b) => a[1].avgPos - b[1].avgPos)
     for (const [query, data] of sorted.slice(0, 10)) {
-      console.log(`    "${query}" — avg position ${data.avgPos.toFixed(1)}, ${data.impressions} impressions`)
+      console.log(
+        `    "${query}" — avg position ${data.avgPos.toFixed(1)}, ${data.impressions} impressions`,
+      )
     }
   } else {
     console.log('  No striking-distance keywords found — using predefined spring topics')
@@ -346,11 +347,7 @@ async function generateBlogPosts(): Promise<string[]> {
       const content = parseJsonResponse(raw) as StructuredContent
 
       // Calculate word count and reading time
-      const wordCount = [
-        content.intro,
-        ...content.sections.map((s) => s.body),
-        content.cta,
-      ]
+      const wordCount = [content.intro, ...content.sections.map((s) => s.body), content.cta]
         .join(' ')
         .replace(/<[^>]*>/g, '')
         .split(/\s+/).length
@@ -400,10 +397,7 @@ const EXPANSION_CITIES = [
   { city: 'Mountainside', county: 'Union', state: 'NJ' },
 ]
 
-function buildLocationPrompt(
-  city: string,
-  county: string,
-): { system: string; user: string } {
+function buildLocationPrompt(city: string, county: string): { system: string; user: string } {
   return {
     system: `You are an expert local SEO copywriter specializing in home improvement and painting contractor websites. You write location-specific service pages that rank for "[service] in [city]" searches.
 
@@ -449,7 +443,9 @@ async function generateLocationPages(): Promise<string[]> {
     .eq('organization_id', ORG_ID)
 
   const existingSlugs = new Set((existingLocations ?? []).map((l: { slug: string }) => l.slug))
-  const existingCities = new Set((existingLocations ?? []).map((l: { city: string }) => l.city.toLowerCase()))
+  const existingCities = new Set(
+    (existingLocations ?? []).map((l: { city: string }) => l.city.toLowerCase()),
+  )
 
   const createdSlugs: string[] = []
   const cities = EXPANSION_CITIES.slice(0, MAX_LOCATION_PAGES)

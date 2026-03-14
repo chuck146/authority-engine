@@ -180,9 +180,8 @@ async function fetchPublishedPages(): Promise<{ type: string; pages: ContentRow[
 }
 
 function pageUrl(type: string, slug: string): string {
-  const prefix = type === 'service_page' ? 'services'
-    : type === 'location_page' ? 'locations'
-    : 'blog'
+  const prefix =
+    type === 'service_page' ? 'services' : type === 'location_page' ? 'locations' : 'blog'
   return `${BASE_URL}/${prefix}/${slug}`
 }
 
@@ -208,9 +207,10 @@ function checkHttpStatus(result: PageCheckResult, issues: AuditIssue[]) {
       category: 'HTTP',
       page: result.url,
       message: `HTTP ${result.status} response`,
-      recommendation: result.status === 404
-        ? 'Page returns 404 — check if the content is published and the slug is correct.'
-        : `Unexpected status code ${result.status}. Investigate server response.`,
+      recommendation:
+        result.status === 404
+          ? 'Page returns 404 — check if the content is published and the slug is correct.'
+          : `Unexpected status code ${result.status}. Investigate server response.`,
     })
   }
 
@@ -278,8 +278,9 @@ function checkMetaTags(result: PageCheckResult, dbPage: ContentRow, issues: Audi
   }
 
   // Meta description
-  const descMatch = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i)
-    ?? html.match(/<meta\s+content=["']([^"']*)["']\s+name=["']description["']/i)
+  const descMatch =
+    html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i) ??
+    html.match(/<meta\s+content=["']([^"']*)["']\s+name=["']description["']/i)
   const description = descMatch?.[1]?.trim() ?? ''
 
   if (!description) {
@@ -341,8 +342,14 @@ function checkOpenGraph(result: PageCheckResult, dbPage: ContentRow, issues: Aud
   const missing: string[] = []
 
   for (const prop of ogProps) {
-    const regex = new RegExp(`<meta\\s+(?:property|name)=["']${prop}["']\\s+content=["']([^"']*)["']`, 'i')
-    const altRegex = new RegExp(`<meta\\s+content=["']([^"']*)["']\\s+(?:property|name)=["']${prop}["']`, 'i')
+    const regex = new RegExp(
+      `<meta\\s+(?:property|name)=["']${prop}["']\\s+content=["']([^"']*)["']`,
+      'i',
+    )
+    const altRegex = new RegExp(
+      `<meta\\s+content=["']([^"']*)["']\\s+(?:property|name)=["']${prop}["']`,
+      'i',
+    )
     const match = html.match(regex) ?? html.match(altRegex)
 
     if (!match || !match[1]?.trim()) {
@@ -368,7 +375,8 @@ function checkOpenGraph(result: PageCheckResult, dbPage: ContentRow, issues: Aud
       category: 'Open Graph',
       page: result.url,
       message: 'Missing Twitter/X Card meta tags',
-      recommendation: 'Add <meta name="twitter:card" content="summary_large_image"> for Twitter sharing.',
+      recommendation:
+        'Add <meta name="twitter:card" content="summary_large_image"> for Twitter sharing.',
     })
   }
 }
@@ -378,7 +386,8 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
   const html = result.html
 
   // Look for JSON-LD script tags
-  const jsonLdMatches = html.match(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) ?? []
+  const jsonLdMatches =
+    html.match(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) ?? []
   const schemas: string[] = []
 
   for (const match of jsonLdMatches) {
@@ -400,20 +409,28 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
 
   // Check for LocalBusiness on homepage
   if (result.url === BASE_URL || result.url === `${BASE_URL}/`) {
-    if (!schemas.some(s => s === 'LocalBusiness' || s === 'PaintingContractor' || s === 'HomeAndConstructionBusiness')) {
+    if (
+      !schemas.some(
+        (s) =>
+          s === 'LocalBusiness' ||
+          s === 'PaintingContractor' ||
+          s === 'HomeAndConstructionBusiness',
+      )
+    ) {
       issues.push({
         severity: 'high',
         category: 'Schema',
         page: result.url,
         message: 'Missing LocalBusiness schema on homepage',
-        recommendation: 'Add LocalBusiness JSON-LD with name, address, phone, hours, and service area.',
+        recommendation:
+          'Add LocalBusiness JSON-LD with name, address, phone, hours, and service area.',
       })
     }
   }
 
   // Check for BreadcrumbList on content pages
   if (pageType !== 'homepage') {
-    if (!schemas.some(s => s === 'BreadcrumbList' || s === 'graph')) {
+    if (!schemas.some((s) => s === 'BreadcrumbList' || s === 'graph')) {
       issues.push({
         severity: 'medium',
         category: 'Schema',
@@ -426,7 +443,7 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
 
   // Check for Service schema on service pages
   if (pageType === 'service_page') {
-    if (!schemas.some(s => s === 'Service' || s === 'ProfessionalService')) {
+    if (!schemas.some((s) => s === 'Service' || s === 'ProfessionalService')) {
       issues.push({
         severity: 'medium',
         category: 'Schema',
@@ -464,7 +481,7 @@ function checkHeadingStructure(result: PageCheckResult, issues: AuditIssue[]) {
 
   // Check for img alt text
   const imgTags = html.match(/<img\s[^>]*>/gi) ?? []
-  const missingAlt = imgTags.filter(img => !img.match(/alt=["'][^"']+["']/i))
+  const missingAlt = imgTags.filter((img) => !img.match(/alt=["'][^"']+["']/i))
   if (missingAlt.length > 0) {
     issues.push({
       severity: 'medium',
@@ -476,7 +493,7 @@ function checkHeadingStructure(result: PageCheckResult, issues: AuditIssue[]) {
   }
 }
 
-function checkInternalLinks(result: PageCheckResult, allUrls: Set<string>, issues: AuditIssue[]) {
+function checkInternalLinks(result: PageCheckResult, _allUrls: Set<string>, _issues: AuditIssue[]) {
   if (!result.html) return
   const html = result.html
 
@@ -495,7 +512,7 @@ function checkInternalLinks(result: PageCheckResult, allUrls: Set<string>, issue
 
   // Filter to internal content links only
   const contentLinks = links.filter(
-    l => l.includes('/services/') || l.includes('/locations/') || l.includes('/blog/')
+    (l) => l.includes('/services/') || l.includes('/locations/') || l.includes('/blog/'),
   )
 
   if (verbose && contentLinks.length > 0) {
@@ -534,13 +551,15 @@ async function checkSitemap(
 
   // Parse URLs from sitemap
   const urlMatches = result.html?.match(/<loc>([^<]+)<\/loc>/gi) ?? []
-  const sitemapUrls = urlMatches.map(m => m.replace(/<\/?loc>/gi, '').trim())
+  const sitemapUrls = urlMatches.map((m) => m.replace(/<\/?loc>/gi, '').trim())
 
   console.log(`    Sitemap contains ${sitemapUrls.length} URLs`)
 
   // Check published pages missing from sitemap
-  const sitemapSet = new Set(sitemapUrls.map(u => u.replace(/\/$/, '')))
-  const missingFromSitemap = publishedUrls.filter(u => !sitemapSet.has(u) && !sitemapSet.has(u + '/'))
+  const sitemapSet = new Set(sitemapUrls.map((u) => u.replace(/\/$/, '')))
+  const missingFromSitemap = publishedUrls.filter(
+    (u) => !sitemapSet.has(u) && !sitemapSet.has(u + '/'),
+  )
 
   if (missingFromSitemap.length > 0) {
     issues.push({
@@ -666,9 +685,10 @@ function printAuditReport(issues: AuditIssue[], pageCount: number, responseTimes
   printDivider('TECHNICAL SEO AUDIT REPORT')
 
   // Overall stats
-  const avgResponseTime = responseTimesMs.length > 0
-    ? Math.round(responseTimesMs.reduce((a, b) => a + b, 0) / responseTimesMs.length)
-    : 0
+  const avgResponseTime =
+    responseTimesMs.length > 0
+      ? Math.round(responseTimesMs.reduce((a, b) => a + b, 0) / responseTimesMs.length)
+      : 0
   const maxResponseTime = responseTimesMs.length > 0 ? Math.max(...responseTimesMs) : 0
 
   console.log(`\n  Pages audited:        ${pageCount}`)
@@ -727,8 +747,8 @@ function printAuditReport(issues: AuditIssue[], pageCount: number, responseTimes
   // Action summary
   printDivider('RECOMMENDED ACTIONS')
 
-  const critical = sorted.filter(i => i.severity === 'critical')
-  const high = sorted.filter(i => i.severity === 'high')
+  const critical = sorted.filter((i) => i.severity === 'critical')
+  const high = sorted.filter((i) => i.severity === 'high')
 
   if (critical.length > 0) {
     console.log('\n  IMMEDIATE (critical):')
@@ -744,12 +764,12 @@ function printAuditReport(issues: AuditIssue[], pageCount: number, responseTimes
     }
   }
 
-  const medium = sorted.filter(i => i.severity === 'medium')
+  const medium = sorted.filter((i) => i.severity === 'medium')
   if (medium.length > 0) {
     console.log(`\n  NEXT SPRINT (medium): ${medium.length} issue(s) — address in next cycle`)
   }
 
-  const low = sorted.filter(i => i.severity === 'low')
+  const low = sorted.filter((i) => i.severity === 'low')
   if (low.length > 0) {
     console.log(`  BACKLOG (low): ${low.length} issue(s) — nice-to-have improvements`)
   }
@@ -786,7 +806,7 @@ async function main() {
   }
 
   // 2. Build URL list (content pages + homepage)
-  const urlsToCheck = [BASE_URL, ...allPages.map(p => p.url)]
+  const urlsToCheck = [BASE_URL, ...allPages.map((p) => p.url)]
 
   // 3. Fetch all pages
   console.log(`\n  Fetching ${urlsToCheck.length} pages (concurrency: ${CONCURRENT_FETCHES})...`)
@@ -796,7 +816,9 @@ async function main() {
     responseTimes.push(result.responseTimeMs)
     const statusIcon = result.status === 200 ? 'OK' : result.status ? `${result.status}` : 'ERR'
     if (verbose) {
-      console.log(`    [${statusIcon}] ${result.responseTimeMs}ms ${result.url.replace(BASE_URL, '') || '/'}`)
+      console.log(
+        `    [${statusIcon}] ${result.responseTimeMs}ms ${result.url.replace(BASE_URL, '') || '/'}`,
+      )
     }
   }
 
@@ -807,9 +829,17 @@ async function main() {
 
   for (const result of fetchResults) {
     const isHomepage = result.url === BASE_URL || result.url === `${BASE_URL}/`
-    const pageInfo = allPages.find(p => p.url === result.url)
+    const pageInfo = allPages.find((p) => p.url === result.url)
     const pageType = isHomepage ? 'homepage' : (pageInfo?.type ?? 'unknown')
-    const dbPage = pageInfo?.page ?? { id: '', title: '', slug: '', status: 'published', meta_title: null, meta_description: null, hero_image_url: null }
+    const dbPage = pageInfo?.page ?? {
+      id: '',
+      title: '',
+      slug: '',
+      status: 'published',
+      meta_title: null,
+      meta_description: null,
+      hero_image_url: null,
+    }
 
     if (shouldCheck('http')) checkHttpStatus(result, issues)
     if (shouldCheck('meta')) checkMetaTags(result, dbPage, issues)
@@ -817,14 +847,14 @@ async function main() {
     if (shouldCheck('schema')) checkSchemaMarkup(result, pageType, issues)
     if (shouldCheck('structure')) checkHeadingStructure(result, issues)
     if (shouldCheck('links')) {
-      const allUrlSet = new Set(allPages.map(p => p.url))
+      const allUrlSet = new Set(allPages.map((p) => p.url))
       checkInternalLinks(result, allUrlSet, issues)
     }
   }
 
   // 5. Check sitemap
   if (shouldCheck('sitemap')) {
-    const publishedUrls = allPages.map(p => p.url)
+    const publishedUrls = allPages.map((p) => p.url)
     await checkSitemap(publishedUrls, issues)
   }
 
