@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import {
   getOrganizationBySlug,
   getAllPublishedServiceLinks,
@@ -8,6 +9,13 @@ import { SiteFooter } from '@/components/marketing/site-footer'
 import type { OrgBranding, OrgSettings } from '@/types'
 
 const ORG_SLUG = 'cleanest-painting'
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Cleanest Painting LLC',
+    template: '%s',
+  },
+}
 
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   const org = await getOrganizationBySlug(ORG_SLUG)

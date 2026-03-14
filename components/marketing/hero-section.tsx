@@ -5,17 +5,32 @@ type Breadcrumb = { label: string; href?: string }
 
 type HeroSectionProps = {
   imageUrl?: string | null
+  imageAlt?: string
   title: string
   subtitle?: string
   breadcrumbs: Breadcrumb[]
   badge?: string
 }
 
-export function HeroSection({ imageUrl, title, subtitle, breadcrumbs, badge }: HeroSectionProps) {
+export function HeroSection({
+  imageUrl,
+  imageAlt,
+  title,
+  subtitle,
+  breadcrumbs,
+  badge,
+}: HeroSectionProps) {
   return (
     <header className="relative flex min-h-[340px] items-end overflow-hidden sm:min-h-[400px]">
       {imageUrl ? (
-        <Image src={imageUrl} alt="" fill className="object-cover" priority sizes="100vw" />
+        <Image
+          src={imageUrl}
+          alt={imageAlt ?? title}
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-[#1B2B5B] via-[#1e3a5f] to-[#0f1a35]" />
       )}

@@ -17,6 +17,7 @@ export function ServicePageLayout({ page, phone, estimateUrl }: ServicePageLayou
     <article>
       <HeroSection
         imageUrl={(page as Record<string, unknown>).hero_image_url as string | null}
+        imageAlt={`${page.title} by Cleanest Painting in New Jersey`}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Services', href: '/services' },
