@@ -9,6 +9,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **SEO Growth Sprint team agent:** `.claude/agents/team-seo-growth.md` — 4-teammate monthly SEO optimization sprint (content gap analysis, on-page SEO optimization, social distribution, technical audit + conversion path testing)
+- **Wrap-up slash command:** `.claude/commands/wrap-up.md` — post-task workflow for committing work, updating docs, and suggesting next steps
 - **Custom domain migration:** Production app now served at `cleanestpaintingnj.com` (apex domain, no www redirect) via Vercel
 - **DNS configuration:** A records updated in SiteGround (apex + www → Vercel IP `216.150.1.1`), mail/FTP records preserved on SiteGround hosting
 - **Google Cloud OAuth production mode:** OAuth consent screen pushed to Production — tokens no longer expire after 7 days
