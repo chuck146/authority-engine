@@ -9,6 +9,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Dynamic OG image generator:** `opengraph-image.tsx` for homepage — generates 1200×630 branded image with navy gradient, company name, and tagline (app/(marketing)/opengraph-image.tsx)
+- **SEO Growth Sprint scripts (6 phases):** Standalone CLI scripts for monthly SEO optimization sprints (scripts/seo-sprint/)
+  - **Phase 0 — Baseline:** Queries Supabase for keyword rankings, GA4 metrics, GSC snapshots, content inventory with expansion opportunity analysis (00-baseline.ts)
+  - **Phase 1 — Content Gaps:** Publishes review-ready pages (SEO >= 80), generates spring-themed blog posts for striking-distance keywords, creates location pages for expansion cities (01-content-gaps.ts)
+  - **Phase 2 — SEO Optimize:** Fetches pages scoring below threshold, uses Claude to optimize meta tags, content length, keyword density, recalculates scores (02-seo-optimize.ts)
+  - **Phase 3 — Social Posts:** Generates 12 social posts (6 GBP + 3 Instagram + 3 Facebook) promoting top content, schedules across 14-day calendar window (03-social-posts.ts)
+  - **Phase 4 — Technical Audit:** HTTP status checks, meta tag validation, Open Graph tags, schema markup (LocalBusiness/Service/BreadcrumbList), sitemap coverage, robots.txt, GSC indexing, heading structure, image alt text — severity-ranked report (04-technical-audit.ts)
+  - **Phase 5 — Sprint Summary:** Compiles all-phase results — content inventory, SEO score distribution, social post schedule, 28-day keyword comparison, sprint scorecard with targets, action items, next sprint preparation checklist (05-sprint-summary.ts)
 - **SEO Growth Sprint team agent:** `.claude/agents/team-seo-growth.md` — 4-teammate monthly SEO optimization sprint (content gap analysis, on-page SEO optimization, social distribution, technical audit + conversion path testing)
 - **Wrap-up slash command:** `.claude/commands/wrap-up.md` — post-task workflow for committing work, updating docs, and suggesting next steps
 - **Custom domain migration:** Production app now served at `cleanestpaintingnj.com` (apex domain, no www redirect) via Vercel
@@ -32,6 +40,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Service hero image type:** `service_hero` added to Nano Banana 2 pipeline with prompt template (types/media.ts, packages/ai/prompts/images/service-hero.ts)
 - **Hero image generation script:** `scripts/generate-hero-images.ts` — standalone CLI for batch-generating hero images via Gemini Flash Image + Supabase Storage (--type, --slug, --dry-run, --force flags)
 - **Marketing layout components:** HeroSection (full-width with image/gradient fallback), BrandedCta (navy + gold CTA bar) used by service/location/blog page layouts (components/marketing/hero-section.tsx, components/marketing/branded-cta.tsx)
+- **Hero images generated:** All 20 published pages (8 service + 12 location) have AI-generated hero images via Gemini Flash Image, uploaded to Supabase Storage
+- **Migration applied:** `hero_image_url` columns live on production Supabase, types regenerated
 
 ### Changed
 
@@ -46,6 +56,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Missing og:url on content pages:** Added explicit `url` field to OpenGraph metadata on service, location, and blog page routes
+- **Missing Twitter Card meta tags:** Added `twitter:card`, `twitter:title`, `twitter:description`, and `twitter:images` to all 5 marketing page routes (homepage, locations hub, service pages, location pages, blog posts)
+- **Sitemap gap:** Added `/locations` hub page to sitemap.xml (was missing from dynamic sitemap generation)
 - **Google OAuth callback cleanup:** Removed 2 success-path `console.log` debug statements that triggered lint warnings (app/api/auth/google/callback/route.ts)
 
 ---
