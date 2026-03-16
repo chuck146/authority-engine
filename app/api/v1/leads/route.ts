@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { sendLeadNotification } from '@/lib/email/resend'
 import { scoreLead } from '@/lib/leads/lead-scorer'
+import { isRateLimited } from '@/lib/leads/rate-limiter'
 import type { OrgSettings } from '@/types'
 import type { LeadListItem } from '@/types/leads'
 
@@ -19,21 +20,6 @@ const leadSchema = z.object({
   message: z.string().max(1000).optional(),
   org_slug: z.string().min(1).max(100),
 })
-
-// Simple in-memory rate limiter for public lead submission
-export const rateLimitMap = new Map<string, number[]>()
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
-const RATE_LIMIT_MAX = 5 // 5 submissions per IP per hour
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const timestamps = rateLimitMap.get(ip) ?? []
-  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS)
-  if (recent.length >= RATE_LIMIT_MAX) return true
-  recent.push(now)
-  rateLimitMap.set(ip, recent)
-  return false
-}
 
 // Public POST — anyone can submit a lead
 export async function POST(request: Request) {

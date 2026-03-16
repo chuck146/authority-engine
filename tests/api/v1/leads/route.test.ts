@@ -21,6 +21,12 @@ vi.mock('@/lib/email/resend', () => ({
   sendLeadNotification: vi.fn().mockResolvedValue(undefined),
 }))
 
+const mockClearRateLimits = vi.fn()
+vi.mock('@/lib/leads/rate-limiter', () => ({
+  isRateLimited: vi.fn().mockReturnValue(false),
+  clearRateLimits: mockClearRateLimits,
+}))
+
 function validLeadBody() {
   return {
     name: 'Jane Doe',
@@ -35,8 +41,6 @@ function validLeadBody() {
 describe('POST /api/v1/leads', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
-    const { rateLimitMap } = await import('@/app/api/v1/leads/route')
-    rateLimitMap.clear()
     // Default: org slug lookup succeeds, then lead insert succeeds
     mockSupabase.single
       .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null }) // org slug lookup
