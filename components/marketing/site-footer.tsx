@@ -35,33 +35,31 @@ export function SiteFooter({
         <div className="mb-16 grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand column */}
           <div>
-            <Link href="/" className="flex items-center gap-2.5">
-              {logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoUrl}
-                  alt={orgName}
-                  width={52}
-                  height={52}
-                  className="h-[52px] w-[52px] rounded-xl object-cover shadow-md shadow-black/20"
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <div className="flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-[#1B2B5B] ring-1 ring-white/10">
-                  <svg viewBox="0 0 24 24" fill="white" className="h-7 w-7">
-                    <path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z" />
-                  </svg>
-                </div>
-              )}
-              <div className="flex flex-col leading-tight">
-                <span className="font-display text-lg font-semibold text-white">
-                  {orgName.replace(' LLC', '')}
+            <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/left-brush.png"
+                alt=""
+                className="h-8 w-auto scale-110 sm:h-10"
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="flex flex-col items-center leading-tight">
+                <span className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">
+                  {orgName.replace(' LLC', '').toUpperCase()}
                 </span>
-                <span className="text-[0.6rem] font-medium tracking-[0.15em] text-white/50 uppercase">
+                <span className="text-[0.5rem] font-medium tracking-[0.15em] text-white/80 uppercase sm:text-[0.6rem]">
                   Painting Beyond the Ordinary
                 </span>
               </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/right-brush.png"
+                alt=""
+                className="h-8 w-auto sm:h-10"
+                loading="lazy"
+                decoding="async"
+              />
             </Link>
             <p className="mt-5 max-w-[300px] text-[0.95rem] leading-relaxed text-white/60">
               {tagline}. Proudly serving New Jersey with artistry, precision, and care.
