@@ -53,6 +53,12 @@ import type {
   KeywordSummary,
   ContentPerformanceItem,
 } from '@/types/analytics'
+import type {
+  LeadListItem,
+  LeadDetail,
+  LeadActivity,
+  LeadOverview,
+} from '@/types/leads'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {
@@ -863,6 +869,85 @@ export function buildContentPerformanceItem(
     engagementRate: 0.58,
     topKeyword: 'interior painting nj',
     keywordCount: 12,
+    ...overrides,
+  }
+}
+
+// --- Lead Factories ---
+
+export function buildLeadListItem(overrides?: Partial<LeadListItem>): LeadListItem {
+  return {
+    id: 'lead-1',
+    name: 'Jane Doe',
+    email: 'jane@example.com',
+    phone: '(201) 555-1234',
+    service: 'Interior Painting',
+    status: 'new',
+    source: 'website',
+    score: 65,
+    scoreLabel: 'warm',
+    assignedTo: null,
+    createdAt: '2026-03-16T12:00:00Z',
+    updatedAt: '2026-03-16T12:00:00Z',
+    lastActivityAt: null,
+    ...overrides,
+  }
+}
+
+export function buildLeadActivity(overrides?: Partial<LeadActivity>): LeadActivity {
+  return {
+    id: 'activity-1',
+    activityType: 'status_change',
+    description: 'Status changed from new to contacted',
+    metadata: { from: 'new', to: 'contacted' },
+    createdBy: 'user-123',
+    createdAt: '2026-03-16T13:00:00Z',
+    ...overrides,
+  }
+}
+
+export function buildLeadDetail(overrides?: Partial<LeadDetail>): LeadDetail {
+  return {
+    id: 'lead-1',
+    name: 'Jane Doe',
+    email: 'jane@example.com',
+    phone: '(201) 555-1234',
+    service: 'Interior Painting',
+    message: 'Looking for a quote on painting my living room.',
+    status: 'new',
+    source: 'website',
+    score: 65,
+    scoreLabel: 'warm',
+    assignedTo: null,
+    notes: null,
+    contactedAt: null,
+    closedAt: null,
+    closeReason: null,
+    createdAt: '2026-03-16T12:00:00Z',
+    updatedAt: '2026-03-16T12:00:00Z',
+    activities: [buildLeadActivity()],
+    followups: [],
+    ...overrides,
+  }
+}
+
+export function buildLeadOverview(overrides?: Partial<LeadOverview>): LeadOverview {
+  return {
+    total: 15,
+    newThisWeek: 5,
+    inPipeline: 10,
+    conversionRate: 0.33,
+    byStatus: { new: 5, contacted: 3, qualified: 1, proposed: 1, won: 3, lost: 2 },
+    bySource: [
+      { source: 'website', count: 10 },
+      { source: 'phone', count: 3 },
+      { source: 'referral', count: 2 },
+    ],
+    topServices: [
+      { service: 'Interior Painting', count: 8 },
+      { service: 'Exterior Painting', count: 5 },
+    ],
+    avgResponseTimeHours: 2.5,
     ...overrides,
   }
 }

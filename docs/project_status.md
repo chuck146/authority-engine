@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 15, 2026_
+_Last Updated: March 17, 2026_
 
 ---
 
@@ -323,12 +323,24 @@ Sprint Results:
 | Location coverage | 12 cities | 17 cities (+5) |
 | Blog posts | 3 | 8 (+5) |
 
+**Post-V2: Leads Dashboard** ✅
+
+- [x] Database migration: expanded leads table (assigned_to, source, score, score_label, notes, contacted_at, closed_at, close_reason), lead_activities table (12 activity types, JSONB metadata), lead_followups table (sequence-based SMS/email followups with scheduling)
+- [x] All tables with RLS policies and indexes (20260317000001_expand_leads_and_activities.sql)
+- [x] Lead types: Zod schemas for status (new→contacted→qualified→proposed→won→lost), source (website/phone/referral/gbp/facebook/other), score labels (hot/warm/cold), activity types (12), followup channels (types/leads.ts)
+- [x] Lead scorer: rule-based scoring engine with recency, completeness, source quality, engagement signals (lib/leads/lead-scorer.ts)
+- [x] Status transitions: role-based validation with allowed transition map (lib/leads/status-transitions.ts)
+- [x] Lead APIs (7 routes): list with filters + pagination (GET /api/v1/leads), create (POST), detail (GET /api/v1/leads/[id]), update (PATCH), activities timeline (GET /api/v1/leads/[id]/activities), send SMS (POST /api/v1/leads/[id]/send-sms), send email (POST /api/v1/leads/[id]/send-email), overview aggregations (GET /api/v1/leads/overview)
+- [x] Lead dashboard UI: leads-page-client with tabs, lead-list with status/source badges, lead-detail-sheet with activity timeline + SMS/email forms, lead-overview-cards with funnel visualization, lead-pipeline-view (Kanban-style board), lead-score-badge, lead-status-badge (components/leads/)
+- [x] Email integration: Resend sendEmail utility for lead outreach (lib/email/resend.ts)
+- [x] Sidebar nav: "Leads" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
+- [x] Test suite: 74 new tests across 12 files — 6 API route tests, 4 component tests, 2 lib tests (1282 total, up from 1191)
+
 ### What's Next
 
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
-- ~~Fix 1 HIGH issue: missing og:image on blog/signs-exterior-needs-repainting~~ ✅ Fixed — featured images generated for all 7 blog posts
-- ~~Fix medium issues: trim 10 meta titles to ≤60 chars, add alt text to 21 images~~ ✅ Fixed — hero-section alt text uses page title, meta titles trimmed via scripts/fix-long-meta-titles.ts (1 page: Berkeley Heights)
+- Apply leads migration to live Supabase + regenerate types
 - Next sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 

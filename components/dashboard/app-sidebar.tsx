@@ -10,7 +10,7 @@ import {
   Search,
   Share2,
   Star,
-  Users,
+  UserPlus,
   BarChart3,
   Settings,
   Video,
@@ -38,7 +38,7 @@ const navItems = [
   { title: 'Social & GBP', href: '/social' as const, icon: Share2 },
   { title: 'SEO', href: '/seo' as const, icon: Search },
   { title: 'Reviews', href: '/reviews' as const, icon: Star },
-  { title: 'Community', href: '/community' as const, icon: Users },
+  { title: 'Leads', href: '/leads' as const, icon: UserPlus },
   { title: 'Analytics', href: '/analytics' as const, icon: BarChart3 },
 ]
 

@@ -7,6 +7,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Leads dashboard:** Full lead management module with pipeline tracking, scoring, activity timeline, and outreach (SMS + email)
+  - **Database migration:** Expanded leads table (assigned_to, source, score, score_label, notes, contacted_at, closed_at, close_reason), new lead_activities table (12 activity types, JSONB metadata), new lead_followups table (sequence-based SMS/email followups) — all with RLS + indexes (packages/db/supabase/migrations/20260317000001_expand_leads_and_activities.sql)
+  - **Types:** Zod schemas for lead status (new→contacted→qualified→proposed→won→lost), source (6 channels), score labels (hot/warm/cold), 12 activity types, followup channels/status, input/response schemas (types/leads.ts)
+  - **Lead scorer:** Rule-based scoring engine with recency, completeness, source quality, engagement signals (lib/leads/lead-scorer.ts)
+  - **Status transitions:** Role-based validation with allowed transition map and close_reason tracking (lib/leads/status-transitions.ts)
+  - **APIs (7 routes):** List with status/source/assignee filters + pagination, create, detail, update (PATCH), activities timeline, send SMS, send email, overview aggregations (app/api/v1/leads/)
+  - **Dashboard UI:** leads-page-client with tabs, lead-list with status/source badges, lead-detail-sheet with activity timeline + SMS/email forms, lead-overview-cards with funnel visualization, lead-pipeline-view (Kanban-style board), lead-score-badge, lead-status-badge (components/leads/)
+  - **Email integration:** Resend sendEmail utility for lead outreach (lib/email/resend.ts)
+  - **Sidebar nav:** "Leads" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
+  - **Test suite:** 74 new tests across 12 files — 6 API route test files, 4 component test files, 2 lib test files (1282 total, up from 1191)
+
 ### Fixed
 
 - **Flaky composite video form tests:** Replaced slow `user.type()` calls (60+ chars typed char-by-char) with instant `fireEvent.change()` in submission tests, extracted shared `fillCompositeFields()` helper — tests now pass consistently across full suite runs (tests/components/video/video-generate-form-composite.test.tsx)

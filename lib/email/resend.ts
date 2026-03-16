@@ -74,6 +74,44 @@ export async function sendLeadNotification(to: string, lead: LeadNotificationDat
   }
 }
 
+type SendLeadEmailParams = {
+  to: string
+  subject: string
+  body: string
+  orgName: string
+}
+
+export async function sendLeadEmail(params: SendLeadEmailParams): Promise<void> {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured — skipping lead email')
+    return
+  }
+
+  const from = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px;">
+      <div style="margin-bottom: 24px;">
+        ${escapeHtml(params.body).replace(/\n/g, '<br />')}
+      </div>
+      <p style="margin-top: 24px; color: #999; font-size: 12px;">Sent by ${escapeHtml(params.orgName)}</p>
+    </div>
+  `
+
+  try {
+    await resend.emails.send({
+      from,
+      to: params.to,
+      subject: params.subject,
+      text: params.body,
+      html,
+    })
+  } catch (err) {
+    console.error('Failed to send lead email:', err)
+    throw err
+  }
+}
+
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, '&amp;')
