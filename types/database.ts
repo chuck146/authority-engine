@@ -435,39 +435,180 @@ export type Database = {
           },
         ]
       }
+      lead_activities: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          created_by: string | null
+          description: string
+          id: string
+          lead_id: string
+          metadata: Json | null
+          organization_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          created_by?: string | null
+          description: string
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          organization_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'lead_activities_lead_id_fkey'
+            columns: ['lead_id']
+            isOneToOne: false
+            referencedRelation: 'leads'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'lead_activities_organization_id_fkey'
+            columns: ['organization_id']
+            isOneToOne: false
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      lead_followups: {
+        Row: {
+          channel: string
+          created_at: string | null
+          created_by: string | null
+          error_message: string | null
+          id: string
+          lead_id: string
+          message_template: string
+          metadata: Json | null
+          organization_id: string
+          scheduled_at: string
+          sent_at: string | null
+          sequence_name: string
+          status: string
+          step_number: number
+        }
+        Insert: {
+          channel: string
+          created_at?: string | null
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          lead_id: string
+          message_template: string
+          metadata?: Json | null
+          organization_id: string
+          scheduled_at: string
+          sent_at?: string | null
+          sequence_name: string
+          status?: string
+          step_number: number
+        }
+        Update: {
+          channel?: string
+          created_at?: string | null
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          lead_id?: string
+          message_template?: string
+          metadata?: Json | null
+          organization_id?: string
+          scheduled_at?: string
+          sent_at?: string | null
+          sequence_name?: string
+          status?: string
+          step_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'lead_followups_lead_id_fkey'
+            columns: ['lead_id']
+            isOneToOne: false
+            referencedRelation: 'leads'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'lead_followups_organization_id_fkey'
+            columns: ['organization_id']
+            isOneToOne: false
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       leads: {
         Row: {
+          assigned_to: string | null
+          close_reason: string | null
+          closed_at: string | null
+          contacted_at: string | null
           created_at: string | null
           email: string
           id: string
           message: string | null
           name: string
+          notes: string | null
           organization_id: string
           phone: string
+          score: number
+          score_label: string | null
           service: string | null
+          source: string
           status: string
+          updated_at: string | null
         }
         Insert: {
+          assigned_to?: string | null
+          close_reason?: string | null
+          closed_at?: string | null
+          contacted_at?: string | null
           created_at?: string | null
           email: string
           id?: string
           message?: string | null
           name: string
+          notes?: string | null
           organization_id: string
           phone: string
+          score?: number
+          score_label?: string | null
           service?: string | null
+          source?: string
           status?: string
+          updated_at?: string | null
         }
         Update: {
+          assigned_to?: string | null
+          close_reason?: string | null
+          closed_at?: string | null
+          contacted_at?: string | null
           created_at?: string | null
           email?: string
           id?: string
           message?: string | null
           name?: string
+          notes?: string | null
           organization_id?: string
           phone?: string
+          score?: number
+          score_label?: string | null
           service?: string | null
+          source?: string
           status?: string
+          updated_at?: string | null
         }
         Relationships: [
           {

@@ -116,6 +116,9 @@ google_connections   — OAuth2 tokens (AES-256-GCM encrypted), site URLs, GA4 p
 gsc_snapshots        — Daily sitemap + indexing snapshots from GSC sync
 ga4_page_metrics     — Per-page daily analytics (sessions, users, pageviews, bounce rate, engagement)
 ga4_snapshots        — JSONB snapshots (traffic_sources, device_breakdown, daily_totals)
+leads                — Lead pipeline (status, source, score, assignment, contact info)
+lead_activities      — Activity timeline per lead (notes, status changes, SMS/email, calls)
+lead_followups       — Scheduled follow-up sequences (SMS/email with step tracking)
 lead_events          — Unified lead tracking
 media_assets         — Generated images + videos with metadata
 job_executions       — Background job logs for debugging

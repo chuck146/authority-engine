@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 14, 2026_
+_Last Updated: March 17, 2026_
 
 ---
 
@@ -296,11 +296,53 @@ _Last Updated: March 14, 2026_
 - [x] Missing Twitter Card meta tags: added `twitter:card`, `twitter:title`, `twitter:description` to all 5 marketing routes
 - [x] Dynamic OG image: created `opengraph-image.tsx` for homepage (1200×630 branded image via Next.js ImageResponse)
 - [x] Sitemap gap: added `/locations` hub page to sitemap.xml
+- [x] Blog featured images: generated og:image for all 7 blog posts via Nano Banana 2 (fixes HIGH audit issue)
+- [x] Hero image script extended: `--type=blog` support added to `scripts/generate-hero-images.ts`
+- [x] Hero image alt text: `HeroSection` updated from `alt=""` to `alt={title}` for descriptive alt text on all 27+ hero images
+- [x] Long meta titles: `scripts/fix-long-meta-titles.ts` trims titles >60 chars with intelligent rules + SEO score recalculation (1 page fixed: Berkeley Heights)
+
+**Post-V2: SEO Growth Sprint — March 2026 (First Sprint)** ✅
+
+- [x] Phase 0 — Baseline: 24 pages (21 published, 2 review, 1 draft), 37 keywords tracked, 8 striking-distance, 18 GA4 sessions
+- [x] Phase 1 — Content Gaps: Published 1 blog from review (SEO 82), generated 5 spring-themed blog posts + 5 expansion location pages (all in review)
+- [x] Phase 2 — SEO Optimize: 17 pages optimized, average improvement +25 points (many 70s → 98-100)
+- [x] Phase 3 — Social Posts: 12 posts created (6 GBP, 3 Instagram, 3 Facebook), all in review status
+- [x] Hero images generated for 6 new location pages (5 expansion + Woodbridge) via Nano Banana 2
+- [x] Phase 4 — Technical Audit: 33 issues found (1 high: missing og:image on blog, 31 medium: long titles + missing alt text, 1 low)
+- [x] Phase 5 — Sprint Summary: 4/6 targets met, avg SEO score 96, 10 new pages created, 23 pages optimized
+- [x] Script fixes: Phase 3 `created_by` field added for social_posts, `title` column removed from content_calendar references
+
+Sprint Results:
+| Metric | Before | After |
+|--------|--------|-------|
+| Total content pages | 24 | 34 |
+| Pages in review | 2 | 11 |
+| Published pages | 21 | 22 |
+| Avg SEO score | 85 | 96 |
+| Social posts | 0 | 12 |
+| Location coverage | 12 cities | 17 cities (+5) |
+| Blog posts | 3 | 8 (+5) |
+
+**Post-V2: Leads Dashboard** ✅
+
+- [x] Database migration: expanded leads table (assigned_to, source, score, score_label, notes, contacted_at, closed_at, close_reason), lead_activities table (12 activity types, JSONB metadata), lead_followups table (sequence-based SMS/email followups with scheduling)
+- [x] All tables with RLS policies and indexes (20260317000001_expand_leads_and_activities.sql)
+- [x] Lead types: Zod schemas for status (new→contacted→qualified→proposed→won→lost), source (website/phone/referral/gbp/facebook/other), score labels (hot/warm/cold), activity types (12), followup channels (types/leads.ts)
+- [x] Lead scorer: rule-based scoring engine with recency, completeness, source quality, engagement signals (lib/leads/lead-scorer.ts)
+- [x] Status transitions: role-based validation with allowed transition map (lib/leads/status-transitions.ts)
+- [x] Lead APIs (7 routes): list with filters + pagination (GET /api/v1/leads), create (POST), detail (GET /api/v1/leads/[id]), update (PATCH), activities timeline (GET /api/v1/leads/[id]/activities), send SMS (POST /api/v1/leads/[id]/send-sms), send email (POST /api/v1/leads/[id]/send-email), overview aggregations (GET /api/v1/leads/overview)
+- [x] Lead dashboard UI: leads-page-client with tabs, lead-list with status/source badges, lead-detail-sheet with activity timeline + SMS/email forms, lead-overview-cards with funnel visualization, lead-pipeline-view (Kanban-style board), lead-score-badge, lead-status-badge (components/leads/)
+- [x] Email integration: Resend sendEmail utility for lead outreach (lib/email/resend.ts)
+- [x] Sidebar nav: "Leads" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
+- [x] Test suite: 74 new tests across 12 files — 6 API route tests, 4 component tests, 2 lib tests (1282 total, up from 1191)
 
 ### What's Next
 
+- Approve 11 review-status pages in dashboard → publish
+- Approve 12 social posts → begin scheduled distribution
+- Apply leads migration to live Supabase + regenerate types
+- Next sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
-- Run monthly SEO Growth Sprint with fresh GSC/GA4 data
 
 ### Blockers
 

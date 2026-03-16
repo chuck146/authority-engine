@@ -9,6 +9,46 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Leads dashboard:** Full lead management module with pipeline tracking, scoring, activity timeline, and outreach (SMS + email)
+  - **Database migration:** Expanded leads table (assigned_to, source, score, score_label, notes, contacted_at, closed_at, close_reason), new lead_activities table (12 activity types, JSONB metadata), new lead_followups table (sequence-based SMS/email followups) — all with RLS + indexes (packages/db/supabase/migrations/20260317000001_expand_leads_and_activities.sql)
+  - **Types:** Zod schemas for lead status (new→contacted→qualified→proposed→won→lost), source (6 channels), score labels (hot/warm/cold), 12 activity types, followup channels/status, input/response schemas (types/leads.ts)
+  - **Lead scorer:** Rule-based scoring engine with recency, completeness, source quality, engagement signals (lib/leads/lead-scorer.ts)
+  - **Status transitions:** Role-based validation with allowed transition map and close_reason tracking (lib/leads/status-transitions.ts)
+  - **APIs (7 routes):** List with status/source/assignee filters + pagination, create, detail, update (PATCH), activities timeline, send SMS, send email, overview aggregations (app/api/v1/leads/)
+  - **Dashboard UI:** leads-page-client with tabs, lead-list with status/source badges, lead-detail-sheet with activity timeline + SMS/email forms, lead-overview-cards with funnel visualization, lead-pipeline-view (Kanban-style board), lead-score-badge, lead-status-badge (components/leads/)
+  - **Email integration:** Resend sendEmail utility for lead outreach (lib/email/resend.ts)
+  - **Sidebar nav:** "Leads" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
+  - **Test suite:** 74 new tests across 12 files — 6 API route test files, 4 component test files, 2 lib test files (1282 total, up from 1191)
+
+### Fixed
+
+- **Flaky composite video form tests:** Replaced slow `user.type()` calls (60+ chars typed char-by-char) with instant `fireEvent.change()` in submission tests, extracted shared `fillCompositeFields()` helper — tests now pass consistently across full suite runs (tests/components/video/video-generate-form-composite.test.tsx)
+
+### Added
+
+- **SEO Growth Sprint — March 2026 (first sprint):** Full 6-phase sprint executed against live cleanestpaintingnj.com domain
+  - **Phase 0 — Baseline:** Established starting metrics: 24 pages, 37 keywords, 18 GA4 sessions, 8 striking-distance keywords
+  - **Phase 1 — Content Gaps:** Published 1 blog from review, generated 5 spring-themed blog posts + 5 expansion location pages (Berkeley Heights, Millburn, Livingston, Springfield, Mountainside)
+  - **Phase 2 — SEO Optimize:** 17 pages optimized with Claude API (temp=0.3), average improvement +25 points, many location pages 70s → 98-100
+  - **Phase 3 — Social Posts:** 12 posts generated (6 GBP, 3 Instagram, 3 Facebook), all in review status, scheduled across 14-day window
+  - **Hero images:** 6 new location page hero images generated via Nano Banana 2 (5 expansion + Woodbridge)
+  - **Phase 4 — Technical Audit:** 33 issues found (1 high, 31 medium, 1 low) — missing og:image, long meta titles, missing alt text
+  - **Phase 5 — Sprint Summary:** 4/6 targets met, avg SEO score 96, content inventory 24 → 34 pages
+
+### Fixed
+
+- **Missing og:image on blog posts (HIGH audit issue):** Generated featured images for all 7 blog posts via Nano Banana 2 — fixes `signs-exterior-needs-repainting` and 5 other sprint blog posts that were missing `featured_image_url` (scripts/generate-hero-images.ts)
+- **Hero image script blog support:** Extended `generate-hero-images.ts` with `--type=blog` — queries blog_posts table, generates 1200×630 featured images, updates `featured_image_url` column (scripts/generate-hero-images.ts)
+- **Social post script `created_by`:** Phase 3 script now queries `user_organizations` for org user ID and includes `created_by` in social_posts insert (scripts/seo-sprint/03-social-posts.ts)
+- **Calendar schema mismatch:** Removed non-existent `title` column from content_calendar queries in Phase 3 and Phase 5 scripts (scripts/seo-sprint/03-social-posts.ts, scripts/seo-sprint/05-sprint-summary.ts)
+- **Hero image script status filter:** Updated `generate-hero-images.ts` to include `review` status pages alongside `published` for location page hero generation (scripts/generate-hero-images.ts)
+
+---
+
+## [Post-V2.1] — 2026-03-14
+
+### Added
+
 - **Dynamic OG image generator:** `opengraph-image.tsx` for homepage — generates 1200×630 branded image with navy gradient, company name, and tagline (app/(marketing)/opengraph-image.tsx)
 - **SEO Growth Sprint scripts (6 phases):** Standalone CLI scripts for monthly SEO optimization sprints (scripts/seo-sprint/)
   - **Phase 0 — Baseline:** Queries Supabase for keyword rankings, GA4 metrics, GSC snapshots, content inventory with expansion opportunity analysis (00-baseline.ts)

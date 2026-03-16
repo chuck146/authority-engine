@@ -114,6 +114,23 @@ export type {
   ReviewRequestOverview,
 } from './review-requests'
 export type {
+  LeadStatus,
+  LeadSource,
+  LeadScoreLabel,
+  LeadActivityType,
+  FollowupChannel,
+  FollowupStatus,
+  UpdateLeadRequest,
+  CreateActivityRequest,
+  SendLeadSmsRequest,
+  SendLeadEmailRequest,
+  LeadListItem,
+  LeadActivity,
+  LeadFollowup,
+  LeadDetail,
+  LeadOverview,
+} from './leads'
+export type {
   VideoType,
   VeoModel,
   AspectRatio,
