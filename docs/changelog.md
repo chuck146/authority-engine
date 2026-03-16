@@ -13,7 +13,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Commercial services generation script:** Claude API script generates 6 commercial service pages (office, retail, warehouse, HOA, multi-unit, healthcare) with SEO scoring, skip-if-exists, dry-run, and single-slug support (scripts/generate-commercial-services.ts)
 - **Residential services dropdown:** Hover dropdown (desktop) + accordion (mobile) in site header listing published residential services with "View All Services" link (components/marketing/services-dropdown.tsx)
 - **Commercial query functions (4):** getPublishedCommercialServicePage, getAllPublishedCommercialServiceSlugs, getAllPublishedCommercialServiceCards, getAllPublishedCommercialServiceLinks (lib/queries/content.ts)
-- **Commercial types:** `CommercialServicePage` and `CommercialServiceCardLink` types (types/index.ts)
+- **Commercial types:** `CommercialServicePage` (generated from database schema) and `CommercialServiceCardLink` types (types/index.ts)
+- **Hero image script extended:** `--type=commercial` support with commercial-specific prompt builder (scripts/generate-hero-images.ts)
+- **6 commercial service pages generated:** Office & Corporate, Retail & Restaurant, Warehouse & Industrial, HOA & Property Management, Multi-Unit Residential, Healthcare & Educational — all SEO score 100, status='review'
+- **Hero images generated:** 6 commercial service page hero images via Nano Banana 2
 
 ### Changed
 

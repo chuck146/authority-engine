@@ -358,15 +358,15 @@ Sprint Results:
 - [x] Marketing nav: "Commercial Services" link added, residential services in dropdown
 - [x] Sitemap: /commercial hub + individual commercial service entries
 - [x] Migration applied to live Supabase, types regenerated
-- [ ] Run generation script to create 6 commercial service pages
-- [ ] Generate hero images for commercial pages
+- [x] 6 commercial service pages generated via Claude API (all SEO score 100, status='review')
+- [x] Hero image script extended: `--type=commercial` support added to `scripts/generate-hero-images.ts`
+- [x] Hero images generated for 6 commercial service pages via Nano Banana 2
+- [x] Type cleanup: removed manual `CommercialServicePage` type, now uses generated database type; removed `as never` casts from query functions
 - [ ] Review + publish pages in dashboard
 
 ### What's Next
 
-- Run `npx tsx scripts/generate-commercial-services.ts` to generate 6 commercial service pages
-- Generate hero images for commercial pages (extend generate-hero-images.ts with --type=commercial)
-- Review + publish commercial pages in dashboard
+- Review + publish 6 commercial service pages in dashboard
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
 - Next sprint recommended: April 13, 2026
