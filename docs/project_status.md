@@ -365,11 +365,10 @@ Sprint Results:
 - [x] Hero image script extended: `--type=commercial` support added to `scripts/generate-hero-images.ts`
 - [x] Hero images generated for 6 commercial service pages via Nano Banana 2
 - [x] Type cleanup: removed manual `CommercialServicePage` type, now uses generated database type; removed `as never` casts from query functions
-- [ ] Review + publish pages in dashboard
+- [x] Review + publish 6 commercial service pages (all SEO score 100, now live)
 
 ### What's Next
 
-- Review + publish 6 commercial service pages in dashboard
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
 - Next sprint recommended: April 13, 2026
