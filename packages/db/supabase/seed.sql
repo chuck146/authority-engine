@@ -128,11 +128,11 @@ values (
 insert into public.service_pages (organization_id, title, slug, status, seo_score, keywords, meta_title, meta_description, published_at, content)
 values (
   '00000000-0000-0000-0000-000000000001',
-  'Cabinet Refinishing & Painting',
+  'Cabinet Refinishing',
   'cabinet-refinishing',
   'published', 87,
   '{"cabinet refinishing", "cabinet painting", "kitchen cabinets", "NJ cabinet painters"}',
-  'Cabinet Refinishing & Painting | Cleanest Painting NJ',
+  'Cabinet Refinishing | Cleanest Painting NJ',
   'Transform your kitchen with professional cabinet refinishing. Fraction of replacement cost. Serving Union, Essex, Morris & Somerset counties.',
   now() - interval '10 days',
   '{
@@ -153,7 +153,7 @@ values (
       }
     ],
     "cta": "Ready to transform your kitchen? Get a free cabinet refinishing quote.",
-    "meta_title": "Cabinet Refinishing & Painting | Cleanest Painting NJ",
+    "meta_title": "Cabinet Refinishing | Cleanest Painting NJ",
     "meta_description": "Transform your kitchen with professional cabinet refinishing. Fraction of replacement cost. Serving Union, Essex, Morris & Somerset counties."
   }'::jsonb
 );

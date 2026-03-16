@@ -13,7 +13,36 @@ type ServicesDropdownProps = {
   services: ServiceLink[]
 }
 
-export function ServicesDropdownDesktop({ services }: ServicesDropdownProps) {
+/** Preferred display order for residential services dropdown */
+const SERVICE_ORDER: string[] = [
+  'interior-painting',
+  'exterior-painting',
+  'wallpaper-installation',
+  'color-consultation',
+  'cabinet-refinishing',
+  'deck-staining',
+  'pressure-washing',
+]
+
+/** Slugs to exclude from the residential dropdown */
+const EXCLUDED_SLUGS = ['commercial-painting']
+
+function sortServices(services: ServiceLink[]): ServiceLink[] {
+  return [...services]
+    .filter((s) => !EXCLUDED_SLUGS.includes(s.slug))
+    .sort((a, b) => {
+      const ai = SERVICE_ORDER.indexOf(a.slug)
+      const bi = SERVICE_ORDER.indexOf(b.slug)
+      // Items not in the list go to the end, preserving their original order
+      if (ai === -1 && bi === -1) return 0
+      if (ai === -1) return 1
+      if (bi === -1) return -1
+      return ai - bi
+    })
+}
+
+export function ServicesDropdownDesktop({ services: rawServices }: ServicesDropdownProps) {
+  const services = sortServices(rawServices)
   const [open, setOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -64,7 +93,8 @@ export function ServicesDropdownDesktop({ services }: ServicesDropdownProps) {
   )
 }
 
-export function ServicesAccordionMobile({ services }: ServicesDropdownProps) {
+export function ServicesAccordionMobile({ services: rawServices }: ServicesDropdownProps) {
+  const services = sortServices(rawServices)
   const [expanded, setExpanded] = useState(false)
 
   return (
