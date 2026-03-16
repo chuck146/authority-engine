@@ -9,6 +9,7 @@
  *   npx tsx scripts/generate-hero-images.ts
  *   npx tsx scripts/generate-hero-images.ts --type=service
  *   npx tsx scripts/generate-hero-images.ts --type=location
+ *   npx tsx scripts/generate-hero-images.ts --type=blog
  *   npx tsx scripts/generate-hero-images.ts --slug=interior-painting
  *   npx tsx scripts/generate-hero-images.ts --dry-run
  *
@@ -41,7 +42,7 @@ for (const arg of args) {
   const m = arg.match(/^--(\w[\w-]*)(?:=(.*))?$/)
   if (m?.[1]) flagMap.set(m[1], m[2] ?? 'true')
 }
-const filterType = flagMap.get('type') as 'service' | 'location' | undefined
+const filterType = flagMap.get('type') as 'service' | 'location' | 'blog' | undefined
 const filterSlug = flagMap.get('slug')
 const dryRun = flagMap.has('dry-run')
 const skipExisting = !flagMap.has('force')
@@ -98,6 +99,22 @@ function servicePrompt(title: string): string {
   ].join('\n')
 }
 
+function blogPrompt(title: string, excerpt: string): string {
+  return [
+    'Generate a 1200x630 featured image for a home improvement blog post.',
+    `Company: ${ORG_NAME} — "${TAGLINE}"`,
+    `Blog topic: "${title}".`,
+    excerpt ? `Summary: ${excerpt}` : '',
+    'Style: photorealistic, warm natural lighting, editorially compelling.',
+    'The image should work well as both a blog header and an Open Graph share image.',
+    'Show a scene directly related to the blog topic — real homes, real paint, real results.',
+    'Do NOT include any text, logos, or watermarks in the image.',
+    `Brand colors: primary ${BRAND.primary}, secondary ${BRAND.secondary}, accent ${BRAND.accent}. Subtly incorporate these colors where appropriate.`,
+  ]
+    .filter(Boolean)
+    .join('\n')
+}
+
 function locationPrompt(city: string, state: string): string {
   return [
     'Generate a 1920x1080 hero image for a location-based painting service page.',
@@ -117,7 +134,7 @@ function locationPrompt(city: string, state: string): string {
 // ---------------------------------------------------------------------------
 
 async function uploadAndUpdate(
-  table: 'service_pages' | 'location_pages',
+  table: 'service_pages' | 'location_pages' | 'blog_posts',
   id: string,
   imageType: string,
   buf: Buffer,
@@ -136,9 +153,10 @@ async function uploadAndUpdate(
   const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(storagePath)
   const publicUrl = urlData.publicUrl
 
+  const column = table === 'blog_posts' ? 'featured_image_url' : 'hero_image_url'
   const { error: dbErr } = await supabase
     .from(table)
-    .update({ hero_image_url: publicUrl } as never)
+    .update({ [column]: publicUrl } as never)
     .eq('id', id)
   if (dbErr) throw new Error(`DB update failed: ${dbErr.message}`)
 
@@ -151,6 +169,13 @@ async function uploadAndUpdate(
 
 type PageRow = { id: string; title: string; slug: string; hero_image_url?: string | null }
 type LocRow = PageRow & { city: string; state: string }
+type BlogRow = {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  featured_image_url?: string | null
+}
 
 async function main() {
   console.log('=== Hero Image Generator ===')
@@ -215,7 +240,7 @@ async function main() {
       .from('location_pages')
       .select('id, title, slug, city, state, hero_image_url')
       .eq('organization_id', ORG_ID)
-      .eq('status', 'published' as never)
+      .in('status', ['published', 'review'] as never)
       .order('city')
 
     if (filterSlug) query = query.eq('slug', filterSlug)
@@ -241,6 +266,49 @@ async function main() {
         const prompt = locationPrompt(page.city, page.state)
         const { data: buf, mime } = await generateImage(prompt)
         const url = await uploadAndUpdate('location_pages', page.id, 'location_hero', buf, mime)
+        console.log(`    ✓ ${url}`)
+        generated++
+      } catch (err) {
+        console.error(`    ✗ Error: ${(err as Error).message}`)
+        errors++
+      }
+
+      await sleep(2000)
+    }
+  }
+
+  // --- Blog posts ---
+  if (!filterType || filterType === 'blog') {
+    let query = supabase
+      .from('blog_posts')
+      .select('id, title, slug, excerpt, featured_image_url')
+      .eq('organization_id', ORG_ID)
+      .in('status', ['published', 'review'] as never)
+      .order('title')
+
+    if (filterSlug) query = query.eq('slug', filterSlug)
+
+    const { data: blogs, error } = await query.returns<BlogRow[]>()
+    if (error) throw error
+
+    console.log(`\nBlog posts: ${blogs?.length ?? 0} published/review`)
+    for (const post of blogs ?? []) {
+      if (skipExisting && post.featured_image_url) {
+        console.log(`  SKIP ${post.slug} (already has featured image)`)
+        skipped++
+        continue
+      }
+
+      console.log(`  Generating: ${post.title} (${post.slug})...`)
+      if (dryRun) {
+        console.log('    [dry run — skipped]')
+        continue
+      }
+
+      try {
+        const prompt = blogPrompt(post.title, post.excerpt ?? '')
+        const { data: buf, mime } = await generateImage(prompt)
+        const url = await uploadAndUpdate('blog_posts', post.id, 'blog_thumbnail', buf, mime)
         console.log(`    ✓ ${url}`)
         generated++
       } catch (err) {
