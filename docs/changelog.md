@@ -7,6 +7,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Flaky composite video form tests:** Replaced slow `user.type()` calls (60+ chars typed char-by-char) with instant `fireEvent.change()` in submission tests, extracted shared `fillCompositeFields()` helper — tests now pass consistently across full suite runs (tests/components/video/video-generate-form-composite.test.tsx)
+
 ### Added
 
 - **SEO Growth Sprint — March 2026 (first sprint):** Full 6-phase sprint executed against live cleanestpaintingnj.com domain
