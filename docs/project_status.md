@@ -340,8 +340,11 @@ Sprint Results:
 
 - [x] Services hub page (`/services`): SSR page with service card grid, hero images, meta descriptions, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/services/page.tsx)
 - [x] Blog hub page (`/blog`): SSR page with featured post (full-width) + grid, publication dates, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/blog/page.tsx)
-- [x] Marketing nav updated: 5 links — Services → /services, Our Work → /#work, Reviews → /#testimonials, Service Areas → /locations, Blog → /blog (components/marketing/site-header.tsx)
+- [x] Marketing nav updated: 4 links — Services → /services, Reviews → /#testimonials, Service Areas → /locations, Blog → /blog (components/marketing/site-header.tsx)
 - [x] Header restored: solid green #3DA535 background, paintbrush logo, gold Free Estimate CTA
+- [x] Header CTA redesign: desktop phone number + icon visible, separated action cluster (phone + "Get a Free Estimate" button), upgraded button styling (rounded-lg, font-bold, shadow)
+- [x] Hero CTA simplified: single "Get Your Free Estimate" button (phone moved to header)
+- [x] Live Supabase: estimate_url added to org settings JSONB
 - [x] Hub page query functions: getAllPublishedServiceCards, getAllPublishedBlogCards (lib/queries/content.ts)
 - [x] Hub page types: ServiceCardLink, BlogCardLink (types/index.ts)
 - [x] Sitemap updated: /services (priority 0.9) and /blog (priority 0.8) entries added (app/sitemap.ts)

@@ -20,7 +20,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- **Marketing nav:** Added "Commercial Services" link, residential services now in "Residential Painting" dropdown with hover/accordion behavior (components/marketing/site-header.tsx)
+- **Header CTA redesign:** Separated nav links from action cluster on desktop — phone number with icon now visible alongside a prominent "Get a Free Estimate" gold button (rounded-lg, font-bold, shadow). Mobile menu gets phone icon + divider separator (components/marketing/site-header.tsx)
+- **Hero CTA simplified:** Replaced phone number button with single "Get Your Free Estimate" green CTA; phone now lives in header instead (components/marketing/home/hero-split.tsx)
+- **Marketing nav:** Removed "Our Work" link; added "Commercial Services" link, residential services now in "Residential Painting" dropdown with hover/accordion behavior (components/marketing/site-header.tsx)
 - **ServicePageLayout generalized:** Accepts any service-like page with optional breadcrumb overrides, reused by both residential and commercial pages (components/marketing/service-page-layout.tsx)
 - **Sitemap expanded:** Added `/commercial` hub (priority 0.85) + individual commercial service slug entries (app/sitemap.ts)
 
