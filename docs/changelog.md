@@ -22,6 +22,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Dashboard content preview — raw HTML tags:** Replaced `isomorphic-dompurify` (requires jsdom, fails on Vercel serverless) with `sanitize-html` in content-preview.tsx — HTML now renders correctly in the dashboard detail sheet (components/content/content-preview.tsx)
+- **Dashboard content preview — missing hero images:** Added `hero_image_url`/`featured_image_url` to content detail API response, rendered hero image via `next/image` at top of detail sheet preview (app/api/v1/content/[type]/[id]/route.ts, components/content/content-detail-sheet.tsx, types/content.ts)
 - **Flaky composite video form tests:** Replaced slow `user.type()` calls (60+ chars typed char-by-char) with instant `fireEvent.change()` in submission tests, extracted shared `fillCompositeFields()` helper — tests now pass consistently across full suite runs (tests/components/video/video-generate-form-composite.test.tsx)
 
 ### Added
