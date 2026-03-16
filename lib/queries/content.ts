@@ -7,6 +7,8 @@ import type {
   RelatedServiceLink,
   RelatedLocationLink,
   RelatedBlogLink,
+  ServiceCardLink,
+  BlogCardLink,
 } from '@/types'
 
 export async function getPublishedServicePage(slug: string): Promise<ServicePage | null> {
@@ -152,6 +154,32 @@ export async function getAllPublishedBlogLinks(orgId: string): Promise<RelatedBl
     .eq('status', 'published')
     .order('published_at', { ascending: false })
     .returns<RelatedBlogLink[]>()
+  return data ?? []
+}
+
+// --- Hub page card queries (richer data for /services and /blog hubs) ---
+
+export async function getAllPublishedServiceCards(orgId: string): Promise<ServiceCardLink[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('service_pages')
+    .select('slug, title, hero_image_url, content')
+    .eq('organization_id', orgId)
+    .eq('status', 'published')
+    .order('title')
+    .returns<ServiceCardLink[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedBlogCards(orgId: string): Promise<BlogCardLink[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('blog_posts')
+    .select('slug, title, excerpt, featured_image_url, published_at')
+    .eq('organization_id', orgId)
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .returns<BlogCardLink[]>()
   return data ?? []
 }
 

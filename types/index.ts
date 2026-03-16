@@ -235,3 +235,18 @@ export type RelatedLocationLink = {
   county?: string | null
 }
 export type RelatedBlogLink = { slug: string; title: string; excerpt: string | null }
+
+// Hub page card types (richer data for /services and /blog hub pages)
+export type ServiceCardLink = {
+  slug: string
+  title: string
+  hero_image_url: string | null
+  content: Record<string, unknown> | null
+}
+export type BlogCardLink = {
+  slug: string
+  title: string
+  excerpt: string | null
+  featured_image_url: string | null
+  published_at: string | null
+}
