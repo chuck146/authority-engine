@@ -153,22 +153,25 @@ describe('VideoGenerateForm — composite engine', () => {
   })
 
   describe('form submission with composite engine', () => {
+    /** Fill required composite fields using fireEvent for speed (no char-by-char typing) */
+    function fillCompositeFields() {
+      fireEvent.change(getEngineSelect(), { target: { value: 'composite' } })
+      fireEvent.change(screen.getByLabelText('Scene Description'), {
+        target: { value: 'A freshly painted living room with warm afternoon light streaming in' },
+      })
+      fireEvent.change(screen.getByLabelText('Audio Mood'), {
+        target: { value: 'Warm orchestral strings' },
+      })
+    }
+
     it('submits and shows status component on success', async () => {
-      const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ jobId: 'composite-org-456-111', status: 'queued' }),
       })
 
-      fireEvent.change(getEngineSelect(), { target: { value: 'composite' } })
-
-      await user.type(
-        screen.getByLabelText('Scene Description'),
-        'A freshly painted living room with warm afternoon light streaming in',
-      )
-      await user.type(screen.getByLabelText('Audio Mood'), 'Warm orchestral strings')
-
+      fillCompositeFields()
       fireEvent.submit(screen.getByRole('button', { name: 'Generate Video' }).closest('form')!)
 
       await waitFor(() => {
@@ -178,21 +181,13 @@ describe('VideoGenerateForm — composite engine', () => {
     })
 
     it('sends composite_reel videoType in request body', async () => {
-      const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ jobId: 'composite-org-456-111', status: 'queued' }),
       })
 
-      fireEvent.change(getEngineSelect(), { target: { value: 'composite' } })
-
-      await user.type(
-        screen.getByLabelText('Scene Description'),
-        'A freshly painted living room with warm afternoon light streaming in',
-      )
-      await user.type(screen.getByLabelText('Audio Mood'), 'Warm orchestral strings')
-
+      fillCompositeFields()
       fireEvent.submit(screen.getByRole('button', { name: 'Generate Video' }).closest('form')!)
 
       await waitFor(() => {
@@ -207,21 +202,13 @@ describe('VideoGenerateForm — composite engine', () => {
     })
 
     it('includes includeIntro and includeOutro in request body', async () => {
-      const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ jobId: 'composite-org-456-111', status: 'queued' }),
       })
 
-      fireEvent.change(getEngineSelect(), { target: { value: 'composite' } })
-
-      await user.type(
-        screen.getByLabelText('Scene Description'),
-        'A freshly painted living room with warm afternoon light streaming in',
-      )
-      await user.type(screen.getByLabelText('Audio Mood'), 'Warm orchestral strings')
-
+      fillCompositeFields()
       fireEvent.submit(screen.getByRole('button', { name: 'Generate Video' }).closest('form')!)
 
       await waitFor(() => {
@@ -233,21 +220,13 @@ describe('VideoGenerateForm — composite engine', () => {
     })
 
     it('shows error message when generation fails', async () => {
-      const user = userEvent.setup()
       render(<VideoGenerateForm onJobComplete={onJobComplete} />)
       ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         ok: false,
         json: () => Promise.resolve({ error: 'Failed to start video generation' }),
       })
 
-      fireEvent.change(getEngineSelect(), { target: { value: 'composite' } })
-
-      await user.type(
-        screen.getByLabelText('Scene Description'),
-        'A freshly painted living room with warm afternoon light streaming in',
-      )
-      await user.type(screen.getByLabelText('Audio Mood'), 'Warm orchestral strings')
-
+      fillCompositeFields()
       fireEvent.submit(screen.getByRole('button', { name: 'Generate Video' }).closest('form')!)
 
       await waitFor(() => {
