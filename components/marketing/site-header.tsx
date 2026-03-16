@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Phone } from 'lucide-react'
 import { SiteHeaderWrapper } from './site-header-wrapper'
 import { ServicesDropdownDesktop, ServicesAccordionMobile } from './services-dropdown'
 
@@ -16,7 +17,6 @@ type SiteHeaderProps = {
 
 const NAV_LINKS = [
   { href: '/commercial', label: 'Commercial Services' },
-  { href: '/#work', label: 'Our Work' },
   { href: '/#testimonials', label: 'Reviews' },
   { href: '/locations', label: 'Service Areas' },
   { href: '/blog', label: 'Blog' },
@@ -35,20 +35,23 @@ export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteH
           {link.label}
         </a>
       ))}
+      {(phone || estimateUrl) && <div className="my-2 border-t border-gray-200" />}
       {phone && (
         <a
           href={`tel:${phone.replace(/[^\d+]/g, '')}`}
-          className="text-base font-medium text-gray-800"
+          className="flex items-center gap-2 text-base font-medium text-gray-800"
+          aria-label={`Call ${phone}`}
         >
+          <Phone className="h-4 w-4 text-[#3DA535]" />
           {phone}
         </a>
       )}
       {estimateUrl && (
         <a
           href={estimateUrl}
-          className="inline-flex w-fit items-center rounded-full bg-[#fbbf24] px-6 py-2.5 text-sm font-semibold text-gray-900 transition-all hover:bg-[#f59e0b]"
+          className="inline-flex w-fit items-center rounded-lg bg-[#fbbf24] px-6 py-2.5 text-sm font-bold text-gray-900 shadow-sm transition-all hover:bg-[#f59e0b] hover:shadow-md"
         >
-          Free Estimate
+          Get a Free Estimate
         </a>
       )}
     </div>
@@ -99,17 +102,29 @@ export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteH
             </a>
           </li>
         ))}
-        {estimateUrl && (
-          <li>
-            <a
-              href={estimateUrl}
-              className="rounded-full bg-[#fbbf24] px-7 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-[#f59e0b]"
-            >
-              Free Estimate
-            </a>
-          </li>
-        )}
       </ul>
+
+      {/* Desktop action cluster — phone + CTA */}
+      <div className="hidden items-center gap-3 md:flex">
+        {phone && (
+          <a
+            href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+            className="flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[#fbbf24]"
+            aria-label={`Call ${phone}`}
+          >
+            <Phone className="h-4 w-4" />
+            {phone}
+          </a>
+        )}
+        {estimateUrl && (
+          <a
+            href={estimateUrl}
+            className="rounded-lg bg-[#fbbf24] px-5 py-2.5 text-sm font-bold text-gray-900 shadow-sm transition-all hover:bg-[#f59e0b] hover:shadow-md"
+          >
+            Get a Free Estimate
+          </a>
+        )}
+      </div>
     </SiteHeaderWrapper>
   )
 }

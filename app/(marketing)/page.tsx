@@ -93,12 +93,7 @@ export default async function HomePage() {
     <>
       <JsonLd data={[businessSchema]} />
 
-      <HeroSplit
-        orgName={org.name}
-        estimateUrl={estimateUrl}
-        phone={phone}
-        heroVideo="/hero-video.mov"
-      />
+      <HeroSplit orgName={org.name} estimateUrl={estimateUrl} heroVideo="/hero-video.mov" />
 
       <TrustBar />
 
