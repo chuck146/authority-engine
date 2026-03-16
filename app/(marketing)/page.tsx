@@ -57,9 +57,6 @@ export default async function HomePage() {
   const branding = org.branding as unknown as OrgBranding | null
   const settings = org.settings as unknown as OrgSettings | null
   const phone = settings?.contact_info?.phone
-  const rawEstimateUrl = settings?.estimate_url
-  const estimateUrl =
-    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
   const tagline = branding?.tagline ?? 'Where Artistry Meets Craftsmanship'
 
   const businessSchema = {
@@ -93,7 +90,7 @@ export default async function HomePage() {
     <>
       <JsonLd data={[businessSchema]} />
 
-      <HeroSplit orgName={org.name} estimateUrl={estimateUrl} heroVideo="/hero-video.mov" />
+      <HeroSplit orgName={org.name} heroVideo="/hero-video.mov" />
 
       <TrustBar />
 

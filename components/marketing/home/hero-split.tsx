@@ -1,12 +1,12 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 type HeroSplitProps = {
   orgName: string
-  estimateUrl?: string | null
   heroVideo?: string | null
 }
 
-export function HeroSplit({ orgName, estimateUrl, heroVideo }: HeroSplitProps) {
+export function HeroSplit({ orgName, heroVideo }: HeroSplitProps) {
   return (
     <section className="relative min-h-[85vh] overflow-hidden bg-black sm:min-h-[90vh]">
       {/* Background — video on desktop, static image always visible */}
@@ -58,14 +58,12 @@ export function HeroSplit({ orgName, estimateUrl, heroVideo }: HeroSplitProps) {
 
           {/* CTAs */}
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            {estimateUrl && (
-              <a
-                href={estimateUrl}
-                className="inline-flex items-center justify-center rounded-lg bg-[#4CB848] px-8 py-3.5 text-sm font-bold text-white transition-colors hover:bg-[#3a9438]"
-              >
-                Get Your Free Estimate
-              </a>
-            )}
+            <Link
+              href="/#estimate"
+              className="inline-flex items-center justify-center rounded-lg bg-[#4CB848] px-8 py-3.5 text-sm font-bold text-white transition-colors hover:bg-[#3a9438]"
+            >
+              Get Your Free Estimate
+            </Link>
           </div>
 
           {/* Trust signals — single text line */}

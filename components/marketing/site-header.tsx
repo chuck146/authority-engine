@@ -23,6 +23,7 @@ const NAV_LINKS = [
 ]
 
 export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
+  const estimateHref = '/#estimate'
   const mobileMenu = (
     <div className="flex flex-col gap-4">
       {services.length > 0 && <ServicesAccordionMobile services={services} />}
@@ -46,6 +47,12 @@ export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
           {phone}
         </a>
       )}
+      <a
+        href={estimateHref}
+        className="mt-2 inline-flex items-center justify-center rounded-lg bg-[#fbbf24] px-6 py-2.5 text-sm font-bold text-gray-900 shadow transition-colors hover:bg-[#f59e0b]"
+      >
+        Get a Free Estimate
+      </a>
     </div>
   )
 
@@ -96,9 +103,9 @@ export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
         ))}
       </ul>
 
-      {/* Desktop action cluster — phone */}
-      {phone && (
-        <div className="hidden items-center md:flex">
+      {/* Desktop action cluster — phone + estimate CTA */}
+      <div className="hidden items-center gap-4 md:flex">
+        {phone && (
           <a
             href={`tel:${phone.replace(/[^\d+]/g, '')}`}
             className="flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[#fbbf24]"
@@ -107,8 +114,14 @@ export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
             <Phone className="h-4 w-4" />
             {phone}
           </a>
-        </div>
-      )}
+        )}
+        <a
+          href={estimateHref}
+          className="inline-flex items-center justify-center rounded-lg bg-[#fbbf24] px-5 py-2 text-sm font-bold text-gray-900 shadow transition-colors hover:bg-[#f59e0b]"
+        >
+          Get a Free Estimate
+        </a>
+      </div>
     </SiteHeaderWrapper>
   )
 }

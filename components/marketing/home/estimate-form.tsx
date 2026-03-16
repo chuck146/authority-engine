@@ -79,7 +79,7 @@ export function EstimateForm({ organizationId, services, phone }: EstimateFormPr
   }
 
   return (
-    <section className="bg-[#1B2B5B]">
+    <section id="estimate" className="bg-[#1B2B5B]">
       <div className="mx-auto max-w-7xl px-6 py-28 md:px-10 lg:px-[60px]">
         <div className="grid gap-12 lg:grid-cols-5">
           {/* Left: Headline */}
