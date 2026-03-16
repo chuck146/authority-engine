@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { CheckCircle, XCircle, Globe, Archive, CalendarDays, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -175,6 +176,17 @@ export function ContentDetailSheet({
             </div>
           ) : detail ? (
             <>
+              {detail.heroImageUrl && (
+                <div className="relative mb-4 aspect-[16/9] w-full overflow-hidden rounded-lg">
+                  <Image
+                    src={detail.heroImageUrl}
+                    alt={detail.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 672px) 100vw, 672px"
+                  />
+                </div>
+              )}
               <ContentPreview
                 content={detail.content}
                 title={detail.title}

@@ -37,6 +37,8 @@ type ContentRow = {
   published_at: string | null
   created_at: string
   updated_at: string
+  hero_image_url?: string | null
+  featured_image_url?: string | null
 }
 
 export async function GET(_request: Request, { params }: RouteParams) {
@@ -55,7 +57,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
     const { data, error } = await supabase
       .from(tableName)
       .select(
-        'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at',
+        'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at, hero_image_url, featured_image_url',
       )
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
@@ -83,6 +85,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
       publishedAt: data.published_at,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
+      heroImageUrl: data.hero_image_url ?? data.featured_image_url ?? null,
     }
 
     return NextResponse.json(detail)
@@ -234,7 +237,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     const { data: updated, error: refetchError } = await supabase
       .from(tableName)
       .select(
-        'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at',
+        'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at, hero_image_url, featured_image_url',
       )
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
@@ -260,6 +263,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       publishedAt: updated.published_at,
       createdAt: updated.created_at,
       updatedAt: updated.updated_at,
+      heroImageUrl: updated.hero_image_url ?? updated.featured_image_url ?? null,
     }
 
     return NextResponse.json(detail)
