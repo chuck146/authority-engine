@@ -20,6 +20,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Missing og:image on blog posts (HIGH audit issue):** Generated featured images for all 7 blog posts via Nano Banana 2 — fixes `signs-exterior-needs-repainting` and 5 other sprint blog posts that were missing `featured_image_url` (scripts/generate-hero-images.ts)
+- **Hero image script blog support:** Extended `generate-hero-images.ts` with `--type=blog` — queries blog_posts table, generates 1200×630 featured images, updates `featured_image_url` column (scripts/generate-hero-images.ts)
 - **Social post script `created_by`:** Phase 3 script now queries `user_organizations` for org user ID and includes `created_by` in social_posts insert (scripts/seo-sprint/03-social-posts.ts)
 - **Calendar schema mismatch:** Removed non-existent `title` column from content_calendar queries in Phase 3 and Phase 5 scripts (scripts/seo-sprint/03-social-posts.ts, scripts/seo-sprint/05-sprint-summary.ts)
 - **Hero image script status filter:** Updated `generate-hero-images.ts` to include `review` status pages alongside `published` for location page hero generation (scripts/generate-hero-images.ts)

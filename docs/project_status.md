@@ -296,6 +296,8 @@ _Last Updated: March 15, 2026_
 - [x] Missing Twitter Card meta tags: added `twitter:card`, `twitter:title`, `twitter:description` to all 5 marketing routes
 - [x] Dynamic OG image: created `opengraph-image.tsx` for homepage (1200×630 branded image via Next.js ImageResponse)
 - [x] Sitemap gap: added `/locations` hub page to sitemap.xml
+- [x] Blog featured images: generated og:image for all 7 blog posts via Nano Banana 2 (fixes HIGH audit issue)
+- [x] Hero image script extended: `--type=blog` support added to `scripts/generate-hero-images.ts`
 
 **Post-V2: SEO Growth Sprint — March 2026 (First Sprint)** ✅
 
@@ -323,7 +325,7 @@ Sprint Results:
 
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
-- Fix 1 HIGH issue: missing og:image on blog/signs-exterior-needs-repainting
+- ~~Fix 1 HIGH issue: missing og:image on blog/signs-exterior-needs-repainting~~ ✅ Fixed — featured images generated for all 7 blog posts
 - Fix medium issues: trim 10 meta titles to ≤60 chars, add alt text to 21 images
 - Next sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
