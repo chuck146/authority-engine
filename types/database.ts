@@ -91,6 +91,68 @@ export type Database = {
           },
         ]
       }
+      commercial_service_pages: {
+        Row: {
+          content: Json
+          created_at: string
+          created_by: string | null
+          hero_image_url: string | null
+          id: string
+          keywords: string[] | null
+          meta_description: string | null
+          meta_title: string | null
+          organization_id: string
+          published_at: string | null
+          seo_score: number | null
+          slug: string
+          status: Database['public']['Enums']['content_status']
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          hero_image_url?: string | null
+          id?: string
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          organization_id: string
+          published_at?: string | null
+          seo_score?: number | null
+          slug: string
+          status?: Database['public']['Enums']['content_status']
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          hero_image_url?: string | null
+          id?: string
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          organization_id?: string
+          published_at?: string | null
+          seo_score?: number | null
+          slug?: string
+          status?: Database['public']['Enums']['content_status']
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'commercial_service_pages_organization_id_fkey'
+            columns: ['organization_id']
+            isOneToOne: false
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       content_calendar: {
         Row: {
           content_id: string

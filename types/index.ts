@@ -161,6 +161,10 @@ export type JobExecution =
 export type ContentCalendar =
   import('./database').Database['public']['Tables']['content_calendar']['Row']
 
+// Commercial service pages
+export type CommercialServicePage =
+  import('./database').Database['public']['Tables']['commercial_service_pages']['Row']
+
 // Insert types
 export type OrganizationInsert =
   import('./database').Database['public']['Tables']['organizations']['Insert']
@@ -235,3 +239,24 @@ export type RelatedLocationLink = {
   county?: string | null
 }
 export type RelatedBlogLink = { slug: string; title: string; excerpt: string | null }
+
+// Hub page card types (richer data for /services, /commercial, and /blog hub pages)
+export type ServiceCardLink = {
+  slug: string
+  title: string
+  hero_image_url: string | null
+  content: Record<string, unknown> | null
+}
+export type CommercialServiceCardLink = {
+  slug: string
+  title: string
+  hero_image_url: string | null
+  content: Record<string, unknown> | null
+}
+export type BlogCardLink = {
+  slug: string
+  title: string
+  excerpt: string | null
+  featured_image_url: string | null
+  published_at: string | null
+}

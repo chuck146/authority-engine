@@ -10,6 +10,7 @@
  *   npx tsx scripts/generate-hero-images.ts --type=service
  *   npx tsx scripts/generate-hero-images.ts --type=location
  *   npx tsx scripts/generate-hero-images.ts --type=blog
+ *   npx tsx scripts/generate-hero-images.ts --type=commercial
  *   npx tsx scripts/generate-hero-images.ts --slug=interior-painting
  *   npx tsx scripts/generate-hero-images.ts --dry-run
  *
@@ -42,7 +43,7 @@ for (const arg of args) {
   const m = arg.match(/^--(\w[\w-]*)(?:=(.*))?$/)
   if (m?.[1]) flagMap.set(m[1], m[2] ?? 'true')
 }
-const filterType = flagMap.get('type') as 'service' | 'location' | 'blog' | undefined
+const filterType = flagMap.get('type') as 'service' | 'location' | 'blog' | 'commercial' | undefined
 const filterSlug = flagMap.get('slug')
 const dryRun = flagMap.has('dry-run')
 const skipExisting = !flagMap.has('force')
@@ -115,6 +116,20 @@ function blogPrompt(title: string, excerpt: string): string {
     .join('\n')
 }
 
+function commercialPrompt(title: string): string {
+  return [
+    'Generate a 1920x1080 hero image for a commercial painting service page.',
+    `Company: ${ORG_NAME} — "${TAGLINE}"`,
+    `Service: "${title}".`,
+    'Style: photorealistic, professional commercial environment, clean modern lighting.',
+    'Show a commercial or industrial space — office building, retail store, warehouse, or multi-unit property.',
+    'The scene should convey scale, professionalism, and commercial-grade quality.',
+    'Include realistic details: professional crew, commercial equipment, large-scale surfaces.',
+    'Do NOT include any text, logos, or watermarks in the image.',
+    `Brand colors: primary ${BRAND.primary}, secondary ${BRAND.secondary}, accent ${BRAND.accent}. Subtly incorporate these colors where appropriate.`,
+  ].join('\n')
+}
+
 function locationPrompt(city: string, state: string): string {
   return [
     'Generate a 1920x1080 hero image for a location-based painting service page.',
@@ -134,7 +149,7 @@ function locationPrompt(city: string, state: string): string {
 // ---------------------------------------------------------------------------
 
 async function uploadAndUpdate(
-  table: 'service_pages' | 'location_pages' | 'blog_posts',
+  table: 'service_pages' | 'location_pages' | 'blog_posts' | 'commercial_service_pages',
   id: string,
   imageType: string,
   buf: Buffer,
@@ -309,6 +324,55 @@ async function main() {
         const prompt = blogPrompt(post.title, post.excerpt ?? '')
         const { data: buf, mime } = await generateImage(prompt)
         const url = await uploadAndUpdate('blog_posts', post.id, 'blog_thumbnail', buf, mime)
+        console.log(`    ✓ ${url}`)
+        generated++
+      } catch (err) {
+        console.error(`    ✗ Error: ${(err as Error).message}`)
+        errors++
+      }
+
+      await sleep(2000)
+    }
+  }
+
+  // --- Commercial service pages ---
+  if (!filterType || filterType === 'commercial') {
+    let query = supabase
+      .from('commercial_service_pages')
+      .select('id, title, slug, hero_image_url')
+      .eq('organization_id', ORG_ID)
+      .in('status', ['published', 'review'] as never)
+      .order('title')
+
+    if (filterSlug) query = query.eq('slug', filterSlug)
+
+    const { data: commercials, error } = await query.returns<PageRow[]>()
+    if (error) throw error
+
+    console.log(`\nCommercial service pages: ${commercials?.length ?? 0} published/review`)
+    for (const page of commercials ?? []) {
+      if (skipExisting && page.hero_image_url) {
+        console.log(`  SKIP ${page.slug} (already has hero image)`)
+        skipped++
+        continue
+      }
+
+      console.log(`  Generating: ${page.title} (${page.slug})...`)
+      if (dryRun) {
+        console.log('    [dry run — skipped]')
+        continue
+      }
+
+      try {
+        const prompt = commercialPrompt(page.title)
+        const { data: buf, mime } = await generateImage(prompt)
+        const url = await uploadAndUpdate(
+          'commercial_service_pages',
+          page.id,
+          'commercial_hero',
+          buf,
+          mime,
+        )
         console.log(`    ✓ ${url}`)
         generated++
       } catch (err) {

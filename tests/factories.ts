@@ -119,6 +119,7 @@ export function buildContentDetail(overrides?: Partial<ContentDetail>): ContentD
     publishedAt: null,
     createdAt: '2026-03-01T12:00:00Z',
     updatedAt: '2026-03-01T12:00:00Z',
+    heroImageUrl: null,
     ...overrides,
   }
 }

@@ -9,6 +9,39 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Commercial service pages:** New `commercial_service_pages` table with RLS, SSR hub page (`/commercial`), individual page routes (`/commercial/[slug]`), JsonLd Service + BreadcrumbList schemas, SEO metadata with og:image support (app/(marketing)/commercial/, packages/db/supabase/migrations/20260317000002_create_commercial_service_pages.sql)
+- **Commercial services generation script:** Claude API script generates 6 commercial service pages (office, retail, warehouse, HOA, multi-unit, healthcare) with SEO scoring, skip-if-exists, dry-run, and single-slug support (scripts/generate-commercial-services.ts)
+- **Residential services dropdown:** Hover dropdown (desktop) + accordion (mobile) in site header listing published residential services with "View All Services" link (components/marketing/services-dropdown.tsx)
+- **Commercial query functions (4):** getPublishedCommercialServicePage, getAllPublishedCommercialServiceSlugs, getAllPublishedCommercialServiceCards, getAllPublishedCommercialServiceLinks (lib/queries/content.ts)
+- **Commercial types:** `CommercialServicePage` (generated from database schema) and `CommercialServiceCardLink` types (types/index.ts)
+- **Hero image script extended:** `--type=commercial` support with commercial-specific prompt builder (scripts/generate-hero-images.ts)
+- **6 commercial service pages generated:** Office & Corporate, Retail & Restaurant, Warehouse & Industrial, HOA & Property Management, Multi-Unit Residential, Healthcare & Educational — all SEO score 100, status='review'
+- **Hero images generated:** 6 commercial service page hero images via Nano Banana 2
+
+### Changed
+
+- **Header CTA redesign:** Separated nav links from action cluster on desktop — phone number with icon now visible alongside a prominent "Get a Free Estimate" gold button (rounded-lg, font-bold, shadow). Mobile menu gets phone icon + divider separator (components/marketing/site-header.tsx)
+- **Hero CTA simplified:** Replaced phone number button with single "Get Your Free Estimate" green CTA; phone now lives in header instead (components/marketing/home/hero-split.tsx)
+- **Marketing nav:** Removed "Our Work" link; added "Commercial Services" link, residential services now in "Residential Painting" dropdown with hover/accordion behavior (components/marketing/site-header.tsx)
+- **ServicePageLayout generalized:** Accepts any service-like page with optional breadcrumb overrides, reused by both residential and commercial pages (components/marketing/service-page-layout.tsx)
+- **Sitemap expanded:** Added `/commercial` hub (priority 0.85) + individual commercial service slug entries (app/sitemap.ts)
+
+### Added
+
+- **Services hub page (`/services`):** New SSR page listing all published services with hero image cards, meta descriptions, JsonLd ItemList schema, SEO metadata, and bottom CTA (app/(marketing)/services/page.tsx)
+- **Blog hub page (`/blog`):** New SSR page with featured post (full-width) + remaining posts grid, publication dates, JsonLd ItemList schema, SEO metadata, and bottom CTA (app/(marketing)/blog/page.tsx)
+- **Hub page query functions:** `getAllPublishedServiceCards()` and `getAllPublishedBlogCards()` with richer data (hero images, content, dates) for hub page cards (lib/queries/content.ts)
+- **Hub page types:** `ServiceCardLink` and `BlogCardLink` types (types/index.ts)
+
+### Changed
+
+- **Marketing nav updated:** 5 links with improved labels — Services → `/services`, Our Work → `/#work`, Reviews → `/#testimonials`, Service Areas → `/locations`, Blog → `/blog` (components/marketing/site-header.tsx)
+- **Header restored to green:** Solid green `#3DA535` background with white text and gold Free Estimate CTA, paintbrush logo flanking company name (components/marketing/site-header.tsx, site-header-wrapper.tsx)
+- **Sitemap expanded:** Added `/services` (priority 0.9) and `/blog` (priority 0.8) hub page entries (app/sitemap.ts)
+- **Desktop nav spacing:** Tightened gap from `gap-8/12` to `gap-6/10` to fit 5 links + CTA comfortably
+
+### Added
+
 - **Leads dashboard:** Full lead management module with pipeline tracking, scoring, activity timeline, and outreach (SMS + email)
   - **Database migration:** Expanded leads table (assigned_to, source, score, score_label, notes, contacted_at, closed_at, close_reason), new lead_activities table (12 activity types, JSONB metadata), new lead_followups table (sequence-based SMS/email followups) — all with RLS + indexes (packages/db/supabase/migrations/20260317000001_expand_leads_and_activities.sql)
   - **Types:** Zod schemas for lead status (new→contacted→qualified→proposed→won→lost), source (6 channels), score labels (hot/warm/cold), 12 activity types, followup channels/status, input/response schemas (types/leads.ts)
@@ -22,6 +55,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Dashboard content preview — raw HTML tags:** Replaced `isomorphic-dompurify` (requires jsdom, fails on Vercel serverless) with `sanitize-html` in content-preview.tsx — HTML now renders correctly in the dashboard detail sheet (components/content/content-preview.tsx)
+- **Dashboard content preview — missing hero images:** Added `hero_image_url`/`featured_image_url` to content detail API response, rendered hero image via `next/image` at top of detail sheet preview (app/api/v1/content/[type]/[id]/route.ts, components/content/content-detail-sheet.tsx, types/content.ts)
 - **Flaky composite video form tests:** Replaced slow `user.type()` calls (60+ chars typed char-by-char) with instant `fireEvent.change()` in submission tests, extracted shared `fillCompositeFields()` helper — tests now pass consistently across full suite runs (tests/components/video/video-generate-form-composite.test.tsx)
 
 ### Added

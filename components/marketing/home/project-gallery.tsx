@@ -84,7 +84,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
         <ScrollReveal>
           <div className="mt-8">
             <Link
-              href="/locations"
+              href="/#services"
               className="text-sm font-medium text-[#1B2B5B] underline underline-offset-4 transition-colors hover:text-[#1B2B5B]/70"
             >
               View all projects

@@ -20,10 +20,8 @@ export function SiteHeaderWrapper({ children, mobileMenu }: SiteHeaderWrapperPro
 
   return (
     <header
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-400 ${
-        scrolled
-          ? 'header-scrolled bg-white/95 py-3 shadow-sm backdrop-blur-xl'
-          : 'bg-transparent py-5'
+      className={`fixed top-0 right-0 left-0 z-50 bg-[#3DA535] transition-all duration-400 ${
+        scrolled ? 'py-3 shadow-md' : 'py-5'
       }`}
     >
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 md:px-10 lg:px-[60px]">
@@ -36,19 +34,13 @@ export function SiteHeaderWrapper({ children, mobileMenu }: SiteHeaderWrapperPro
           aria-label="Toggle menu"
         >
           <span
-            className={`block h-0.5 w-7 transition-all ${
-              scrolled ? 'bg-gray-900' : 'bg-white'
-            } ${menuOpen ? 'translate-y-2 rotate-45' : ''}`}
+            className={`block h-0.5 w-7 bg-white transition-all ${menuOpen ? 'translate-y-2 rotate-45' : ''}`}
           />
           <span
-            className={`block h-0.5 w-7 transition-all ${
-              scrolled ? 'bg-gray-900' : 'bg-white'
-            } ${menuOpen ? 'opacity-0' : ''}`}
+            className={`block h-0.5 w-7 bg-white transition-all ${menuOpen ? 'opacity-0' : ''}`}
           />
           <span
-            className={`block h-0.5 w-7 transition-all ${
-              scrolled ? 'bg-gray-900' : 'bg-white'
-            } ${menuOpen ? '-translate-y-2 -rotate-45' : ''}`}
+            className={`block h-0.5 w-7 bg-white transition-all ${menuOpen ? '-translate-y-2 -rotate-45' : ''}`}
           />
         </button>
       </nav>

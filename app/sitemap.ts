@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 
 import {
   getAllPublishedServiceSlugs,
+  getAllPublishedCommercialServiceSlugs,
   getAllPublishedLocationSlugs,
   getAllPublishedBlogSlugs,
 } from '@/lib/queries/content'
@@ -9,8 +10,9 @@ import {
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [services, locations, blogs] = await Promise.all([
+  const [services, commercialServices, locations, blogs] = await Promise.all([
     getAllPublishedServiceSlugs(),
+    getAllPublishedCommercialServiceSlugs(),
     getAllPublishedLocationSlugs(),
     getAllPublishedBlogSlugs(),
   ])
@@ -20,6 +22,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: s.updated_at,
     changeFrequency: 'monthly',
     priority: 0.9,
+  }))
+
+  const commercialServiceEntries: MetadataRoute.Sitemap = commercialServices.map((s) => ({
+    url: `${BASE_URL}/commercial/${s.slug}`,
+    lastModified: s.updated_at,
+    changeFrequency: 'monthly',
+    priority: 0.85,
   }))
 
   const locationEntries: MetadataRoute.Sitemap = locations.map((l) => ({
@@ -44,12 +53,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${BASE_URL}/services`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/commercial`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
       url: `${BASE_URL}/locations`,
       lastModified: new Date().toISOString(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    {
+      url: `${BASE_URL}/blog`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
     ...serviceEntries,
+    ...commercialServiceEntries,
     ...locationEntries,
     ...blogEntries,
   ]

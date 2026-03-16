@@ -135,6 +135,7 @@ export type ContentDetail = {
   publishedAt: string | null
   createdAt: string
   updatedAt: string
+  heroImageUrl: string | null
 }
 
 // --- Unified content list item (for the listing table) ---

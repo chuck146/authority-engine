@@ -36,12 +36,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      <SiteHeader
-        orgName={org.name}
-        logoUrl={org.logo_url}
-        estimateUrl={estimateUrl}
-        phone={phone}
-      />
+      <SiteHeader orgName={org.name} estimateUrl={estimateUrl} phone={phone} services={services} />
       <main>{children}</main>
       <SiteFooter
         orgName={org.name}

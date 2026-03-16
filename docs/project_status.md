@@ -336,11 +336,42 @@ Sprint Results:
 - [x] Sidebar nav: "Leads" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
 - [x] Test suite: 74 new tests across 12 files — 6 API route tests, 4 component tests, 2 lib tests (1282 total, up from 1191)
 
+**Post-V2: Marketing Nav & Hub Pages** ✅
+
+- [x] Services hub page (`/services`): SSR page with service card grid, hero images, meta descriptions, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/services/page.tsx)
+- [x] Blog hub page (`/blog`): SSR page with featured post (full-width) + grid, publication dates, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/blog/page.tsx)
+- [x] Marketing nav updated: 4 links — Services → /services, Reviews → /#testimonials, Service Areas → /locations, Blog → /blog (components/marketing/site-header.tsx)
+- [x] Header restored: solid green #3DA535 background, paintbrush logo, gold Free Estimate CTA
+- [x] Header CTA redesign: desktop phone number + icon visible, separated action cluster (phone + "Get a Free Estimate" button), upgraded button styling (rounded-lg, font-bold, shadow)
+- [x] Hero CTA simplified: single "Get Your Free Estimate" button (phone moved to header)
+- [x] Live Supabase: estimate_url added to org settings JSONB
+- [x] Hub page query functions: getAllPublishedServiceCards, getAllPublishedBlogCards (lib/queries/content.ts)
+- [x] Hub page types: ServiceCardLink, BlogCardLink (types/index.ts)
+- [x] Sitemap updated: /services (priority 0.9) and /blog (priority 0.8) entries added (app/sitemap.ts)
+
+**Post-V2: Commercial Service Pages** ✅
+
+- [x] Database migration: `commercial_service_pages` table with RLS policies, indexes, updated_at trigger (packages/db/supabase/migrations/20260317000002_create_commercial_service_pages.sql)
+- [x] Commercial hub page (`/commercial`): SSR page with service card grid, hero images, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/commercial/page.tsx)
+- [x] Individual commercial page route (`/commercial/[slug]`): breadcrumbs, metadata, related locations, reuses ServicePageLayout (app/(marketing)/commercial/[slug]/page.tsx)
+- [x] Generation script: Claude API generates 6 commercial services (office, retail, warehouse, HOA, multi-unit, healthcare) with SEO scoring (scripts/generate-commercial-services.ts)
+- [x] 4 commercial query functions in lib/queries/content.ts
+- [x] JsonLd schemas: buildCommercialServicePageSchemas() with /commercial breadcrumbs (lib/seo/json-ld.ts)
+- [x] Residential services dropdown: hover dropdown (desktop) + accordion (mobile) in nav (components/marketing/services-dropdown.tsx)
+- [x] Marketing nav: "Commercial Services" link added, residential services in dropdown
+- [x] Sitemap: /commercial hub + individual commercial service entries
+- [x] Migration applied to live Supabase, types regenerated
+- [x] 6 commercial service pages generated via Claude API (all SEO score 100, status='review')
+- [x] Hero image script extended: `--type=commercial` support added to `scripts/generate-hero-images.ts`
+- [x] Hero images generated for 6 commercial service pages via Nano Banana 2
+- [x] Type cleanup: removed manual `CommercialServicePage` type, now uses generated database type; removed `as never` casts from query functions
+- [ ] Review + publish pages in dashboard
+
 ### What's Next
 
+- Review + publish 6 commercial service pages in dashboard
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
-- Apply leads migration to live Supabase + regenerate types
 - Next sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 
