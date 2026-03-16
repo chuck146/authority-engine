@@ -53,12 +53,7 @@ import type {
   KeywordSummary,
   ContentPerformanceItem,
 } from '@/types/analytics'
-import type {
-  LeadListItem,
-  LeadDetail,
-  LeadActivity,
-  LeadOverview,
-} from '@/types/leads'
+import type { LeadListItem, LeadDetail, LeadActivity, LeadOverview } from '@/types/leads'
 
 export function buildOrgContext(overrides?: Partial<OrgContext>): OrgContext {
   return {

@@ -13,7 +13,15 @@ export async function GET() {
       .from('leads' as never)
       .select('status, source, service, created_at, contacted_at')
       .eq('organization_id', auth.organizationId)
-      .returns<{ status: string; source: string; service: string | null; created_at: string; contacted_at: string | null }[]>()
+      .returns<
+        {
+          status: string
+          source: string
+          service: string | null
+          created_at: string
+          contacted_at: string | null
+        }[]
+      >()
 
     if (error) {
       console.error('Failed to fetch leads overview:', error)
@@ -44,9 +52,7 @@ export async function GET() {
     ).length
 
     // In pipeline (not won/lost)
-    const inPipeline = allLeads.filter(
-      (l) => l.status !== 'won' && l.status !== 'lost',
-    ).length
+    const inPipeline = allLeads.filter((l) => l.status !== 'won' && l.status !== 'lost').length
 
     // Conversion rate
     const totalClosed = byStatus.won + byStatus.lost

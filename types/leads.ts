@@ -5,14 +5,7 @@ import { z } from 'zod'
 export const leadStatusSchema = z.enum(['new', 'contacted', 'qualified', 'proposed', 'won', 'lost'])
 export type LeadStatus = z.infer<typeof leadStatusSchema>
 
-export const leadSourceSchema = z.enum([
-  'website',
-  'phone',
-  'referral',
-  'gbp',
-  'facebook',
-  'other',
-])
+export const leadSourceSchema = z.enum(['website', 'phone', 'referral', 'gbp', 'facebook', 'other'])
 export type LeadSource = z.infer<typeof leadSourceSchema>
 
 export const leadScoreLabelSchema = z.enum(['hot', 'warm', 'cold'])

@@ -176,7 +176,7 @@ export function LeadList({ refreshKey }: LeadListProps) {
               {items.map((item) => (
                 <TableRow
                   key={item.id}
-                  className="cursor-pointer hover:bg-muted/50"
+                  className="hover:bg-muted/50 cursor-pointer"
                   onClick={() => handleRowClick(item.id)}
                 >
                   <TableCell className="font-medium">{item.name}</TableCell>
@@ -187,7 +187,7 @@ export function LeadList({ refreshKey }: LeadListProps) {
                   <TableCell>
                     <LeadScoreBadge score={item.score} scoreLabel={item.scoreLabel} />
                   </TableCell>
-                  <TableCell className="capitalize text-muted-foreground">{item.source}</TableCell>
+                  <TableCell className="text-muted-foreground capitalize">{item.source}</TableCell>
                   <TableCell className="text-muted-foreground">
                     {new Date(item.createdAt).toLocaleDateString()}
                   </TableCell>

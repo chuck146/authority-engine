@@ -46,10 +46,34 @@ describe('GET /api/v1/leads/overview', () => {
 
   it('computes correct byStatus counts', async () => {
     const leads = [
-      { status: 'new', source: 'website', service: 'Painting', created_at: new Date().toISOString(), contacted_at: null },
-      { status: 'new', source: 'website', service: 'Painting', created_at: new Date().toISOString(), contacted_at: null },
-      { status: 'won', source: 'phone', service: 'Deck Staining', created_at: '2026-03-10T12:00:00Z', contacted_at: '2026-03-10T14:00:00Z' },
-      { status: 'lost', source: 'referral', service: null, created_at: '2026-03-08T12:00:00Z', contacted_at: '2026-03-09T12:00:00Z' },
+      {
+        status: 'new',
+        source: 'website',
+        service: 'Painting',
+        created_at: new Date().toISOString(),
+        contacted_at: null,
+      },
+      {
+        status: 'new',
+        source: 'website',
+        service: 'Painting',
+        created_at: new Date().toISOString(),
+        contacted_at: null,
+      },
+      {
+        status: 'won',
+        source: 'phone',
+        service: 'Deck Staining',
+        created_at: '2026-03-10T12:00:00Z',
+        contacted_at: '2026-03-10T14:00:00Z',
+      },
+      {
+        status: 'lost',
+        source: 'referral',
+        service: null,
+        created_at: '2026-03-08T12:00:00Z',
+        contacted_at: '2026-03-09T12:00:00Z',
+      },
     ]
     mockSupabase.returns.mockResolvedValueOnce({ data: leads, error: null })
 
@@ -63,9 +87,27 @@ describe('GET /api/v1/leads/overview', () => {
 
   it('computes conversion rate correctly', async () => {
     const leads = [
-      { status: 'won', source: 'website', service: null, created_at: '2026-03-10T12:00:00Z', contacted_at: null },
-      { status: 'won', source: 'website', service: null, created_at: '2026-03-10T12:00:00Z', contacted_at: null },
-      { status: 'lost', source: 'website', service: null, created_at: '2026-03-10T12:00:00Z', contacted_at: null },
+      {
+        status: 'won',
+        source: 'website',
+        service: null,
+        created_at: '2026-03-10T12:00:00Z',
+        contacted_at: null,
+      },
+      {
+        status: 'won',
+        source: 'website',
+        service: null,
+        created_at: '2026-03-10T12:00:00Z',
+        contacted_at: null,
+      },
+      {
+        status: 'lost',
+        source: 'website',
+        service: null,
+        created_at: '2026-03-10T12:00:00Z',
+        contacted_at: null,
+      },
     ]
     mockSupabase.returns.mockResolvedValueOnce({ data: leads, error: null })
 
@@ -77,7 +119,13 @@ describe('GET /api/v1/leads/overview', () => {
 
   it('returns null avgResponseTimeHours when no contacted leads', async () => {
     const leads = [
-      { status: 'new', source: 'website', service: null, created_at: new Date().toISOString(), contacted_at: null },
+      {
+        status: 'new',
+        source: 'website',
+        service: null,
+        created_at: new Date().toISOString(),
+        contacted_at: null,
+      },
     ]
     mockSupabase.returns.mockResolvedValueOnce({ data: leads, error: null })
 

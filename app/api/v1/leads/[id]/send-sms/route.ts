@@ -55,7 +55,12 @@ export async function POST(request: Request, context: RouteContext) {
       lead_id: id,
       activity_type: 'sms_sent',
       description: `SMS sent to ${lead.name}`,
-      metadata: { messagePreview: message.slice(0, 50), messageLength: message.length, messageId: result.messageId, success: result.success },
+      metadata: {
+        messagePreview: message.slice(0, 50),
+        messageLength: message.length,
+        messageId: result.messageId,
+        success: result.success,
+      },
       created_by: auth.userId,
     } as never)
 

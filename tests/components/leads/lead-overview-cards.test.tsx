@@ -15,7 +15,12 @@ describe('LeadOverviewCards', () => {
   })
 
   it('renders hero cards with data', async () => {
-    const overview = buildLeadOverview({ total: 15, newThisWeek: 5, inPipeline: 10, conversionRate: 0.33 })
+    const overview = buildLeadOverview({
+      total: 15,
+      newThisWeek: 5,
+      inPipeline: 10,
+      conversionRate: 0.33,
+    })
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(overview),

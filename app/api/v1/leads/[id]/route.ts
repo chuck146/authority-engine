@@ -147,7 +147,11 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     const updateFields: Record<string, unknown> = { updated_at: new Date().toISOString() }
-    const activitiesToCreate: { type: string; description: string; metadata?: Record<string, unknown> }[] = []
+    const activitiesToCreate: {
+      type: string
+      description: string
+      metadata?: Record<string, unknown>
+    }[] = []
 
     // Status change
     if (input.status && input.status !== current.status) {
@@ -159,7 +163,11 @@ export async function PATCH(request: Request, context: RouteContext) {
       }
 
       // Require admin for win/lose
-      if ((input.status === 'won' || input.status === 'lost') && auth.role !== 'admin' && auth.role !== 'owner') {
+      if (
+        (input.status === 'won' || input.status === 'lost') &&
+        auth.role !== 'admin' &&
+        auth.role !== 'owner'
+      ) {
         return NextResponse.json({ error: 'Admin required for win/lose' }, { status: 403 })
       }
 
@@ -198,7 +206,10 @@ export async function PATCH(request: Request, context: RouteContext) {
           .single()
 
         if (!assignee) {
-          return NextResponse.json({ error: 'Assigned user not found in this organization' }, { status: 400 })
+          return NextResponse.json(
+            { error: 'Assigned user not found in this organization' },
+            { status: 400 },
+          )
         }
       }
 

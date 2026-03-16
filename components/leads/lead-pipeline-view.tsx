@@ -84,7 +84,7 @@ export function LeadPipelineView({ refreshKey }: LeadPipelineViewProps) {
                 {columnLeads.map((lead) => (
                   <div
                     key={lead.id}
-                    className="cursor-pointer rounded-md border bg-card p-3 shadow-sm transition-shadow hover:shadow-md"
+                    className="bg-card cursor-pointer rounded-md border p-3 shadow-sm transition-shadow hover:shadow-md"
                     onClick={() => handleCardClick(lead.id)}
                   >
                     <p className="text-sm font-medium">{lead.name}</p>

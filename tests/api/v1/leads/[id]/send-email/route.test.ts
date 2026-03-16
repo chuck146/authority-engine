@@ -60,7 +60,10 @@ describe('POST /api/v1/leads/[id]/send-email', () => {
 
   it('returns 500 when email send fails', async () => {
     mockSupabase.single
-      .mockResolvedValueOnce({ data: { id: 'lead-1', email: 'jane@example.com', name: 'Jane Doe' }, error: null })
+      .mockResolvedValueOnce({
+        data: { id: 'lead-1', email: 'jane@example.com', name: 'Jane Doe' },
+        error: null,
+      })
       .mockResolvedValueOnce({ data: { name: 'Cleanest Painting LLC' }, error: null })
     mockSendLeadEmail.mockRejectedValueOnce(new Error('Email failed'))
     const res = await callPost({ subject: 'Estimate', body: 'Details here' })
@@ -69,7 +72,10 @@ describe('POST /api/v1/leads/[id]/send-email', () => {
 
   it('returns 200 on success', async () => {
     mockSupabase.single
-      .mockResolvedValueOnce({ data: { id: 'lead-1', email: 'jane@example.com', name: 'Jane Doe' }, error: null })
+      .mockResolvedValueOnce({
+        data: { id: 'lead-1', email: 'jane@example.com', name: 'Jane Doe' },
+        error: null,
+      })
       .mockResolvedValueOnce({ data: { name: 'Cleanest Painting LLC' }, error: null })
     const res = await callPost({ subject: 'Estimate', body: 'Your painting estimate is $2,500' })
     expect(res.status).toBe(200)

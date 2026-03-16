@@ -117,7 +117,9 @@ describe('GET /api/v1/leads', () => {
 
   async function callGet(queryString = '') {
     const { GET } = await import('@/app/api/v1/leads/route')
-    const request = new NextRequest(`http://localhost/api/v1/leads${queryString ? `?${queryString}` : ''}`)
+    const request = new NextRequest(
+      `http://localhost/api/v1/leads${queryString ? `?${queryString}` : ''}`,
+    )
     return GET(request)
   }
 
@@ -164,7 +166,11 @@ describe('GET /api/v1/leads', () => {
   })
 
   it('returns 500 when query fails', async () => {
-    mockSupabase.returns.mockResolvedValueOnce({ data: null, count: null, error: { message: 'fail' } })
+    mockSupabase.returns.mockResolvedValueOnce({
+      data: null,
+      count: null,
+      error: { message: 'fail' },
+    })
     const res = await callGet()
     expect(res.status).toBe(500)
   })

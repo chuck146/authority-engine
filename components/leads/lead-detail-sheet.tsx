@@ -1,12 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Phone, MessageSquare, Mail, Bot } from 'lucide-react'
@@ -144,7 +139,9 @@ export function LeadDetailSheet({ leadId, open, onOpenChange, onUpdated }: LeadD
           <div className="space-y-6 p-4">
             {/* Header info */}
             <div>
-              <p className="text-muted-foreground text-sm">{lead.service ?? 'No service specified'}</p>
+              <p className="text-muted-foreground text-sm">
+                {lead.service ?? 'No service specified'}
+              </p>
               <div className="mt-2 flex items-center gap-2">
                 <LeadStatusBadge status={lead.status} />
                 <LeadScoreBadge score={lead.score} scoreLabel={lead.scoreLabel} />
@@ -188,11 +185,7 @@ export function LeadDetailSheet({ leadId, open, onOpenChange, onUpdated }: LeadD
               <LeadSendSmsForm leadId={lead.id} leadName={lead.name} onSent={handleActionSent} />
             )}
             {showEmail && (
-              <LeadSendEmailForm
-                leadId={lead.id}
-                leadName={lead.name}
-                onSent={handleActionSent}
-              />
+              <LeadSendEmailForm leadId={lead.id} leadName={lead.name} onSent={handleActionSent} />
             )}
 
             {/* Pipeline indicator */}
@@ -217,16 +210,12 @@ export function LeadDetailSheet({ leadId, open, onOpenChange, onUpdated }: LeadD
                       title={stage}
                     />
                     {idx < PIPELINE_STAGES.length - 1 && (
-                      <div
-                        className={`h-0.5 w-4 ${isCompleted ? 'bg-primary/50' : 'bg-muted'}`}
-                      />
+                      <div className={`h-0.5 w-4 ${isCompleted ? 'bg-primary/50' : 'bg-muted'}`} />
                     )}
                   </div>
                 )
               })}
-              {lead.status === 'lost' && (
-                <span className="ml-2 text-xs text-red-500">Lost</span>
-              )}
+              {lead.status === 'lost' && <span className="ml-2 text-xs text-red-500">Lost</span>}
             </div>
 
             {/* Action buttons */}
@@ -235,7 +224,11 @@ export function LeadDetailSheet({ leadId, open, onOpenChange, onUpdated }: LeadD
                 <Button
                   key={action.target}
                   variant={
-                    action.target === 'lost' ? 'destructive' : action.target === 'won' ? 'default' : 'outline'
+                    action.target === 'lost'
+                      ? 'destructive'
+                      : action.target === 'won'
+                        ? 'default'
+                        : 'outline'
                   }
                   size="sm"
                   onClick={() => handleStatusChange(action.target)}
@@ -329,7 +322,7 @@ export function LeadDetailSheet({ leadId, open, onOpenChange, onUpdated }: LeadD
                         {new Date(f.scheduledAt).toLocaleString()}
                       </span>
                     </div>
-                    <span className="capitalize text-xs">{f.status}</span>
+                    <span className="text-xs capitalize">{f.status}</span>
                   </div>
                 ))}
               </div>

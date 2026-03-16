@@ -10,10 +10,7 @@ export function LeadsPageClient() {
   const [refreshKey, setRefreshKey] = useState(0)
 
   return (
-    <Tabs
-      defaultValue="pipeline"
-      onValueChange={() => setRefreshKey((k) => k + 1)}
-    >
+    <Tabs defaultValue="pipeline" onValueChange={() => setRefreshKey((k) => k + 1)}>
       <TabsList>
         <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
         <TabsTrigger value="all">All Leads</TabsTrigger>

@@ -60,13 +60,13 @@ export function LeadActivityTimeline({ activities, compact = false }: LeadActivi
 
   return (
     <div className="space-y-0">
-      <div className="relative border-l-2 border-muted pl-4">
+      <div className="border-muted relative border-l-2 pl-4">
         {displayed.map((activity) => {
           const Icon = ICON_MAP[activity.activityType] ?? FileText
           return (
             <div key={activity.id} className="relative mb-4 last:mb-0">
-              <div className="bg-background absolute -left-[calc(0.5rem+1px+1rem)] top-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-muted">
-                <Icon className="h-3 w-3 text-muted-foreground" />
+              <div className="bg-background border-muted absolute top-0.5 -left-[calc(0.5rem+1px+1rem)] flex h-5 w-5 items-center justify-center rounded-full border-2">
+                <Icon className="text-muted-foreground h-3 w-3" />
               </div>
               <div>
                 <p className="text-sm">{activity.description}</p>

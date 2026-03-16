@@ -61,7 +61,9 @@ export function LeadOverviewCards({ refreshKey }: LeadOverviewCardsProps) {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-muted-foreground text-sm font-normal">New This Week</CardTitle>
+            <CardTitle className="text-muted-foreground text-sm font-normal">
+              New This Week
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{data.newThisWeek}</p>
@@ -77,7 +79,9 @@ export function LeadOverviewCards({ refreshKey }: LeadOverviewCardsProps) {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-muted-foreground text-sm font-normal">Conversion Rate</CardTitle>
+            <CardTitle className="text-muted-foreground text-sm font-normal">
+              Conversion Rate
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{(data.conversionRate * 100).toFixed(0)}%</p>

@@ -154,7 +154,9 @@ export async function GET(request: NextRequest) {
     if (search) {
       const maxLen = 100
       const sanitized = search.slice(0, maxLen).replace(/[%_\\]/g, '\\$&')
-      query = query.or(`name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,phone.ilike.%${sanitized}%`)
+      query = query.or(
+        `name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,phone.ilike.%${sanitized}%`,
+      )
     }
 
     const validSortColumns = ['created_at', 'updated_at', 'score', 'name', 'status']

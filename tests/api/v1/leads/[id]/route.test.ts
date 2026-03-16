@@ -92,7 +92,14 @@ describe('GET /api/v1/leads/[id]', () => {
       .mockReturnValueOnce(mockSupabase) // lead query: keep chain for .single()
       .mockResolvedValueOnce({
         data: [
-          { id: 'act-1', activity_type: 'status_change', description: 'Created', metadata: {}, created_by: 'user-123', created_at: '2026-03-16T12:00:00Z' },
+          {
+            id: 'act-1',
+            activity_type: 'status_change',
+            description: 'Created',
+            metadata: {},
+            created_by: 'user-123',
+            created_at: '2026-03-16T12:00:00Z',
+          },
         ],
         error: null,
       })
@@ -155,7 +162,10 @@ describe('PATCH /api/v1/leads/[id]', () => {
   })
 
   it('returns 403 when editor tries to mark won', async () => {
-    mockSupabase.single.mockResolvedValueOnce({ data: { ...leadRow, status: 'qualified' }, error: null })
+    mockSupabase.single.mockResolvedValueOnce({
+      data: { ...leadRow, status: 'qualified' },
+      error: null,
+    })
     const res = await callPatch({ status: 'won' })
     expect(res.status).toBe(403)
   })
