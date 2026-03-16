@@ -346,11 +346,29 @@ Sprint Results:
 - [x] Hub page types: ServiceCardLink, BlogCardLink (types/index.ts)
 - [x] Sitemap updated: /services (priority 0.9) and /blog (priority 0.8) entries added (app/sitemap.ts)
 
+**Post-V2: Commercial Service Pages** ✅
+
+- [x] Database migration: `commercial_service_pages` table with RLS policies, indexes, updated_at trigger (packages/db/supabase/migrations/20260317000002_create_commercial_service_pages.sql)
+- [x] Commercial hub page (`/commercial`): SSR page with service card grid, hero images, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/commercial/page.tsx)
+- [x] Individual commercial page route (`/commercial/[slug]`): breadcrumbs, metadata, related locations, reuses ServicePageLayout (app/(marketing)/commercial/[slug]/page.tsx)
+- [x] Generation script: Claude API generates 6 commercial services (office, retail, warehouse, HOA, multi-unit, healthcare) with SEO scoring (scripts/generate-commercial-services.ts)
+- [x] 4 commercial query functions in lib/queries/content.ts
+- [x] JsonLd schemas: buildCommercialServicePageSchemas() with /commercial breadcrumbs (lib/seo/json-ld.ts)
+- [x] Residential services dropdown: hover dropdown (desktop) + accordion (mobile) in nav (components/marketing/services-dropdown.tsx)
+- [x] Marketing nav: "Commercial Services" link added, residential services in dropdown
+- [x] Sitemap: /commercial hub + individual commercial service entries
+- [x] Migration applied to live Supabase, types regenerated
+- [ ] Run generation script to create 6 commercial service pages
+- [ ] Generate hero images for commercial pages
+- [ ] Review + publish pages in dashboard
+
 ### What's Next
 
+- Run `npx tsx scripts/generate-commercial-services.ts` to generate 6 commercial service pages
+- Generate hero images for commercial pages (extend generate-hero-images.ts with --type=commercial)
+- Review + publish commercial pages in dashboard
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
-- Apply leads migration to live Supabase + regenerate types
 - Next sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 

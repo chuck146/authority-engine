@@ -9,6 +9,20 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Commercial service pages:** New `commercial_service_pages` table with RLS, SSR hub page (`/commercial`), individual page routes (`/commercial/[slug]`), JsonLd Service + BreadcrumbList schemas, SEO metadata with og:image support (app/(marketing)/commercial/, packages/db/supabase/migrations/20260317000002_create_commercial_service_pages.sql)
+- **Commercial services generation script:** Claude API script generates 6 commercial service pages (office, retail, warehouse, HOA, multi-unit, healthcare) with SEO scoring, skip-if-exists, dry-run, and single-slug support (scripts/generate-commercial-services.ts)
+- **Residential services dropdown:** Hover dropdown (desktop) + accordion (mobile) in site header listing published residential services with "View All Services" link (components/marketing/services-dropdown.tsx)
+- **Commercial query functions (4):** getPublishedCommercialServicePage, getAllPublishedCommercialServiceSlugs, getAllPublishedCommercialServiceCards, getAllPublishedCommercialServiceLinks (lib/queries/content.ts)
+- **Commercial types:** `CommercialServicePage` and `CommercialServiceCardLink` types (types/index.ts)
+
+### Changed
+
+- **Marketing nav:** Added "Commercial Services" link, residential services now in "Residential Painting" dropdown with hover/accordion behavior (components/marketing/site-header.tsx)
+- **ServicePageLayout generalized:** Accepts any service-like page with optional breadcrumb overrides, reused by both residential and commercial pages (components/marketing/service-page-layout.tsx)
+- **Sitemap expanded:** Added `/commercial` hub (priority 0.85) + individual commercial service slug entries (app/sitemap.ts)
+
+### Added
+
 - **Services hub page (`/services`):** New SSR page listing all published services with hero image cards, meta descriptions, JsonLd ItemList schema, SEO metadata, and bottom CTA (app/(marketing)/services/page.tsx)
 - **Blog hub page (`/blog`):** New SSR page with featured post (full-width) + remaining posts grid, publication dates, JsonLd ItemList schema, SEO metadata, and bottom CTA (app/(marketing)/blog/page.tsx)
 - **Hub page query functions:** `getAllPublishedServiceCards()` and `getAllPublishedBlogCards()` with richer data (hero images, content, dates) for hub page cards (lib/queries/content.ts)

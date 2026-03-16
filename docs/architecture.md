@@ -120,6 +120,7 @@ leads                — Lead pipeline (status, source, score, assignment, conta
 lead_activities      — Activity timeline per lead (notes, status changes, SMS/email, calls)
 lead_followups       — Scheduled follow-up sequences (SMS/email with step tracking)
 lead_events          — Unified lead tracking
+commercial_service_pages — Commercial painting service pages (office, retail, warehouse, HOA, etc.)
 media_assets         — Generated images + videos with metadata
 job_executions       — Background job logs for debugging
 ```
