@@ -9,6 +9,20 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Services hub page (`/services`):** New SSR page listing all published services with hero image cards, meta descriptions, JsonLd ItemList schema, SEO metadata, and bottom CTA (app/(marketing)/services/page.tsx)
+- **Blog hub page (`/blog`):** New SSR page with featured post (full-width) + remaining posts grid, publication dates, JsonLd ItemList schema, SEO metadata, and bottom CTA (app/(marketing)/blog/page.tsx)
+- **Hub page query functions:** `getAllPublishedServiceCards()` and `getAllPublishedBlogCards()` with richer data (hero images, content, dates) for hub page cards (lib/queries/content.ts)
+- **Hub page types:** `ServiceCardLink` and `BlogCardLink` types (types/index.ts)
+
+### Changed
+
+- **Marketing nav updated:** 5 links with improved labels — Services → `/services`, Our Work → `/#work`, Reviews → `/#testimonials`, Service Areas → `/locations`, Blog → `/blog` (components/marketing/site-header.tsx)
+- **Header restored to green:** Solid green `#3DA535` background with white text and gold Free Estimate CTA, paintbrush logo flanking company name (components/marketing/site-header.tsx, site-header-wrapper.tsx)
+- **Sitemap expanded:** Added `/services` (priority 0.9) and `/blog` (priority 0.8) hub page entries (app/sitemap.ts)
+- **Desktop nav spacing:** Tightened gap from `gap-8/12` to `gap-6/10` to fit 5 links + CTA comfortably
+
+### Added
+
 - **Leads dashboard:** Full lead management module with pipeline tracking, scoring, activity timeline, and outreach (SMS + email)
   - **Database migration:** Expanded leads table (assigned_to, source, score, score_label, notes, contacted_at, closed_at, close_reason), new lead_activities table (12 activity types, JSONB metadata), new lead_followups table (sequence-based SMS/email followups) — all with RLS + indexes (packages/db/supabase/migrations/20260317000001_expand_leads_and_activities.sql)
   - **Types:** Zod schemas for lead status (new→contacted→qualified→proposed→won→lost), source (6 channels), score labels (hot/warm/cold), 12 activity types, followup channels/status, input/response schemas (types/leads.ts)

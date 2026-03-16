@@ -336,6 +336,16 @@ Sprint Results:
 - [x] Sidebar nav: "Leads" item added to dashboard sidebar (components/dashboard/app-sidebar.tsx)
 - [x] Test suite: 74 new tests across 12 files — 6 API route tests, 4 component tests, 2 lib tests (1282 total, up from 1191)
 
+**Post-V2: Marketing Nav & Hub Pages** ✅
+
+- [x] Services hub page (`/services`): SSR page with service card grid, hero images, meta descriptions, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/services/page.tsx)
+- [x] Blog hub page (`/blog`): SSR page with featured post (full-width) + grid, publication dates, JsonLd ItemList, SEO metadata, bottom CTA (app/(marketing)/blog/page.tsx)
+- [x] Marketing nav updated: 5 links — Services → /services, Our Work → /#work, Reviews → /#testimonials, Service Areas → /locations, Blog → /blog (components/marketing/site-header.tsx)
+- [x] Header restored: solid green #3DA535 background, paintbrush logo, gold Free Estimate CTA
+- [x] Hub page query functions: getAllPublishedServiceCards, getAllPublishedBlogCards (lib/queries/content.ts)
+- [x] Hub page types: ServiceCardLink, BlogCardLink (types/index.ts)
+- [x] Sitemap updated: /services (priority 0.9) and /blog (priority 0.8) entries added (app/sitemap.ts)
+
 ### What's Next
 
 - Approve 11 review-status pages in dashboard → publish
