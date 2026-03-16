@@ -10,15 +10,41 @@ import type { LeadListItem } from '@/types/leads'
 const leadSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(7, 'Phone number is required').max(20),
+  phone: z
+    .string()
+    .min(7, 'Phone number is required')
+    .max(20)
+    .regex(/^\+?[\d\s\-()]+$/, 'Invalid phone number format'),
   service: z.string().max(200).optional(),
   message: z.string().max(1000).optional(),
-  organization_id: z.string().uuid(),
+  org_slug: z.string().min(1).max(100),
 })
+
+// Simple in-memory rate limiter for public lead submission
+export const rateLimitMap = new Map<string, number[]>()
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
+const RATE_LIMIT_MAX = 5 // 5 submissions per IP per hour
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const timestamps = rateLimitMap.get(ip) ?? []
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS)
+  if (recent.length >= RATE_LIMIT_MAX) return true
+  recent.push(now)
+  rateLimitMap.set(ip, recent)
+  return false
+}
 
 // Public POST — anyone can submit a lead
 export async function POST(request: Request) {
   try {
+    // Rate limit by IP
+    const forwarded = request.headers.get('x-forwarded-for')
+    const ip = forwarded?.split(',')[0]?.trim() ?? 'unknown'
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     const body = await request.json()
     const parseResult = leadSchema.safeParse(body)
 
@@ -32,6 +58,21 @@ export async function POST(request: Request) {
     const input = parseResult.data
     const now = new Date().toISOString()
 
+    const supabase = await createClient()
+
+    // Look up organization by slug (never trust client-supplied org ID)
+    const { data: orgRow, error: orgErr } = await supabase
+      .from('organizations')
+      .select('id, settings')
+      .eq('slug', input.org_slug)
+      .single()
+
+    if (orgErr || !orgRow) {
+      return NextResponse.json({ error: 'Organization not found' }, { status: 404 })
+    }
+
+    const organizationId = orgRow.id as string
+
     // Score the lead
     const { score, scoreLabel } = scoreLead({
       service: input.service ?? null,
@@ -41,12 +82,10 @@ export async function POST(request: Request) {
       createdAt: now,
     })
 
-    const supabase = await createClient()
-
     const { data: lead, error } = await supabase
       .from('leads' as never)
       .insert({
-        organization_id: input.organization_id,
+        organization_id: organizationId,
         name: input.name,
         email: input.email,
         phone: input.phone,
@@ -68,7 +107,7 @@ export async function POST(request: Request) {
     // Create initial activity
     const leadRow = lead as unknown as { id: string }
     await supabase.from('lead_activities' as never).insert({
-      organization_id: input.organization_id,
+      organization_id: organizationId,
       lead_id: leadRow.id,
       activity_type: 'score_change',
       description: `Lead scored ${score} (${scoreLabel}) on submission`,
@@ -76,13 +115,7 @@ export async function POST(request: Request) {
     } as never)
 
     // Send email notification (fire-and-forget)
-    const { data: org } = await supabase
-      .from('organizations')
-      .select('settings')
-      .eq('id', input.organization_id)
-      .single()
-
-    const settings = org?.settings as unknown as OrgSettings | null
+    const settings = orgRow.settings as unknown as OrgSettings | null
     const notifyEmail = settings?.contact_info?.email
     if (notifyEmail) {
       sendLeadNotification(notifyEmail, input).catch(() => {})
@@ -119,7 +152,9 @@ export async function GET(request: NextRequest) {
     if (status) query = query.eq('status', status)
     if (source) query = query.eq('source', source)
     if (search) {
-      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`)
+      const maxLen = 100
+      const sanitized = search.slice(0, maxLen).replace(/[%_\\]/g, '\\$&')
+      query = query.or(`name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,phone.ilike.%${sanitized}%`)
     }
 
     const validSortColumns = ['created_at', 'updated_at', 'score', 'name', 'status']

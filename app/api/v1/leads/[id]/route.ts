@@ -188,6 +188,20 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (input.source !== undefined) updateFields.source = input.source
 
     if (input.assigned_to !== undefined && input.assigned_to !== current.assigned_to) {
+      // Validate assigned user belongs to the same organization
+      if (input.assigned_to !== null) {
+        const { data: assignee } = await supabase
+          .from('user_organizations')
+          .select('user_id')
+          .eq('user_id', input.assigned_to)
+          .eq('organization_id', auth.organizationId)
+          .single()
+
+        if (!assignee) {
+          return NextResponse.json({ error: 'Assigned user not found in this organization' }, { status: 400 })
+        }
+      }
+
       updateFields.assigned_to = input.assigned_to
       activitiesToCreate.push({
         type: 'assignment_change',

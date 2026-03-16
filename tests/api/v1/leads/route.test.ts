@@ -28,17 +28,19 @@ function validLeadBody() {
     phone: '(201) 555-1234',
     service: 'Interior Painting',
     message: 'Looking for a quote.',
-    organization_id: '00000000-0000-0000-0000-000000000001',
+    org_slug: 'cleanest-painting',
   }
 }
 
 describe('POST /api/v1/leads', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
-    // Default: insert succeeds, org lookup returns settings
+    const { rateLimitMap } = await import('@/app/api/v1/leads/route')
+    rateLimitMap.clear()
+    // Default: org slug lookup succeeds, then lead insert succeeds
     mockSupabase.single
+      .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null }) // org slug lookup
       .mockResolvedValueOnce({ data: { id: 'lead-1' }, error: null }) // lead insert
-      .mockResolvedValueOnce({ data: { settings: null }, error: null }) // org lookup
   })
 
   async function callPost(body: Record<string, unknown>) {
@@ -85,9 +87,18 @@ describe('POST /api/v1/leads', () => {
 
   it('returns 500 when lead insert fails', async () => {
     mockSupabase.single.mockReset()
-    mockSupabase.single.mockResolvedValueOnce({ data: null, error: { message: 'DB error' } })
+    mockSupabase.single
+      .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null }) // org lookup ok
+      .mockResolvedValueOnce({ data: null, error: { message: 'DB error' } }) // lead insert fails
     const res = await callPost(validLeadBody())
     expect(res.status).toBe(500)
+  })
+
+  it('returns 404 when org_slug is not found', async () => {
+    mockSupabase.single.mockReset()
+    mockSupabase.single.mockResolvedValueOnce({ data: null, error: { message: 'not found' } })
+    const res = await callPost(validLeadBody())
+    expect(res.status).toBe(404)
   })
 })
 

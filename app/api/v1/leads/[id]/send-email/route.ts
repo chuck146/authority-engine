@@ -60,7 +60,7 @@ export async function POST(request: Request, context: RouteContext) {
       lead_id: id,
       activity_type: 'email_sent',
       description: `Email sent to ${lead.name}: "${subject}"`,
-      metadata: { subject, bodyPreview: emailBody.slice(0, 200) },
+      metadata: { subject, bodyPreview: emailBody.slice(0, 50), bodyLength: emailBody.length },
       created_by: auth.userId,
     } as never)
 
