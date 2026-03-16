@@ -298,6 +298,8 @@ _Last Updated: March 15, 2026_
 - [x] Sitemap gap: added `/locations` hub page to sitemap.xml
 - [x] Blog featured images: generated og:image for all 7 blog posts via Nano Banana 2 (fixes HIGH audit issue)
 - [x] Hero image script extended: `--type=blog` support added to `scripts/generate-hero-images.ts`
+- [x] Hero image alt text: `HeroSection` updated from `alt=""` to `alt={title}` for descriptive alt text on all 27+ hero images
+- [x] Long meta titles: `scripts/fix-long-meta-titles.ts` trims titles >60 chars with intelligent rules + SEO score recalculation (1 page fixed: Berkeley Heights)
 
 **Post-V2: SEO Growth Sprint — March 2026 (First Sprint)** ✅
 
@@ -326,7 +328,7 @@ Sprint Results:
 - Approve 11 review-status pages in dashboard → publish
 - Approve 12 social posts → begin scheduled distribution
 - ~~Fix 1 HIGH issue: missing og:image on blog/signs-exterior-needs-repainting~~ ✅ Fixed — featured images generated for all 7 blog posts
-- Fix medium issues: trim 10 meta titles to ≤60 chars, add alt text to 21 images
+- ~~Fix medium issues: trim 10 meta titles to ≤60 chars, add alt text to 21 images~~ ✅ Fixed — hero-section alt text uses page title, meta titles trimmed via scripts/fix-long-meta-titles.ts (1 page: Berkeley Heights)
 - Next sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 
