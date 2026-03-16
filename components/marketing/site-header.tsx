@@ -22,7 +22,7 @@ const NAV_LINKS = [
   { href: '/blog', label: 'Blog' },
 ]
 
-export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteHeaderProps) {
+export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
   const mobileMenu = (
     <div className="flex flex-col gap-4">
       {services.length > 0 && <ServicesAccordionMobile services={services} />}
@@ -35,7 +35,7 @@ export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteH
           {link.label}
         </a>
       ))}
-      {(phone || estimateUrl) && <div className="my-2 border-t border-gray-200" />}
+      {phone && <div className="my-2 border-t border-gray-200" />}
       {phone && (
         <a
           href={`tel:${phone.replace(/[^\d+]/g, '')}`}
@@ -44,14 +44,6 @@ export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteH
         >
           <Phone className="h-4 w-4 text-[#3DA535]" />
           {phone}
-        </a>
-      )}
-      {estimateUrl && (
-        <a
-          href={estimateUrl}
-          className="inline-flex w-fit items-center rounded-lg bg-[#fbbf24] px-6 py-2.5 text-sm font-bold text-gray-900 shadow-sm transition-all hover:bg-[#f59e0b] hover:shadow-md"
-        >
-          Get a Free Estimate
         </a>
       )}
     </div>
@@ -104,9 +96,9 @@ export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteH
         ))}
       </ul>
 
-      {/* Desktop action cluster — phone + CTA */}
-      <div className="hidden items-center gap-3 md:flex">
-        {phone && (
+      {/* Desktop action cluster — phone */}
+      {phone && (
+        <div className="hidden items-center md:flex">
           <a
             href={`tel:${phone.replace(/[^\d+]/g, '')}`}
             className="flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[#fbbf24]"
@@ -115,16 +107,8 @@ export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteH
             <Phone className="h-4 w-4" />
             {phone}
           </a>
-        )}
-        {estimateUrl && (
-          <a
-            href={estimateUrl}
-            className="rounded-lg bg-[#fbbf24] px-5 py-2.5 text-sm font-bold text-gray-900 shadow-sm transition-all hover:bg-[#f59e0b] hover:shadow-md"
-          >
-            Get a Free Estimate
-          </a>
-        )}
-      </div>
+        </div>
+      )}
     </SiteHeaderWrapper>
   )
 }
