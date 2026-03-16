@@ -3,11 +3,13 @@ import type {
   ServicePage,
   LocationPage,
   BlogPost,
+  CommercialServicePage,
   Organization,
   RelatedServiceLink,
   RelatedLocationLink,
   RelatedBlogLink,
   ServiceCardLink,
+  CommercialServiceCardLink,
   BlogCardLink,
 } from '@/types'
 
@@ -215,5 +217,58 @@ export async function getRelatedBlogPosts(
     .order('published_at', { ascending: false })
     .limit(limit)
     .returns<RelatedBlogLink[]>()
+  return data ?? []
+}
+
+// --- Commercial service page queries ---
+
+export async function getPublishedCommercialServicePage(
+  slug: string,
+): Promise<CommercialServicePage | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('commercial_service_pages')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .returns<CommercialServicePage[]>()
+    .single()
+  return data
+}
+
+export async function getAllPublishedCommercialServiceSlugs(): Promise<ContentSlug[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('commercial_service_pages')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+    .returns<ContentSlug[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedCommercialServiceCards(
+  orgId: string,
+): Promise<CommercialServiceCardLink[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('commercial_service_pages')
+    .select('slug, title, hero_image_url, content')
+    .eq('organization_id', orgId)
+    .eq('status', 'published')
+    .order('title')
+    .returns<CommercialServiceCardLink[]>()
+  return data ?? []
+}
+
+export async function getAllPublishedCommercialServiceLinks(
+  orgId: string,
+): Promise<RelatedServiceLink[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('commercial_service_pages')
+    .select('slug, title')
+    .eq('organization_id', orgId)
+    .eq('status', 'published')
+    .returns<RelatedServiceLink[]>()
   return data ?? []
 }

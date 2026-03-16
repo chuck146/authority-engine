@@ -1,6 +1,7 @@
 import type {
   Organization,
   ServicePage,
+  CommercialServicePage,
   LocationPage,
   BlogPost,
   OrgBranding,
@@ -183,4 +184,34 @@ export function buildBlogPostSchemas(post: BlogPost, org: Organization): Record<
   ])
 
   return [articleSchema, breadcrumbSchema]
+}
+
+export function buildCommercialServicePageSchemas(
+  page: CommercialServicePage,
+  org: Organization,
+): Record<string, unknown>[] {
+  const content = page.content as unknown as StructuredContent
+
+  const businessSchema = buildBusinessSchema(org)
+
+  const serviceSchema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: page.title,
+    description: content.meta_description,
+    url: `${getBaseUrl()}/commercial/${page.slug}`,
+    provider: {
+      '@type': 'HomeAndConstructionBusiness',
+      name: org.name,
+      url: getBaseUrl(),
+    },
+  }
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { label: 'Home', href: '/' },
+    { label: 'Commercial Services', href: '/commercial' },
+    { label: page.title },
+  ])
+
+  return [businessSchema, serviceSchema, breadcrumbSchema]
 }

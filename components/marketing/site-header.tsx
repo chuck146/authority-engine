@@ -1,23 +1,31 @@
 import Link from 'next/link'
 import { SiteHeaderWrapper } from './site-header-wrapper'
+import { ServicesDropdownDesktop, ServicesAccordionMobile } from './services-dropdown'
+
+type ServiceLink = {
+  slug: string
+  title: string
+}
 
 type SiteHeaderProps = {
   orgName: string
   estimateUrl?: string
   phone?: string
+  services?: ServiceLink[]
 }
 
 const NAV_LINKS = [
-  { href: '/services', label: 'Services' },
+  { href: '/commercial', label: 'Commercial Services' },
   { href: '/#work', label: 'Our Work' },
   { href: '/#testimonials', label: 'Reviews' },
   { href: '/locations', label: 'Service Areas' },
   { href: '/blog', label: 'Blog' },
 ]
 
-export function SiteHeader({ orgName, estimateUrl, phone }: SiteHeaderProps) {
+export function SiteHeader({ orgName, estimateUrl, phone, services = [] }: SiteHeaderProps) {
   const mobileMenu = (
     <div className="flex flex-col gap-4">
+      {services.length > 0 && <ServicesAccordionMobile services={services} />}
       {NAV_LINKS.map((link) => (
         <a
           key={link.href}
@@ -80,6 +88,7 @@ export function SiteHeader({ orgName, estimateUrl, phone }: SiteHeaderProps) {
 
       {/* Desktop nav */}
       <ul className="hidden items-center gap-6 md:flex lg:gap-10">
+        {services.length > 0 && <ServicesDropdownDesktop services={services} />}
         {NAV_LINKS.map((link) => (
           <li key={link.href}>
             <a
