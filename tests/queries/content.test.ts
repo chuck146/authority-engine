@@ -5,9 +5,14 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(),
 }))
 
+vi.mock('@/lib/supabase/static', () => ({
+  createStaticClient: vi.fn(),
+}))
+
 const mockClient = createMockSupabaseClient()
 
 import { createClient } from '@/lib/supabase/server'
+import { createStaticClient } from '@/lib/supabase/static'
 
 import {
   getAllPublishedServiceSlugs,
@@ -19,6 +24,7 @@ describe('bulk slug queries', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.mocked(createClient).mockResolvedValue(mockClient as never)
+    vi.mocked(createStaticClient).mockReturnValue(mockClient as never)
     mockClient.from.mockReturnValue(mockClient)
     mockClient.select.mockReturnValue(mockClient)
     mockClient.eq.mockReturnValue(mockClient)
