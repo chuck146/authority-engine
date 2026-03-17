@@ -9,6 +9,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Vercel cron for content publishing:** `/api/cron/publish-content` runs every 15 minutes, queries due `content_calendar` entries, and publishes them without Redis/BullMQ dependency (app/api/cron/publish-content/route.ts)
+- **Manual publish trigger:** `POST /api/v1/content/publish-scheduled` — admin-only endpoint to publish all due scheduled content on demand (app/api/v1/content/publish-scheduled/route.ts)
+- **Standalone publish function:** Extracted `publishCalendarEntry()` and `publishScheduledContent()` from BullMQ worker — callable from both Vercel cron and BullMQ paths (lib/queue/publish-worker.ts)
+- **8 new tests:** Cron auth, publish flow, partial failure handling, manual trigger auth/success/error (1291 tests total)
 - **Staggered publishing schedule script:** `scripts/schedule-publishing.ts` — queries review-status content, builds staggered 5-week schedule (content Tue/Thu, social Mon/Wed/Fri at 9 AM ET), approves items and inserts content_calendar entries. Supports `--dry-run` and `--start-date=YYYY-MM-DD` flags (scripts/schedule-publishing.ts)
 - **23 content items scheduled:** 6 location pages (weeks 1-3), 5 blog posts (weeks 4-5), 12 social posts (interleaved Mon/Wed/Fri) — date range Mar 17 → Apr 21, 2026
 - **Calendar CHECK constraint migration:** Updated `content_calendar` content_type CHECK to include `social_post` and `video` alongside original 3 types (packages/db/supabase/migrations/20260318000001_update_calendar_content_types.sql)

@@ -1,5 +1,5 @@
 import { Worker, type Job } from 'bullmq'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { getRedisConnection } from './connection'
 import type { PublishJobData } from './scheduler'
 import type { Database } from '@/types/database'
@@ -35,22 +35,30 @@ function getTableName(contentType: string): ContentTableName {
   }
 }
 
-async function processPublishJob(job: Job<PublishJobData>): Promise<void> {
-  const { calendarEntryId, contentType, contentId } = job.data
-  const supabase = getAdminClient()
+type CalendarEntryForPublish = {
+  id: string
+  content_type: string
+  content_id: string
+}
+
+export async function publishCalendarEntry(
+  supabase: SupabaseClient<Database>,
+  entry: CalendarEntryForPublish,
+): Promise<void> {
+  const { id: calendarEntryId, content_type: contentType, content_id: contentId } = entry
 
   // Verify calendar entry is still scheduled
-  const { data: entry, error: fetchError } = await supabase
+  const { data: calendarEntry, error: fetchError } = await supabase
     .from('content_calendar')
     .select('id, status')
     .eq('id', calendarEntryId)
     .single()
 
-  if (fetchError || !entry) {
+  if (fetchError || !calendarEntry) {
     throw new Error(`Calendar entry ${calendarEntryId} not found`)
   }
 
-  if (entry.status !== 'scheduled') {
+  if (calendarEntry.status !== 'scheduled') {
     return // Already processed or cancelled
   }
 
@@ -104,6 +112,49 @@ async function processPublishJob(job: Job<PublishJobData>): Promise<void> {
     .from('content_calendar')
     .update({ status: 'published', published_at: new Date().toISOString() })
     .eq('id', calendarEntryId)
+}
+
+async function processPublishJob(job: Job<PublishJobData>): Promise<void> {
+  const supabase = getAdminClient()
+  await publishCalendarEntry(supabase, {
+    id: job.data.calendarEntryId,
+    content_type: job.data.contentType,
+    content_id: job.data.contentId,
+  })
+}
+
+export async function publishScheduledContent(): Promise<{
+  published: number
+  failed: number
+}> {
+  const supabase = getAdminClient()
+
+  const { data: entries } = await supabase
+    .from('content_calendar')
+    .select('id, content_type, content_id')
+    .eq('status', 'scheduled')
+    .lte('scheduled_at', new Date().toISOString())
+    .order('scheduled_at', { ascending: true })
+
+  if (!entries || entries.length === 0) {
+    return { published: 0, failed: 0 }
+  }
+
+  let published = 0
+  let failed = 0
+
+  for (const entry of entries) {
+    try {
+      await publishCalendarEntry(supabase, entry)
+      published++
+    } catch (err) {
+      failed++
+      const message = err instanceof Error ? err.message : 'Unknown error'
+      console.error(`[Publish Cron] Failed for entry ${entry.id} (${entry.content_type}):`, message)
+    }
+  }
+
+  return { published, failed }
 }
 
 export function createPublishWorker(): Worker<PublishJobData> {
