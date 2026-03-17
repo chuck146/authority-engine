@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 18, 2026_
+_Last Updated: March 17, 2026_
 
 ---
 
@@ -400,9 +400,17 @@ Sprint Results:
 - [x] Vercel `maxDuration` added to 8 API routes: 60s for AI generation (content, social, media, review response), 90s for manual sync (GSC, GA4), 300s for cron sync (GSC, GA4)
 - [x] Test suite updated: 3 test files updated with `createAdminClient` mock (1283 tests, 172 files, all passing)
 
+**Post-V2: Vercel Cron Content Publishing** ✅
+
+- [x] Standalone publish function: extracted `publishCalendarEntry()` + `publishScheduledContent()` from BullMQ worker (no Redis dependency) (lib/queue/publish-worker.ts)
+- [x] Vercel cron route: `GET /api/cron/publish-content` — runs every 15 minutes, timing-safe CRON_SECRET auth, error isolation per entry (app/api/cron/publish-content/route.ts)
+- [x] Manual trigger: `POST /api/v1/content/publish-scheduled` — admin-only on-demand publishing (app/api/v1/content/publish-scheduled/route.ts)
+- [x] vercel.json updated with `*/15 * * * *` cron schedule
+- [x] Test suite: 8 new tests (1291 total, 174 files, all passing)
+
 ### What's Next
 
-- Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live
+- Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live via cron
 - Check GSC indexing for newly published location pages
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
