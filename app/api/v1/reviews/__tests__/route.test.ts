@@ -23,6 +23,10 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => Promise.resolve(mockSupabase)),
 }))
 
+vi.mock('@/lib/supabase/admin', () => ({
+  createAdminClient: vi.fn(() => mockSupabase),
+}))
+
 const { GET, POST } = await import('../route')
 const { AuthError } = await import('@/lib/auth/api-guard')
 

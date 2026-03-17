@@ -392,6 +392,14 @@ Sprint Results:
   - 12 social posts (6 GBP, 3 Instagram, 3 Facebook) — interleaved Mon/Wed/Fri
 - [x] All review-status content approved → scheduled in content calendar
 
+**Post-V2: RLS Fix + Vercel maxDuration** ✅
+
+- [x] Social post generation RLS fix: switched `social_posts` INSERT to `createAdminClient()` — RLS policy checked `auth.jwt() ->> 'org_id'` which Supabase JWTs don't include (app/api/v1/social/generate/route.ts)
+- [x] Reviews INSERT RLS fix: same `createAdminClient()` fix for `reviews` table (app/api/v1/reviews/route.ts)
+- [x] Review requests INSERT RLS fix: same `createAdminClient()` fix for `review_requests` table (app/api/v1/reviews/requests/route.ts)
+- [x] Vercel `maxDuration` added to 8 API routes: 60s for AI generation (content, social, media, review response), 90s for manual sync (GSC, GA4), 300s for cron sync (GSC, GA4)
+- [x] Test suite updated: 3 test files updated with `createAdminClient` mock (1283 tests, 172 files, all passing)
+
 ### What's Next
 
 - Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live

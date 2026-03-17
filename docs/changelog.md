@@ -15,6 +15,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Social post generation RLS failure:** INSERT into `social_posts` was blocked by RLS policy checking `auth.jwt() ->> 'org_id'` — a claim that Supabase JWTs don't include. Switched to `createAdminClient()` for the insert (auth already verified by `requireApiRole`). Same fix applied to `reviews` and `review_requests` INSERT routes (app/api/v1/social/generate/route.ts, app/api/v1/reviews/route.ts, app/api/v1/reviews/requests/route.ts)
+- **Vercel function timeout prevention:** Added `maxDuration` exports to all AI-heavy and sync API routes — `60s` for content/social/media generation, `45s` for review response generation, `90s` for manual GSC/GA4 sync, `300s` for cron sync jobs (8 routes total)
 - **Content detail API — column mismatch:** GET and PUT handlers were selecting both `hero_image_url` and `featured_image_url` from every table, but `service_pages`/`location_pages` only have `hero_image_url` and `blog_posts` only has `featured_image_url`. Supabase PostgREST errored on non-existent columns, causing "Failed to load content details" for all content types. Now conditionally selects the correct image column per content type (app/api/v1/content/[type]/[id]/route.ts)
 
 ### Added

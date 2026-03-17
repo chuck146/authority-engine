@@ -6,6 +6,8 @@ import { generateImageRequestSchema } from '@/types/media'
 import type { OrgContext } from '@/packages/ai/prompts/content'
 import type { OrgBranding } from '@/types'
 
+export const maxDuration = 60
+
 export async function POST(request: Request) {
   try {
     // 1. Auth: require at least editor role

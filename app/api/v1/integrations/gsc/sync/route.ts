@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { syncGscForOrg } from '@/lib/queue/gsc-sync-worker'
 
+export const maxDuration = 90
+
 export async function POST() {
   try {
     const auth = await requireApiRole('admin')
