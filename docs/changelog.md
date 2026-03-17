@@ -7,6 +7,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Staggered publishing schedule script:** `scripts/schedule-publishing.ts` — queries review-status content, builds staggered 5-week schedule (content Tue/Thu, social Mon/Wed/Fri at 9 AM ET), approves items and inserts content_calendar entries. Supports `--dry-run` and `--start-date=YYYY-MM-DD` flags (scripts/schedule-publishing.ts)
+- **23 content items scheduled:** 6 location pages (weeks 1-3), 5 blog posts (weeks 4-5), 12 social posts (interleaved Mon/Wed/Fri) — date range Mar 17 → Apr 21, 2026
+- **Calendar CHECK constraint migration:** Updated `content_calendar` content_type CHECK to include `social_post` and `video` alongside original 3 types (packages/db/supabase/migrations/20260318000001_update_calendar_content_types.sql)
+
 ### Fixed
 
 - **Content detail API — column mismatch:** GET and PUT handlers were selecting both `hero_image_url` and `featured_image_url` from every table, but `service_pages`/`location_pages` only have `hero_image_url` and `blog_posts` only has `featured_image_url`. Supabase PostgREST errored on non-existent columns, causing "Failed to load content details" for all content types. Now conditionally selects the correct image column per content type (app/api/v1/content/[type]/[id]/route.ts)

@@ -382,11 +382,21 @@ Sprint Results:
 - [x] Commercial painting hero image prompt updated: 4 painters in branded white shirts (scripts/generate-hero-images.ts)
 - [x] Footer logo fix: replaced small logo image with text + paintbrush pattern matching header
 
+**Post-V2: Staggered Content Publishing Schedule** ✅
+
+- [x] Database migration: updated `content_calendar` CHECK constraint to include `social_post` and `video` content types (20260318000001_update_calendar_content_types.sql)
+- [x] Publishing schedule script: `scripts/schedule-publishing.ts` — queries review-status content, builds staggered schedule (content Tue/Thu, social Mon/Wed/Fri, all at 9 AM ET), approves and inserts calendar entries, --dry-run + --start-date flags
+- [x] 23 items approved and scheduled across 5 weeks (Mar 17 → Apr 21):
+  - 6 location pages (Woodbridge, Berkeley Heights, Millburn, Livingston, Springfield, Mountainside) — weeks 1-3
+  - 5 blog posts (spring-themed SEO content) — weeks 4-5
+  - 12 social posts (6 GBP, 3 Instagram, 3 Facebook) — interleaved Mon/Wed/Fri
+- [x] All review-status content approved → scheduled in content calendar
+
 ### What's Next
 
-- Approve 11 review-status pages in dashboard → publish
-- Approve 12 social posts → begin scheduled distribution
-- Next sprint recommended: April 13, 2026
+- Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live
+- Check GSC indexing for newly published location pages
+- Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 
 ### Blockers
