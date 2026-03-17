@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createStaticClient } from '@/lib/supabase/static'
 import type {
   ServicePage,
   LocationPage,
@@ -52,7 +53,7 @@ export async function getPublishedBlogPost(slug: string): Promise<BlogPost | nul
 type ContentSlug = { slug: string; updated_at: string }
 
 export async function getAllPublishedServiceSlugs(): Promise<ContentSlug[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('service_pages')
     .select('slug, updated_at')
@@ -62,7 +63,7 @@ export async function getAllPublishedServiceSlugs(): Promise<ContentSlug[]> {
 }
 
 export async function getAllPublishedLocationSlugs(): Promise<ContentSlug[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('location_pages')
     .select('slug, updated_at')
@@ -72,7 +73,7 @@ export async function getAllPublishedLocationSlugs(): Promise<ContentSlug[]> {
 }
 
 export async function getAllPublishedBlogSlugs(): Promise<ContentSlug[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('blog_posts')
     .select('slug, updated_at')
@@ -237,7 +238,7 @@ export async function getPublishedCommercialServicePage(
 }
 
 export async function getAllPublishedCommercialServiceSlugs(): Promise<ContentSlug[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('commercial_service_pages')
     .select('slug, updated_at')
