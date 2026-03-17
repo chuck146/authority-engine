@@ -18,7 +18,8 @@ export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProp
         <ScrollReveal>
           <div className="mb-12 text-center">
             <h2 className="font-display text-3xl font-normal tracking-tight text-gray-900 sm:text-4xl">
-              Service <em className="font-editorial-italic text-[var(--color-brand-green)]">Areas</em>
+              Service{' '}
+              <em className="font-editorial-italic text-[var(--color-brand-green)]">Areas</em>
             </h2>
             <p className="mt-3 text-gray-500">Proudly serving communities across New Jersey</p>
           </div>

@@ -100,9 +100,7 @@ export function SiteFooter({
 
           {/* Services column */}
           <div>
-            <h4 className="editorial-kicker mb-6 text-white/80">
-              Services
-            </h4>
+            <h4 className="editorial-kicker mb-6 text-white/80">Services</h4>
             <ul className="flex flex-col gap-3.5">
               {services.slice(0, 6).map((s) => (
                 <li key={s.slug}>
@@ -119,9 +117,7 @@ export function SiteFooter({
 
           {/* Service Areas column */}
           <div>
-            <h4 className="editorial-kicker mb-6 text-white/80">
-              Service Areas
-            </h4>
+            <h4 className="editorial-kicker mb-6 text-white/80">Service Areas</h4>
             <ul className="flex flex-col gap-3.5">
               {locations.slice(0, 6).map((l) => (
                 <li key={l.slug}>
@@ -146,9 +142,7 @@ export function SiteFooter({
 
           {/* Contact column */}
           <div>
-            <h4 className="editorial-kicker mb-6 text-white/80">
-              Contact
-            </h4>
+            <h4 className="editorial-kicker mb-6 text-white/80">Contact</h4>
             <div className="flex flex-col gap-4">
               {phone && (
                 <div>

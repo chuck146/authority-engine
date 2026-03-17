@@ -33,7 +33,9 @@ export function CtaBanner({ estimateUrl }: CtaBannerProps) {
                 key={perk.title}
                 className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm"
               >
-                <h3 className="text-sm font-semibold tracking-wide text-white uppercase">{perk.title}</h3>
+                <h3 className="text-sm font-semibold tracking-wide text-white uppercase">
+                  {perk.title}
+                </h3>
                 <p className="mt-1 text-sm text-white/70">{perk.desc}</p>
               </div>
             ))}
