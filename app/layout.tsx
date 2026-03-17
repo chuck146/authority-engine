@@ -17,6 +17,7 @@ const dmSerif = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'),
   title: {
     default: 'Authority Engine',
     template: '%s | Authority Engine',
