@@ -48,11 +48,14 @@ export function HeroSplit({ orgName, heroVideo }: HeroSplitProps) {
       {/* Copy — anchored bottom-left */}
       <div className="relative z-10 flex min-h-[85vh] items-end sm:min-h-[90vh]">
         <div className="w-full px-6 pb-16 sm:pb-20 md:px-10 lg:max-w-3xl lg:px-[60px] lg:pb-24">
-          <h1 className="font-display text-5xl leading-[1.05] font-semibold text-white sm:text-6xl lg:text-7xl">
-            Where Artistry Meets Craftsmanship
+          <p className="editorial-kicker mb-4 text-white/60">Cleanest Painting LLC</p>
+          <h1 className="font-display text-5xl leading-[0.95] font-normal tracking-tight text-white sm:text-6xl lg:text-8xl">
+            Where Artistry{' '}
+            <em className="font-editorial-italic text-[var(--color-brand-yellow)]">Meets</em>{' '}
+            Craftsmanship
           </h1>
 
-          <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/80">
+          <p className="mt-6 max-w-lg text-base leading-relaxed tracking-wide text-white/60">
             Premium residential painting across Union, Essex, Morris &amp; Somerset counties.
           </p>
 
@@ -67,7 +70,7 @@ export function HeroSplit({ orgName, heroVideo }: HeroSplitProps) {
           </div>
 
           {/* Trust signals — single text line */}
-          <p className="mt-8 text-xs tracking-wide text-white/50 uppercase">
+          <p className="editorial-kicker mt-8 text-white/40">
             5.0 Google Rating &mdash; Licensed &amp; Insured &mdash; Angi 2024 Super Service
           </p>
         </div>

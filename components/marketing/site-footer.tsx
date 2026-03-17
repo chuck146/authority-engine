@@ -21,7 +21,7 @@ type SiteFooterProps = {
 export function SiteFooter({
   orgName,
   tagline,
-  logoUrl,
+  logoUrl: _logoUrl,
   phone,
   email,
   address,
@@ -45,10 +45,10 @@ export function SiteFooter({
                 decoding="async"
               />
               <div className="flex flex-col items-center leading-tight">
-                <span className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">
+                <span className="font-display text-lg font-normal tracking-[0.08em] text-white sm:text-xl">
                   {orgName.replace(' LLC', '').toUpperCase()}
                 </span>
-                <span className="text-[0.5rem] font-medium tracking-[0.15em] text-white/80 uppercase sm:text-[0.6rem]">
+                <span className="font-editorial-italic text-[0.55rem] text-white/70 sm:text-[0.65rem]">
                   Painting Beyond the Ordinary
                 </span>
               </div>
@@ -100,7 +100,7 @@ export function SiteFooter({
 
           {/* Services column */}
           <div>
-            <h4 className="mb-6 text-sm font-semibold tracking-[0.05em] text-white uppercase">
+            <h4 className="editorial-kicker mb-6 text-white/80">
               Services
             </h4>
             <ul className="flex flex-col gap-3.5">
@@ -119,7 +119,7 @@ export function SiteFooter({
 
           {/* Service Areas column */}
           <div>
-            <h4 className="mb-6 text-sm font-semibold tracking-[0.05em] text-white uppercase">
+            <h4 className="editorial-kicker mb-6 text-white/80">
               Service Areas
             </h4>
             <ul className="flex flex-col gap-3.5">
@@ -146,7 +146,7 @@ export function SiteFooter({
 
           {/* Contact column */}
           <div>
-            <h4 className="mb-6 text-sm font-semibold tracking-[0.05em] text-white uppercase">
+            <h4 className="editorial-kicker mb-6 text-white/80">
               Contact
             </h4>
             <div className="flex flex-col gap-4">

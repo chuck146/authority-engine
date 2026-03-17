@@ -41,7 +41,7 @@ export function Testimonials() {
     <section id="testimonials" className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-28 md:px-10 lg:px-[60px]">
         <ScrollReveal>
-          <h2 className="font-display text-3xl font-semibold text-gray-900 sm:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl font-normal tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
             What Our Clients Say
           </h2>
         </ScrollReveal>
@@ -52,7 +52,7 @@ export function Testimonials() {
             <div className="flex h-full flex-col justify-between rounded-2xl border border-gray-100 bg-gray-50 p-8 lg:p-10">
               <div>
                 <SmallStars />
-                <blockquote className="font-display mt-6 text-2xl leading-relaxed text-gray-900 italic sm:text-[1.65rem]">
+                <blockquote className="font-editorial-italic mt-6 text-2xl leading-snug text-gray-900 sm:text-3xl">
                   &ldquo;{featured.text}&rdquo;
                 </blockquote>
               </div>
