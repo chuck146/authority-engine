@@ -130,9 +130,24 @@ function buildSchedule(
   const schedule: ScheduleItem[] = []
 
   // Content pages go on Tue (2) and Thu (4)
-  const contentItems: { id: string; title: string; table: string; contentType: 'location_page' | 'blog_post' }[] = [
-    ...locations.map((l) => ({ id: l.id, title: l.title, table: 'location_pages', contentType: 'location_page' as const })),
-    ...blogs.map((b) => ({ id: b.id, title: b.title, table: 'blog_posts', contentType: 'blog_post' as const })),
+  const contentItems: {
+    id: string
+    title: string
+    table: string
+    contentType: 'location_page' | 'blog_post'
+  }[] = [
+    ...locations.map((l) => ({
+      id: l.id,
+      title: l.title,
+      table: 'location_pages',
+      contentType: 'location_page' as const,
+    })),
+    ...blogs.map((b) => ({
+      id: b.id,
+      title: b.title,
+      table: 'blog_posts',
+      contentType: 'blog_post' as const,
+    })),
   ]
 
   // Social posts go on Mon (1), Wed (3), Fri (5)
@@ -208,11 +223,7 @@ function printSchedule(schedule: ScheduleItem[]) {
           ? 'Location'
           : 'Blog'
     console.log(
-      '  ' +
-        dateStr.padEnd(14) +
-        day.padEnd(6) +
-        typeLabel.padEnd(16) +
-        item.title.slice(0, 45),
+      '  ' + dateStr.padEnd(14) + day.padEnd(6) + typeLabel.padEnd(16) + item.title.slice(0, 45),
     )
   }
 }
