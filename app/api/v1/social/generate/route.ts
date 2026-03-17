@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { generateSocialPost } from '@/lib/ai/social-generator'
 import { generateAndStoreImage } from '@/lib/ai/image-generator'
 import { generateSocialPostRequestSchema } from '@/types/social'
 import type { SocialPostResponse } from '@/types/social'
 import type { OrgContext } from '@/packages/ai/prompts/content/shared'
 import type { OrgBranding, Json } from '@/types'
+
+export const maxDuration = 60
 
 export async function POST(request: Request) {
   try {
@@ -77,8 +80,9 @@ export async function POST(request: Request) {
     // Build title from topic
     const title = input.topic.slice(0, 200)
 
-    // Insert into social_posts
-    const { data, error } = await supabase
+    // Insert into social_posts (admin client bypasses RLS — auth already verified by requireApiRole)
+    const admin = createAdminClient()
+    const { data, error } = await admin
       .from('social_posts' as never)
       .insert({
         organization_id: auth.organizationId,

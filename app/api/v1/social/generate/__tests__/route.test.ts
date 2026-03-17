@@ -22,6 +22,10 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => Promise.resolve(mockSupabase)),
 }))
 
+vi.mock('@/lib/supabase/admin', () => ({
+  createAdminClient: vi.fn(() => mockSupabase),
+}))
+
 vi.mock('@/lib/ai/social-generator', () => ({
   generateSocialPost: (...args: unknown[]) => mockGenerateSocialPost(...args),
 }))

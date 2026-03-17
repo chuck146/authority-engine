@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireApiAuth, requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createReviewRequestSchema } from '@/types/review-requests'
 import type {
   ReviewRequestListItem,
@@ -89,9 +90,11 @@ export async function POST(request: Request) {
     }
 
     const input = parseResult.data
-    const supabase = await createClient()
 
-    const { data, error } = await supabase
+    // Admin client bypasses RLS — auth already verified by requireApiRole
+    const admin = createAdminClient()
+
+    const { data, error } = await admin
       .from('review_requests' as never)
       .insert({
         organization_id: auth.organizationId,

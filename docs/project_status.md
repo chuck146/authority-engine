@@ -382,11 +382,29 @@ Sprint Results:
 - [x] Commercial painting hero image prompt updated: 4 painters in branded white shirts (scripts/generate-hero-images.ts)
 - [x] Footer logo fix: replaced small logo image with text + paintbrush pattern matching header
 
+**Post-V2: Staggered Content Publishing Schedule** ✅
+
+- [x] Database migration: updated `content_calendar` CHECK constraint to include `social_post` and `video` content types (20260318000001_update_calendar_content_types.sql)
+- [x] Publishing schedule script: `scripts/schedule-publishing.ts` — queries review-status content, builds staggered schedule (content Tue/Thu, social Mon/Wed/Fri, all at 9 AM ET), approves and inserts calendar entries, --dry-run + --start-date flags
+- [x] 23 items approved and scheduled across 5 weeks (Mar 17 → Apr 21):
+  - 6 location pages (Woodbridge, Berkeley Heights, Millburn, Livingston, Springfield, Mountainside) — weeks 1-3
+  - 5 blog posts (spring-themed SEO content) — weeks 4-5
+  - 12 social posts (6 GBP, 3 Instagram, 3 Facebook) — interleaved Mon/Wed/Fri
+- [x] All review-status content approved → scheduled in content calendar
+
+**Post-V2: RLS Fix + Vercel maxDuration** ✅
+
+- [x] Social post generation RLS fix: switched `social_posts` INSERT to `createAdminClient()` — RLS policy checked `auth.jwt() ->> 'org_id'` which Supabase JWTs don't include (app/api/v1/social/generate/route.ts)
+- [x] Reviews INSERT RLS fix: same `createAdminClient()` fix for `reviews` table (app/api/v1/reviews/route.ts)
+- [x] Review requests INSERT RLS fix: same `createAdminClient()` fix for `review_requests` table (app/api/v1/reviews/requests/route.ts)
+- [x] Vercel `maxDuration` added to 8 API routes: 60s for AI generation (content, social, media, review response), 90s for manual sync (GSC, GA4), 300s for cron sync (GSC, GA4)
+- [x] Test suite updated: 3 test files updated with `createAdminClient` mock (1283 tests, 172 files, all passing)
+
 ### What's Next
 
-- Approve 11 review-status pages in dashboard → publish
-- Approve 12 social posts → begin scheduled distribution
-- Next sprint recommended: April 13, 2026
+- Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live
+- Check GSC indexing for newly published location pages
+- Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 
 ### Blockers

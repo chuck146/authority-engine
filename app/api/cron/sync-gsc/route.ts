@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 import { syncGscForOrg } from '@/lib/queue/gsc-sync-worker'
 import type { Database } from '@/types/database'
 
+export const maxDuration = 300
+
 function verifyCronSecret(authHeader: string | null): boolean {
   const expected = `Bearer ${process.env.CRON_SECRET}`
   if (!authHeader || !process.env.CRON_SECRET) return false

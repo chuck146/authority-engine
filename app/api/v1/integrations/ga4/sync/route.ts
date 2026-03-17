@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { syncGa4ForOrg } from '@/lib/queue/ga4-sync-worker'
 
+export const maxDuration = 90
+
 export async function POST() {
   try {
     const auth = await requireApiRole('admin')

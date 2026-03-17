@@ -6,6 +6,8 @@ import { generateResponseSchema } from '@/types/reviews'
 import type { OrgContext } from '@/packages/ai/prompts/content/shared'
 import type { OrgBranding, Json } from '@/types'
 
+export const maxDuration = 45
+
 type RouteParams = {
   params: Promise<{ id: string }>
 }

@@ -8,6 +8,8 @@ import type { OrgContext } from '@/packages/ai/prompts/content'
 import { calculateSeoScoreValue } from '@/lib/seo'
 import type { OrgBranding, Json } from '@/types'
 
+export const maxDuration = 60
+
 export async function POST(request: Request) {
   try {
     // 1. Auth: require at least editor role to generate content
