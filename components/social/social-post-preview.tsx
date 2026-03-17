@@ -3,22 +3,35 @@
 import { Card, CardContent } from '@/components/ui/card'
 import type { SocialPostDetail } from '@/types/social'
 
-type SocialPostPreviewProps = {
-  post: SocialPostDetail
+type SocialPostPreviewOverrides = {
+  body?: string
+  hashtags?: string[]
+  ctaType?: string | null
+  ctaUrl?: string | null
+  mediaUrl?: string | null
 }
 
-export function SocialPostPreview({ post }: SocialPostPreviewProps) {
+type SocialPostPreviewProps = {
+  post: SocialPostDetail
+  overrides?: SocialPostPreviewOverrides
+}
+
+export function SocialPostPreview({ post, overrides }: SocialPostPreviewProps) {
   switch (post.platform) {
     case 'gbp':
-      return <GbpPreview post={post} />
+      return <GbpPreview post={post} overrides={overrides} />
     case 'instagram':
-      return <InstagramPreview post={post} />
+      return <InstagramPreview post={post} overrides={overrides} />
     case 'facebook':
-      return <FacebookPreview post={post} />
+      return <FacebookPreview post={post} overrides={overrides} />
   }
 }
 
-function GbpPreview({ post }: SocialPostPreviewProps) {
+function GbpPreview({ post, overrides }: SocialPostPreviewProps) {
+  const body = overrides?.body ?? post.body
+  const ctaType = overrides?.ctaType !== undefined ? overrides.ctaType : post.ctaType
+  const mediaUrl = overrides?.mediaUrl !== undefined ? overrides.mediaUrl : post.mediaUrl
+
   return (
     <Card className="border-blue-200 dark:border-blue-800">
       <CardContent className="pt-4">
@@ -31,21 +44,29 @@ function GbpPreview({ post }: SocialPostPreviewProps) {
             <p className="text-muted-foreground text-xs">Google Business Profile</p>
           </div>
         </div>
-        <p className="text-sm whitespace-pre-wrap">{post.body}</p>
-        {post.ctaType && (
+        {mediaUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={mediaUrl} alt="Post image" className="mb-3 w-full rounded object-cover" />
+        )}
+        <p className="text-sm whitespace-pre-wrap">{body}</p>
+        {ctaType && (
           <div className="mt-3">
             <span className="inline-flex items-center rounded bg-blue-600 px-3 py-1 text-xs font-medium text-white">
-              {post.ctaType.replace('_', ' ')}
+              {ctaType.replace('_', ' ')}
             </span>
           </div>
         )}
-        <p className="text-muted-foreground mt-2 text-xs">{post.body.length} / 1,500 characters</p>
+        <p className="text-muted-foreground mt-2 text-xs">{body.length} / 1,500 characters</p>
       </CardContent>
     </Card>
   )
 }
 
-function InstagramPreview({ post }: SocialPostPreviewProps) {
+function InstagramPreview({ post, overrides }: SocialPostPreviewProps) {
+  const body = overrides?.body ?? post.body
+  const hashtags = overrides?.hashtags ?? post.hashtags
+  const mediaUrl = overrides?.mediaUrl !== undefined ? overrides.mediaUrl : post.mediaUrl
+
   return (
     <Card className="border-pink-200 dark:border-pink-800">
       <CardContent className="pt-4">
@@ -58,21 +79,29 @@ function InstagramPreview({ post }: SocialPostPreviewProps) {
             <p className="text-muted-foreground text-xs">Caption Preview</p>
           </div>
         </div>
-        <p className="text-sm whitespace-pre-wrap">{post.body}</p>
-        {post.hashtags.length > 0 && (
+        {mediaUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={mediaUrl} alt="Post image" className="mb-3 w-full rounded object-cover" />
+        )}
+        <p className="text-sm whitespace-pre-wrap">{body}</p>
+        {hashtags.length > 0 && (
           <p className="mt-2 text-sm text-blue-600 dark:text-blue-400">
-            {post.hashtags.map((h) => `#${h}`).join(' ')}
+            {hashtags.map((h) => `#${h}`).join(' ')}
           </p>
         )}
         <p className="text-muted-foreground mt-2 text-xs">
-          {post.body.length} / 2,200 characters | {post.hashtags.length} hashtags
+          {body.length} / 2,200 characters | {hashtags.length} hashtags
         </p>
       </CardContent>
     </Card>
   )
 }
 
-function FacebookPreview({ post }: SocialPostPreviewProps) {
+function FacebookPreview({ post, overrides }: SocialPostPreviewProps) {
+  const body = overrides?.body ?? post.body
+  const hashtags = overrides?.hashtags ?? post.hashtags
+  const mediaUrl = overrides?.mediaUrl !== undefined ? overrides.mediaUrl : post.mediaUrl
+
   return (
     <Card className="border-indigo-200 dark:border-indigo-800">
       <CardContent className="pt-4">
@@ -85,14 +114,18 @@ function FacebookPreview({ post }: SocialPostPreviewProps) {
             <p className="text-muted-foreground text-xs">Post Preview</p>
           </div>
         </div>
-        <p className="text-sm whitespace-pre-wrap">{post.body}</p>
-        {post.hashtags.length > 0 && (
+        {mediaUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={mediaUrl} alt="Post image" className="mb-3 w-full rounded object-cover" />
+        )}
+        <p className="text-sm whitespace-pre-wrap">{body}</p>
+        {hashtags.length > 0 && (
           <p className="mt-2 text-sm text-blue-600 dark:text-blue-400">
-            {post.hashtags.map((h) => `#${h}`).join(' ')}
+            {hashtags.map((h) => `#${h}`).join(' ')}
           </p>
         )}
         <p className="text-muted-foreground mt-2 text-xs">
-          {post.body.length} characters | {post.hashtags.length} hashtags
+          {body.length} characters | {hashtags.length} hashtags
         </p>
       </CardContent>
     </Card>

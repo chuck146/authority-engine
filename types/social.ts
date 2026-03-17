@@ -122,6 +122,7 @@ export const socialPostEditSchema = z
     hashtags: z.array(z.string().max(100)).max(30).optional(),
     ctaType: z.string().max(50).optional().nullable(),
     ctaUrl: z.string().url().optional().nullable(),
+    mediaAssetId: z.string().uuid().optional().nullable(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: 'At least one field must be provided for update',

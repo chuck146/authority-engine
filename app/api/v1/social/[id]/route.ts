@@ -29,6 +29,22 @@ type SocialPostRow = {
 
 const EDITABLE_STATUSES: ContentStatus[] = ['draft', 'review']
 
+async function resolveMediaUrl(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  mediaAssetId: string | null,
+): Promise<string | null> {
+  if (!mediaAssetId) return null
+  const { data: media } = await supabase
+    .from('media_assets')
+    .select('storage_path')
+    .eq('id', mediaAssetId)
+    .returns<{ storage_path: string }[]>()
+    .single()
+  if (!media) return null
+  const { data: urlData } = supabase.storage.from('media').getPublicUrl(media.storage_path)
+  return urlData.publicUrl
+}
+
 function rowToDetail(row: SocialPostRow, mediaUrl: string | null): SocialPostDetail {
   return {
     id: row.id,
@@ -71,21 +87,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Social post not found' }, { status: 404 })
     }
 
-    // Fetch media URL if attached
-    let mediaUrl: string | null = null
-    if (data.media_asset_id) {
-      const { data: media } = await supabase
-        .from('media_assets')
-        .select('storage_path')
-        .eq('id', data.media_asset_id)
-        .returns<{ storage_path: string }[]>()
-        .single()
-
-      if (media) {
-        const { data: urlData } = supabase.storage.from('media').getPublicUrl(media.storage_path)
-        mediaUrl = urlData.publicUrl
-      }
-    }
+    const mediaUrl = await resolveMediaUrl(supabase, data.media_asset_id)
 
     return NextResponse.json(rowToDetail(data, mediaUrl))
   } catch (err) {
@@ -143,6 +145,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     if (input.hashtags !== undefined) updatePayload.hashtags = input.hashtags
     if (input.ctaType !== undefined) updatePayload.cta_type = input.ctaType
     if (input.ctaUrl !== undefined) updatePayload.cta_url = input.ctaUrl
+    if (input.mediaAssetId !== undefined) updatePayload.media_asset_id = input.mediaAssetId
 
     const { error: updateError } = await supabase
       .from('social_posts' as never)
@@ -165,7 +168,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     if (refetchError || !updated) throw refetchError ?? new Error('Failed to refetch')
 
-    return NextResponse.json(rowToDetail(updated, null))
+    const updatedMediaUrl = await resolveMediaUrl(supabase, updated.media_asset_id)
+    return NextResponse.json(rowToDetail(updated, updatedMediaUrl))
   } catch (err) {
     if (err instanceof AuthError) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode })
