@@ -429,6 +429,19 @@ Sprint Results:
 - [x] `metadataBase` added to root layout — OG image URLs now resolve to absolute URLs (app/layout.tsx)
 - [x] Indexing check script: `scripts/check-indexing-status.ts` for auditing Google indexing status
 
+**Post-V2: Image Management System** ✅
+
+- [x] Reusable ImageManager component: 3-tab UI (Library / Upload / Generate) with style selector, file validation, toast notifications (components/shared/image-manager.tsx)
+- [x] Image upload API: POST /api/v1/media/upload — multipart/form-data, 10 MB limit, editor+ auth, Supabase Storage (app/api/v1/media/upload/route.ts)
+- [x] Content page image management: ImageManager integrated into content detail sheet for draft/review items (hero image for service/location, featured image for blog) (components/content/content-detail-sheet.tsx)
+- [x] Video thumbnail management: ImageManager in video detail sheet + PATCH /api/v1/video/[id] endpoint + thumbnail display in library grid (components/video/video-detail-sheet.tsx, app/api/v1/video/[id]/route.ts)
+- [x] Social post image management: replaced InlineMediaPicker with full ImageManager — regenerate, upload, or library pick (components/social/social-post-detail.tsx)
+- [x] Video thumbnail image type: `video_thumbnail` added to ImageType + Nano Banana 2 prompt template (types/media.ts, packages/ai/prompts/images/video-thumbnail.ts)
+- [x] Content edit API: PUT handler now persists hero_image_url/featured_image_url (app/api/v1/content/[type]/[id]/route.ts)
+- [x] Database migration: thumbnail_url column on media_assets (applied to live Supabase)
+- [x] Types regenerated from live schema
+- [x] Test suite: 1319 tests, 177 files, all passing
+
 ### What's Next
 
 - Deploy to Vercel (triggers static page generation via `generateStaticParams`)

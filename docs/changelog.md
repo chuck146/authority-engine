@@ -9,6 +9,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Image management system (ImageManager component):** Reusable 3-tab component (Library / Upload / Generate) for managing images across the platform. Supports library browsing with type filtering, local file upload (10 MB limit), and AI generation via Nano Banana 2 with style selector (photorealistic, illustration, flat, watercolor) (components/shared/image-manager.tsx)
+- **Image upload API:** POST /api/v1/media/upload — multipart/form-data endpoint for direct image uploads with editor+ auth, image MIME validation, 10 MB limit, Supabase Storage upload, and media_assets DB insert (app/api/v1/media/upload/route.ts)
+- **Content page image management:** ImageManager integrated into content detail sheet for draft/review items — supports hero image (service/location pages) and featured image (blog posts) with content-type-aware generation defaults. Read-only display for published content (components/content/content-detail-sheet.tsx)
+- **Video thumbnail management:** ImageManager integrated into video detail sheet below video player. New PATCH /api/v1/video/[id] endpoint for thumbnail updates. Video library grid shows thumbnail when available, falls back to video element (components/video/video-detail-sheet.tsx, app/api/v1/video/[id]/route.ts)
+- **Social post image management:** Replaced InlineMediaPicker with full ImageManager in social post edit mode — users can now regenerate images via AI, upload from local machine, or pick from library (components/social/social-post-detail.tsx)
+- **Video thumbnail image type:** `video_thumbnail` added to ImageType enum with dedicated prompt template for Nano Banana 2 generation (types/media.ts, packages/ai/prompts/images/video-thumbnail.ts)
+- **Database migration:** `thumbnail_url` column added to `media_assets` table (packages/db/supabase/migrations/20260319000001_add_video_thumbnail_url.sql)
+- **InlineMediaPicker enhanced:** Added `imageTypeFilter` and `onUpload` props, fixed `data.items ?? data` fallback for API response compatibility (components/social/inline-media-picker.tsx)
+
+### Changed
+
+- **Content edit API extended:** PUT /api/v1/content/[type]/[id] now persists `hero_image_url` (service/location pages) or `featured_image_url` (blog posts) from `heroImageUrl` field in request body (app/api/v1/content/[type]/[id]/route.ts)
+- **Video list API extended:** GET /api/v1/video now includes `thumbnailUrl` in response items (app/api/v1/video/route.ts)
+- **Media list API extended:** Added `service_hero` and `video_thumbnail` to valid imageType filter values (app/api/v1/media/route.ts)
+- **Image generate form extended:** Added "Video Thumbnail" option with topic field to the media generation form (components/media/image-generate-form.tsx)
+
 - **Google indexing fix — public org RLS policy:** New migration adds `using (true)` SELECT policy on `organizations` table so unauthenticated visitors (including Googlebot) can read org branding, settings, and contact info needed to render full marketing pages with headers, footers, and JsonLd structured data (packages/db/supabase/migrations/20260318000003_add_org_public_read_policy.sql)
 - **Static page generation (`generateStaticParams`):** All 4 content routes (locations, services, blog, commercial) now pre-build published pages at deploy time — Googlebot gets instant static HTML instead of on-demand SSR (app/(marketing)/locations/[slug]/page.tsx, services/[slug]/page.tsx, blog/[slug]/page.tsx, commercial/[slug]/page.tsx)
 - **`metadataBase` in root layout:** All OG image URLs now resolve to absolute URLs via `metadataBase` (app/layout.tsx)
