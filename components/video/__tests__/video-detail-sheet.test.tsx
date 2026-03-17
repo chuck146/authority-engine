@@ -50,9 +50,11 @@ describe('VideoDetailSheet', () => {
 
     render(<VideoDetailSheet item={item} open={true} onOpenChange={vi.fn()} onDelete={onDelete} />)
 
-    // Find all buttons, the destructive one is the delete button
+    // Find the delete button by its aria-label-like content (Trash2 icon inside)
     const buttons = screen.getAllByRole('button')
-    const deleteBtn = buttons.find((btn) => btn.className.includes('destructive'))
+    // The delete button is the last destructive-styled button
+    const destructiveButtons = buttons.filter((btn) => btn.className.includes('destructive'))
+    const deleteBtn = destructiveButtons[destructiveButtons.length - 1]
     expect(deleteBtn).toBeDefined()
     fireEvent.click(deleteBtn!)
     expect(onDelete).toHaveBeenCalledWith(item.id)

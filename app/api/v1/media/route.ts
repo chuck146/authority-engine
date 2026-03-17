@@ -3,7 +3,13 @@ import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
 import type { MediaLibraryItem, ImageType } from '@/types/media'
 
-const VALID_IMAGE_TYPES: ImageType[] = ['blog_thumbnail', 'location_hero', 'social_graphic']
+const VALID_IMAGE_TYPES: ImageType[] = [
+  'blog_thumbnail',
+  'location_hero',
+  'service_hero',
+  'social_graphic',
+  'video_thumbnail',
+]
 
 export async function GET(request: Request) {
   try {

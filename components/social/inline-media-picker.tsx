@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { ImageIcon, X, RefreshCw } from 'lucide-react'
+import { ImageIcon, X, RefreshCw, Upload, Loader2 } from 'lucide-react'
 
 type MediaItem = {
   id: string
@@ -14,20 +14,31 @@ type InlineMediaPickerProps = {
   currentMediaUrl: string | null
   onSelect: (mediaAssetId: string, mediaUrl: string) => void
   onRemove: () => void
+  imageTypeFilter?: string
+  onUpload?: (file: File) => Promise<void>
 }
 
-export function InlineMediaPicker({ currentMediaUrl, onSelect, onRemove }: InlineMediaPickerProps) {
+export function InlineMediaPicker({
+  currentMediaUrl,
+  onSelect,
+  onRemove,
+  imageTypeFilter,
+  onUpload,
+}: InlineMediaPickerProps) {
   const [expanded, setExpanded] = useState(false)
   const [items, setItems] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function fetchMedia() {
     setLoading(true)
     try {
-      const res = await fetch('/api/v1/media')
+      const url = imageTypeFilter ? `/api/v1/media?imageType=${imageTypeFilter}` : '/api/v1/media'
+      const res = await fetch(url)
       if (!res.ok) throw new Error('Failed to load media')
       const data = await res.json()
-      setItems(data)
+      setItems(data.items ?? data)
     } catch {
       setItems([])
     } finally {
@@ -77,8 +88,48 @@ export function InlineMediaPicker({ currentMediaUrl, onSelect, onRemove }: Inlin
 
       {expanded && (
         <div className="mt-3 rounded-lg border p-3">
+          {onUpload && (
+            <div className="mb-3">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  setUploading(true)
+                  try {
+                    await onUpload(file)
+                    setExpanded(false)
+                  } finally {
+                    setUploading(false)
+                    if (fileInputRef.current) fileInputRef.current.value = ''
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="w-full"
+                disabled={uploading}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {uploading ? (
+                  <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                ) : (
+                  <Upload className="mr-1 h-3 w-3" />
+                )}
+                {uploading ? 'Uploading...' : 'Upload Image'}
+              </Button>
+            </div>
+          )}
+
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-muted-foreground text-xs">Select from media library</p>
+            <p className="text-muted-foreground text-xs">
+              {onUpload ? 'Or select from media library' : 'Select from media library'}
+            </p>
             <Button
               type="button"
               variant="ghost"

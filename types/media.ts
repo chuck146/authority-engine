@@ -7,6 +7,7 @@ export const imageTypeSchema = z.enum([
   'location_hero',
   'service_hero',
   'social_graphic',
+  'video_thumbnail',
 ])
 export type ImageType = z.infer<typeof imageTypeSchema>
 
@@ -50,6 +51,12 @@ export const socialGraphicInputSchema = z.object({
   mood: imageMoodSchema,
 })
 
+export const videoThumbnailInputSchema = z.object({
+  imageType: z.literal('video_thumbnail'),
+  topic: z.string().min(2).max(200),
+  style: imageStyleSchema,
+})
+
 // --- Discriminated Union Request ---
 
 export const generateImageRequestSchema = z.discriminatedUnion('imageType', [
@@ -57,12 +64,14 @@ export const generateImageRequestSchema = z.discriminatedUnion('imageType', [
   locationHeroInputSchema,
   serviceHeroInputSchema,
   socialGraphicInputSchema,
+  videoThumbnailInputSchema,
 ])
 
 export type BlogThumbnailInput = z.infer<typeof blogThumbnailInputSchema>
 export type LocationHeroInput = z.infer<typeof locationHeroInputSchema>
 export type ServiceHeroInput = z.infer<typeof serviceHeroInputSchema>
 export type SocialGraphicInput = z.infer<typeof socialGraphicInputSchema>
+export type VideoThumbnailInput = z.infer<typeof videoThumbnailInputSchema>
 export type GenerateImageRequest = z.infer<typeof generateImageRequestSchema>
 
 // --- API Response ---

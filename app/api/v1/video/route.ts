@@ -4,6 +4,18 @@ import { createClient } from '@/lib/supabase/server'
 import type { VideoType, VideoEngine, VideoLibraryItem } from '@/types/video'
 import { videoTypeSchema, videoEngineSchema } from '@/types/video'
 
+type VideoRow = {
+  id: string
+  filename: string
+  storage_path: string
+  mime_type: string
+  size_bytes: number | null
+  duration_seconds: number | null
+  metadata: Record<string, unknown> | null
+  thumbnail_url: string | null
+  created_at: string
+}
+
 export async function GET(request: Request) {
   try {
     const auth = await requireApiAuth()
@@ -16,7 +28,7 @@ export async function GET(request: Request) {
     let query = supabase
       .from('media_assets')
       .select(
-        'id, filename, storage_path, mime_type, size_bytes, duration_seconds, metadata, created_at',
+        'id, filename, storage_path, mime_type, size_bytes, duration_seconds, metadata, thumbnail_url, created_at',
       )
       .eq('organization_id', auth.organizationId)
       .eq('type', 'video')
@@ -30,14 +42,14 @@ export async function GET(request: Request) {
       query = query.eq('metadata->>engine', engineFilter)
     }
 
-    const { data, error } = await query
+    const { data, error } = await query.returns<VideoRow[]>()
 
     if (error) throw error
 
     const { data: bucketUrl } = supabase.storage.from('media').getPublicUrl('')
 
     const items: VideoLibraryItem[] = (data ?? []).map((row) => {
-      const metadata = row.metadata as Record<string, unknown> | null
+      const metadata = row.metadata
       return {
         id: row.id,
         videoType: (metadata?.videoType as VideoType) ?? null,
@@ -47,6 +59,7 @@ export async function GET(request: Request) {
         mimeType: row.mime_type,
         sizeBytes: row.size_bytes,
         durationSeconds: row.duration_seconds,
+        thumbnailUrl: row.thumbnail_url ?? null,
         createdAt: row.created_at,
       }
     })

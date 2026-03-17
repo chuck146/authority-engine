@@ -28,6 +28,7 @@ import {
   locationHeroInputSchema,
   serviceHeroInputSchema,
   socialGraphicInputSchema,
+  videoThumbnailInputSchema,
   type ImageType,
   type GenerateImageResponse,
 } from '@/types/media'
@@ -41,6 +42,7 @@ const schemaMap = {
   location_hero: locationHeroInputSchema,
   service_hero: serviceHeroInputSchema,
   social_graphic: socialGraphicInputSchema,
+  video_thumbnail: videoThumbnailInputSchema,
 } as const
 
 type ImageFormValues = {
@@ -133,6 +135,7 @@ export function ImageGenerateForm({ onGenerated }: ImageGenerateFormProps) {
                 <SelectItem value="blog_thumbnail">Blog Thumbnail</SelectItem>
                 <SelectItem value="location_hero">Location Hero</SelectItem>
                 <SelectItem value="social_graphic">Social Graphic</SelectItem>
+                <SelectItem value="video_thumbnail">Video Thumbnail</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -142,6 +145,7 @@ export function ImageGenerateForm({ onGenerated }: ImageGenerateFormProps) {
               {selectedType === 'blog_thumbnail' && <BlogThumbnailFields />}
               {selectedType === 'location_hero' && <LocationHeroFields />}
               {selectedType === 'social_graphic' && <SocialGraphicFields />}
+              {selectedType === 'video_thumbnail' && <VideoThumbnailFields />}
 
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -315,6 +319,26 @@ function SocialGraphicFields() {
           <FormLabel>Message / Theme</FormLabel>
           <FormControl>
             <Input placeholder="e.g., Spring special: 15% off exterior painting" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
+
+function VideoThumbnailFields() {
+  const { control } = useFormContext()
+
+  return (
+    <FormField
+      control={control}
+      name="topic"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Topic / Title</FormLabel>
+          <FormControl>
+            <Input placeholder="e.g., Before & After: Kitchen Cabinet Painting" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

@@ -2,7 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { CheckCircle, XCircle, Globe, Archive, CalendarDays, Loader2 } from 'lucide-react'
+import {
+  CheckCircle,
+  XCircle,
+  Globe,
+  Archive,
+  CalendarDays,
+  Loader2,
+  ImageIcon,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +26,7 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet'
 import { ContentPreview } from '@/components/content/content-preview'
+import { ImageManager } from '@/components/shared/image-manager'
 import { ScheduleDialog } from '@/components/calendar/schedule-dialog'
 import { getAvailableActions } from '@/lib/content/status-transitions'
 import type { ContentListItem, ContentDetail, ContentType } from '@/types/content'
@@ -60,6 +69,25 @@ const actionConfig: Record<
   archive: { label: 'Archive', icon: Archive, variant: 'destructive' },
 }
 
+function buildGenerateDefaults(detail: ContentDetail): Record<string, string> {
+  switch (detail.type) {
+    case 'service_page':
+      return { serviceName: detail.title }
+    case 'location_page': {
+      const parts = detail.slug.split('-')
+      const state = parts.length >= 2 ? (parts[parts.length - 2]?.toUpperCase() ?? 'NJ') : 'NJ'
+      const city =
+        parts
+          .slice(0, -2)
+          .join(' ')
+          .replace(/\b\w/g, (c) => c.toUpperCase()) || detail.title
+      return { city, state, serviceName: 'Painting' }
+    }
+    case 'blog_post':
+      return { topic: detail.title }
+  }
+}
+
 function formatDateTime(dateStr: string): string {
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
@@ -83,12 +111,15 @@ export function ContentDetailSheet({
   const [rejectionNote, setRejectionNote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [scheduleOpen, setScheduleOpen] = useState(false)
+  const [editingImage, setEditingImage] = useState(false)
+  const [savingImage, setSavingImage] = useState(false)
 
   useEffect(() => {
     if (!open || !item) {
       setDetail(null)
       setShowRejectForm(false)
       setRejectionNote('')
+      setEditingImage(false)
       return
     }
 
@@ -176,7 +207,76 @@ export function ContentDetailSheet({
             </div>
           ) : detail ? (
             <>
-              {detail.heroImageUrl && (
+              {/* Hero image section */}
+              {currentStatus === 'draft' || currentStatus === 'review' ? (
+                <div className="mb-4">
+                  {!editingImage && detail.heroImageUrl ? (
+                    <div className="relative mb-2 aspect-[16/9] w-full overflow-hidden rounded-lg">
+                      <Image
+                        src={detail.heroImageUrl}
+                        alt={detail.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 672px) 100vw, 672px"
+                      />
+                    </div>
+                  ) : null}
+                  {!editingImage ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingImage(true)}
+                    >
+                      <ImageIcon className="mr-1 h-3 w-3" />
+                      {detail.heroImageUrl ? 'Change Image' : 'Add Image'}
+                    </Button>
+                  ) : (
+                    <div className="space-y-2">
+                      <ImageManager
+                        imageType={
+                          detail.type === 'service_page'
+                            ? 'service_hero'
+                            : detail.type === 'location_page'
+                              ? 'location_hero'
+                              : 'blog_thumbnail'
+                        }
+                        generateDefaults={buildGenerateDefaults(detail)}
+                        currentImageUrl={detail.heroImageUrl}
+                        disabled={savingImage}
+                        onImageChange={async (url, _mediaAssetId) => {
+                          setSavingImage(true)
+                          try {
+                            const res = await fetch(`/api/v1/content/${detail.type}/${detail.id}`, {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ heroImageUrl: url }),
+                            })
+                            if (!res.ok) throw new Error('Failed to save')
+                            const updated = await res.json()
+                            setDetail({ ...detail, heroImageUrl: updated.heroImageUrl })
+                            setEditingImage(false)
+                            toast.success(url ? 'Image updated' : 'Image removed')
+                          } catch {
+                            toast.error('Failed to save image')
+                          } finally {
+                            setSavingImage(false)
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingImage(false)}
+                        disabled={savingImage}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ) : detail.heroImageUrl ? (
                 <div className="relative mb-4 aspect-[16/9] w-full overflow-hidden rounded-lg">
                   <Image
                     src={detail.heroImageUrl}
@@ -186,7 +286,7 @@ export function ContentDetailSheet({
                     sizes="(max-width: 672px) 100vw, 672px"
                   />
                 </div>
-              )}
+              ) : null}
               <ContentPreview
                 content={detail.content}
                 title={detail.title}
