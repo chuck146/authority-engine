@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 17, 2026_
+_Last Updated: March 18, 2026_
 
 ---
 
@@ -366,6 +366,21 @@ Sprint Results:
 - [x] Hero images generated for 6 commercial service pages via Nano Banana 2
 - [x] Type cleanup: removed manual `CommercialServicePage` type, now uses generated database type; removed `as never` casts from query functions
 - [x] Review + publish 6 commercial service pages (all SEO score 100, now live)
+
+**Post-V2: Typography Overhaul (DM Serif Display)** ✅
+
+- [x] Display font swap: Playfair Display → DM Serif Display (weight 400, normal + italic) for Architectural Digest editorial aesthetic (app/layout.tsx)
+- [x] CSS infrastructure: updated `--font-display` CSS var, added `.font-editorial-italic` and `.editorial-kicker` utility classes (app/globals.css)
+- [x] Homepage hero: editorial kicker "Cleanest Painting LLC", headline scaled to 8xl with leading-[0.95], italic serif "Meets" accent in gold (components/marketing/home/hero-split.tsx)
+- [x] Section headings: `font-semibold` → `font-normal` + `tracking-tight` across about-section, services-dark, testimonials, cta-banner, service-areas; accent `<em>` words use `.font-editorial-italic`
+- [x] Testimonials: featured blockquote uses `font-editorial-italic`, increased to sm:text-3xl with tighter leading-snug (components/marketing/home/testimonials.tsx)
+- [x] Sub-page hero: added `font-display`, changed `font-bold` → `font-normal` — affects all service/location/blog pages (components/marketing/hero-section.tsx)
+- [x] Header + Footer: logo text `font-bold` → `font-normal`, tagline switched from uppercase sans to italic serif, footer column headers use `.editorial-kicker` class (components/marketing/site-header.tsx, site-footer.tsx)
+- [x] Content body: added `prose-headings:font-display prose-headings:font-normal`, removed `prose-h2:font-bold` (components/marketing/content-body.tsx)
+- [x] Branded CTA: added `font-display`, scaled to lg:text-3xl (components/marketing/branded-cta.tsx)
+- [x] 13 files updated across the marketing site, typecheck + lint pass clean
+- [x] Commercial painting hero image prompt updated: 4 painters in branded white shirts (scripts/generate-hero-images.ts)
+- [x] Footer logo fix: replaced small logo image with text + paintbrush pattern matching header
 
 ### What's Next
 

@@ -7,6 +7,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Content detail API — column mismatch:** GET and PUT handlers were selecting both `hero_image_url` and `featured_image_url` from every table, but `service_pages`/`location_pages` only have `hero_image_url` and `blog_posts` only has `featured_image_url`. Supabase PostgREST errored on non-existent columns, causing "Failed to load content details" for all content types. Now conditionally selects the correct image column per content type (app/api/v1/content/[type]/[id]/route.ts)
+
 ### Added
 
 - **Commercial service pages:** New `commercial_service_pages` table with RLS, SSR hub page (`/commercial`), individual page routes (`/commercial/[slug]`), JsonLd Service + BreadcrumbList schemas, SEO metadata with og:image support (app/(marketing)/commercial/, packages/db/supabase/migrations/20260317000002_create_commercial_service_pages.sql)
@@ -17,9 +21,21 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Hero image script extended:** `--type=commercial` support with commercial-specific prompt builder (scripts/generate-hero-images.ts)
 - **6 commercial service pages generated:** Office & Corporate, Retail & Restaurant, Warehouse & Industrial, HOA & Property Management, Multi-Unit Residential, Healthcare & Educational — all SEO score 100, status='review'
 - **Hero images generated:** 6 commercial service page hero images via Nano Banana 2
+- **Editorial CSS utilities:** `.font-editorial-italic` (DM Serif Display italic) and `.editorial-kicker` (uppercase tracking-widest gold) utility classes (app/globals.css)
+- **Uniform reference image:** `public/Cleanest-Uniform.png` added for brand asset reference
 
 ### Changed
 
+- **Typography overhaul — DM Serif Display:** Replaced Playfair Display with DM Serif Display (weight 400, normal + italic) across 13 marketing files for Architectural Digest editorial aesthetic (app/layout.tsx, app/globals.css)
+- **Homepage hero editorial redesign:** Added editorial kicker "Cleanest Painting LLC", headline scaled to 8xl with leading-[0.95], italic serif "Meets" accent in gold (components/marketing/home/hero-split.tsx)
+- **Section heading typography:** Changed `font-semibold` → `font-normal` + `tracking-tight` across about-section, services-dark, testimonials, cta-banner, service-areas; accent `<em>` words use new `.font-editorial-italic` utility class
+- **Sub-page hero typography:** Added `font-display`, changed `font-bold` → `font-normal` — affects all service/location/blog page heroes (components/marketing/hero-section.tsx)
+- **Header + Footer typography:** Logo text `font-bold` → `font-normal`, tagline switched from uppercase sans to italic serif, footer column headers use `.editorial-kicker` class (components/marketing/site-header.tsx, site-footer.tsx)
+- **Content body headings:** Added `prose-headings:font-display prose-headings:font-normal`, removed `prose-h2:font-bold` (components/marketing/content-body.tsx)
+- **Branded CTA typography:** Added `font-display`, scaled to lg:text-3xl (components/marketing/branded-cta.tsx)
+- **Testimonials featured quote:** Uses `font-editorial-italic`, increased to sm:text-3xl with tighter leading-snug (components/marketing/home/testimonials.tsx)
+- **Commercial painting hero prompt:** Updated to show 4 painters in branded white shirts (scripts/generate-hero-images.ts)
+- **Footer logo:** Replaced small logo image with text + paintbrush pattern matching header (components/marketing/site-footer.tsx)
 - **Header CTA redesign:** Separated nav links from action cluster on desktop — phone number with icon now visible alongside a prominent "Get a Free Estimate" gold button (rounded-lg, font-bold, shadow). Mobile menu gets phone icon + divider separator (components/marketing/site-header.tsx)
 - **Hero CTA simplified:** Replaced phone number button with single "Get Your Free Estimate" green CTA; phone now lives in header instead (components/marketing/home/hero-split.tsx)
 - **Marketing nav:** Removed "Our Work" link; added "Commercial Services" link, residential services now in "Residential Painting" dropdown with hover/accordion behavior (components/marketing/site-header.tsx)
