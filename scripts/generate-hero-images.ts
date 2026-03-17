@@ -97,7 +97,7 @@ function servicePrompt(title: string): string {
       ? 'Style: photorealistic, professional commercial environment, clean modern lighting.'
       : 'Style: photorealistic, high-end residential, warm natural lighting.',
     isCommercial
-      ? 'Show professional painters at work in a commercial space — office building, retail store, or business facility. Show the scale and professionalism of commercial-grade painting.'
+      ? 'Show a team of four professional painters at work in a commercial space — office building, retail store, or business facility. The painters wear matching white work shirts with a green "Cleanest Painting" logo and a paint roller icon printed on them. Show the scale and professionalism of commercial-grade painting.'
       : 'Show professional painters at work on a beautiful home, or a stunning finished result.',
     'The scene should convey craftsmanship, attention to detail, and premium quality.',
     'Include realistic details: clean drop cloths, professional tools, crisp paint lines.',
