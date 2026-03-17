@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 17, 2026_
+_Last Updated: March 18, 2026_
 
 ---
 
@@ -421,10 +421,20 @@ Sprint Results:
 - [x] Migration applied to live Supabase
 - [x] Test suite: 28 new tests across 3 files (1319 total, 177 files, all passing)
 
+**Post-V2: Google Indexing Fix** ✅
+
+- [x] Root cause identified: `organizations` table had no public SELECT RLS policy — Googlebot (unauthenticated) got NULL org data, causing stripped-down pages with no nav, branding, or JsonLd
+- [x] Migration: public SELECT policy on `organizations` table (`using (true)`) — applied to live Supabase (packages/db/supabase/migrations/20260318000003_add_org_public_read_policy.sql)
+- [x] `generateStaticParams()` added to all 4 content routes (locations, services, blog, commercial) — pages pre-built as static HTML at deploy time
+- [x] `metadataBase` added to root layout — OG image URLs now resolve to absolute URLs (app/layout.tsx)
+- [x] Indexing check script: `scripts/check-indexing-status.ts` for auditing Google indexing status
+
 ### What's Next
 
-- Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live via cron
-- Check GSC indexing for newly published location pages
+- Deploy to Vercel (triggers static page generation via `generateStaticParams`)
+- Verify full HTML renders for anon users: `curl https://cleanestpaintingnj.com/locations/summit-nj-painting`
+- Request re-crawl of key pages in Google Search Console
+- Monitor indexing over 48-72 hours
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 

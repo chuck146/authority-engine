@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import {
   getPublishedCommercialServicePage,
   getOrganizationById,
+  getAllPublishedCommercialServiceSlugs,
   getRelatedLocationPages,
 } from '@/lib/queries/content'
 import { buildCommercialServicePageSchemas } from '@/lib/seo/json-ld'
@@ -17,6 +18,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj
 export const revalidate = 3600
 
 type Props = { params: Promise<{ slug: string }> }
+
+export async function generateStaticParams() {
+  const slugs = await getAllPublishedCommercialServiceSlugs()
+  return slugs.map(({ slug }) => ({ slug }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params

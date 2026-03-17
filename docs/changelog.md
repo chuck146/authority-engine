@@ -9,6 +9,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Google indexing fix — public org RLS policy:** New migration adds `using (true)` SELECT policy on `organizations` table so unauthenticated visitors (including Googlebot) can read org branding, settings, and contact info needed to render full marketing pages with headers, footers, and JsonLd structured data (packages/db/supabase/migrations/20260318000003_add_org_public_read_policy.sql)
+- **Static page generation (`generateStaticParams`):** All 4 content routes (locations, services, blog, commercial) now pre-build published pages at deploy time — Googlebot gets instant static HTML instead of on-demand SSR (app/(marketing)/locations/[slug]/page.tsx, services/[slug]/page.tsx, blog/[slug]/page.tsx, commercial/[slug]/page.tsx)
+- **`metadataBase` in root layout:** All OG image URLs now resolve to absolute URLs via `metadataBase` (app/layout.tsx)
+- **Indexing check script:** `scripts/check-indexing-status.ts` for auditing Google indexing status of published pages
+
+### Fixed
+
+- **0/13 location pages indexed by Google:** Root cause was missing public SELECT RLS policy on `organizations` table — Googlebot (unauthenticated) got NULL org data, causing stripped-down pages with no navigation, no branding, no JsonLd structured data. Google saw low-quality pages and refused to index them.
+
+### Added
+
 - **Social post inline editing:** Edit button on social post detail sheet (draft/review status) toggles inline edit mode with live platform preview. Editable fields: title, body, hashtags (add/remove tags), CTA type (dropdown), CTA URL, and attached image via inline media picker. Preview (GBP/Instagram/Facebook) updates in real-time as user types with character counts (components/social/social-post-detail.tsx)
 - **Inline media picker:** Compact image selector component for social post editing — shows current thumbnail with Change/Remove, expands to 4-column grid from media library API (components/social/inline-media-picker.tsx)
 - **Social post preview overrides:** `SocialPostPreview` accepts optional `overrides` prop for live-updating body, hashtags, CTA, and image during editing (components/social/social-post-preview.tsx)
