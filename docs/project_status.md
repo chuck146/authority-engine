@@ -408,6 +408,19 @@ Sprint Results:
 - [x] vercel.json updated with `*/15 * * * *` cron schedule
 - [x] Test suite: 8 new tests (1291 total, 174 files, all passing)
 
+**Post-V2: Social Post Inline Editing** ✅
+
+- [x] RLS policy fix: replaced broken `auth.jwt() ->> 'org_id'` with `public.get_org_id()` on social_posts, reviews, review_requests SELECT/INSERT/UPDATE/DELETE policies (packages/db/supabase/migrations/20260318000002_fix_rls_policies.sql)
+- [x] Inline edit mode: Edit button on social post detail sheet (draft/review status) toggles form fields with live platform preview (components/social/social-post-detail.tsx)
+- [x] Editable fields: title, body (with character count), hashtags (add/remove tags), CTA type (dropdown), CTA URL, attached image
+- [x] Live preview: SocialPostPreview accepts overrides prop, updates GBP/Instagram/Facebook cards in real-time as user types (components/social/social-post-preview.tsx)
+- [x] Image rendering: preview cards now display attached images above post body
+- [x] Inline media picker: compact image selector from media library with Change/Remove/Attach actions (components/social/inline-media-picker.tsx)
+- [x] PUT API extended: media_asset_id editable, resolveMediaUrl helper shared by GET/PUT (app/api/v1/social/[id]/route.ts)
+- [x] Edit schema: mediaAssetId added to socialPostEditSchema (types/social.ts)
+- [x] Migration applied to live Supabase
+- [x] Test suite: 28 new tests across 3 files (1319 total, 177 files, all passing)
+
 ### What's Next
 
 - Monitor first week of scheduled publishing (Mar 17-21) — verify pages go live via cron
