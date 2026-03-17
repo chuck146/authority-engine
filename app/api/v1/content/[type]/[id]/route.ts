@@ -41,6 +41,14 @@ type ContentRow = {
   featured_image_url?: string | null
 }
 
+const BASE_SELECT =
+  'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at'
+
+function selectFieldsFor(contentType: ContentType): string {
+  const imageCol = contentType === 'blog_post' ? 'featured_image_url' : 'hero_image_url'
+  return `${BASE_SELECT}, ${imageCol}`
+}
+
 export async function GET(_request: Request, { params }: RouteParams) {
   try {
     const { type, id } = await params
@@ -56,9 +64,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
     const { data, error } = await supabase
       .from(tableName)
-      .select(
-        'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at, hero_image_url, featured_image_url',
-      )
+      .select(selectFieldsFor(typeResult.data))
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
       .returns<ContentRow[]>()
@@ -236,9 +242,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     // 9. Refetch and return full detail
     const { data: updated, error: refetchError } = await supabase
       .from(tableName)
-      .select(
-        'id, title, slug, status, content, seo_score, keywords, meta_title, meta_description, approved_by, approved_at, rejection_note, published_at, created_at, updated_at, hero_image_url, featured_image_url',
-      )
+      .select(selectFieldsFor(typeResult.data))
       .eq('id', id)
       .eq('organization_id', auth.organizationId)
       .returns<ContentRow[]>()
