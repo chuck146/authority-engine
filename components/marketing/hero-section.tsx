@@ -42,7 +42,7 @@ export function HeroSection({ imageUrl, title, subtitle, breadcrumbs, badge }: H
             {badge}
           </span>
         )}
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+        <h1 className="font-display text-3xl font-normal tracking-tight text-white sm:text-4xl lg:text-5xl">
           {title}
         </h1>
         {subtitle && <p className="mt-3 text-lg text-white/80">{subtitle}</p>}

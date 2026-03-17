@@ -17,9 +17,9 @@ export function CtaBanner({ estimateUrl }: CtaBannerProps) {
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center">
-            <h2 className="font-display text-3xl font-semibold text-white sm:text-4xl">
+            <h2 className="font-display text-3xl font-normal tracking-tight text-white sm:text-4xl">
               Interior Designers, Let&apos;s{' '}
-              <em className="text-white/90 not-italic">Collaborate</em>
+              <em className="font-editorial-italic text-white/90">Collaborate</em>
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
               We partner with designers across Northern NJ to bring your visions to life — with the
@@ -33,7 +33,9 @@ export function CtaBanner({ estimateUrl }: CtaBannerProps) {
                 key={perk.title}
                 className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm"
               >
-                <h3 className="text-sm font-bold text-white">{perk.title}</h3>
+                <h3 className="text-sm font-semibold tracking-wide text-white uppercase">
+                  {perk.title}
+                </h3>
                 <p className="mt-1 text-sm text-white/70">{perk.desc}</p>
               </div>
             ))}

@@ -9,7 +9,9 @@ type BrandedCtaProps = {
 export function BrandedCta({ cta, phone, estimateUrl }: BrandedCtaProps) {
   return (
     <aside className="mt-16 rounded-xl bg-gradient-to-r from-[#1B2B5B] to-[#1e3a5f] px-6 py-10 text-center shadow-lg sm:px-10">
-      <p className="text-xl font-semibold text-white sm:text-2xl">{cta}</p>
+      <p className="font-display text-xl font-normal tracking-tight text-white sm:text-2xl lg:text-3xl">
+        {cta}
+      </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
         {estimateUrl && (
           <a

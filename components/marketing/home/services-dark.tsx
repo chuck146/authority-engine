@@ -13,7 +13,7 @@ export function ServicesDark({ services }: ServicesDarkProps) {
     <section id="services" className="bg-[var(--color-brand-cream)]">
       <div className="mx-auto max-w-7xl px-6 py-28 md:px-10 lg:px-[60px]">
         <ScrollReveal>
-          <h2 className="font-display text-3xl font-semibold text-gray-900 sm:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl font-normal tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
             Our Services
           </h2>
           <p className="mt-3 max-w-lg text-gray-500">
@@ -28,7 +28,7 @@ export function ServicesDark({ services }: ServicesDarkProps) {
                 href={`/services/${service.slug}`}
                 className="group block rounded-xl border border-gray-200 bg-white p-6 transition-colors hover:border-gray-300"
               >
-                <h3 className="text-lg font-semibold text-gray-900">{service.title}</h3>
+                <h3 className="font-display text-lg font-normal text-gray-900">{service.title}</h3>
                 <span className="mt-4 inline-block text-sm font-medium text-[#1B2B5B]">
                   Learn more
                 </span>

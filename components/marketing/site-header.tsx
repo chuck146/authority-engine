@@ -62,10 +62,10 @@ export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
           decoding="async"
         />
         <div className="flex flex-col items-center leading-tight">
-          <span className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">
+          <span className="font-display text-lg font-normal tracking-[0.08em] text-white sm:text-xl">
             {orgName.replace(' LLC', '').toUpperCase()}
           </span>
-          <span className="text-[0.5rem] font-medium tracking-[0.15em] text-white/80 uppercase sm:text-[0.6rem]">
+          <span className="font-editorial-italic text-[0.55rem] text-white/70 sm:text-[0.65rem]">
             Painting Beyond the Ordinary
           </span>
         </div>

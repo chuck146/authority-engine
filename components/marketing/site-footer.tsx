@@ -21,7 +21,7 @@ type SiteFooterProps = {
 export function SiteFooter({
   orgName,
   tagline,
-  logoUrl,
+  logoUrl: _logoUrl,
   phone,
   email,
   address,
@@ -35,33 +35,31 @@ export function SiteFooter({
         <div className="mb-16 grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand column */}
           <div>
-            <Link href="/" className="flex items-center gap-2.5">
-              {logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoUrl}
-                  alt={orgName}
-                  width={52}
-                  height={52}
-                  className="h-[52px] w-[52px] rounded-xl object-cover shadow-md shadow-black/20"
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <div className="flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-[#1B2B5B] ring-1 ring-white/10">
-                  <svg viewBox="0 0 24 24" fill="white" className="h-7 w-7">
-                    <path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z" />
-                  </svg>
-                </div>
-              )}
-              <div className="flex flex-col leading-tight">
-                <span className="font-display text-lg font-semibold text-white">
-                  {orgName.replace(' LLC', '')}
+            <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/left-brush.png"
+                alt=""
+                className="h-8 w-auto scale-110 sm:h-10"
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="flex flex-col items-center leading-tight">
+                <span className="font-display text-lg font-normal tracking-[0.08em] text-white sm:text-xl">
+                  {orgName.replace(' LLC', '').toUpperCase()}
                 </span>
-                <span className="text-[0.6rem] font-medium tracking-[0.15em] text-white/50 uppercase">
+                <span className="font-editorial-italic text-[0.55rem] text-white/70 sm:text-[0.65rem]">
                   Painting Beyond the Ordinary
                 </span>
               </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/right-brush.png"
+                alt=""
+                className="h-8 w-auto sm:h-10"
+                loading="lazy"
+                decoding="async"
+              />
             </Link>
             <p className="mt-5 max-w-[300px] text-[0.95rem] leading-relaxed text-white/60">
               {tagline}. Proudly serving New Jersey with artistry, precision, and care.
@@ -102,9 +100,7 @@ export function SiteFooter({
 
           {/* Services column */}
           <div>
-            <h4 className="mb-6 text-sm font-semibold tracking-[0.05em] text-white uppercase">
-              Services
-            </h4>
+            <h4 className="editorial-kicker mb-6 text-white/80">Services</h4>
             <ul className="flex flex-col gap-3.5">
               {services.slice(0, 6).map((s) => (
                 <li key={s.slug}>
@@ -121,9 +117,7 @@ export function SiteFooter({
 
           {/* Service Areas column */}
           <div>
-            <h4 className="mb-6 text-sm font-semibold tracking-[0.05em] text-white uppercase">
-              Service Areas
-            </h4>
+            <h4 className="editorial-kicker mb-6 text-white/80">Service Areas</h4>
             <ul className="flex flex-col gap-3.5">
               {locations.slice(0, 6).map((l) => (
                 <li key={l.slug}>
@@ -148,9 +142,7 @@ export function SiteFooter({
 
           {/* Contact column */}
           <div>
-            <h4 className="mb-6 text-sm font-semibold tracking-[0.05em] text-white uppercase">
-              Contact
-            </h4>
+            <h4 className="editorial-kicker mb-6 text-white/80">Contact</h4>
             <div className="flex flex-col gap-4">
               {phone && (
                 <div>

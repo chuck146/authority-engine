@@ -87,12 +87,18 @@ async function generateImage(prompt: string): Promise<{ data: Buffer; mime: stri
 // ---------------------------------------------------------------------------
 
 function servicePrompt(title: string): string {
+  const isCommercial = title.toLowerCase().includes('commercial')
+
   return [
     'Generate a 1920x1080 hero image for a professional painting service page.',
     `Company: ${ORG_NAME} — "${TAGLINE}"`,
     `Service: "${title}".`,
-    'Style: photorealistic, high-end residential, warm natural lighting.',
-    'Show professional painters at work on a beautiful home, or a stunning finished result.',
+    isCommercial
+      ? 'Style: photorealistic, professional commercial environment, clean modern lighting.'
+      : 'Style: photorealistic, high-end residential, warm natural lighting.',
+    isCommercial
+      ? 'Show a team of four professional painters at work in a commercial space — office building, retail store, or business facility. The painters wear matching white work shirts with a green "Cleanest Painting" logo and a paint roller icon printed on them. Show the scale and professionalism of commercial-grade painting.'
+      : 'Show professional painters at work on a beautiful home, or a stunning finished result.',
     'The scene should convey craftsmanship, attention to detail, and premium quality.',
     'Include realistic details: clean drop cloths, professional tools, crisp paint lines.',
     'Do NOT include any text, logos, or watermarks in the image.',
