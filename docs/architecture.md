@@ -223,10 +223,20 @@ Social dashboard shows post in list with platform preview
 User reviews, edits, approves → PATCH /api/v1/social/[id]/status
     │
     ├─► Can schedule via content calendar (social_post content type)
-    │   BullMQ publish worker handles scheduled publishing
+    │   Vercel cron / manual publish trigger
     │
     ▼
-Post marked "published" → ready for manual copy to platform
+Publish worker: publishCalendarEntry()
+    │
+    ├─► GBP platform → publishSocialPostToGbp()
+    │   Gets GBP token → builds Local Post request → POST to GBP API
+    │   Stores gbp_post_name in social_posts.metadata
+    │   (Gracefully skips if no GBP connection)
+    │
+    ├─► Instagram / Facebook → internal status update only
+    │
+    ▼
+Post marked "published" (GBP posts also live on Google)
 ```
 
 ---

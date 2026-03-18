@@ -442,6 +442,14 @@ Sprint Results:
 - [x] Types regenerated from live schema
 - [x] Test suite: 1319 tests, 177 files, all passing
 
+**Post-V2: Auto-Publish GBP Social Posts** ✅
+
+- [x] GBP Local Post types: `GbpLocalPostTopicType`, `GbpCallToAction`, `GbpMediaItem`, `GbpLocalPostRequest`, `GbpLocalPostResponse` + `postTypeToTopicType()` helper (types/gbp.ts)
+- [x] `createLocalPost()` API wrapper for GBP Local Posts API v4 (lib/google/business-profile.ts)
+- [x] GBP publisher orchestration: `publishSocialPostToGbp()` — fetches post, resolves token/media, builds request (body truncation to 1500 chars, CTA, image), calls API, stores gbp_post_name in metadata (lib/google/gbp-publisher.ts)
+- [x] Publish worker wired: GBP social posts auto-post to Google during cron/manual publish; Instagram/Facebook remain internal-only; graceful skip if no GBP connection (lib/queue/publish-worker.ts)
+- [x] Test suite: 22 new tests across 3 files (1,341 tests total, 180 files, all passing)
+
 ### What's Next
 
 - Deploy to Vercel (triggers static page generation via `generateStaticParams`)

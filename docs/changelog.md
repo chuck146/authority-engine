@@ -9,6 +9,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Auto-publish GBP social posts:** Scheduled GBP social posts now automatically post to Google Business Profile via the Local Posts API during cron or manual publish. Instagram/Facebook posts remain internal-only. Gracefully skips if no GBP connection exists (lib/google/gbp-publisher.ts, lib/queue/publish-worker.ts)
+- **GBP Local Post types:** `GbpLocalPostTopicType`, `GbpCallToAction`, `GbpMediaItem`, `GbpLocalPostRequest`, `GbpLocalPostResponse` types + `postTypeToTopicType()` helper (types/gbp.ts)
+- **createLocalPost() API wrapper:** Posts to GBP Local Posts API v4, follows existing `replyToReview()` pattern (lib/google/business-profile.ts)
+- **GBP publisher orchestration:** `publishSocialPostToGbp()` — fetches post data, resolves GBP token, builds Local Post request (with CTA, media, body truncation to 1500 chars), calls API, stores gbp_post_name in metadata (lib/google/gbp-publisher.ts)
+- **22 new tests:** business-profile-posts (4), gbp-publisher (10), publish-worker-gbp (8) — 1,341 tests total across 180 files
+
+### Added
+
 - **Image management system (ImageManager component):** Reusable 3-tab component (Library / Upload / Generate) for managing images across the platform. Supports library browsing with type filtering, local file upload (10 MB limit), and AI generation via Nano Banana 2 with style selector (photorealistic, illustration, flat, watercolor) (components/shared/image-manager.tsx)
 - **Image upload API:** POST /api/v1/media/upload — multipart/form-data endpoint for direct image uploads with editor+ auth, image MIME validation, 10 MB limit, Supabase Storage upload, and media_assets DB insert (app/api/v1/media/upload/route.ts)
 - **Content page image management:** ImageManager integrated into content detail sheet for draft/review items — supports hero image (service/location pages) and featured image (blog posts) with content-type-aware generation defaults. Read-only display for published content (components/content/content-detail-sheet.tsx)
