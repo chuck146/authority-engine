@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { sendLeadNotification } from '@/lib/email/resend'
 import { scoreLead } from '@/lib/leads/lead-scorer'
@@ -45,7 +46,9 @@ export async function POST(request: Request) {
     const input = parseResult.data
     const now = new Date().toISOString()
 
-    const supabase = await createClient()
+    // Use admin client — this is a public endpoint (no auth), so the regular
+    // client has no auth.uid() and RLS blocks the insert
+    const supabase = createAdminClient()
 
     // Look up organization by slug (never trust client-supplied org ID)
     const { data: orgRow, error: orgErr } = await supabase
