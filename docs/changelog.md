@@ -9,6 +9,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Privacy Policy page (`/privacy`):** Static legal page with data collection, SMS consent, information sharing, data retention, security, user rights sections. Noindex, uses HeroSection + prose styling. Contact: (732) 913-8574, home@cleanestpaintingnj.com (app/(marketing)/privacy/page.tsx)
+- **Terms of Service page (`/terms`):** Static legal page with SMS Messaging Program section (program name, description, frequency, data rates, STOP/HELP instructions, consent disclosure), website use, estimates, IP, liability, NJ governing law. Noindex (app/(marketing)/terms/page.tsx)
+- **SMS consent checkbox on estimate form:** TCPA-compliant disclosure with links to /privacy and /terms. Consent recorded as `sms_consent` boolean on leads table (components/marketing/home/estimate-form.tsx)
+- **Database migration:** `sms_consent BOOLEAN DEFAULT false` column on leads table (packages/db/supabase/migrations/20260329000001_add_leads_sms_consent.sql)
+- **Leads API `sms_consent` field:** Added to Zod schema and DB insert so opt-in consent is persisted (app/api/v1/leads/route.ts)
+
+### Fixed
+
+- **Estimate form leads not saving:** Form was sending `organization_id` (UUID) but API Zod schema expected `org_slug` (string) — every submission failed validation silently. Changed form to send `org_slug` and homepage to pass `orgSlug` prop (components/marketing/home/estimate-form.tsx, app/(marketing)/page.tsx)
+- **Calendar entry rescheduling:** Failed calendar entries can now be rescheduled; reschedule resets status to 'scheduled' and clears error_message (app/api/v1/calendar/[id]/route.ts)
+
+### Added
+
 - **Auto-publish GBP social posts:** Scheduled GBP social posts now automatically post to Google Business Profile via the Local Posts API during cron or manual publish. Instagram/Facebook posts remain internal-only. Gracefully skips if no GBP connection exists (lib/google/gbp-publisher.ts, lib/queue/publish-worker.ts)
 - **GBP Local Post types:** `GbpLocalPostTopicType`, `GbpCallToAction`, `GbpMediaItem`, `GbpLocalPostRequest`, `GbpLocalPostResponse` types + `postTypeToTopicType()` helper (types/gbp.ts)
 - **createLocalPost() API wrapper:** Posts to GBP Local Posts API v4, follows existing `replyToReview()` pattern (lib/google/business-profile.ts)

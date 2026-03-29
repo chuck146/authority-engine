@@ -450,12 +450,21 @@ Sprint Results:
 - [x] Publish worker wired: GBP social posts auto-post to Google during cron/manual publish; Instagram/Facebook remain internal-only; graceful skip if no GBP connection (lib/queue/publish-worker.ts)
 - [x] Test suite: 22 new tests across 3 files (1,341 tests total, 180 files, all passing)
 
+**Post-V2: SMS Compliance (Privacy Policy + Terms + Consent)** ✅
+
+- [x] Privacy Policy page (`/privacy`): static legal page with data collection, SMS consent, information sharing, data retention, security, user rights — noindex, HeroSection + prose styling (app/(marketing)/privacy/page.tsx)
+- [x] Terms of Service page (`/terms`): static legal page with SMS Messaging Program section (program name, description, frequency, STOP/HELP, consent disclosure), website use, estimates, IP, liability, NJ governing law — noindex (app/(marketing)/terms/page.tsx)
+- [x] SMS consent checkbox on estimate form: TCPA-compliant disclosure with links to /privacy and /terms (components/marketing/home/estimate-form.tsx)
+- [x] Database migration: `sms_consent BOOLEAN DEFAULT false` column on leads table (packages/db/supabase/migrations/20260329000001_add_leads_sms_consent.sql)
+- [x] Leads API: `sms_consent` added to Zod schema and DB insert (app/api/v1/leads/route.ts)
+- [x] Estimate form fix: was sending `organization_id` (UUID) instead of `org_slug` — leads were silently failing Zod validation. Fixed form prop + payload (components/marketing/home/estimate-form.tsx, app/(marketing)/page.tsx)
+- [x] Footer links (`/privacy`, `/terms`) now resolve to real pages (were broken links before)
+- [x] Migration applied to live Supabase
+
 ### What's Next
 
-- Deploy to Vercel (triggers static page generation via `generateStaticParams`)
-- Verify full HTML renders for anon users: `curl https://cleanestpaintingnj.com/locations/summit-nj-painting`
-- Request re-crawl of key pages in Google Search Console
-- Monitor indexing over 48-72 hours
+- Deploy to Vercel (privacy/terms pages + estimate form fix go live)
+- Submit `cleanestpaintingnj.com/privacy` and `cleanestpaintingnj.com/terms` to SMS campaign registration
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 
