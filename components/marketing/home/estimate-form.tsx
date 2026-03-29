@@ -4,12 +4,12 @@ import { useState, type FormEvent } from 'react'
 import { Phone } from 'lucide-react'
 
 type EstimateFormProps = {
-  organizationId: string
+  orgSlug: string
   services: { title: string; slug: string }[]
   phone?: string | null
 }
 
-export function EstimateForm({ organizationId, services, phone }: EstimateFormProps) {
+export function EstimateForm({ orgSlug, services, phone }: EstimateFormProps) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -26,12 +26,13 @@ export function EstimateForm({ organizationId, services, phone }: EstimateFormPr
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: organizationId,
+          org_slug: orgSlug,
           name: data.get('name'),
           email: data.get('email'),
           phone: data.get('phone'),
           service: data.get('service') || undefined,
           message: data.get('message') || undefined,
+          sms_consent: data.get('sms_consent') === 'on',
         }),
       })
 
@@ -143,6 +144,27 @@ export function EstimateForm({ organizationId, services, phone }: EstimateFormPr
                 placeholder="Tell us about your project (optional)"
                 className={`${inputClasses} resize-none`}
               />
+              <label className="flex cursor-pointer items-start gap-3">
+                <input
+                  name="sms_consent"
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 shrink-0 rounded border-white/30 bg-white/10 text-amber-400 accent-amber-400"
+                />
+                <span className="text-sm leading-snug text-white/60">
+                  I agree to receive SMS text messages from Cleanest Painting LLC at the phone
+                  number provided, including estimate follow-ups, appointment confirmations, and
+                  project updates. Message frequency varies (approx. 2–4/month). Msg &amp; data
+                  rates may apply. Reply STOP to opt out anytime. Consent is not required to receive
+                  a painting estimate.{' '}
+                  <a href="/privacy" className="underline underline-offset-2 hover:text-white/80">
+                    Privacy Policy
+                  </a>{' '}
+                  &amp;{' '}
+                  <a href="/terms" className="underline underline-offset-2 hover:text-white/80">
+                    Terms of Service
+                  </a>
+                </span>
+              </label>
               {status === 'error' && <p className="text-sm text-red-300">{errorMessage}</p>}
               <button
                 type="submit"
