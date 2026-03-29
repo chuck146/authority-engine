@@ -56,7 +56,9 @@ export function CalendarEntrySheet({
   const [newScheduledAt, setNewScheduledAt] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const canModify = item?.status === 'scheduled' && ['owner', 'admin', 'editor'].includes(userRole)
+  const canModify =
+    ['scheduled', 'failed'].includes(item?.status ?? '') &&
+    ['owner', 'admin', 'editor'].includes(userRole)
 
   function handleOpenChange(open: boolean) {
     if (!open) {
@@ -205,14 +207,16 @@ export function CalendarEntrySheet({
                   <CalendarClock className="h-4 w-4" />
                   Reschedule
                 </Button>
-                <Button variant="destructive" disabled={isSubmitting} onClick={handleCancel}>
-                  {isSubmitting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <XCircle className="h-4 w-4" />
-                  )}
-                  Cancel Publish
-                </Button>
+                {item?.status === 'scheduled' && (
+                  <Button variant="destructive" disabled={isSubmitting} onClick={handleCancel}>
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <XCircle className="h-4 w-4" />
+                    )}
+                    Cancel Publish
+                  </Button>
+                )}
               </div>
             )}
           </SheetFooter>
