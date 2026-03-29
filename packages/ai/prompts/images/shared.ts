@@ -6,6 +6,7 @@ export const IMAGE_DIMENSIONS: Record<ImageType, { width: number; height: number
   location_hero: { width: 1920, height: 1080 },
   service_hero: { width: 1920, height: 1080 },
   social_graphic: { width: 1080, height: 1080 },
+  video_thumbnail: { width: 1280, height: 720 },
 }
 
 export function buildBrandColorInstruction(org: OrgContext): string {

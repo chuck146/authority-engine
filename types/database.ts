@@ -786,6 +786,7 @@ export type Database = {
           size_bytes: number | null
           storage_path: string
           storage_provider: string
+          thumbnail_url: string | null
           type: Database['public']['Enums']['media_type']
           width: number | null
         }
@@ -803,6 +804,7 @@ export type Database = {
           size_bytes?: number | null
           storage_path: string
           storage_provider?: string
+          thumbnail_url?: string | null
           type: Database['public']['Enums']['media_type']
           width?: number | null
         }
@@ -820,6 +822,7 @@ export type Database = {
           size_bytes?: number | null
           storage_path?: string
           storage_provider?: string
+          thumbnail_url?: string | null
           type?: Database['public']['Enums']['media_type']
           width?: number | null
         }

@@ -29,6 +29,7 @@ function setupChain() {
   mockSupabase.select.mockReturnValue(mockSupabase)
   mockSupabase.eq.mockReturnValue(mockSupabase)
   mockSupabase.order.mockReturnValue(mockSupabase)
+  mockSupabase.returns.mockReturnValue(mockSupabase)
   ;(mockSupabase as unknown as Record<string, unknown>).storage = {
     from: vi.fn(() => ({
       getPublicUrl: vi.fn(() => ({
@@ -57,12 +58,13 @@ describe('GET /api/v1/video', () => {
         size_bytes: 5242880,
         duration_seconds: 8,
         metadata: { videoType: 'cinematic_reel' },
+        thumbnail_url: null,
         created_at: '2026-03-07T12:00:00Z',
       },
     ]
 
-    // No filter, so order is terminal — resolve via order
-    mockSupabase.order.mockResolvedValueOnce({ data: mockData, error: null })
+    // Chain: select → eq → eq → order → returns (terminal)
+    mockSupabase.returns.mockResolvedValueOnce({ data: mockData, error: null })
 
     const req = new NextRequest('http://localhost/api/v1/video')
     const res = await GET(req)
@@ -72,18 +74,18 @@ describe('GET /api/v1/video', () => {
     expect(json.items).toHaveLength(1)
     expect(json.items[0].videoType).toBe('cinematic_reel')
     expect(json.items[0].durationSeconds).toBe(8)
+    expect(json.items[0].thumbnailUrl).toBeNull()
   })
 
   it('applies videoType filter when provided', async () => {
     mockRequireApiAuth.mockResolvedValue(defaultAuth)
-    // With filter: chain is eq(org).eq(type).order().eq(videoType)
-    // eq calls: 1st returns chain, 2nd returns chain, order returns chain, 3rd eq resolves
+    // With filter: chain is select → eq(org) → eq(type) → order → eq(videoType) → returns
     let eqCallCount = 0
     mockSupabase.eq.mockImplementation(() => {
       eqCallCount++
-      if (eqCallCount <= 2) return mockSupabase // org_id and type
-      return Promise.resolve({ data: [], error: null }) // videoType filter (terminal)
+      return mockSupabase
     })
+    mockSupabase.returns.mockResolvedValueOnce({ data: [], error: null })
 
     const req = new NextRequest('http://localhost/api/v1/video?videoType=project_showcase')
     const res = await GET(req)
@@ -103,7 +105,7 @@ describe('GET /api/v1/video', () => {
 
   it('returns empty list when no videos', async () => {
     mockRequireApiAuth.mockResolvedValue(defaultAuth)
-    mockSupabase.order.mockResolvedValueOnce({ data: [], error: null })
+    mockSupabase.returns.mockResolvedValueOnce({ data: [], error: null })
 
     const req = new NextRequest('http://localhost/api/v1/video')
     const res = await GET(req)
@@ -114,7 +116,7 @@ describe('GET /api/v1/video', () => {
 
   it('returns 500 on database error', async () => {
     mockRequireApiAuth.mockResolvedValue(defaultAuth)
-    mockSupabase.order.mockResolvedValueOnce({ data: null, error: { message: 'DB error' } })
+    mockSupabase.returns.mockResolvedValueOnce({ data: null, error: { message: 'DB error' } })
 
     const req = new NextRequest('http://localhost/api/v1/video')
     const res = await GET(req)

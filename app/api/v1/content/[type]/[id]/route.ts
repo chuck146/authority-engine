@@ -183,6 +183,10 @@ export async function PUT(request: Request, { params }: RouteParams) {
     if (input.metaTitle !== undefined) updatePayload.meta_title = input.metaTitle
     if (input.metaDescription !== undefined) updatePayload.meta_description = input.metaDescription
     if (input.keywords !== undefined) updatePayload.keywords = input.keywords
+    if (input.heroImageUrl !== undefined) {
+      const imageCol = typeResult.data === 'blog_post' ? 'featured_image_url' : 'hero_image_url'
+      updatePayload[imageCol] = input.heroImageUrl
+    }
 
     // Sync meta fields into JSONB content (SSR pages read from content.meta_title)
     if (input.metaTitle !== undefined || input.metaDescription !== undefined) {

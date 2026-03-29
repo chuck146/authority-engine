@@ -84,6 +84,46 @@ export type GbpLocationOption = {
   address?: string
 }
 
+// --- Local Posts API ---
+
+export type GbpLocalPostTopicType = 'STANDARD' | 'EVENT' | 'OFFER'
+
+export type GbpCallToAction = {
+  actionType: string
+  url: string
+}
+
+export type GbpMediaItem = {
+  mediaFormat: 'PHOTO'
+  sourceUrl: string
+}
+
+export type GbpLocalPostRequest = {
+  languageCode: string
+  summary: string
+  topicType: GbpLocalPostTopicType
+  callToAction?: GbpCallToAction
+  media?: GbpMediaItem[]
+}
+
+export type GbpLocalPostResponse = {
+  name: string
+  state: string
+  createTime: string
+  updateTime: string
+  searchUrl?: string
+}
+
+const POST_TYPE_TO_TOPIC: Record<string, GbpLocalPostTopicType> = {
+  update: 'STANDARD',
+  event: 'EVENT',
+  offer: 'OFFER',
+}
+
+export function postTypeToTopicType(postType: string): GbpLocalPostTopicType {
+  return POST_TYPE_TO_TOPIC[postType] ?? 'STANDARD'
+}
+
 // --- Star rating conversion ---
 
 const STAR_RATING_MAP: Record<GbpStarRating, number> = {

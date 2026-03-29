@@ -45,12 +45,21 @@ export function VideoLibraryGrid({ items, loading, onSelectItem }: VideoLibraryG
         >
           <CardContent className="p-0">
             <div className="bg-muted relative aspect-video overflow-hidden rounded-t-lg">
-              <video
-                src={item.publicUrl}
-                className="h-full w-full object-cover"
-                muted
-                preload="metadata"
-              />
+              {item.thumbnailUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={item.thumbnailUrl}
+                  alt={item.filename}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <video
+                  src={item.publicUrl}
+                  className="h-full w-full object-cover"
+                  muted
+                  preload="metadata"
+                />
+              )}
               {item.durationSeconds && (
                 <Badge variant="secondary" className="absolute right-2 bottom-2 text-xs">
                   {item.durationSeconds}s

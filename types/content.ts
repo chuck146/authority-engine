@@ -109,6 +109,7 @@ export const contentEditRequestSchema = z
     metaTitle: z.string().max(60).optional(),
     metaDescription: z.string().max(160).optional(),
     keywords: z.array(z.string().max(50)).max(10).optional(),
+    heroImageUrl: z.string().url().nullable().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: 'At least one field must be provided for update',

@@ -89,7 +89,7 @@ describe('PATCH /api/v1/calendar/[id]', () => {
     expect(res.status).toBe(200)
   })
 
-  it('rejects update on non-scheduled entry', async () => {
+  it('rejects update on published entry', async () => {
     const entry = buildCalendarEntry({ status: 'published' })
     mockSupabase.single.mockResolvedValueOnce({ data: entry, error: null })
 
@@ -101,6 +101,46 @@ describe('PATCH /api/v1/calendar/[id]', () => {
 
     const res = await PATCH(req, { params })
     expect(res.status).toBe(422)
+  })
+
+  it('reschedules a failed entry and resets status', async () => {
+    const entry = buildCalendarEntry({ status: 'failed' })
+    const newDate = new Date(Date.now() + 172800000).toISOString()
+
+    // Fetch existing
+    mockSupabase.single.mockResolvedValueOnce({ data: entry, error: null })
+    // Update
+    mockSupabase.single.mockResolvedValueOnce({
+      data: { ...entry, scheduled_at: newDate, status: 'scheduled', error_message: null },
+      error: null,
+    })
+
+    const req = makeRequest({
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scheduledAt: newDate }),
+    })
+
+    const res = await PATCH(req, { params })
+    const data = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(data.status).toBe('scheduled')
+    expect(data.error_message).toBeNull()
+  })
+
+  it('rejects cancelling a failed entry', async () => {
+    const entry = buildCalendarEntry({ status: 'failed' })
+    mockSupabase.single.mockResolvedValueOnce({ data: entry, error: null })
+
+    const req = makeRequest({
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'cancelled' }),
+    })
+
+    const res = await PATCH(req, { params })
+    expect(res.status).toBe(200)
   })
 
   it('rejects rescheduling to past time', async () => {

@@ -429,12 +429,42 @@ Sprint Results:
 - [x] `metadataBase` added to root layout — OG image URLs now resolve to absolute URLs (app/layout.tsx)
 - [x] Indexing check script: `scripts/check-indexing-status.ts` for auditing Google indexing status
 
+**Post-V2: Image Management System** ✅
+
+- [x] Reusable ImageManager component: 3-tab UI (Library / Upload / Generate) with style selector, file validation, toast notifications (components/shared/image-manager.tsx)
+- [x] Image upload API: POST /api/v1/media/upload — multipart/form-data, 10 MB limit, editor+ auth, Supabase Storage (app/api/v1/media/upload/route.ts)
+- [x] Content page image management: ImageManager integrated into content detail sheet for draft/review items (hero image for service/location, featured image for blog) (components/content/content-detail-sheet.tsx)
+- [x] Video thumbnail management: ImageManager in video detail sheet + PATCH /api/v1/video/[id] endpoint + thumbnail display in library grid (components/video/video-detail-sheet.tsx, app/api/v1/video/[id]/route.ts)
+- [x] Social post image management: replaced InlineMediaPicker with full ImageManager — regenerate, upload, or library pick (components/social/social-post-detail.tsx)
+- [x] Video thumbnail image type: `video_thumbnail` added to ImageType + Nano Banana 2 prompt template (types/media.ts, packages/ai/prompts/images/video-thumbnail.ts)
+- [x] Content edit API: PUT handler now persists hero_image_url/featured_image_url (app/api/v1/content/[type]/[id]/route.ts)
+- [x] Database migration: thumbnail_url column on media_assets (applied to live Supabase)
+- [x] Types regenerated from live schema
+- [x] Test suite: 1319 tests, 177 files, all passing
+
+**Post-V2: Auto-Publish GBP Social Posts** ✅
+
+- [x] GBP Local Post types: `GbpLocalPostTopicType`, `GbpCallToAction`, `GbpMediaItem`, `GbpLocalPostRequest`, `GbpLocalPostResponse` + `postTypeToTopicType()` helper (types/gbp.ts)
+- [x] `createLocalPost()` API wrapper for GBP Local Posts API v4 (lib/google/business-profile.ts)
+- [x] GBP publisher orchestration: `publishSocialPostToGbp()` — fetches post, resolves token/media, builds request (body truncation to 1500 chars, CTA, image), calls API, stores gbp_post_name in metadata (lib/google/gbp-publisher.ts)
+- [x] Publish worker wired: GBP social posts auto-post to Google during cron/manual publish; Instagram/Facebook remain internal-only; graceful skip if no GBP connection (lib/queue/publish-worker.ts)
+- [x] Test suite: 22 new tests across 3 files (1,341 tests total, 180 files, all passing)
+
+**Post-V2: SMS Compliance (Privacy Policy + Terms + Consent)** ✅
+
+- [x] Privacy Policy page (`/privacy`): static legal page with data collection, SMS consent, information sharing, data retention, security, user rights — noindex, HeroSection + prose styling (app/(marketing)/privacy/page.tsx)
+- [x] Terms of Service page (`/terms`): static legal page with SMS Messaging Program section (program name, description, frequency, STOP/HELP, consent disclosure), website use, estimates, IP, liability, NJ governing law — noindex (app/(marketing)/terms/page.tsx)
+- [x] SMS consent checkbox on estimate form: TCPA-compliant disclosure with links to /privacy and /terms (components/marketing/home/estimate-form.tsx)
+- [x] Database migration: `sms_consent BOOLEAN DEFAULT false` column on leads table (packages/db/supabase/migrations/20260329000001_add_leads_sms_consent.sql)
+- [x] Leads API: `sms_consent` added to Zod schema and DB insert (app/api/v1/leads/route.ts)
+- [x] Estimate form fix: was sending `organization_id` (UUID) instead of `org_slug` — leads were silently failing Zod validation. Fixed form prop + payload (components/marketing/home/estimate-form.tsx, app/(marketing)/page.tsx)
+- [x] Footer links (`/privacy`, `/terms`) now resolve to real pages (were broken links before)
+- [x] Migration applied to live Supabase
+
 ### What's Next
 
-- Deploy to Vercel (triggers static page generation via `generateStaticParams`)
-- Verify full HTML renders for anon users: `curl https://cleanestpaintingnj.com/locations/summit-nj-painting`
-- Request re-crawl of key pages in Google Search Console
-- Monitor indexing over 48-72 hours
+- Deploy to Vercel (privacy/terms pages + estimate form fix go live)
+- Submit `cleanestpaintingnj.com/privacy` and `cleanestpaintingnj.com/terms` to SMS campaign registration
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)
 

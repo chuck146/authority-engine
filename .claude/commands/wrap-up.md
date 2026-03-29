@@ -6,30 +6,32 @@ After completing a discrete feature, fix, or phase — commit the work, update d
 
 1. **Review what changed** — run `git status` and `git diff` to understand all uncommitted work
 
-2. **Commit the work** — stage and commit with a descriptive message scoped to the completed task:
-   - Summarize the nature of the change (feature, fix, refactor, etc.)
-   - Keep the commit message concise (1-2 sentences)
-   - If changes span multiple unrelated features, create separate commits for each
-
-3. **Update `docs/changelog.md`** — add an entry under `[Unreleased]`:
-   - Use categories: Added, Changed, Fixed, Removed
-   - Be specific about what changed (file names, feature names)
-
-4. **Update `docs/project_status.md`**:
-   - Check off completed items
-   - Add any new items discovered during development
-   - Update progress percentages and "What's Next" section
-
-5. **Update `docs/project_spec.md`** — only if milestone scope changed
-
-6. **If architecture changed** (new tables, services, integrations), update `docs/architecture.md`
-
-7. **Run lint and typecheck:**
+2. **Run lint and typecheck** — fix any errors before committing:
 
    ```bash
    npm run lint
    npm run typecheck
    ```
+
+   If either fails, fix the issues first and re-run until clean.
+
+3. **Commit the work** — stage and commit with a descriptive message scoped to the completed task:
+   - Summarize the nature of the change (feature, fix, refactor, etc.)
+   - Keep the commit message concise (1-2 sentences)
+   - If changes span multiple unrelated features, create separate commits for each
+
+4. **Update `docs/changelog.md`** — add an entry under `[Unreleased]`:
+   - Use categories: Added, Changed, Fixed, Removed
+   - Be specific about what changed (file names, feature names)
+
+5. **Update `docs/project_status.md`**:
+   - Check off completed items
+   - Add any new items discovered during development
+   - Update progress percentages and "What's Next" section
+
+6. **Update `docs/project_spec.md`** — only if milestone scope changed
+
+7. **If architecture changed** (new tables, services, integrations), update `docs/architecture.md`
 
 8. **Commit the doc updates:**
 

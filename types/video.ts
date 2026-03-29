@@ -320,6 +320,7 @@ export type VideoLibraryItem = {
   mimeType: string
   sizeBytes: number | null
   durationSeconds: number | null
+  thumbnailUrl: string | null
   createdAt: string
 }
 

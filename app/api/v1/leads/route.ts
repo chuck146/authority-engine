@@ -18,6 +18,7 @@ const leadSchema = z.object({
     .regex(/^\+?[\d\s\-()]+$/, 'Invalid phone number format'),
   service: z.string().max(200).optional(),
   message: z.string().max(1000).optional(),
+  sms_consent: z.boolean().optional().default(false),
   org_slug: z.string().min(1).max(100),
 })
 
@@ -77,6 +78,7 @@ export async function POST(request: Request) {
         phone: input.phone,
         service: input.service ?? null,
         message: input.message ?? null,
+        sms_consent: input.sms_consent,
         score,
         score_label: scoreLabel,
         source: 'website',

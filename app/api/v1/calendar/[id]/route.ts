@@ -39,8 +39,11 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Calendar entry not found' }, { status: 404 })
     }
 
-    if (entry.status !== 'scheduled') {
-      return NextResponse.json({ error: 'Only scheduled entries can be modified' }, { status: 422 })
+    if (!['scheduled', 'failed'].includes(entry.status)) {
+      return NextResponse.json(
+        { error: 'Only scheduled or failed entries can be modified' },
+        { status: 422 },
+      )
     }
 
     // Handle cancellation
@@ -78,7 +81,11 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
       const { data: updated, error: updateError } = await supabase
         .from('content_calendar')
-        .update({ scheduled_at: input.scheduledAt })
+        .update({
+          scheduled_at: input.scheduledAt,
+          status: 'scheduled',
+          error_message: null,
+        })
         .eq('id', id)
         .select('*')
         .returns<CalendarEntry[]>()

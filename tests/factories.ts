@@ -685,6 +685,7 @@ export function buildVideoLibraryItem(overrides?: Partial<VideoLibraryItem>): Vi
     mimeType: 'video/mp4',
     sizeBytes: 5242880,
     durationSeconds: 8,
+    thumbnailUrl: null,
     createdAt: '2026-03-07T12:00:00Z',
     ...overrides,
   }

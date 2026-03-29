@@ -7,9 +7,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Trash2, Download, CalendarClock } from 'lucide-react'
+import { ImageManager } from '@/components/shared/image-manager'
+import { toast } from 'sonner'
 import { VIDEO_TYPE_LABELS } from './video-generate-form'
 import type { VideoLibraryItem } from '@/types/video'
 
@@ -28,6 +31,12 @@ export function VideoDetailSheet({
   onDelete,
   onSchedule,
 }: VideoDetailSheetProps) {
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null)
+  const [savingThumb, setSavingThumb] = useState(false)
+
+  // Sync local state when item changes
+  const currentThumbnail = thumbnailUrl ?? item?.thumbnailUrl ?? null
+
   if (!item) return null
 
   return (
@@ -41,6 +50,33 @@ export function VideoDetailSheet({
         <div className="mt-6 space-y-6">
           <div className="bg-muted overflow-hidden rounded-lg">
             <video src={item.publicUrl} controls className="w-full" preload="metadata" />
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium">Thumbnail</h4>
+            <ImageManager
+              imageType="video_thumbnail"
+              generateDefaults={{ topic: item.filename.replace(/\.[^.]+$/, '') }}
+              currentImageUrl={currentThumbnail}
+              disabled={savingThumb}
+              onImageChange={async (url) => {
+                setSavingThumb(true)
+                try {
+                  const res = await fetch(`/api/v1/video/${item.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ thumbnailUrl: url }),
+                  })
+                  if (!res.ok) throw new Error('Failed to save')
+                  setThumbnailUrl(url)
+                  toast.success(url ? 'Thumbnail updated' : 'Thumbnail removed')
+                } catch {
+                  toast.error('Failed to save thumbnail')
+                } finally {
+                  setSavingThumb(false)
+                }
+              }}
+            />
           </div>
 
           <div className="space-y-3">

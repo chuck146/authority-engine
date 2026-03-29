@@ -4,6 +4,8 @@ import type {
   GbpReview,
   GbpReviewsResponse,
   GbpReviewReply,
+  GbpLocalPostRequest,
+  GbpLocalPostResponse,
 } from '@/types/gbp'
 
 const ACCOUNT_API = 'https://mybusinessaccountmanagement.googleapis.com/v1'
@@ -121,6 +123,29 @@ export async function replyToReview(
   if (!res.ok) {
     const text = await res.text()
     throw new Error(`GBP Reply API error (${res.status}): ${text}`)
+  }
+
+  return res.json()
+}
+
+// --- Local Posts ---
+
+export async function createLocalPost(
+  options: FetchOptions & { locationName: string; post: GbpLocalPostRequest },
+): Promise<GbpLocalPostResponse> {
+  const { accessToken, locationName, post } = options
+  const res = await fetch(`${REVIEWS_API}/${locationName}/localPosts`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(post),
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`GBP Local Posts API error (${res.status}): ${text}`)
   }
 
   return res.json()

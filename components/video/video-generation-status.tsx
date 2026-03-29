@@ -38,6 +38,7 @@ export function VideoGenerationStatus({ jobId, onComplete, onError }: VideoGener
             mimeType: data.result.mimeType,
             sizeBytes: data.result.sizeBytes,
             durationSeconds: data.result.durationSeconds,
+            thumbnailUrl: null,
             createdAt: new Date().toISOString(),
           })
         } else if (data.status === 'failed') {

@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select'
 import { Pencil } from 'lucide-react'
 import { SocialPostPreview } from './social-post-preview'
-import { InlineMediaPicker } from './inline-media-picker'
+import { ImageManager } from '@/components/shared/image-manager'
 import type { SocialPostDetail as SocialPostDetailType } from '@/types/social'
 
 type SocialPostDetailProps = {
@@ -344,10 +344,17 @@ export function SocialPostDetail({ postId, onClose, onStatusChange }: SocialPost
               )}
 
               {/* Image */}
-              <InlineMediaPicker
-                currentMediaUrl={formState.mediaUrl}
-                onSelect={(id, url) => updateForm({ mediaAssetId: id, mediaUrl: url })}
-                onRemove={() => updateForm({ mediaAssetId: null, mediaUrl: null })}
+              <ImageManager
+                imageType="social_graphic"
+                generateDefaults={{ message: formState.body.slice(0, 300) }}
+                currentImageUrl={formState.mediaUrl}
+                onImageChange={(url, mediaAssetId) =>
+                  updateForm({
+                    mediaUrl: url,
+                    mediaAssetId: mediaAssetId ?? null,
+                  })
+                }
+                disabled={saving}
               />
             </div>
 

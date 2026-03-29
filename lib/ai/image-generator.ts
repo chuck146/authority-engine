@@ -6,6 +6,7 @@ import {
   buildLocationHeroPrompt,
   buildServiceHeroPrompt,
   buildSocialGraphicPrompt,
+  buildVideoThumbnailPrompt,
 } from '@/packages/ai/prompts/images'
 import type { OrgContext } from '@/packages/ai/prompts/content/shared'
 import type { GenerateImageRequest, GenerateImageResponse } from '@/types/media'
@@ -75,6 +76,8 @@ function buildImagePrompt(input: GenerateImageRequest, org: OrgContext): string 
       return buildServiceHeroPrompt(input, org)
     case 'social_graphic':
       return buildSocialGraphicPrompt(input, org)
+    case 'video_thumbnail':
+      return buildVideoThumbnailPrompt(input, org)
   }
 }
 
@@ -88,6 +91,8 @@ function buildAltText(input: GenerateImageRequest, org: OrgContext): string {
       return `Professional ${input.serviceName} — ${org.orgName}`
     case 'social_graphic':
       return `Social graphic: ${input.message.slice(0, 80)} — ${org.orgName}`
+    case 'video_thumbnail':
+      return `Video thumbnail: ${input.topic.slice(0, 80)} — ${org.orgName}`
   }
 }
 
@@ -108,5 +113,7 @@ function buildFilename(input: GenerateImageRequest): string {
       return `service-hero-${slug(input.serviceName)}.png`
     case 'social_graphic':
       return `social-${slug(input.message)}.png`
+    case 'video_thumbnail':
+      return `video-thumb-${slug(input.topic)}.png`
   }
 }

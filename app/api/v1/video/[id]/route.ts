@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 import { requireApiAuth, requireApiRole, AuthError } from '@/lib/auth/api-guard'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { VideoType } from '@/types/video'
+
+const videoThumbnailUpdateSchema = z.object({
+  thumbnailUrl: z.string().url().nullable(),
+})
 
 type RouteContext = { params: Promise<{ id: string }> }
 
@@ -36,6 +41,7 @@ export async function GET(_request: Request, context: RouteContext) {
       mimeType: data.mime_type,
       sizeBytes: data.size_bytes,
       durationSeconds: data.duration_seconds,
+      thumbnailUrl: ((data as Record<string, unknown>).thumbnail_url as string | null) ?? null,
       metadata,
       createdAt: data.created_at,
     })
@@ -84,5 +90,53 @@ export async function DELETE(_request: Request, context: RouteContext) {
     }
     console.error('[Video Delete Error]', err)
     return NextResponse.json({ error: 'Failed to delete video' }, { status: 500 })
+  }
+}
+
+export async function PATCH(request: Request, context: RouteContext) {
+  try {
+    const auth = await requireApiRole('editor')
+    const { id } = await context.params
+
+    const body = await request.json()
+    const parseResult = videoThumbnailUpdateSchema.safeParse(body)
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: 'Invalid request', details: parseResult.error.flatten().fieldErrors },
+        { status: 400 },
+      )
+    }
+
+    const admin = createAdminClient()
+    const supabase = await createClient()
+
+    // Verify ownership
+    const { data: asset } = await supabase
+      .from('media_assets')
+      .select('id')
+      .eq('id', id)
+      .eq('organization_id', auth.organizationId)
+      .eq('type', 'video')
+      .single()
+
+    if (!asset) {
+      return NextResponse.json({ error: 'Video not found' }, { status: 404 })
+    }
+
+    const { error } = await admin
+      .from('media_assets')
+      .update({ thumbnail_url: parseResult.data.thumbnailUrl } as never)
+      .eq('id', id)
+      .eq('organization_id', auth.organizationId)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true, thumbnailUrl: parseResult.data.thumbnailUrl })
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return NextResponse.json({ error: err.message }, { status: err.statusCode })
+    }
+    console.error('[Video Thumbnail Update Error]', err)
+    return NextResponse.json({ error: 'Failed to update thumbnail' }, { status: 500 })
   }
 }

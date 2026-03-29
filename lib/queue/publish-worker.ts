@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { getRedisConnection } from './connection'
 import type { PublishJobData } from './scheduler'
 import type { Database } from '@/types/database'
+import { publishSocialPostToGbp } from '@/lib/google/gbp-publisher'
 
 function getAdminClient() {
   return createClient<Database>(
@@ -91,6 +92,31 @@ export async function publishCalendarEntry(
 
     publishError = error
   } else {
+    // For GBP social posts, publish to Google Business Profile first
+    if (contentType === 'social_post') {
+      const { data: socialPost } = await supabase
+        .from('social_posts')
+        .select('platform, organization_id')
+        .eq('id', contentId)
+        .single()
+
+      if (socialPost?.platform === 'gbp') {
+        const gbpResult = await publishSocialPostToGbp(
+          supabase,
+          contentId,
+          socialPost.organization_id,
+        )
+        if (gbpResult.error) {
+          await supabase
+            .from('content_calendar')
+            .update({ status: 'failed', error_message: `GBP publish failed: ${gbpResult.error}` })
+            .eq('id', calendarEntryId)
+          throw new Error(`GBP publish failed: ${gbpResult.error}`)
+        }
+        // gbpResult.published === false without error means no connection — proceed with internal publish
+      }
+    }
+
     const { error } = await supabase
       .from(table as never)
       .update({ status: 'published', published_at: new Date().toISOString() } as never)
