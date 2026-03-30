@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
+import { isUserRateLimited } from '@/lib/leads/auth-rate-limiter'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { generateSocialPost } from '@/lib/ai/social-generator'
@@ -14,6 +15,10 @@ export const maxDuration = 60
 export async function POST(request: Request) {
   try {
     const auth = await requireApiRole('editor')
+
+    if (isUserRateLimited(auth.userId, 'social-generate', { max: 30 })) {
+      return NextResponse.json({ error: 'Rate limit exceeded. Try again later.' }, { status: 429 })
+    }
 
     const body = await request.json()
     const parseResult = generateSocialPostRequestSchema.safeParse(body)

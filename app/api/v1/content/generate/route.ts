@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
+import { isUserRateLimited } from '@/lib/leads/auth-rate-limiter'
 import { createClient } from '@/lib/supabase/server'
 import { generateContent } from '@/lib/ai'
 import { generateSlug, generateTitleFromInput } from '@/lib/ai/utils'
@@ -14,6 +15,10 @@ export async function POST(request: Request) {
   try {
     // 1. Auth: require at least editor role to generate content
     const auth = await requireApiRole('editor')
+
+    if (isUserRateLimited(auth.userId, 'content-generate', { max: 30 })) {
+      return NextResponse.json({ error: 'Rate limit exceeded. Try again later.' }, { status: 429 })
+    }
 
     // 2. Parse and validate request body
     const body = await request.json()
