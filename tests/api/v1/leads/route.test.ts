@@ -12,6 +12,9 @@ const mockSupabase = createMockSupabaseClient()
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn().mockResolvedValue(mockSupabase),
 }))
+vi.mock('@/lib/supabase/admin', () => ({
+  createAdminClient: vi.fn().mockReturnValue(mockSupabase),
+}))
 
 vi.mock('@/lib/leads/lead-scorer', () => ({
   scoreLead: vi.fn().mockReturnValue({ score: 65, scoreLabel: 'warm', reasons: ['test'] }),

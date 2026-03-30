@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
+import { isUserRateLimited } from '@/lib/leads/auth-rate-limiter'
 import { createClient } from '@/lib/supabase/server'
 import {
   generateVeoRequestSchema,
@@ -22,6 +23,10 @@ import { COMPOSITION_IDS } from '@/services/video/src/types'
 export async function POST(request: Request) {
   try {
     const auth = await requireApiRole('editor')
+
+    if (isUserRateLimited(auth.userId, 'video-generate', { max: 10 })) {
+      return NextResponse.json({ error: 'Rate limit exceeded. Try again later.' }, { status: 429 })
+    }
 
     const body = await request.json()
     const videoType = body.videoType as string | undefined
