@@ -1,6 +1,7 @@
 'use client'
 
 import sanitizeHtml from 'sanitize-html'
+import { sanitizeOptions } from '@/lib/sanitize-config'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -61,7 +62,9 @@ export function ContentPreview({
         {content.sections.map((section, index) => (
           <div key={index}>
             <h2>{section.title}</h2>
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.body) }} />
+            <div
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.body, sanitizeOptions) }}
+            />
           </div>
         ))}
 
