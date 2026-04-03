@@ -25,7 +25,7 @@ config({ path: '.env.local' })
 
 import { createClient } from '@supabase/supabase-js'
 import { getValidToken } from '@/lib/google/token-manager'
-import { inspectUrl } from '@/lib/google/search-console'
+import { inspectUrl, fetchSitemaps, fetchSearchAnalytics } from '@/lib/google/search-console'
 import type { UrlInspectionResult } from '@/types/gsc'
 
 // ---------------------------------------------------------------------------
@@ -89,10 +89,17 @@ type PageEntry = {
   publishedAt: string | null
 }
 
+type SearchAnalyticsData = {
+  clicks: number
+  impressions: number
+  position: number
+}
+
 type InspectionEntry = {
   page: PageEntry
   result: UrlInspectionResult | null
   error: string | null
+  searchAnalytics: SearchAnalyticsData | null
 }
 
 // ---------------------------------------------------------------------------
@@ -253,17 +260,29 @@ async function inspectWithRetry(
 // ---------------------------------------------------------------------------
 
 function printResult(entry: InspectionEntry): void {
-  const { page, result, error } = entry
+  const { page, result, error, searchAnalytics } = entry
   const path = `/${page.type === 'blog' ? 'blog' : page.type === 'commercial' ? 'commercial' : page.type === 'services' ? 'services' : 'locations'}/${page.slug}`
 
   if (error) {
-    console.log(`  ${C.red}✗ ERROR${C.reset}    ${path} — ${error}`)
+    // Still show search analytics confirmation even on inspection error
+    if (searchAnalytics) {
+      console.log(
+        `  ${C.green}✓ INDEXED${C.reset}    ${path} — ${C.green}Confirmed via search data${C.reset} (${searchAnalytics.impressions} impressions, ${searchAnalytics.clicks} clicks, pos ${searchAnalytics.position})`,
+      )
+    } else {
+      console.log(`  ${C.red}✗ ERROR${C.reset}    ${path} — ${error}`)
+    }
     return
   }
 
   if (!result) return
 
-  const cv = coverageLabel(result.coverageState)
+  // If search analytics has data for this page, it's definitively indexed
+  const confirmedBySearch = !!searchAnalytics
+  const cv = confirmedBySearch
+    ? { label: 'INDEXED', color: C.green, icon: '✓' }
+    : coverageLabel(result.coverageState)
+
   const crawl = result.lastCrawlTime
     ? `Crawled ${relativeTime(result.lastCrawlTime)}`
     : 'Not crawled yet'
@@ -272,12 +291,16 @@ function printResult(entry: InspectionEntry): void {
     result.richResults.length > 0
       ? `${result.richResults.length} rich result${result.richResults.length > 1 ? 's' : ''}`
       : ''
+  const searchInfo = searchAnalytics
+    ? `${C.green}${searchAnalytics.impressions} imp, ${searchAnalytics.clicks} clicks, pos ${searchAnalytics.position}${C.reset}`
+    : ''
 
-  const parts = [crawl, mobile, rich].filter(Boolean).join(' — ')
+  const parts = [crawl, mobile, rich, searchInfo].filter(Boolean).join(' — ')
   console.log(`  ${cv.color}${cv.icon} ${cv.label.padEnd(10)}${C.reset} ${path} — ${parts}`)
 
   if (verbose) {
     console.log(`    ${C.gray}Indexing State:  ${result.indexingState}${C.reset}`)
+    console.log(`    ${C.gray}Coverage State:  ${result.coverageState}${C.reset}`)
     console.log(`    ${C.gray}Page Fetch:      ${result.pageFetchState}${C.reset}`)
     console.log(`    ${C.gray}Robots.txt:      ${result.robotsTxtState}${C.reset}`)
     console.log(
@@ -290,22 +313,38 @@ function printResult(entry: InspectionEntry): void {
         .join(', ')
       console.log(`    ${C.gray}Rich Results:    ${types}${C.reset}`)
     }
+    if (searchAnalytics) {
+      console.log(
+        `    ${C.green}Search Data:     ${searchAnalytics.impressions} impressions, ${searchAnalytics.clicks} clicks, avg position ${searchAnalytics.position}${C.reset}`,
+      )
+    }
     console.log()
   }
 }
 
 function printSummary(entries: InspectionEntry[]): void {
   const total = entries.length
-  const indexed = entries.filter((e) => e.result?.coverageState === 'SUBMITTED_AND_INDEXED').length
-  const crawled = entries.filter((e) => e.result?.coverageState === 'CRAWLED_NOT_INDEXED').length
+  // Count as indexed if: URL Inspection says so OR search analytics confirms it
+  const confirmedBySearch = entries.filter((e) => e.searchAnalytics).length
+  const indexedByApi = entries.filter(
+    (e) => e.result?.coverageState === 'SUBMITTED_AND_INDEXED',
+  ).length
+  const indexed = entries.filter(
+    (e) => e.result?.coverageState === 'SUBMITTED_AND_INDEXED' || e.searchAnalytics,
+  ).length
+  const crawled = entries.filter(
+    (e) => e.result?.coverageState === 'CRAWLED_NOT_INDEXED' && !e.searchAnalytics,
+  ).length
   const discovered = entries.filter(
-    (e) => e.result?.coverageState === 'DISCOVERED_NOT_INDEXED',
+    (e) => e.result?.coverageState === 'DISCOVERED_NOT_INDEXED' && !e.searchAnalytics,
   ).length
   const unknown = entries.filter(
-    (e) => !e.result || e.result.coverageState === 'URL_IS_UNKNOWN',
+    (e) => (!e.result || e.result.coverageState === 'URL_IS_UNKNOWN') && !e.searchAnalytics,
   ).length
-  const duplicate = entries.filter((e) => e.result?.coverageState === 'DUPLICATE').length
-  const errors = entries.filter((e) => e.error).length
+  const duplicate = entries.filter(
+    (e) => e.result?.coverageState === 'DUPLICATE' && !e.searchAnalytics,
+  ).length
+  const errors = entries.filter((e) => e.error && !e.searchAnalytics).length
   const mobileFriendly = entries.filter(
     (e) => e.result?.mobileUsability === 'MOBILE_FRIENDLY',
   ).length
@@ -323,6 +362,11 @@ function printSummary(entries: InspectionEntry[]): void {
   console.log(
     `  ${C.green}Indexed:              ${String(indexed).padStart(3)}  ${pct(indexed).padStart(8)}  ${bar(indexed)}${C.reset}`,
   )
+  if (confirmedBySearch > 0 || indexedByApi > 0) {
+    console.log(
+      `    ${C.gray}↳ ${confirmedBySearch} confirmed via search analytics, ${indexedByApi} via URL Inspection API${C.reset}`,
+    )
+  }
   if (crawled > 0)
     console.log(
       `  ${C.yellow}Crawled not indexed:  ${String(crawled).padStart(3)}  ${pct(crawled).padStart(8)}  ${bar(crawled)}${C.reset}`,
@@ -429,6 +473,85 @@ async function main() {
   console.log(`  ${C.gray}GSC property: ${siteUrl}${C.reset}`)
   console.log(`  ${C.gray}Delay: ${delayMs / 1000}s between requests${C.reset}\n`)
 
+  // ---------------------------------------------------------------------------
+  // Sitemap summary (matches GSC dashboard "Page indexing" numbers)
+  // ---------------------------------------------------------------------------
+
+  try {
+    const sitemaps = await fetchSitemaps({ accessToken, siteUrl })
+    const activeSitemaps = sitemaps.filter((s) => s.contents && s.contents.length > 0)
+    if (activeSitemaps.length > 0) {
+      console.log(`  ${C.bold}--- Sitemap Summary (GSC Dashboard) ---${C.reset}`)
+      for (const sm of activeSitemaps) {
+        const webContent = sm.contents?.find((c) => c.type === 'web')
+        if (webContent) {
+          const submitted = parseInt(webContent.submitted, 10)
+          const indexed = parseInt(webContent.indexed, 10)
+          const pct = submitted > 0 ? ((indexed / submitted) * 100).toFixed(1) : '0'
+          console.log(`  ${C.green}${sm.path}${C.reset}`)
+          console.log(
+            `    Submitted: ${submitted}  |  ${C.green}Indexed: ${indexed} (${pct}%)${C.reset}`,
+          )
+          if (sm.lastDownloaded) {
+            console.log(
+              `    ${C.gray}Last downloaded: ${relativeTime(sm.lastDownloaded)}${C.reset}`,
+            )
+          }
+        }
+      }
+      console.log()
+    }
+  } catch (err) {
+    console.log(
+      `  ${C.yellow}Could not fetch sitemaps: ${err instanceof Error ? err.message : err}${C.reset}\n`,
+    )
+  }
+
+  // ---------------------------------------------------------------------------
+  // Search Analytics cross-reference (pages with impressions = confirmed indexed)
+  // ---------------------------------------------------------------------------
+
+  const indexedBySearchAnalytics = new Map<
+    string,
+    { clicks: number; impressions: number; position: number }
+  >()
+
+  try {
+    const now = new Date()
+    const endDate = now.toISOString().split('T')[0]!
+    const startDate = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0]!
+
+    const analyticsData = await fetchSearchAnalytics({
+      accessToken,
+      siteUrl,
+      startDate,
+      endDate,
+      dimensions: ['page'],
+      rowLimit: 1000,
+    })
+
+    if (analyticsData.rows) {
+      for (const row of analyticsData.rows) {
+        const pageUrl = row.keys[0]!
+        indexedBySearchAnalytics.set(pageUrl, {
+          clicks: row.clicks,
+          impressions: row.impressions,
+          position: Math.round(row.position * 10) / 10,
+        })
+      }
+      console.log(`  ${C.bold}--- Search Analytics (28d) ---${C.reset}`)
+      console.log(
+        `  ${C.green}${indexedBySearchAnalytics.size} pages with search impressions (confirmed indexed)${C.reset}\n`,
+      )
+    }
+  } catch (err) {
+    console.log(
+      `  ${C.yellow}Could not fetch search analytics: ${err instanceof Error ? err.message : err}${C.reset}\n`,
+    )
+  }
+
   // Inspect each page
   const entries: InspectionEntry[] = []
 
@@ -436,14 +559,16 @@ async function main() {
     const page = pages[i]!
     const url = buildUrl(page.type, page.slug)
 
+    const sa = indexedBySearchAnalytics.get(url) ?? null
+
     try {
       const result = await inspectWithRetry(url, accessToken, siteUrl)
-      const entry: InspectionEntry = { page, result, error: null }
+      const entry: InspectionEntry = { page, result, error: null, searchAnalytics: sa }
       entries.push(entry)
       printResult(entry)
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err)
-      const entry: InspectionEntry = { page, result: null, error: errorMsg }
+      const entry: InspectionEntry = { page, result: null, error: errorMsg, searchAnalytics: sa }
       entries.push(entry)
       printResult(entry)
     }
