@@ -24,6 +24,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Skip Supabase auth session for public marketing routes and static pages.
+  // No reason to make a network round-trip to Supabase for Googlebot or
+  // unauthenticated visitors on public pages.
+  const needsAuth =
+    protectedPrefixes.some((prefix) => pathname.startsWith(prefix)) ||
+    authRoutes.some((route) => pathname.startsWith(route)) ||
+    pathname.startsWith('/api/')
+
+  if (!needsAuth) {
+    return NextResponse.next()
+  }
+
   const { supabaseResponse, user } = await updateSession(request)
 
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix))

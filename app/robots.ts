@@ -19,6 +19,16 @@ export default function robots(): MetadataRoute.Robots {
           '/video/',
           '/analytics/',
           '/media/',
+          // Old WordPress paths — domain was previously WP on SiteGround.
+          // Vercel WAF returns 403 for these; disallow prevents GSC indexing errors.
+          '/wp-admin',
+          '/wp-login.php',
+          '/xmlrpc.php',
+          '/wp-cron.php',
+          '/wp-signup.php',
+          '/wp-content/',
+          '/wp-includes/',
+          '/wp-json/',
         ],
       },
     ],
