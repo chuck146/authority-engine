@@ -76,7 +76,7 @@ export function SiteFooter({
                 </svg>
               </a>
               <a
-                href="https://facebook.com/cleanestpainting"
+                href="https://www.facebook.com/people/Cleanest-Painting-LLC/100065285028377/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-[#fbbf24]"
