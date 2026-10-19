@@ -103,7 +103,12 @@ export default async function HomePage() {
 
       <Testimonials />
 
-      <ServiceAreas locations={locations} phone={phone} serviceArea={serviceArea} />
+      <ServiceAreas
+        locations={locations}
+        phone={phone}
+        serviceArea={serviceArea}
+        estimateUrl="/#estimate"
+      />
 
       {/* Estimate Form — inline lead capture (replaces CtaBanner) */}
       <EstimateForm orgSlug={ORG_SLUG} services={services} phone={phone} />

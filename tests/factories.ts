@@ -920,6 +920,8 @@ export function buildLeadDetail(overrides?: Partial<LeadDetail>): LeadDetail {
     contactedAt: null,
     closedAt: null,
     closeReason: null,
+    discoverySource: null,
+    attribution: null,
     createdAt: '2026-03-16T12:00:00Z',
     updatedAt: '2026-03-16T12:00:00Z',
     activities: [buildLeadActivity()],
@@ -945,6 +947,8 @@ export function buildLeadOverview(overrides?: Partial<LeadOverview>): LeadOvervi
       { service: 'Exterior Painting', count: 5 },
     ],
     avgResponseTimeHours: 2.5,
+    byChannel: [{ channel: 'organic_search', leads: 4, qualified: 2, won: 1 }],
+    byDiscoverySource: [{ source: 'google_search', count: 3 }],
     ...overrides,
   }
 }

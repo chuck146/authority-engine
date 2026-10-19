@@ -1,3 +1,4 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import { Phone } from 'lucide-react'
 
 type BrandedCtaProps = {
@@ -22,13 +23,14 @@ export function BrandedCta({ cta, phone, estimateUrl }: BrandedCtaProps) {
           </a>
         )}
         {phone && (
-          <a
-            href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+          <TrackedPhoneLink
+            phone={phone}
+            location="content_cta"
             className="inline-flex items-center gap-2 rounded-lg border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
             <Phone className="h-4 w-4" />
             {phone}
-          </a>
+          </TrackedPhoneLink>
         )}
       </div>
       {!estimateUrl && !phone && (

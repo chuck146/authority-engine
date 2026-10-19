@@ -83,11 +83,13 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
 
         <ScrollReveal>
           <div className="mt-8">
+            {/* No portfolio page yet — point to the estimate form rather than a
+                "View all projects" link that led nowhere. */}
             <Link
-              href="/#services"
+              href="/#estimate"
               className="text-sm font-medium text-[#1B2B5B] underline underline-offset-4 transition-colors hover:text-[#1B2B5B]/70"
             >
-              View all projects
+              Planning a similar project? Get a free estimate
             </Link>
           </div>
         </ScrollReveal>

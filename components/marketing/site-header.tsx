@@ -1,3 +1,4 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import Link from 'next/link'
 import { Phone } from 'lucide-react'
 import { SiteHeaderWrapper } from './site-header-wrapper'
@@ -36,14 +37,15 @@ export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
       ))}
       {phone && <div className="my-2 border-t border-gray-200" />}
       {phone && (
-        <a
-          href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+        <TrackedPhoneLink
+          phone={phone}
+          location="header_mobile"
           className="flex items-center gap-2 text-base font-medium text-gray-800"
-          aria-label={`Call ${phone}`}
+          ariaLabel={`Call ${phone}`}
         >
           <Phone className="h-4 w-4 text-[#3DA535]" />
           {phone}
-        </a>
+        </TrackedPhoneLink>
       )}
     </div>
   )
@@ -98,14 +100,15 @@ export function SiteHeader({ orgName, phone, services = [] }: SiteHeaderProps) {
       {/* Desktop action cluster — phone */}
       {phone && (
         <div className="hidden items-center md:flex">
-          <a
-            href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+          <TrackedPhoneLink
+            phone={phone}
+            location="header"
             className="flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-[#fbbf24]"
-            aria-label={`Call ${phone}`}
+            ariaLabel={`Call ${phone}`}
           >
             <Phone className="h-4 w-4" />
             {phone}
-          </a>
+          </TrackedPhoneLink>
         </div>
       )}
     </SiteHeaderWrapper>

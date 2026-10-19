@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/marketing/json-ld'
 import { RelatedBlogPosts, RelatedServices } from '@/components/marketing/related-links'
 import type { StructuredContent } from '@/types/content'
 import type { OrgSettings } from '@/types'
+import { getEstimateHref } from '@/lib/marketing/estimate'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 
@@ -70,9 +71,7 @@ export default async function BlogPostRoute({ params }: Props) {
 
   const settings = org?.settings as OrgSettings | null
   const phone = settings?.contact_info?.phone
-  const rawEstimateUrl = settings?.estimate_url
-  const estimateUrl =
-    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
+  const estimateUrl = getEstimateHref(settings)
 
   return (
     <>

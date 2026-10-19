@@ -1,3 +1,4 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import Link from 'next/link'
 import { SOCIAL_PROFILES } from '@/lib/seo/business'
 
@@ -154,12 +155,13 @@ export function SiteFooter({
                   <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
                     Phone
                   </p>
-                  <a
-                    href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                  <TrackedPhoneLink
+                    phone={phone}
+                    location="footer_contact"
                     className="text-[0.95rem] font-medium text-white transition-colors hover:text-[#fbbf24]"
                   >
                     {phone}
-                  </a>
+                  </TrackedPhoneLink>
                 </div>
               )}
               {email && (
@@ -218,12 +220,13 @@ export function SiteFooter({
               {address && <p className="mb-2.5 text-[0.95rem] text-white/90">{address}</p>}
               {phone && (
                 <p className="mb-2.5 text-[0.95rem] text-white/90">
-                  <a
-                    href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                  <TrackedPhoneLink
+                    phone={phone}
+                    location="footer_nap"
                     className="border-b border-white/30 text-white transition-colors hover:border-white"
                   >
                     {phone}
-                  </a>
+                  </TrackedPhoneLink>
                 </p>
               )}
               {email && (

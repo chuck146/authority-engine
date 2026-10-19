@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { LeadOverview } from '@/types/leads'
+import { CHANNEL_LABELS, discoverySourceLabel } from '@/lib/leads/attribution'
 
 type LeadOverviewCardsProps = {
   refreshKey?: number
@@ -156,6 +157,65 @@ export function LeadOverviewCards({ refreshKey }: LeadOverviewCardsProps) {
                 {data.topServices.slice(0, 5).map((s) => (
                   <div key={s.service} className="flex items-center justify-between text-sm">
                     <span>{s.service}</span>
+                    <span className="font-medium">{s.count}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Attribution: observed channel vs. what the customer told us */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">Leads by Channel (observed)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {data.byChannel.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No data</p>
+            ) : (
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-muted-foreground text-left text-xs">
+                    <th className="pb-2 font-normal">Channel</th>
+                    <th className="pb-2 text-right font-normal">Leads</th>
+                    <th className="pb-2 text-right font-normal">Qualified</th>
+                    <th className="pb-2 text-right font-normal">Won</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.byChannel.map((c) => (
+                    <tr key={c.channel}>
+                      <td className="py-1">
+                        {CHANNEL_LABELS[c.channel as keyof typeof CHANNEL_LABELS] ?? c.channel}
+                      </td>
+                      <td className="py-1 text-right font-medium">{c.leads}</td>
+                      <td className="py-1 text-right">{c.qualified}</td>
+                      <td className="py-1 text-right">{c.won}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">
+              How They Heard About Us (reported)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {data.byDiscoverySource.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No answers yet</p>
+            ) : (
+              <div className="space-y-2">
+                {data.byDiscoverySource.map((s) => (
+                  <div key={s.source} className="flex items-center justify-between text-sm">
+                    <span>{discoverySourceLabel(s.source)}</span>
                     <span className="font-medium">{s.count}</span>
                   </div>
                 ))}

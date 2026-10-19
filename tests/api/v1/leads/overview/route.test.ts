@@ -133,4 +133,50 @@ describe('GET /api/v1/leads/overview', () => {
     const json = await res.json()
     expect(json.avgResponseTimeHours).toBeNull()
   })
+
+  it('breaks leads down by observed channel and reported discovery source', async () => {
+    const base = {
+      source: 'website',
+      service: null,
+      created_at: new Date().toISOString(),
+      contacted_at: null,
+    }
+    mockSupabase.returns.mockResolvedValueOnce({
+      data: [
+        {
+          ...base,
+          status: 'won',
+          attribution: { channel: 'ai_assistant' },
+          discovery_source: 'ai_assistant',
+        },
+        {
+          ...base,
+          status: 'qualified',
+          attribution: { channel: 'ai_assistant' },
+          discovery_source: 'google_search',
+        },
+        {
+          ...base,
+          status: 'new',
+          attribution: { channel: 'organic_search' },
+          discovery_source: null,
+        },
+        // Lead created before the attribution migration
+        { ...base, status: 'lost' },
+      ],
+      error: null,
+    })
+
+    const json = await (await callGet()).json()
+
+    expect(json.byChannel).toEqual([
+      { channel: 'ai_assistant', leads: 2, qualified: 2, won: 1 },
+      { channel: 'organic_search', leads: 1, qualified: 0, won: 0 },
+      { channel: 'unknown', leads: 1, qualified: 0, won: 0 },
+    ])
+    expect(json.byDiscoverySource).toEqual([
+      { source: 'ai_assistant', count: 1 },
+      { source: 'google_search', count: 1 },
+    ])
+  })
 })

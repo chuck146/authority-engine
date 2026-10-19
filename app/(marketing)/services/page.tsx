@@ -1,3 +1,4 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,6 +8,7 @@ import { HeroSection } from '@/components/marketing/hero-section'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
 import { JsonLd } from '@/components/marketing/json-ld'
 import type { OrgSettings, ServiceCardLink } from '@/types'
+import { getEstimateHref } from '@/lib/marketing/estimate'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 const ORG_SLUG = 'cleanest-painting'
@@ -46,9 +48,7 @@ export default async function ServicesPage() {
 
   const settings = org.settings as unknown as OrgSettings | null
   const phone = settings?.contact_info?.phone
-  const rawEstimateUrl = settings?.estimate_url
-  const estimateUrl =
-    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
+  const estimateUrl = getEstimateHref(settings)
 
   const services = await getAllPublishedServiceCards(org.id)
 
@@ -138,13 +138,14 @@ export default async function ServicesPage() {
                 </a>
               )}
               {phone && (
-                <a
-                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                <TrackedPhoneLink
+                  phone={phone}
+                  location="services_hub"
                   className="inline-flex items-center gap-2 rounded-lg border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   <Phone className="h-4 w-4" />
                   {phone}
-                </a>
+                </TrackedPhoneLink>
               )}
             </div>
           </div>

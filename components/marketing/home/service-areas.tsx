@@ -1,3 +1,4 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Phone } from 'lucide-react'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
@@ -72,13 +73,14 @@ export function ServiceAreas({ locations, phone, estimateUrl, serviceArea }: Ser
                 </a>
               )}
               {phone && (
-                <a
-                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                <TrackedPhoneLink
+                  phone={phone}
+                  location="service_areas"
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
                 >
                   <Phone className="h-3.5 w-3.5" />
                   {phone}
-                </a>
+                </TrackedPhoneLink>
               )}
             </div>
           </div>

@@ -6,6 +6,8 @@ import {
 import { getBusinessProfile, formatPublicAddress, formatServiceArea } from '@/lib/seo/business'
 import { SiteHeader } from '@/components/marketing/site-header'
 import { SiteFooter } from '@/components/marketing/site-footer'
+import { AttributionCapture } from '@/components/marketing/attribution-capture'
+import { Ga4 } from '@/components/marketing/ga4'
 import type { Metadata } from 'next'
 import type { OrgBranding } from '@/types'
 
@@ -43,6 +45,8 @@ export default async function MarketingLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
+      <Ga4 />
+      <AttributionCapture />
       <SiteHeader orgName={org.name} phone={phone} services={services} />
       <main>{children}</main>
       <SiteFooter

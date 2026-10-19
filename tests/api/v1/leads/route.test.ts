@@ -107,6 +107,91 @@ describe('POST /api/v1/leads', () => {
     const res = await callPost(validLeadBody())
     expect(res.status).toBe(404)
   })
+
+  function leadInsertRow(): Record<string, unknown> {
+    const call = mockSupabase.insert.mock.calls.find(
+      (c: unknown[]) => (c[0] as Record<string, unknown>).email !== undefined,
+    )
+    return call?.[0] as Record<string, unknown>
+  }
+
+  it('silently accepts honeypot submissions without storing or notifying', async () => {
+    const { sendLeadNotification } = await import('@/lib/email/resend')
+    const res = await callPost({ ...validLeadBody(), company_website: 'http://spam.example' })
+    expect(res.status).toBe(201)
+    expect(mockSupabase.insert).not.toHaveBeenCalled()
+    expect(sendLeadNotification).not.toHaveBeenCalled()
+  })
+
+  it('stores discovery source and classified attribution', async () => {
+    await callPost({
+      ...validLeadBody(),
+      discovery_source: 'ai_assistant',
+      attribution: { landing_page: '/services/interior-painting', referrer_host: 'chatgpt.com' },
+    })
+    const row = leadInsertRow()
+    expect(row.discovery_source).toBe('ai_assistant')
+    expect(row.attribution).toEqual({
+      landing_page: '/services/interior-painting',
+      referrer_host: 'chatgpt.com',
+      channel: 'ai_assistant',
+    })
+    expect(row.source).toBe('website')
+  })
+
+  it('maps Google Business Profile traffic onto source=gbp', async () => {
+    await callPost({ ...validLeadBody(), attribution: { utm_source: 'gbp' } })
+    expect(leadInsertRow().source).toBe('gbp')
+  })
+
+  it('marks submissions without attribution as direct', async () => {
+    await callPost(validLeadBody())
+    expect(leadInsertRow().attribution).toEqual({ channel: 'direct' })
+  })
+
+  it('rejects an unknown discovery source', async () => {
+    const res = await callPost({ ...validLeadBody(), discovery_source: 'billboard' })
+    expect(res.status).toBe(400)
+  })
+
+  it('keeps the lead when attribution columns do not exist yet', async () => {
+    mockSupabase.single.mockReset()
+    mockSupabase.single
+      .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null })
+      .mockResolvedValueOnce({
+        data: null,
+        error: { code: 'PGRST204', message: "Could not find the 'attribution' column" },
+      })
+      .mockResolvedValueOnce({ data: { id: 'lead-1' }, error: null })
+
+    const res = await callPost({ ...validLeadBody(), discovery_source: 'google_search' })
+
+    expect(res.status).toBe(201)
+    const leadInserts = mockSupabase.insert.mock.calls
+      .map((c: unknown[]) => c[0] as Record<string, unknown>)
+      .filter((row: Record<string, unknown>) => row.email !== undefined)
+    expect(leadInserts).toHaveLength(2)
+    expect(leadInserts[1]).not.toHaveProperty('attribution')
+    expect(leadInserts[1]).not.toHaveProperty('discovery_source')
+  })
+
+  it('includes the discovery source label in the notification email', async () => {
+    const { sendLeadNotification } = await import('@/lib/email/resend')
+    mockSupabase.single.mockReset()
+    mockSupabase.single
+      .mockResolvedValueOnce({
+        data: { id: 'org-1', settings: { contact_info: { email: 'owner@example.com' } } },
+        error: null,
+      })
+      .mockResolvedValueOnce({ data: { id: 'lead-1' }, error: null })
+
+    await callPost({ ...validLeadBody(), discovery_source: 'google_maps' })
+
+    expect(sendLeadNotification).toHaveBeenCalledWith(
+      'owner@example.com',
+      expect.objectContaining({ discoverySource: 'Google Maps / Business Profile' }),
+    )
+  })
 })
 
 describe('GET /api/v1/leads', () => {

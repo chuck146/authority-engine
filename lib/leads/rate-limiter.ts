@@ -35,3 +35,26 @@ export function isRateLimited(ip: string): boolean {
 export function clearRateLimits(): void {
   rateLimitMap.clear()
 }
+
+// Independent limiter with its own budget (e.g. analytics beacons, which are
+// more frequent than lead submissions and must not consume the lead budget).
+export function createRateLimiter({ max, windowMs }: { max: number; windowMs: number }) {
+  const hits = new Map<string, number[]>()
+  return {
+    isLimited(key: string): boolean {
+      const now = Date.now()
+      const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs)
+      if (recent.length >= max) {
+        hits.set(key, recent)
+        return true
+      }
+      recent.push(now)
+      hits.set(key, recent)
+      if (hits.size > 10_000) hits.clear() // bound memory on a long-lived instance
+      return false
+    },
+    clear(): void {
+      hits.clear()
+    },
+  }
+}

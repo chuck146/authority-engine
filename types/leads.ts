@@ -128,6 +128,10 @@ export type LeadDetail = {
   contactedAt: string | null
   closedAt: string | null
   closeReason: string | null
+  // Customer-reported "How did you hear about us?" (see lib/leads/attribution.ts)
+  discoverySource: string | null
+  // Observed first-touch attribution incl. classified `channel`
+  attribution: Record<string, unknown> | null
   createdAt: string
   updatedAt: string | null
   activities: LeadActivity[]
@@ -143,4 +147,9 @@ export type LeadOverview = {
   bySource: { source: LeadSource; count: number }[]
   topServices: { service: string; count: number }[]
   avgResponseTimeHours: number | null
+  // Observed channel (referrer/UTM) with downstream quality: qualified = reached
+  // qualified/proposed/won; won = booked job.
+  byChannel: { channel: string; leads: number; qualified: number; won: number }[]
+  // Customer-reported discovery source
+  byDiscoverySource: { source: string; count: number }[]
 }

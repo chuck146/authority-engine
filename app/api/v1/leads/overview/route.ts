@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import type { LeadOverview, LeadStatus, LeadSource } from '@/types/leads'
 
+const QUALIFIED_STATUSES = new Set(['qualified', 'proposed', 'won'])
+
 export async function GET() {
   try {
     const auth = await requireApiAuth()
@@ -11,7 +13,9 @@ export async function GET() {
     // Fetch all leads for the org
     const { data: leads, error } = await supabase
       .from('leads' as never)
-      .select('status, source, service, created_at, contacted_at')
+      // '*' rather than a column list so this keeps working before the
+      // attribution migration (discovery_source, attribution) is applied.
+      .select('*')
       .eq('organization_id', auth.organizationId)
       .returns<
         {
@@ -20,6 +24,8 @@ export async function GET() {
           service: string | null
           created_at: string
           contacted_at: string | null
+          discovery_source?: string | null
+          attribution?: { channel?: string } | null
         }[]
       >()
 
@@ -93,6 +99,31 @@ export async function GET() {
         ? responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length
         : null
 
+    // By observed channel, with lead quality downstream
+    const channelMap = new Map<string, { leads: number; qualified: number; won: number }>()
+    for (const lead of allLeads) {
+      const channel = lead.attribution?.channel ?? 'unknown'
+      const row = channelMap.get(channel) ?? { leads: 0, qualified: 0, won: 0 }
+      row.leads++
+      if (QUALIFIED_STATUSES.has(lead.status)) row.qualified++
+      if (lead.status === 'won') row.won++
+      channelMap.set(channel, row)
+    }
+    const byChannel = Array.from(channelMap.entries())
+      .map(([channel, row]) => ({ channel, ...row }))
+      .sort((a, b) => b.leads - a.leads)
+
+    // By customer-reported discovery source
+    const discoveryMap = new Map<string, number>()
+    for (const lead of allLeads) {
+      if (lead.discovery_source) {
+        discoveryMap.set(lead.discovery_source, (discoveryMap.get(lead.discovery_source) ?? 0) + 1)
+      }
+    }
+    const byDiscoverySource = Array.from(discoveryMap.entries())
+      .map(([source, count]) => ({ source, count }))
+      .sort((a, b) => b.count - a.count)
+
     const overview: LeadOverview = {
       total: allLeads.length,
       newThisWeek,
@@ -102,6 +133,8 @@ export async function GET() {
       bySource,
       topServices,
       avgResponseTimeHours,
+      byChannel,
+      byDiscoverySource,
     }
 
     return NextResponse.json(overview)
