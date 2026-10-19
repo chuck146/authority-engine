@@ -15,6 +15,15 @@ const nextConfig: NextConfig = {
     ],
   },
   typedRoutes: true,
+  // Consolidate the www host onto the canonical apex domain.
+  redirects: async () => [
+    {
+      source: '/:path*',
+      has: [{ type: 'host', value: 'www.cleanestpaintingnj.com' }],
+      destination: 'https://cleanestpaintingnj.com/:path*',
+      permanent: true,
+    },
+  ],
   headers: async () => [
     {
       source: '/:path*',
