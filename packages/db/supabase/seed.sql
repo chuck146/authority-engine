@@ -14,7 +14,7 @@ values (
   '00000000-0000-0000-0000-000000000001',
   'Cleanest Painting LLC',
   'cleanest-painting',
-  'cleanestpainting.com',
+  'cleanestpaintingnj.com',
   '/logo.png',
   '{
     "primary": "#1B2B5B",
@@ -29,16 +29,16 @@ values (
     "service_area_states": ["NJ"],
     "service_area_counties": ["Union", "Essex", "Morris", "Somerset"],
     "contact_info": {
-      "phone": "(908) 361-4693",
-      "email": "info@cleanestpainting.com",
+      "phone": "(732) 496-4607",
+      "email": "home@cleanestpaintingnj.com",
       "address": {
-        "streetAddress": "123 Main St",
-        "city": "Summit",
+        "streetAddress": "",
+        "city": "Rahway",
         "state": "NJ",
-        "postalCode": "07901"
+        "postalCode": "07065"
       }
     },
-    "estimate_url": "https://cleanestpaintingnj.com/estimate"
+    "estimate_url": "/estimate"
   }'::jsonb,
   'pro'
 );

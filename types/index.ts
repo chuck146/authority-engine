@@ -217,6 +217,9 @@ export type OrgContactInfo = {
     postalCode: string
     country?: string
   }
+  // Publish the street address on the website/structured data. Off by default
+  // so a home-based business never exposes a residential address.
+  show_street_address?: boolean
 }
 
 // Organization settings (stored in organizations.settings JSONB)

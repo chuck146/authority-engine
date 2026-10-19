@@ -1,14 +1,13 @@
 import {
-  getOrganizationBySlug,
+  getMarketingOrganization,
   getAllPublishedServiceLinks,
   getAllPublishedLocationLinks,
 } from '@/lib/queries/content'
+import { getBusinessProfile, formatPublicAddress, formatServiceArea } from '@/lib/seo/business'
 import { SiteHeader } from '@/components/marketing/site-header'
 import { SiteFooter } from '@/components/marketing/site-footer'
 import type { Metadata } from 'next'
-import type { OrgBranding, OrgSettings } from '@/types'
-
-const ORG_SLUG = 'cleanest-painting'
+import type { OrgBranding } from '@/types'
 
 // Overrides the root "| Authority Engine" (dashboard) title template. Content
 // meta_titles already carry the business name, so they render unchanged.
@@ -22,7 +21,7 @@ export const metadata: Metadata = {
 }
 
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
-  const org = await getOrganizationBySlug(ORG_SLUG)
+  const org = await getMarketingOrganization()
 
   if (!org) {
     return (
@@ -33,9 +32,8 @@ export default async function MarketingLayout({ children }: { children: React.Re
   }
 
   const branding = org.branding as unknown as OrgBranding | null
-  const settings = org.settings as unknown as OrgSettings | null
-  const phone = settings?.contact_info?.phone
-  const email = settings?.contact_info?.email
+  const profile = getBusinessProfile(org)
+  const phone = profile.phone
   const tagline = branding?.tagline ?? 'Where Artistry Meets Craftsmanship'
 
   const [services, locations] = await Promise.all([
@@ -52,8 +50,9 @@ export default async function MarketingLayout({ children }: { children: React.Re
         tagline={tagline}
         logoUrl={org.logo_url}
         phone={phone}
-        email={email}
-        address={settings?.contact_info?.address}
+        email={profile.email}
+        address={formatPublicAddress(profile)}
+        serviceArea={formatServiceArea(profile)}
         services={services}
         locations={locations}
       />

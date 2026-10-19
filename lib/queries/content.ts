@@ -263,9 +263,7 @@ export async function getPublishedCommercialServicePage(
   return data
 }
 
-export async function getAllPublishedCommercialServiceSlugs(
-  orgId: string,
-): Promise<ContentSlug[]> {
+export async function getAllPublishedCommercialServiceSlugs(orgId: string): Promise<ContentSlug[]> {
   const supabase = createStaticClient()
   const { data } = await supabase
     .from('commercial_service_pages')

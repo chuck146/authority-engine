@@ -2,11 +2,14 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import {
-  getOrganizationBySlug,
+  getMarketingOrganization,
   getAllPublishedServiceLinks,
   getAllPublishedLocationLinks,
   getAllPublishedBlogLinks,
 } from '@/lib/queries/content'
+import { buildHomePageSchemas } from '@/lib/seo/json-ld'
+import { getBusinessProfile, formatServiceArea } from '@/lib/seo/business'
+import { MARKETING_ORG_SLUG as ORG_SLUG } from '@/lib/marketing/site'
 import { JsonLd } from '@/components/marketing/json-ld'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
 import { HeroSplit } from '@/components/marketing/home/hero-split'
@@ -17,10 +20,8 @@ import { Testimonials } from '@/components/marketing/home/testimonials'
 import { ProjectGallery } from '@/components/marketing/home/project-gallery'
 import { ServiceAreas } from '@/components/marketing/home/service-areas'
 import { EstimateForm } from '@/components/marketing/home/estimate-form'
-import type { OrgBranding, OrgSettings } from '@/types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
-const ORG_SLUG = 'cleanest-painting'
 
 export const revalidate = 3600
 
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const org = await getOrganizationBySlug(ORG_SLUG)
+  const org = await getMarketingOrganization()
   if (!org) return null
 
   const [services, locations, blogPosts] = await Promise.all([
@@ -54,43 +55,20 @@ export default async function HomePage() {
     getAllPublishedBlogLinks(org.id),
   ])
 
-  const branding = org.branding as unknown as OrgBranding | null
-  const settings = org.settings as unknown as OrgSettings | null
-  const phone = settings?.contact_info?.phone
-  const tagline = branding?.tagline ?? 'Where Artistry Meets Craftsmanship'
-
-  const businessSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'HomeAndConstructionBusiness',
-    name: org.name,
-    url: BASE_URL,
-    ...(org.logo_url && { logo: org.logo_url }),
-    description: tagline,
-    ...(phone && { telephone: phone }),
-    ...(settings?.contact_info?.email && { email: settings.contact_info.email }),
-    ...(settings?.contact_info?.address && {
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: settings.contact_info.address.streetAddress,
-        addressLocality: settings.contact_info.address.city,
-        addressRegion: settings.contact_info.address.state,
-        postalCode: settings.contact_info.address.postalCode,
-        addressCountry: 'US',
-      },
-    }),
-    ...(settings?.service_area_counties && {
-      areaServed: settings.service_area_counties.map((county) => ({
-        '@type': 'AdministrativeArea',
-        name: `${county} County, ${settings.service_area_states?.[0] ?? 'NJ'}`,
-      })),
-    }),
-  }
+  const profile = getBusinessProfile(org)
+  const phone = profile.phone
+  const serviceArea = formatServiceArea(profile)
 
   return (
     <>
-      <JsonLd data={[businessSchema]} />
+      <JsonLd data={buildHomePageSchemas(org)} />
 
-      <HeroSplit orgName={org.name} heroVideo="/hero-video.mov" />
+      <HeroSplit
+        orgName={org.name}
+        heroVideo="/hero-video.mov"
+        location={[profile.locality, profile.region].filter(Boolean).join(', ') || undefined}
+        serviceArea={serviceArea}
+      />
 
       <TrustBar />
 
@@ -125,7 +103,7 @@ export default async function HomePage() {
 
       <Testimonials />
 
-      <ServiceAreas locations={locations} />
+      <ServiceAreas locations={locations} phone={phone} serviceArea={serviceArea} />
 
       {/* Estimate Form — inline lead capture (replaces CtaBanner) */}
       <EstimateForm orgSlug={ORG_SLUG} services={services} phone={phone} />

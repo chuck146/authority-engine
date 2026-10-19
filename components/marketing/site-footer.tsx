@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { SOCIAL_PROFILES } from '@/lib/seo/business'
 
 type FooterLink = { slug: string; title: string; city?: string; state?: string }
 
@@ -8,12 +9,10 @@ type SiteFooterProps = {
   logoUrl?: string | null
   phone?: string
   email?: string
-  address?: {
-    streetAddress?: string
-    city?: string
-    state?: string
-    postalCode?: string
-  }
+  // Pre-formatted public address, e.g. "Rahway, NJ 07065" (see lib/seo/business.ts)
+  address?: string
+  // e.g. "Union, Essex, Morris & Somerset counties"
+  serviceArea?: string
   services: FooterLink[]
   locations: FooterLink[]
 }
@@ -25,9 +24,14 @@ export function SiteFooter({
   phone,
   email,
   address,
+  serviceArea,
   services,
   locations,
 }: SiteFooterProps) {
+  const mapSrc = address
+    ? `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`
+    : undefined
+
   return (
     <footer className="bg-[#1A1A1A]">
       <div className="mx-auto max-w-[1400px] px-6 pt-20 pb-10 md:px-10 lg:px-[60px]">
@@ -66,7 +70,7 @@ export function SiteFooter({
             </p>
             <div className="mt-6 flex gap-3">
               <a
-                href="https://instagram.com/cleanestpainting"
+                href={SOCIAL_PROFILES.instagram}
                 aria-label={`${orgName} on Instagram`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -77,7 +81,7 @@ export function SiteFooter({
                 </svg>
               </a>
               <a
-                href="https://www.facebook.com/people/Cleanest-Painting-LLC/100065285028377/"
+                href={SOCIAL_PROFILES.facebook}
                 aria-label={`${orgName} on Facebook`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -174,25 +178,19 @@ export function SiteFooter({
               {address && (
                 <div>
                   <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
-                    Address
+                    Based In
                   </p>
-                  <p className="text-[0.95rem] text-white/90">
-                    {address.streetAddress && (
-                      <>
-                        {address.streetAddress}
-                        <br />
-                      </>
-                    )}
-                    {address.city}, {address.state} {address.postalCode}
-                  </p>
+                  <p className="text-[0.95rem] text-white/90">{address}</p>
                 </div>
               )}
-              <div>
-                <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
-                  Service Area
-                </p>
-                <p className="text-[0.95rem] text-white/90">All of New Jersey</p>
-              </div>
+              {serviceArea && (
+                <div>
+                  <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
+                    Service Area
+                  </p>
+                  <p className="text-[0.95rem] text-white/90">{serviceArea}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -200,27 +198,24 @@ export function SiteFooter({
         {/* Map + NAP */}
         <div className="mt-4 mb-12">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
-            <div className="w-full overflow-hidden rounded-2xl shadow-lg lg:max-w-md">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.1583091352!2d-74.24322613964118!3d40.69714941879884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
-                width="100%"
-                height="220"
-                style={{ border: 0, borderRadius: '16px' }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                sandbox="allow-scripts allow-same-origin allow-popups"
-                title="Service area map"
-              />
-            </div>
+            {mapSrc && (
+              <div className="w-full overflow-hidden rounded-2xl shadow-lg lg:max-w-md">
+                <iframe
+                  src={mapSrc}
+                  width="100%"
+                  height="220"
+                  style={{ border: 0, borderRadius: '16px' }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  sandbox="allow-scripts allow-same-origin allow-popups"
+                  title={`Map of ${address}`}
+                />
+              </div>
+            )}
             <div className="max-w-md">
-              <h4 className="mb-3 text-sm font-semibold text-white">{orgName}</h4>
-              {address && (
-                <p className="mb-2.5 text-[0.95rem] text-white/90">
-                  {address.streetAddress && <>{address.streetAddress}, </>}
-                  {address.city}, {address.state} {address.postalCode}
-                </p>
-              )}
+              <p className="mb-3 text-sm font-semibold text-white">{orgName}</p>
+              {address && <p className="mb-2.5 text-[0.95rem] text-white/90">{address}</p>}
               {phone && (
                 <p className="mb-2.5 text-[0.95rem] text-white/90">
                   <a
@@ -241,7 +236,9 @@ export function SiteFooter({
                   </a>
                 </p>
               )}
-              <p className="text-sm text-white/50">Serving communities across New Jersey</p>
+              <p className="text-sm text-white/50">
+                {serviceArea ? `Serving ${serviceArea}` : 'Serving communities across New Jersey'}
+              </p>
             </div>
           </div>
         </div>

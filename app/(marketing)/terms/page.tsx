@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { HeroSection } from '@/components/marketing/hero-section'
+import { getPublicContact } from '@/lib/marketing/public-contact'
 
 const BASE_URL = 'https://cleanestpaintingnj.com'
 
@@ -13,7 +14,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function TermsOfServicePage() {
+export default async function TermsOfServicePage() {
+  const contact = await getPublicContact()
+
   return (
     <>
       <HeroSection
@@ -60,9 +63,8 @@ export default function TermsOfServicePage() {
             </p>
             <p>
               <strong>Help:</strong> For assistance with our SMS program, reply{' '}
-              <strong>HELP</strong> to any message you receive from us. You may also contact us by
-              email at <a href="mailto:home@cleanestpaintingnj.com">home@cleanestpaintingnj.com</a>{' '}
-              or by phone at <a href="tel:+17329138574">(732) 913-8574</a>.
+              <strong>HELP</strong> to any message you receive from us. You may also contact us
+              using the contact information below.
             </p>
             <p>
               <strong>Consent:</strong> By providing your phone number and opting in to our SMS
@@ -134,16 +136,21 @@ export default function TermsOfServicePage() {
             <h2 className="!mt-0">Contact Information</h2>
             <p>If you have questions about these Terms, please contact us:</p>
             <ul>
-              <li>
-                <strong>Phone:</strong> <a href="tel:+17329138574">(732) 913-8574</a>
-              </li>
-              <li>
-                <strong>Email:</strong>{' '}
-                <a href="mailto:home@cleanestpaintingnj.com">home@cleanestpaintingnj.com</a>
-              </li>
-              <li>
-                <strong>Address:</strong> Cleanest Painting LLC, Rahway, NJ
-              </li>
+              {contact.phone && (
+                <li>
+                  <strong>Phone:</strong> <a href={contact.phoneHref}>{contact.phone}</a>
+                </li>
+              )}
+              {contact.email && (
+                <li>
+                  <strong>Email:</strong> <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                </li>
+              )}
+              {contact.address && (
+                <li>
+                  <strong>Address:</strong> {contact.name}, {contact.address}
+                </li>
+              )}
             </ul>
             <p>
               For SMS program support, reply <strong>HELP</strong> to any text message you receive

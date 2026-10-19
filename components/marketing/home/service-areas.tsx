@@ -7,9 +7,11 @@ type ServiceAreasProps = {
   locations: RelatedLocationLink[]
   phone?: string
   estimateUrl?: string
+  // e.g. "Union, Essex, Morris & Somerset counties"
+  serviceArea?: string
 }
 
-export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProps) {
+export function ServiceAreas({ locations, phone, estimateUrl, serviceArea }: ServiceAreasProps) {
   if (locations.length === 0) return null
 
   return (
@@ -56,7 +58,9 @@ export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProp
         <ScrollReveal>
           <div className="mt-8 rounded-xl border border-gray-200 bg-white px-6 py-5 text-center">
             <p className="text-sm font-medium text-gray-900">
-              Don&apos;t see your town? We service all of New Jersey.
+              {serviceArea
+                ? `Don't see your town? We work throughout ${serviceArea} — ask us about yours.`
+                : "Don't see your town? Ask us — we may already work near you."}
             </p>
             <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
               {estimateUrl && (
