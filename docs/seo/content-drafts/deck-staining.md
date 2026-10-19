@@ -18,6 +18,7 @@ URL: https://cleanestpaintingnj.com/services/deck-staining (fetched October 2026
 ### Solid vs. semi-transparent stain
 
 **Semi-transparent stain**
+
 - Shows the wood grain with a light tint of color
 - Soaks into the wood instead of forming a surface film
 - Wears away gradually, so it usually does not peel
@@ -25,6 +26,7 @@ URL: https://cleanestpaintingnj.com/services/deck-staining (fetched October 2026
 - Does not hide stains, patched boards, or mismatched wood
 
 **Solid stain**
+
 - Covers the grain with an opaque color, like thin paint
 - Hides weathering, stains, and mismatched boards
 - Gives more UV protection to the wood underneath

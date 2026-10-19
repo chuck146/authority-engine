@@ -18,12 +18,14 @@ URL: https://cleanestpaintingnj.com/services/cabinet-refinishing (fetched Octobe
 ### Refinish or replace? A quick check
 
 **Refinishing is usually a good fit when:**
+
 - The cabinet boxes are solid wood or plywood with no water damage
 - Doors open and close properly, and hinges hold
 - You are happy with the layout and the door style
 - You want a new color without demolition
 
 **Replacement may be the better choice when:**
+
 - Boxes are swollen, sagging, or water-damaged (common under sinks)
 - You want to change the layout, add cabinets, or move appliances
 - Thermofoil or veneer is peeling badly

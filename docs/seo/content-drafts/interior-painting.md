@@ -21,6 +21,7 @@ URL: https://cleanestpaintingnj.com/services/interior-painting (fetched October 
 Your estimate lists the work room by room, so you can see what is and is not included. [CONFIRM: estimate is written and itemized]
 
 **Usually included:**
+
 - The surfaces you choose: walls, ceilings, trim, doors, closets [CONFIRM]
 - Covering floors and furniture, and masking edges
 - Minor surface prep: filling nail holes, sanding rough spots, spot-priming
@@ -28,6 +29,7 @@ Your estimate lists the work room by room, so you can see what is and is not inc
 - Daily tidy-up and a final walkthrough [CONFIRM]
 
 **Usually not included unless listed:**
+
 - Larger drywall or plaster repair [CONFIRM: owner decision — offered, subcontracted, or excluded]
 - Wallpaper removal (quoted separately — see Wallpaper Installation)
 - Moving very heavy or fragile items, such as pianos, large TVs, or artwork [CONFIRM]

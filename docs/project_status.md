@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: March 18, 2026_
+_Last Updated: October 19, 2026_
 
 ---
 
@@ -461,8 +461,24 @@ Sprint Results:
 - [x] Footer links (`/privacy`, `/terms`) now resolve to real pages (were broken links before)
 - [x] Migration applied to live Supabase
 
+**Post-V2: Search & AI Visibility + Lead Attribution** 🔄 (branch `feature/seo-aeo-improvements`, not deployed)
+
+- [x] Audit of the live site and repo, recorded in docs/seo/aeo-playbook.md
+- [x] Marketing titles carry the business name, not the platform name. Branded 404. robots.txt fixed. www → apex 308
+- [x] Marketing pages actually static/ISR (49 routes prerendered). Sitemap revalidates. Public queries scoped to the marketing org
+- [x] One business identity (lib/seo/business.ts) for footer, legal pages and JSON-LD (`HousePainter` + `@id`, `WebSite`)
+- [x] `/estimate` page with service preselect. Honeypot. Discovery-source question
+- [x] Lead attribution (channel incl. AI assistants), call-click events, optional GA4, Leads dashboard channel cards
+- [x] Visible FAQ support. Crawlable ScrollReveal. No-fabrication prompt guardrail. Sprint script no longer auto-publishes
+- [x] Topic map, six page drafts, AI visibility prompt sample (docs/seo/)
+- [x] Test suite: 1,424 tests across 190 files, all passing. Typecheck, lint and build clean. Local technical audit: 40 pages, 0 issues after fixes
+- [ ] Apply migration `20261019000001_add_lead_attribution_and_marketing_events.sql` and regenerate types
+- [ ] Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel and mark `generate_lead` as a GA4 key event
+- [ ] Owner confirms the facts in the playbook checklist, then the reviewed FAQs/intros are loaded via the dashboard
+
 ### What's Next
 
+- Review and merge `feature/seo-aeo-improvements`, then follow the deploy order in docs/seo/aeo-playbook.md
 - Deploy to Vercel (privacy/terms pages + estimate form fix go live)
 - Submit `cleanestpaintingnj.com/privacy` and `cleanestpaintingnj.com/terms` to SMS campaign registration
 - Next SEO sprint recommended: April 13, 2026

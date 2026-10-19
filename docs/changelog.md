@@ -7,6 +7,36 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Search & AI visibility + lead attribution (branch `feature/seo-aeo-improvements`)
+
+- **`/estimate` page:** a dedicated, statically rendered estimate request page. Service pages link to `/estimate?service=<slug>` and the form preselects that service. All CTAs go through `getEstimateHref()` (lib/marketing/estimate.ts)
+- **Lead attribution:**
+  - First-touch landing path, referrer host, UTM tags and a gclid flag, plus an optional "How did you hear about us?" answer
+  - The server classifies the channel, including AI-assistant referrals
+  - New `leads.discovery_source` / `leads.attribution` columns and a `marketing_events` table (migration `20261019000001`, not yet applied). Lead inserts fall back if the columns are missing
+  - Code: lib/leads/attribution.ts, app/api/v1/leads/route.ts
+- **Call-click tracking:** `TrackedPhoneLink` on every marketing `tel:` link, plus an anonymous `/api/v1/events` beacon with its own rate limit
+- **Optional GA4:** loads on marketing pages only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. Signals and ad personalization are off. `generate_lead` fires only after a 201. CSP updated
+- **Leads dashboard:** "Leads by Channel" card (leads/qualified/won), "How They Heard About Us" card, and attribution on the lead detail sheet. The owner email includes the discovery source
+- **Single business identity:** `lib/seo/business.ts` feeds the footer, legal pages and JSON-LD (`HousePainter` with a stable `@id`, `WebSite` node, `sameAs`). A street address is published only on explicit opt-in
+- **Visible FAQs:** optional `faqs[]` on structured content, rendered as "Common Questions"
+- **Facts guardrail:** generated content may only state owner-verified facts (`settings.verified_facts`)
+- **Branded 404 page**, footer links to hubs, blog and estimate, and topically related guides on service pages
+- **Docs:** `docs/seo/` playbook, topic map, six page drafts, AI visibility prompt sample
+
+### Fixed
+
+- **Platform name in page titles:** every marketing title ended in "| Authority Engine". The marketing route group now has its own title template
+- **ISR not working:** marketing pages rendered dynamically on every request (`no-store`) because public queries used the cookie-based Supabase client. They now use the anon static client, 49 routes prerender, and the site is revalidated on publish/unpublish
+- **Frozen sitemap:** the sitemap was generated once at build time, so newly published posts were missing. It now revalidates, and hub `lastmod` uses the newest child page
+- **Duplicate host:** `www.` now 308-redirects to the apex domain
+- **robots.txt:** trailing slashes in `Disallow: /dashboard/` etc. didn't match the real paths. Added `/login`, `/leads`, `/calendar`, `/community`, and noindex on auth/dashboard layouts
+- **Address and phone:** JSON-LD/footer address no longer reads "Rahway, Rahway". The footer map shows Rahway instead of New York, NY. `/privacy` and `/terms` show the business phone from settings
+- **Hidden content in server HTML:** `ScrollReveal` content is visible in server HTML and respects reduced motion
+- **Multi-tenant scoping:** public slug lookups and the sitemap are scoped to the marketing organization
+- **Auto-publish:** the SEO sprint content-gaps script no longer auto-publishes; all AI content stays in review
+- **Technical audit:** `--base-url`, HousePainter, `@id`, title and commercial checks. Decorative `alt=""` images are no longer flagged
+
 ### Added
 
 - **Privacy Policy page (`/privacy`):** Static legal page with data collection, SMS consent, information sharing, data retention, security, user rights sections. Noindex, uses HeroSection + prose styling. Contact: (732) 913-8574, home@cleanestpaintingnj.com (app/(marketing)/privacy/page.tsx)

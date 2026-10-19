@@ -7,9 +7,9 @@ URL: https://cleanestpaintingnj.com/ (fetched October 2026)
 - **Hero:** The H1 is "Where Artistry Meets Craftsmanship." The support line reads "Premium residential painting across Union, Essex, Morris & Somerset counties." It does not name any service, does not say the company is based in Rahway, and leaves out commercial work even though commercial is in the nav.
 - **Service area contradicts itself in four places.** The hero says four counties. The block below the town list says "We service all of New Jersey." The footer says "Service Area: All of New Jersey." The JSON-LD `areaServed` lists the four counties. The town list also includes Woodbridge, which is in Middlesex County, not one of the four.
 - **Brand conflict:** The "Premium Materials" card says "Benjamin Moore & Sherwin-Williams exclusively." The interior page lists Farrow & Ball, and the color consultation and Westfield pages name Farrow & Ball colors.
-- **Trust bar shows an HIC registration number.** It is pending re-verification. Hide the number until it is confirmed. Keep "NJ HIC registered" as text only.
+- **Trust bar shows an HIC registration number.** The owner confirmed it is accurate (2026-10-19). One check remains: "13VH12345" has 5 digits after the 13VH prefix, while NJ HIC numbers are usually 13VH plus 8 digits. Compare it with the registration certificate.
 - **Nothing explains how estimates work.** The only process detail is "We'll get back to you within 24 hours." The "View all projects" link goes to `/#services`, so there is no projects page behind it.
-- **Technical issues seen in passing (not copy):** Every page title ends in "| Authority Engine," which is the platform name, not the business. The footer and JSON-LD address reads "Rahway, Rahway, NJ 07065" because the street-address field holds the city name. Three named testimonials appear without a source link. Confirm they are real customers who gave permission, or replace them with linked Google reviews.
+- **Technical issues seen in passing (not copy):** Every page title ends in "| Authority Engine," which is the platform name, not the business. The footer and JSON-LD address reads "Rahway, Rahway, NJ 07065" because the street-address field holds the city name. The owner confirmed the three named testimonials are real customers (2026-10-19). Keep written permission on file. Linking to the original Google reviews would add credibility.
 
 ## (b) Proposed hero support line (replaces the line under the H1)
 
@@ -69,8 +69,8 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
 
 - [ ] Final service-area wording (Option 1, 2, or 3), and whether Woodbridge (Middlesex County) stays.
 - [ ] Paint brands: is "Benjamin Moore & Sherwin-Williams exclusively" still true, or does the company also use Farrow & Ball / Fine Paints of Europe? [CONFIRM: paint brands]
-- [ ] HIC registration number (re-verify before it is shown again anywhere on the site).
+- [ ] HIC registration number: confirmed accurate by the owner. Re-check the digit count against the certificate.
 - [ ] Estimate process details: walkthrough format, delivery method, itemization, validity period, deposit, lead time.
 - [ ] Certificate of insurance is available on request.
-- [ ] The three homepage testimonials (Westfield, Summit, Cranford) are real, attributable customers who gave permission. Otherwise, replace them with linked Google reviews.
+- [x] The three homepage testimonials are real customers (owner confirmed 2026-10-19). Keep written permission on file.
 - [ ] Whether a projects/portfolio page will exist. If not, change "View all projects" to "View our services."
