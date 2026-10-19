@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { HeroSection } from '@/components/marketing/hero-section'
 import { getPublicContact } from '@/lib/marketing/public-contact'
 
-const BASE_URL = 'https://cleanestpaintingnj.com'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 
 export const revalidate = 3600
 

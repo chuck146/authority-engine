@@ -520,7 +520,8 @@ function checkHeadingStructure(result: PageCheckResult, issues: AuditIssue[]) {
 
   // Check for img alt text
   const imgTags = html.match(/<img\s[^>]*>/gi) ?? []
-  const missingAlt = imgTags.filter((img) => !img.match(/alt=["'][^"']+["']/i))
+  // alt="" is correct for decorative images — only a missing attribute is an issue.
+  const missingAlt = imgTags.filter((img) => !/\balt=["']/i.test(img))
   if (missingAlt.length > 0) {
     issues.push({
       severity: 'medium',

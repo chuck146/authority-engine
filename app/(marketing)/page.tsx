@@ -26,9 +26,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Cleanest Painting LLC — Professional Painting Services in NJ',
+  // absolute: a layout's title template doesn't apply to the page in its own
+  // segment, so this would otherwise inherit the root "| Authority Engine" suffix.
+  title: { absolute: 'Cleanest Painting LLC — Professional Painting Services in NJ' },
   description:
-    'Premium residential and commercial painting services in Northern New Jersey. Interior painting, exterior painting, cabinet refinishing, deck staining, and more. Free estimates.',
+    'Interior and exterior painting, cabinet refinishing, and deck staining for New Jersey homes and businesses. Request a free estimate from Cleanest Painting LLC.',
   alternates: { canonical: BASE_URL },
   openGraph: {
     title: 'Cleanest Painting LLC — Professional Painting Services in NJ',
