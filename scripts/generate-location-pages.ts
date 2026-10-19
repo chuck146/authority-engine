@@ -22,6 +22,14 @@ config({ path: '.env.local' })
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { NJ_SERVICE_COUNTIES, type NjTown, type NjCounty } from '../lib/data/nj-towns'
+import { buildFactsGuardrail } from '../packages/ai/prompts/content/shared'
+
+// Accuracy rules shared with the app's prompt builders — no invented company facts.
+const ACCURACY_RULES = buildFactsGuardrail({
+  orgName: 'Cleanest Painting LLC',
+  domain: null,
+  branding: null,
+})
 
 // ---------------------------------------------------------------------------
 // Config
@@ -99,6 +107,8 @@ function buildPrompt(
 Tone: professional
 
 Brand: ${ORG_NAME} — a premium painting company known for craftsmanship and attention to detail.
+
+${ACCURACY_RULES}
 
 Guidelines:
 - Write specifically for homeowners in ${city}, NJ

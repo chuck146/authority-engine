@@ -6,11 +6,18 @@ import {
   getAllPublishedServiceSlugs,
   getRelatedServicePages,
   getRelatedLocationPages,
+  getRelatedBlogPosts,
+  getAllPublishedCommercialServiceLinks,
 } from '@/lib/queries/content'
+import { pickRelatedPosts } from '@/lib/marketing/related'
 import { buildServicePageSchemas } from '@/lib/seo/json-ld'
 import { ServicePageLayout } from '@/components/marketing/service-page-layout'
 import { JsonLd } from '@/components/marketing/json-ld'
-import { RelatedServices, RelatedLocations } from '@/components/marketing/related-links'
+import {
+  RelatedServices,
+  RelatedLocations,
+  RelatedBlogPosts,
+} from '@/components/marketing/related-links'
 import type { StructuredContent } from '@/types/content'
 import type { OrgSettings } from '@/types'
 import { getEstimateHref } from '@/lib/marketing/estimate'
@@ -62,10 +69,14 @@ export default async function ServicePageRoute({ params }: Props) {
   const page = org ? await getPublishedServicePage(org.id, slug) : null
   if (!org || !page) notFound()
 
-  const [relatedServices, relatedLocations] = await Promise.all([
+  const isCommercial = page.slug === 'commercial-painting'
+  const [relatedServices, relatedLocations, recentPosts, commercialServices] = await Promise.all([
     getRelatedServicePages(page.organization_id, page.slug, 3),
     getRelatedLocationPages(page.organization_id, '', 4),
+    getRelatedBlogPosts(page.organization_id, '', 20),
+    isCommercial ? getAllPublishedCommercialServiceLinks(page.organization_id) : [],
   ])
+  const relatedPosts = pickRelatedPosts(recentPosts, page.slug, 2)
 
   const settings = org?.settings as OrgSettings | null
   const phone = settings?.contact_info?.phone
@@ -75,7 +86,13 @@ export default async function ServicePageRoute({ params }: Props) {
     <>
       {org && <JsonLd data={buildServicePageSchemas(page, org)} />}
       <ServicePageLayout page={page} phone={phone} estimateUrl={estimateUrl} />
+      <RelatedServices
+        services={commercialServices}
+        basePath="/commercial"
+        heading="Commercial Painting Services"
+      />
       <RelatedServices services={relatedServices} />
+      <RelatedBlogPosts posts={relatedPosts} />
       <RelatedLocations locations={relatedLocations} heading="We Also Serve" />
     </>
   )

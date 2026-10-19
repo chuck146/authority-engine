@@ -5,9 +5,11 @@ import type { RelatedServiceLink, RelatedLocationLink, RelatedBlogLink } from '@
 export function RelatedServices({
   services,
   heading = 'Related Services',
+  basePath = '/services',
 }: {
   services: RelatedServiceLink[]
   heading?: string
+  basePath?: '/services' | '/commercial'
 }) {
   if (services.length === 0) return null
 
@@ -19,7 +21,7 @@ export function RelatedServices({
           {services.map((service) => (
             <Link
               key={service.slug}
-              href={`/services/${service.slug}`}
+              href={`${basePath}/${service.slug}`}
               className="group flex items-center justify-between rounded-lg border p-4 transition-all hover:border-[#1B2B5B]/30 hover:shadow-md"
             >
               <span className="font-medium">{service.title}</span>

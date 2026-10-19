@@ -118,6 +118,22 @@ export function SiteFooter({
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/services"
+                  className="text-[0.95rem] font-medium text-[#fbbf24] transition-colors hover:text-[#fbbf24]/80"
+                >
+                  All residential services &rarr;
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/commercial"
+                  className="text-[0.95rem] font-medium text-[#fbbf24] transition-colors hover:text-[#fbbf24]/80"
+                >
+                  Commercial painting &rarr;
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -251,7 +267,16 @@ export function SiteFooter({
           <p className="text-sm text-white/40">
             &copy; {new Date().getFullYear()} {orgName}. All rights reserved.
           </p>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+            <Link
+              href="/estimate"
+              className="text-sm text-white/40 transition-colors hover:text-white"
+            >
+              Free Estimate
+            </Link>
+            <Link href="/blog" className="text-sm text-white/40 transition-colors hover:text-white">
+              Painting Guides
+            </Link>
             <a href="/privacy" className="text-sm text-white/40 transition-colors hover:text-white">
               Privacy Policy
             </a>

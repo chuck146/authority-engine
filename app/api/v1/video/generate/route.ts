@@ -56,6 +56,7 @@ export async function POST(request: Request) {
       branding,
       serviceAreaStates: (settings?.service_area_states as string[]) ?? undefined,
       serviceAreaCounties: (settings?.service_area_counties as string[]) ?? undefined,
+      verifiedFacts: (settings?.verified_facts as string[]) ?? undefined,
     }
 
     // Route to correct engine based on videoType (premium first, then composite, remotion, veo)

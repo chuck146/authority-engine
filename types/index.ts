@@ -228,6 +228,9 @@ export type OrgSettings = {
   service_area_counties?: string[]
   contact_info?: OrgContactInfo
   estimate_url?: string
+  // Owner-confirmed public claims that AI-generated content may use
+  // (e.g. "Licensed and insured"). Anything else is never stated as fact.
+  verified_facts?: string[]
   hubspot_portal_id?: string
   clickup_list_id?: string
 }
