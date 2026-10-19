@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import {
   getPublishedCommercialServicePage,
-  getOrganizationById,
+  getMarketingOrganization,
   getAllPublishedCommercialServiceSlugs,
   getRelatedLocationPages,
 } from '@/lib/queries/content'
@@ -20,13 +20,16 @@ export const revalidate = 3600
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedCommercialServiceSlugs()
+  const org = await getMarketingOrganization()
+  if (!org) return []
+  const slugs = await getAllPublishedCommercialServiceSlugs(org.id)
   return slugs.map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const page = await getPublishedCommercialServicePage(slug)
+  const org = await getMarketingOrganization()
+  const page = org ? await getPublishedCommercialServicePage(org.id, slug) : null
   if (!page) return {}
 
   const content = page.content as unknown as StructuredContent
@@ -53,11 +56,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CommercialServicePageRoute({ params }: Props) {
   const { slug } = await params
-  const page = await getPublishedCommercialServicePage(slug)
-  if (!page) notFound()
+  const org = await getMarketingOrganization()
+  const page = org ? await getPublishedCommercialServicePage(org.id, slug) : null
+  if (!org || !page) notFound()
 
-  const [org, relatedLocations] = await Promise.all([
-    getOrganizationById(page.organization_id),
+  const [relatedLocations] = await Promise.all([
     getRelatedLocationPages(page.organization_id, '', 4),
   ])
 

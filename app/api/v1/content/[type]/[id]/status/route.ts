@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
 import { requireApiRole, AuthError } from '@/lib/auth/api-guard'
+import { revalidateMarketingSite } from '@/lib/marketing/revalidate'
 import { createClient } from '@/lib/supabase/server'
 import { contentTypeSchema, contentStatusUpdateSchema, type ContentType } from '@/types/content'
 import type { ContentStatus } from '@/types'
@@ -104,23 +104,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
     if (updateError) throw updateError
 
-    // 8. Revalidate SSR page cache after publish
-    if (action === 'publish') {
-      const pathMap: Record<ContentType, string> = {
-        service_page: '/services/',
-        location_page: '/locations/',
-        blog_post: '/blog/',
-      }
-      const { data: published } = await supabase
-        .from(tableName)
-        .select('slug')
-        .eq('id', id)
-        .returns<{ slug: string }[]>()
-        .single()
-
-      if (published) {
-        revalidatePath(pathMap[typeResult.data] + published.slug)
-      }
+    // 8. Purge the ISR-cached marketing site when public content appears or disappears
+    if (action === 'publish' || current.status === 'published') {
+      revalidateMarketingSite()
     }
 
     // 9. Return updated status

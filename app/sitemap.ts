@@ -1,20 +1,34 @@
 import type { MetadataRoute } from 'next'
 
 import {
+  getMarketingOrganization,
   getAllPublishedServiceSlugs,
   getAllPublishedCommercialServiceSlugs,
   getAllPublishedLocationSlugs,
   getAllPublishedBlogSlugs,
 } from '@/lib/queries/content'
+import { SITE_URL as BASE_URL } from '@/lib/marketing/site'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
+export const revalidate = 3600
+
+type Dated = { updated_at: string }
+
+// Hub pages change when their children change — use the newest child's
+// updated_at instead of "now" so lastmod stays truthful.
+function latest(...groups: Dated[][]): string | undefined {
+  const times = groups.flat().map((d) => d.updated_at)
+  return times.length > 0 ? times.sort().at(-1) : undefined
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const org = await getMarketingOrganization()
+  if (!org) return [{ url: BASE_URL }]
+
   const [services, commercialServices, locations, blogs] = await Promise.all([
-    getAllPublishedServiceSlugs(),
-    getAllPublishedCommercialServiceSlugs(),
-    getAllPublishedLocationSlugs(),
-    getAllPublishedBlogSlugs(),
+    getAllPublishedServiceSlugs(org.id),
+    getAllPublishedCommercialServiceSlugs(org.id),
+    getAllPublishedLocationSlugs(org.id),
+    getAllPublishedBlogSlugs(org.id),
   ])
 
   const serviceEntries: MetadataRoute.Sitemap = services.map((s) => ({
@@ -48,33 +62,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
       url: BASE_URL,
-      lastModified: new Date().toISOString(),
+      lastModified: latest(services, commercialServices, locations, blogs),
       changeFrequency: 'weekly',
       priority: 1.0,
     },
     {
       url: `${BASE_URL}/services`,
-      lastModified: new Date().toISOString(),
+      lastModified: latest(services),
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/commercial`,
-      lastModified: new Date().toISOString(),
+      lastModified: latest(commercialServices),
       changeFrequency: 'weekly',
       priority: 0.85,
     },
     {
       url: `${BASE_URL}/locations`,
-      lastModified: new Date().toISOString(),
+      lastModified: latest(locations),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/blog`,
-      lastModified: new Date().toISOString(),
+      lastModified: latest(blogs),
       changeFrequency: 'weekly',
       priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/estimate`,
+      changeFrequency: 'monthly',
+      priority: 0.7,
     },
     ...serviceEntries,
     ...commercialServiceEntries,
