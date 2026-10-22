@@ -52,7 +52,7 @@ Related files:
 | P1       | Lead attribution, call-click events, optional GA4                                    | Know which channels produce booked jobs            | M      | ✅ Code done. **Migration + GA4 ID pending**               |
 | P2       | FAQ field; crawlable animations; no-fabrication prompts; internal links              | Answerable content; accurate claims                | M      | ✅ Done                                                    |
 | P2       | Load reviewed FAQ and intro drafts into the six pages                                | Pages that answer real customer questions          | S each | ⏳ Owner review of `content-drafts/` first                 |
-| P2       | Resolve the paint-brand contradiction ("BM & SW exclusively" vs Farrow & Ball copy)  | Trust; consistent AI answers                       | S      | ⏳ Owner decision                                          |
+| P2       | Resolve the paint-brand contradiction ("BM & SW exclusively" vs Farrow & Ball copy)  | Trust; consistent AI answers                       | S      | Decided: BM & SW; live page edits pending                  |
 | P3       | Rahway (home base), Montclair, West Orange location pages, one at a time             | Local coverage                                     | S each | ⏳ Owner confirms coverage, then generate in the dashboard |
 | P3       | Project case studies (`/projects`) with real photos, town, scope, duration, products | Strongest evidence for people and AI answers       | M      | ⏳ Needs real project assets                               |
 | P3       | Fix keyword-stuffed location page titles (e.g. "Painters Westfield NJ")              | Clearer listings                                   | S      | Backlog                                                    |
@@ -136,7 +136,9 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 
 - [x] HIC number: corrected to 13VH11564300 (owner, 2026-10-22). The trust bar now shows it.
 - [x] Phone numbers (owner, 2026-10-22): (732) 496-4607 is the direct line used everywhere. (732) 913-8574 is the Twilio texting number; `/privacy` and `/terms` show it in their SMS sections and contact lists (`MARKETING_SMS_PHONE` in lib/marketing/site.ts). It is not used in structured data.
-- [ ] Paint brands: "Benjamin Moore & Sherwin-Williams exclusively" (homepage) or Farrow & Ball / Fine Paints of Europe (service pages)?
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22).
+- [ ] Remove Farrow & Ball / Fine Paints of Europe mentions from five live pages: services `interior-painting`, `color-consultation`; locations `westfield-nj-painting`, `short-hills-nj-painting`, `bernardsville-nj-painting`.
+- [x] Projects outside the eight counties are accepted by request (owner, 2026-10-22). Shown on the homepage town list and `/locations`.
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Hudson, Monmouth and Bergen added the same day. Woodbridge (Middlesex) stays.
 - [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). Live JSON-LD picks it up now; the hero, footer and `/locations` follow once this branch is deployed.
 - [ ] Are Rahway, Montclair, and West Orange served? Are drywall repair, trim/carpentry, and fence staining offered?

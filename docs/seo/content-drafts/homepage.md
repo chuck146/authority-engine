@@ -52,7 +52,7 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
   },
   {
     "question": "What areas does Cleanest Painting LLC serve?",
-    "answer": "We are based in Rahway, NJ, and work mainly in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. Towns we serve include Westfield, Summit, Chatham, Cranford, Millburn, Short Hills, Madison, and Morristown. If your town is not listed, call (732) 496-4607 and ask. [CONFIRM: whether projects outside these counties are accepted]"
+    "answer": "We are based in Rahway, NJ, and work mainly in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. Towns we serve include Westfield, Summit, Chatham, Cranford, Millburn, Short Hills, Madison, and Morristown. We also take projects elsewhere in New Jersey. If your town is not listed, call (732) 496-4607."
   },
   {
     "question": "Is Cleanest Painting LLC licensed and insured?",
@@ -68,8 +68,8 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
 ## (e) Facts to confirm
 
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Woodbridge stays.
-- [ ] Whether projects outside these five counties are accepted (Option 1 vs 2).
-- [ ] Paint brands: is "Benjamin Moore & Sherwin-Williams exclusively" still true, or does the company also use Farrow & Ball / Fine Paints of Europe? [CONFIRM: paint brands]
+- [x] Projects outside the eight counties are accepted (owner, 2026-10-22). Option 2 wording.
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Farrow & Ball and Fine Paints of Europe mentions are to be removed from live pages.
 - [x] HIC registration number: 13VH11564300 (owner, 2026-10-22).
 - [ ] Estimate process details: walkthrough format, delivery method, itemization, validity period, deposit, lead time.
 - [ ] Certificate of insurance is available on request.

@@ -60,7 +60,7 @@ export function ServiceAreas({ locations, phone, estimateUrl, serviceArea }: Ser
           <div className="mt-8 rounded-xl border border-gray-200 bg-white px-6 py-5 text-center">
             <p className="text-sm font-medium text-gray-900">
               {serviceArea
-                ? `Don't see your town? We work throughout ${serviceArea} — ask us about yours.`
+                ? `Don't see your town? We work throughout ${serviceArea}, and take projects elsewhere in New Jersey too — ask us about yours.`
                 : "Don't see your town? Ask us — we may already work near you."}
             </p>
             <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">

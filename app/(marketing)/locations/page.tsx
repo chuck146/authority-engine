@@ -104,8 +104,8 @@ export default async function LocationsPage() {
             <p className="mt-1 text-sm text-gray-600">
               Towns with a{' '}
               <MapPin className="inline-block h-3.5 w-3.5 text-[var(--color-brand-green)]" /> green
-              pin have a dedicated page. We serve every town listed below — use the search to find
-              yours.
+              pin have a dedicated page. We serve every town listed below, and take projects
+              elsewhere in New Jersey too.
             </p>
           </div>
         </ScrollReveal>
@@ -115,11 +115,9 @@ export default async function LocationsPage() {
         {/* Bottom CTA */}
         <ScrollReveal>
           <div className="mt-16 rounded-xl bg-gradient-to-r from-[#1B2B5B] to-[#1e3a5f] px-6 py-10 text-center shadow-lg sm:px-10">
-            <p className="text-xl font-semibold text-white sm:text-2xl">
-              Not sure if we cover your town?
-            </p>
+            <p className="text-xl font-semibold text-white sm:text-2xl">Outside these counties?</p>
             <p className="mt-2 text-white/70">
-              Call or request a free estimate and we&apos;ll let you know.
+              We take projects elsewhere in New Jersey too. Call or request a free estimate.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               {estimateUrl && (

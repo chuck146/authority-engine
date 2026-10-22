@@ -25,7 +25,7 @@ Your estimate lists the work room by room, so you can see what is and is not inc
 - The surfaces you choose: walls, ceilings, trim, doors, closets [CONFIRM]
 - Covering floors and furniture, and masking edges
 - Minor surface prep: filling nail holes, sanding rough spots, spot-priming
-- Paint and primer, with the product and sheen named for each surface [CONFIRM: paint brands]
+- Benjamin Moore or Sherwin-Williams paint and primer, with the product and sheen named for each surface
 - Daily tidy-up and a final walkthrough [CONFIRM]
 
 **Usually not included unless listed:**
@@ -83,7 +83,7 @@ Duration depends on the number of rooms, how much prep the walls need, ceiling h
 
 ## (e) Facts to confirm
 
-- [ ] Paint brands used on interiors. Resolve the Farrow & Ball conflict with the homepage. [CONFIRM: paint brands]
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Remove Farrow & Ball from the live page.
 - [ ] Standard surfaces included (walls, ceilings, trim, doors, closets) and the standard number of coats.
 - [ ] The estimate is written and itemized, and how it is delivered.
 - [ ] **Owner decision:** larger drywall/plaster repair — offered, subcontracted, or excluded.
