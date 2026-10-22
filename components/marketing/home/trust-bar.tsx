@@ -3,7 +3,7 @@ import { Star, Shield, CheckCircle, Award } from 'lucide-react'
 const BADGES = [
   { icon: Star, label: 'Google Verified', desc: '5-Star Reviews' },
   { icon: Shield, label: 'Fully Insured', desc: 'Licensed & Bonded' },
-  { icon: CheckCircle, label: 'Licensed NJ', desc: 'HIC #13VH12345' },
+  { icon: CheckCircle, label: 'Licensed NJ', desc: 'HIC #13VH11564300' },
   { icon: Award, label: 'Angi Super Service', desc: '2024 Award Winner' },
 ] as const
 

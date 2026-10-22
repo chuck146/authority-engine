@@ -131,8 +131,8 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 
 **Facts to confirm** (private, do not publish until confirmed):
 
-- [ ] HIC number: confirmed accurate. Re-check "13VH12345" against the certificate; NJ HIC numbers are usually 13VH plus 8 digits.
-- [ ] Is **(732) 913-8574** the texting number registered for the SMS campaign? `/privacy` and `/terms` now show (732) 496-4607. If the SMS registration lists 913-8574 as the HELP contact, tell the developer so the SMS section keeps that number.
+- [x] HIC number: corrected to 13VH11564300 (owner, 2026-10-22). The trust bar now shows it.
+- [x] Phone numbers (owner, 2026-10-22): (732) 496-4607 is the direct line used everywhere. (732) 913-8574 is the Twilio texting number; `/privacy` and `/terms` show it in their SMS sections and contact lists (`MARKETING_SMS_PHONE` in lib/marketing/site.ts). It is not used in structured data.
 - [ ] Paint brands: "Benjamin Moore & Sherwin-Williams exclusively" (homepage) or Farrow & Ball / Fine Paints of Europe (service pages)?
 - [ ] Service area wording: the 4 counties (Union, Essex, Morris, Somerset) or "all of New Jersey"? Woodbridge (Middlesex) already has a page.
 - [ ] Are Rahway, Montclair, and West Orange served? Are drywall repair, trim/carpentry, and fence staining offered?

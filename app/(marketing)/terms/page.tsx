@@ -63,8 +63,9 @@ export default async function TermsOfServicePage() {
             </p>
             <p>
               <strong>Help:</strong> For assistance with our SMS program, reply{' '}
-              <strong>HELP</strong> to any message you receive from us. You may also contact us
-              using the contact information below.
+              <strong>HELP</strong> to any message you receive from us. Our texting number is{' '}
+              <a href={contact.smsPhoneHref}>{contact.smsPhone}</a>. You may also contact us using
+              the contact information below.
             </p>
             <p>
               <strong>Consent:</strong> By providing your phone number and opting in to our SMS
@@ -141,6 +142,10 @@ export default async function TermsOfServicePage() {
                   <strong>Phone:</strong> <a href={contact.phoneHref}>{contact.phone}</a>
                 </li>
               )}
+              <li>
+                <strong>Text messages:</strong>{' '}
+                <a href={contact.smsPhoneHref}>{contact.smsPhone}</a>
+              </li>
               {contact.email && (
                 <li>
                   <strong>Email:</strong> <a href={`mailto:${contact.email}`}>{contact.email}</a>

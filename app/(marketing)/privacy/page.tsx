@@ -74,7 +74,8 @@ export default async function PrivacyPolicyPage() {
             <p>
               If you provide your phone number and consent to receive text messages, we may send you
               appointment reminders, estimate follow-ups, and review requests related to our
-              painting services.
+              painting services. Text messages are sent from{' '}
+              <a href={contact.smsPhoneHref}>{contact.smsPhone}</a>.
             </p>
             <ul>
               <li>
@@ -167,6 +168,10 @@ export default async function PrivacyPolicyPage() {
                   <strong>Phone:</strong> <a href={contact.phoneHref}>{contact.phone}</a>
                 </li>
               )}
+              <li>
+                <strong>Text messages:</strong>{' '}
+                <a href={contact.smsPhoneHref}>{contact.smsPhone}</a>
+              </li>
               {contact.email && (
                 <li>
                   <strong>Email:</strong> <a href={`mailto:${contact.email}`}>{contact.email}</a>
