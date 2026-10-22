@@ -12,7 +12,7 @@ URL: https://cleanestpaintingnj.com/services/wallpaper-installation (fetched Oct
 
 ## (b) Proposed intro rewrite (≤90 words)
 
-> Cleanest Painting LLC installs and removes wallpaper in homes and commercial spaces across Union, Essex, Morris, Somerset, and Middlesex counties. We hang accent walls and full rooms using pre-pasted, unpasted, peel-and-stick, vinyl, grasscloth, fabric-backed, and mural papers. A smooth result depends on the wall underneath. Every install starts with prep: filling holes, sanding, and a primer made for wallpaper. Estimates are free, and we reply to requests within 24 hours.
+> Cleanest Painting LLC installs and removes wallpaper in homes and commercial spaces across Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. We hang accent walls and full rooms using pre-pasted, unpasted, peel-and-stick, vinyl, grasscloth, fabric-backed, and mural papers. A smooth result depends on the wall underneath. Every install starts with prep: filling holes, sanding, and a primer made for wallpaper. Estimates are free, and we reply to requests within 24 hours.
 
 ## (c) Proposed new sections
 

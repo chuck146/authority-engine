@@ -6,7 +6,7 @@ type HeroSplitProps = {
   heroVideo?: string | null
   // e.g. "Rahway, NJ" — where the business is based
   location?: string
-  // e.g. "Union, Essex, Morris, Somerset & Middlesex counties"
+  // e.g. "Union, Essex & Morris counties"
   serviceArea?: string
 }
 
@@ -65,8 +65,7 @@ export function HeroSplit({ orgName, heroVideo, location, serviceArea }: HeroSpl
           </h1>
 
           <p className="mt-6 max-w-lg text-base leading-relaxed tracking-wide text-white/60">
-            Premium residential painting across{' '}
-            {serviceArea ?? 'Union, Essex, Morris, Somerset & Middlesex counties'}.
+            Premium residential painting across {serviceArea ?? 'North & Central New Jersey'}.
           </p>
 
           {/* CTAs */}

@@ -4,7 +4,7 @@ URL: https://cleanestpaintingnj.com/ (fetched October 2026)
 
 ## (a) Current state
 
-- **Hero:** The H1 is "Where Artistry Meets Craftsmanship." The support line reads "Premium residential painting across Union, Essex, Morris, Somerset & Middlesex counties." It does not name any service, does not say the company is based in Rahway, and leaves out commercial work even though commercial is in the nav.
+- **Hero:** The H1 is "Where Artistry Meets Craftsmanship." The support line reads "Premium residential painting across Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties." It does not name any service, does not say the company is based in Rahway, and leaves out commercial work even though commercial is in the nav.
 - **Service area contradicts itself in four places.** The hero says four counties. The block below the town list says "We service all of New Jersey." The footer says "Service Area: All of New Jersey." The JSON-LD `areaServed` lists the four counties. The town list also includes Woodbridge, which is in Middlesex County, not one of the four.
 - **Brand conflict:** The "Premium Materials" card says "Benjamin Moore & Sherwin-Williams exclusively." The interior page lists Farrow & Ball, and the color consultation and Westfield pages name Farrow & Ball colors.
 - **Trust bar shows an HIC registration number.** Corrected to 13VH11564300 (owner, 2026-10-22).
@@ -15,7 +15,7 @@ URL: https://cleanestpaintingnj.com/ (fetched October 2026)
 
 Keep the H1. Pick one support line:
 
-- **Option A (services + location):** "Interior, exterior, and cabinet painting for homes in Union, Essex, Morris, Somerset & Middlesex counties. Based in Rahway. Free estimates — we reply within 24 hours."
+- **Option A (services + location):** "Interior, exterior, and cabinet painting for homes in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties. Based in Rahway. Free estimates — we reply within 24 hours."
 - **Option B (homes + businesses):** "Residential and commercial painting from our base in Rahway, NJ. Licensed, insured, and rated 5.0 on Google."
 - **Option C (shortest):** "Rahway-based painters for homes across [CONFIRM: service area wording]. Free estimates."
 
@@ -36,8 +36,8 @@ Short block, placed directly above the estimate form. Four numbered steps:
 
 Whatever is chosen must match in four places: the hero, the line below the town list, the footer "Service Area," and the JSON-LD `areaServed`.
 
-- **Option 1 — counties only (strict):** "Serving Union, Essex, Morris, Somerset & Middlesex counties from our base in Rahway, NJ." Then either remove Woodbridge from the town list or add Middlesex County.
-- **Option 2 — core counties + by request:** "Based in Rahway, NJ. We serve Union, Essex, Morris, Somerset & Middlesex counties, and take projects elsewhere in New Jersey by request." This replaces "We service all of New Jersey."
+- **Option 1 — counties only (strict):** "Serving Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties from our base in Rahway, NJ." Then either remove Woodbridge from the town list or add Middlesex County.
+- **Option 2 — core counties + by request:** "Based in Rahway, NJ. We serve Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties, and take projects elsewhere in New Jersey by request." This replaces "We service all of New Jersey."
 - **Option 3 — radius:** "We serve homes within about [CONFIRM: miles] of Rahway, NJ, including the towns below."
 
 Recommendation: Option 2. It is accurate if the company really does travel, and it avoids an "all of New Jersey" claim that AI tools and Google may treat as vague. [CONFIRM: owner's preferred wording]
@@ -52,7 +52,7 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
   },
   {
     "question": "What areas does Cleanest Painting LLC serve?",
-    "answer": "We are based in Rahway, NJ, and work mainly in Union, Essex, Morris, Somerset, and Middlesex counties. Towns we serve include Westfield, Summit, Chatham, Cranford, Millburn, Short Hills, Madison, and Morristown. If your town is not listed, call (732) 496-4607 and ask. [CONFIRM: whether projects outside these counties are accepted]"
+    "answer": "We are based in Rahway, NJ, and work mainly in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. Towns we serve include Westfield, Summit, Chatham, Cranford, Millburn, Short Hills, Madison, and Morristown. If your town is not listed, call (732) 496-4607 and ask. [CONFIRM: whether projects outside these counties are accepted]"
   },
   {
     "question": "Is Cleanest Painting LLC licensed and insured?",
@@ -67,7 +67,7 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
 
 ## (e) Facts to confirm
 
-- [x] Service area: Union, Essex, Morris, Somerset & Middlesex counties (owner, 2026-10-22). Woodbridge stays.
+- [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Woodbridge stays.
 - [ ] Whether projects outside these five counties are accepted (Option 1 vs 2).
 - [ ] Paint brands: is "Benjamin Moore & Sherwin-Williams exclusively" still true, or does the company also use Farrow & Ball / Fine Paints of Europe? [CONFIRM: paint brands]
 - [x] HIC registration number: 13VH11564300 (owner, 2026-10-22).

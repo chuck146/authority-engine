@@ -12,7 +12,7 @@ type SiteFooterProps = {
   email?: string
   // Pre-formatted public address, e.g. "Rahway, NJ 07065" (see lib/seo/business.ts)
   address?: string
-  // e.g. "Union, Essex, Morris, Somerset & Middlesex counties"
+  // e.g. "Union, Essex & Morris counties"
   serviceArea?: string
   services: FooterLink[]
   locations: FooterLink[]

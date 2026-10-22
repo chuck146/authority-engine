@@ -11,7 +11,7 @@ URL: https://cleanestpaintingnj.com/services/cabinet-refinishing (fetched Octobe
 
 ## (b) Proposed intro rewrite (≤90 words)
 
-> Cabinet refinishing gives solid cabinets a new finish without replacing them. Cleanest Painting LLC removes the doors, drawers, and hardware. Then we clean, degloss, sand, prime, and apply a cabinet-grade finish. Refinishing makes the most sense when the cabinet boxes are in good shape and you like your layout. If the boxes are damaged or the layout does not work, replacement may be the better choice. We offer free estimates across Union, Essex, Morris, Somerset, and Middlesex counties.
+> Cabinet refinishing gives solid cabinets a new finish without replacing them. Cleanest Painting LLC removes the doors, drawers, and hardware. Then we clean, degloss, sand, prime, and apply a cabinet-grade finish. Refinishing makes the most sense when the cabinet boxes are in good shape and you like your layout. If the boxes are damaged or the layout does not work, replacement may be the better choice. We offer free estimates across Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties.
 
 ## (c) Proposed new sections
 
