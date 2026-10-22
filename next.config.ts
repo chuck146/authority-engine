@@ -15,6 +15,15 @@ const nextConfig: NextConfig = {
     ],
   },
   typedRoutes: true,
+  // Consolidate the www host onto the canonical apex domain.
+  redirects: async () => [
+    {
+      source: '/:path*',
+      has: [{ type: 'host', value: 'www.cleanestpaintingnj.com' }],
+      destination: 'https://cleanestpaintingnj.com/:path*',
+      permanent: true,
+    },
+  ],
   headers: async () => [
     {
       source: '/:path*',
@@ -23,11 +32,13 @@ const nextConfig: NextConfig = {
           key: 'Content-Security-Policy',
           value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            // googletagmanager.com: GA4 tag on marketing pages (only loads when
+            // NEXT_PUBLIC_GA_MEASUREMENT_ID is set)
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' https: data: blob:",
-            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.r2.cloudflarestorage.com",
+            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.r2.cloudflarestorage.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
             "frame-src 'self' https://www.google.com",
             "object-src 'none'",
             "base-uri 'self'",

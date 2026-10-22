@@ -21,6 +21,14 @@ config({ path: '.env.local' })
 
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
+import { buildFactsGuardrail } from '../../packages/ai/prompts/content/shared'
+
+// Accuracy rules shared with the app's prompt builders — no invented company facts.
+const ACCURACY_RULES = buildFactsGuardrail({
+  orgName: 'Cleanest Painting LLC',
+  domain: null,
+  branding: null,
+})
 
 // ---------------------------------------------------------------------------
 // Config
@@ -143,7 +151,7 @@ type KeywordRow = {
 // ---------------------------------------------------------------------------
 
 async function publishReviewPages(): Promise<{ published: string[]; skipped: string[] }> {
-  console.log('\n--- Step 1A: Publish pages stuck in review ---\n')
+  console.log('\n--- Step 1A: Pages in review ready for an editor (not auto-published) ---\n')
 
   const published: string[] = []
   const skipped: string[] = []
@@ -167,20 +175,11 @@ async function publishReviewPages(): Promise<{ published: string[]; skipped: str
       const score = page.seo_score ?? 0
 
       if (score >= PUBLISH_THRESHOLD) {
-        console.log(`  ✓ Publishing: ${page.title} (SEO: ${score}, table: ${table})`)
+        console.log(`  ✓ Ready for human review: ${page.title} (SEO: ${score}, table: ${table})`)
 
-        if (!dryRun) {
-          const { error: updateErr } = await supabase
-            .from(table)
-            .update({ status: 'published', published_at: new Date().toISOString() } as never)
-            .eq('id', page.id)
-
-          if (updateErr) {
-            console.error(`    Error updating: ${updateErr.message}`)
-            skipped.push(page.title)
-            continue
-          }
-        }
+        // All AI content requires human review (CLAUDE.md) — never publish from a
+        // script. Pages that meet the threshold are listed for an editor to review
+        // and publish from the dashboard.
         published.push(page.title)
       } else {
         console.log(
@@ -191,7 +190,7 @@ async function publishReviewPages(): Promise<{ published: string[]; skipped: str
     }
   }
 
-  console.log(`\n  Published: ${published.length}, Skipped: ${skipped.length}`)
+  console.log(`\n  Ready for review: ${published.length}, Need work: ${skipped.length}`)
   return { published, skipped }
 }
 
@@ -235,6 +234,8 @@ Tone: friendly, knowledgeable, helpful
 Brand: ${ORG_NAME} — "${TAGLINE}"
 Website: ${DOMAIN}
 Service Area: ${SERVICE_AREA}
+
+${ACCURACY_RULES}
 
 Guidelines:
 - Write for NJ homeowners planning spring/early spring painting projects
@@ -406,12 +407,14 @@ Brand: ${ORG_NAME} — "${TAGLINE}"
 Website: ${DOMAIN}
 Service Area: ${SERVICE_AREA}
 
+${ACCURACY_RULES}
+
 Guidelines:
 - Write specifically for homeowners in ${city}, NJ
 - Reference local character where relevant (but do not fabricate)
 - This town is in ${county} County, NJ. Mention the county 1-2 times.
 - Include the city name naturally 3-5 times
-- 4-5 sections covering: local overview, services, why choose us, local CTA
+- 4-5 sections covering: local overview, services, what to expect, local CTA
 - Use HTML tags (<p>, <ul>, <li>, <strong>, <em>) within section body
 - meta_title format: "Painting Services in ${city}, NJ | ${ORG_NAME}"
 - meta_description: mention city + CTA, 120-160 chars`,

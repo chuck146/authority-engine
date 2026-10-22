@@ -3,25 +3,38 @@ import { createClient } from '@/lib/supabase/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import type { LeadOverview, LeadStatus, LeadSource } from '@/types/leads'
 
+const QUALIFIED_STATUSES = new Set(['qualified', 'proposed', 'won'])
+
 export async function GET() {
   try {
     const auth = await requireApiAuth()
     const supabase = await createClient()
 
-    // Fetch all leads for the org
-    const { data: leads, error } = await supabase
-      .from('leads' as never)
-      .select('status, source, service, created_at, contacted_at')
-      .eq('organization_id', auth.organizationId)
-      .returns<
-        {
-          status: string
-          source: string
-          service: string | null
-          created_at: string
-          contacted_at: string | null
-        }[]
-      >()
+    // Only the columns the counts need (no names, emails, or phone numbers).
+    const BASE_COLUMNS = 'status, source, service, created_at, contacted_at'
+    const fetchLeads = (columns: string) =>
+      supabase
+        .from('leads' as never)
+        .select(columns)
+        .eq('organization_id', auth.organizationId)
+        .returns<
+          {
+            status: string
+            source: string
+            service: string | null
+            created_at: string
+            contacted_at: string | null
+            discovery_source?: string | null
+            attribution?: { channel?: string } | null
+          }[]
+        >()
+
+    let { data: leads, error } = await fetchLeads(`${BASE_COLUMNS}, discovery_source, attribution`)
+    // TODO: remove once migration 20261019000001 is applied — before then the
+    // attribution columns don't exist (42703 undefined_column).
+    if (error?.code === '42703') {
+      ;({ data: leads, error } = await fetchLeads(BASE_COLUMNS))
+    }
 
     if (error) {
       console.error('Failed to fetch leads overview:', error)
@@ -93,6 +106,31 @@ export async function GET() {
         ? responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length
         : null
 
+    // By observed channel, with lead quality downstream
+    const channelMap = new Map<string, { leads: number; qualified: number; won: number }>()
+    for (const lead of allLeads) {
+      const channel = lead.attribution?.channel ?? 'unknown'
+      const row = channelMap.get(channel) ?? { leads: 0, qualified: 0, won: 0 }
+      row.leads++
+      if (QUALIFIED_STATUSES.has(lead.status)) row.qualified++
+      if (lead.status === 'won') row.won++
+      channelMap.set(channel, row)
+    }
+    const byChannel = Array.from(channelMap.entries())
+      .map(([channel, row]) => ({ channel, ...row }))
+      .sort((a, b) => b.leads - a.leads)
+
+    // By customer-reported discovery source
+    const discoveryMap = new Map<string, number>()
+    for (const lead of allLeads) {
+      if (lead.discovery_source) {
+        discoveryMap.set(lead.discovery_source, (discoveryMap.get(lead.discovery_source) ?? 0) + 1)
+      }
+    }
+    const byDiscoverySource = Array.from(discoveryMap.entries())
+      .map(([source, count]) => ({ source, count }))
+      .sort((a, b) => b.count - a.count)
+
     const overview: LeadOverview = {
       total: allLeads.length,
       newThisWeek,
@@ -102,6 +140,8 @@ export async function GET() {
       bySource,
       topServices,
       avgResponseTimeHours,
+      byChannel,
+      byDiscoverySource,
     }
 
     return NextResponse.json(overview)

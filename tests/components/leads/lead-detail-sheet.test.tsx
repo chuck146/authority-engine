@@ -84,4 +84,37 @@ describe('LeadDetailSheet', () => {
     expect(screen.getByText('Mark Contacted')).toBeDefined()
     expect(screen.getByText('Qualify')).toBeDefined()
   })
+
+  it('renders discovery source and attribution rows', async () => {
+    const detail = buildLeadDetail({
+      discoverySource: 'ai_assistant',
+      attribution: { channel: 'ai_assistant', landing_page: '/services/deck-staining' },
+    })
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve(detail) })
+
+    await act(async () => {
+      render(<LeadDetailSheet {...defaultProps} />)
+    })
+
+    expect(screen.getByText('Heard about us')).toBeDefined()
+    expect(screen.getByText('ChatGPT or another AI assistant')).toBeDefined()
+    expect(screen.getByText('Channel')).toBeDefined()
+    expect(screen.getByText('AI assistant referral')).toBeDefined()
+    expect(screen.getByText('Landing page')).toBeDefined()
+    expect(screen.getByText('/services/deck-staining')).toBeDefined()
+  })
+
+  it('renders without attribution rows when attribution is null', async () => {
+    const detail = buildLeadDetail({ discoverySource: null, attribution: null })
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve(detail) })
+
+    await act(async () => {
+      render(<LeadDetailSheet {...defaultProps} />)
+    })
+
+    expect(screen.getByText('Jane Doe')).toBeDefined()
+    expect(screen.queryByText('Heard about us')).toBeNull()
+    expect(screen.queryByText('Channel')).toBeNull()
+    expect(screen.queryByText('Landing page')).toBeNull()
+  })
 })

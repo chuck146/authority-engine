@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createMockSupabaseClient } from '../mocks/supabase'
 
-vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(),
+vi.mock('@/lib/supabase/static', () => ({
+  createStaticClient: vi.fn(),
 }))
 
 const mockClient = createMockSupabaseClient()
 
-import { createClient } from '@/lib/supabase/server'
+import { createStaticClient } from '@/lib/supabase/static'
 
 import {
   getOrganizationById,
@@ -19,7 +19,7 @@ import {
 
 beforeEach(() => {
   vi.clearAllMocks()
-  vi.mocked(createClient).mockResolvedValue(mockClient as never)
+  vi.mocked(createStaticClient).mockReturnValue(mockClient as never)
   mockClient.from.mockReturnValue(mockClient)
   mockClient.select.mockReturnValue(mockClient)
   mockClient.eq.mockReturnValue(mockClient)

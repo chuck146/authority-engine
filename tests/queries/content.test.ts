@@ -18,7 +18,49 @@ import {
   getAllPublishedServiceSlugs,
   getAllPublishedLocationSlugs,
   getAllPublishedBlogSlugs,
+  getPublishedServicePage,
+  getPublishedCommercialServicePage,
 } from '@/lib/queries/content'
+
+describe('single-page queries', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(createStaticClient).mockReturnValue(mockClient as never)
+    mockClient.from.mockReturnValue(mockClient)
+    mockClient.select.mockReturnValue(mockClient)
+    mockClient.eq.mockReturnValue(mockClient)
+    mockClient.returns.mockReturnValue(mockClient)
+  })
+
+  it('scopes service page lookups to the organization', async () => {
+    mockClient.single.mockResolvedValueOnce({ data: { slug: 'interior-painting' }, error: null })
+
+    await getPublishedServicePage('org-1', 'interior-painting')
+
+    expect(mockClient.eq).toHaveBeenCalledWith('organization_id', 'org-1')
+    expect(mockClient.eq).toHaveBeenCalledWith('slug', 'interior-painting')
+    expect(mockClient.eq).toHaveBeenCalledWith('status', 'published')
+  })
+
+  it('scopes commercial page lookups to the organization', async () => {
+    mockClient.single.mockResolvedValueOnce({ data: null, error: null })
+
+    const result = await getPublishedCommercialServicePage('org-1', 'office')
+
+    expect(mockClient.from).toHaveBeenCalledWith('commercial_service_pages')
+    expect(mockClient.eq).toHaveBeenCalledWith('organization_id', 'org-1')
+    expect(result).toBeNull()
+  })
+
+  it('uses the cookie-free client so marketing pages can be statically cached', async () => {
+    mockClient.single.mockResolvedValueOnce({ data: null, error: null })
+
+    await getPublishedServicePage('org-1', 'interior-painting')
+
+    expect(createStaticClient).toHaveBeenCalled()
+    expect(createClient).not.toHaveBeenCalled()
+  })
+})
 
 describe('bulk slug queries', () => {
   beforeEach(() => {
@@ -39,10 +81,11 @@ describe('bulk slug queries', () => {
       ]
       mockClient.returns.mockResolvedValueOnce({ data: slugs, error: null })
 
-      const result = await getAllPublishedServiceSlugs()
+      const result = await getAllPublishedServiceSlugs('org-1')
 
       expect(mockClient.from).toHaveBeenCalledWith('service_pages')
       expect(mockClient.select).toHaveBeenCalledWith('slug, updated_at')
+      expect(mockClient.eq).toHaveBeenCalledWith('organization_id', 'org-1')
       expect(mockClient.eq).toHaveBeenCalledWith('status', 'published')
       expect(result).toEqual(slugs)
     })
@@ -50,7 +93,7 @@ describe('bulk slug queries', () => {
     it('returns empty array when no data', async () => {
       mockClient.returns.mockResolvedValueOnce({ data: null, error: null })
 
-      const result = await getAllPublishedServiceSlugs()
+      const result = await getAllPublishedServiceSlugs('org-1')
       expect(result).toEqual([])
     })
   })
@@ -60,10 +103,11 @@ describe('bulk slug queries', () => {
       const slugs = [{ slug: 'summit-nj', updated_at: '2026-03-01T00:00:00Z' }]
       mockClient.returns.mockResolvedValueOnce({ data: slugs, error: null })
 
-      const result = await getAllPublishedLocationSlugs()
+      const result = await getAllPublishedLocationSlugs('org-1')
 
       expect(mockClient.from).toHaveBeenCalledWith('location_pages')
       expect(mockClient.select).toHaveBeenCalledWith('slug, updated_at')
+      expect(mockClient.eq).toHaveBeenCalledWith('organization_id', 'org-1')
       expect(mockClient.eq).toHaveBeenCalledWith('status', 'published')
       expect(result).toEqual(slugs)
     })
@@ -71,7 +115,7 @@ describe('bulk slug queries', () => {
     it('returns empty array when no data', async () => {
       mockClient.returns.mockResolvedValueOnce({ data: null, error: null })
 
-      const result = await getAllPublishedLocationSlugs()
+      const result = await getAllPublishedLocationSlugs('org-1')
       expect(result).toEqual([])
     })
   })
@@ -81,10 +125,11 @@ describe('bulk slug queries', () => {
       const slugs = [{ slug: 'choose-right-paint-color', updated_at: '2026-03-01T00:00:00Z' }]
       mockClient.returns.mockResolvedValueOnce({ data: slugs, error: null })
 
-      const result = await getAllPublishedBlogSlugs()
+      const result = await getAllPublishedBlogSlugs('org-1')
 
       expect(mockClient.from).toHaveBeenCalledWith('blog_posts')
       expect(mockClient.select).toHaveBeenCalledWith('slug, updated_at')
+      expect(mockClient.eq).toHaveBeenCalledWith('organization_id', 'org-1')
       expect(mockClient.eq).toHaveBeenCalledWith('status', 'published')
       expect(result).toEqual(slugs)
     })
@@ -92,7 +137,7 @@ describe('bulk slug queries', () => {
     it('returns empty array when no data', async () => {
       mockClient.returns.mockResolvedValueOnce({ data: null, error: null })
 
-      const result = await getAllPublishedBlogSlugs()
+      const result = await getAllPublishedBlogSlugs('org-1')
       expect(result).toEqual([])
     })
   })

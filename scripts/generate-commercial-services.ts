@@ -18,6 +18,14 @@ import { config } from 'dotenv'
 config({ path: '.env.local' })
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
+import { buildFactsGuardrail } from '../packages/ai/prompts/content/shared'
+
+// Accuracy rules shared with the app's prompt builders — no invented company facts.
+const ACCURACY_RULES = buildFactsGuardrail({
+  orgName: 'Cleanest Painting LLC',
+  domain: null,
+  branding: null,
+})
 
 // ---------------------------------------------------------------------------
 // Config
@@ -144,12 +152,14 @@ Website: ${ORG_DOMAIN}
 Tagline: "${TAGLINE}"
 Service Area: ${SERVICE_AREA}
 
+${ACCURACY_RULES}
+
 Guidelines:
 - Write for business owners, property managers, and facility managers searching for this service
-- Include specific benefits, process steps, and reasons to choose this company
-- Emphasize commercial-specific advantages: minimal disruption, off-hours scheduling, volume pricing, safety compliance
+- Include specific benefits and process steps; any reason to choose this company must come from the verified facts
+- Explain commercial-specific considerations (minimizing disruption, scheduling around business hours, site safety) as general information, not company promises
 - Naturally incorporate keywords without stuffing
-- Sections should cover: service overview, industries served, our process, why choose us, and service area
+- Sections should cover: service overview, industries served, our process, what to expect, and service area
 - Generate 4-6 sections
 - Use HTML tags (<p>, <ul>, <li>, <strong>, <em>) within section body text
 - meta_title should include the service name and company name (max 60 chars)

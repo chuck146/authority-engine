@@ -7,6 +7,11 @@ vi.mock('@/lib/queue/publish-worker', () => ({
   publishScheduledContent: (...args: unknown[]) => mockPublishScheduledContent(...args),
 }))
 
+const mockRevalidateMarketingSite = vi.fn()
+vi.mock('@/lib/marketing/revalidate', () => ({
+  revalidateMarketingSite: () => mockRevalidateMarketingSite(),
+}))
+
 function makeRequest(secret?: string): NextRequest {
   const headers: Record<string, string> = {}
   if (secret) headers['authorization'] = `Bearer ${secret}`
@@ -45,6 +50,7 @@ describe('GET /api/cron/publish-content', () => {
     expect(body.success).toBe(true)
     expect(body.published).toBe(0)
     expect(body.failed).toBe(0)
+    expect(mockRevalidateMarketingSite).not.toHaveBeenCalled()
   })
 
   it('publishes due entries', async () => {
@@ -58,6 +64,7 @@ describe('GET /api/cron/publish-content', () => {
     expect(body.published).toBe(3)
     expect(body.failed).toBe(0)
     expect(mockPublishScheduledContent).toHaveBeenCalledOnce()
+    expect(mockRevalidateMarketingSite).toHaveBeenCalledOnce()
   })
 
   it('handles partial failures gracefully', async () => {

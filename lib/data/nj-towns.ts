@@ -515,7 +515,21 @@ export function findCountyForTown(townName: string): string | null {
   return null
 }
 
-/** Total count of towns across all serviced counties */
-export function getTotalTownCount(): number {
-  return NJ_SERVICE_COUNTIES.reduce((sum, c) => sum + c.towns.length, 0)
+/**
+ * Counties to list for the given service-area names (from org settings).
+ * Matching ignores case and a trailing "County". If no names are given, or
+ * none match a known county, every serviced county is returned so the page
+ * is never empty.
+ */
+export function getServedCounties(names: string[]): NjCounty[] {
+  const wanted = new Set(
+    names.map((n) =>
+      n
+        .trim()
+        .replace(/\s+county$/i, '')
+        .toLowerCase(),
+    ),
+  )
+  const matched = NJ_SERVICE_COUNTIES.filter((c) => wanted.has(c.name.toLowerCase()))
+  return matched.length > 0 ? matched : NJ_SERVICE_COUNTIES
 }

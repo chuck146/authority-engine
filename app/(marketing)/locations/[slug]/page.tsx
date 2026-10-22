@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import {
   getPublishedLocationPage,
-  getOrganizationById,
+  getMarketingOrganization,
   getAllPublishedServiceLinks,
   getAllPublishedLocationSlugs,
   getRelatedLocationPages,
@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/marketing/json-ld'
 import { RelatedServices, RelatedLocations } from '@/components/marketing/related-links'
 import type { StructuredContent } from '@/types/content'
 import type { OrgSettings } from '@/types'
+import { getEstimateHref } from '@/lib/marketing/estimate'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 
@@ -21,13 +22,16 @@ export const revalidate = 3600
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedLocationSlugs()
+  const org = await getMarketingOrganization()
+  if (!org) return []
+  const slugs = await getAllPublishedLocationSlugs(org.id)
   return slugs.map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const page = await getPublishedLocationPage(slug)
+  const org = await getMarketingOrganization()
+  const page = org ? await getPublishedLocationPage(org.id, slug) : null
   if (!page) return {}
 
   const content = page.content as unknown as StructuredContent
@@ -54,20 +58,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LocationPageRoute({ params }: Props) {
   const { slug } = await params
-  const page = await getPublishedLocationPage(slug)
-  if (!page) notFound()
+  const org = await getMarketingOrganization()
+  const page = org ? await getPublishedLocationPage(org.id, slug) : null
+  if (!org || !page) notFound()
 
-  const [org, allServices, nearbyLocations] = await Promise.all([
-    getOrganizationById(page.organization_id),
+  const [allServices, nearbyLocations] = await Promise.all([
     getAllPublishedServiceLinks(page.organization_id),
     getRelatedLocationPages(page.organization_id, page.slug, 3),
   ])
 
   const settings = org?.settings as OrgSettings | null
   const phone = settings?.contact_info?.phone
-  const rawEstimateUrl = settings?.estimate_url
-  const estimateUrl =
-    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
+  const estimateUrl = getEstimateHref(settings)
 
   return (
     <>

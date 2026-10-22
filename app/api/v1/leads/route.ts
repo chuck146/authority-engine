@@ -6,6 +6,13 @@ import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
 import { sendLeadNotification } from '@/lib/email/resend'
 import { scoreLead } from '@/lib/leads/lead-scorer'
 import { isRateLimited } from '@/lib/leads/rate-limiter'
+import {
+  DISCOVERY_SOURCES,
+  attributionSchema,
+  classifyChannel,
+  discoverySourceSchema,
+  leadSourceForChannel,
+} from '@/lib/leads/attribution'
 import type { OrgSettings } from '@/types'
 import type { LeadListItem } from '@/types/leads'
 
@@ -21,7 +28,18 @@ const leadSchema = z.object({
   message: z.string().max(1000).optional(),
   sms_consent: z.boolean().optional().default(false),
   org_slug: z.string().min(1).max(100),
+  discovery_source: discoverySourceSchema.optional(),
+  attribution: attributionSchema.optional(),
+  // Honeypot: hidden from people, filled in by naive bots.
+  company_website: z.string().max(200).optional(),
 })
+
+// Postgres/PostgREST errors for a column that doesn't exist yet (migration not applied).
+// TODO: remove this fallback once migration 20261019000001 is applied.
+function isMissingColumnError(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false
+  return error.code === 'PGRST204' || error.code === '42703'
+}
 
 // Public POST — anyone can submit a lead
 export async function POST(request: Request) {
@@ -45,6 +63,14 @@ export async function POST(request: Request) {
 
     const input = parseResult.data
     const now = new Date().toISOString()
+
+    // Bots that fill the honeypot get a normal-looking success and nothing is stored.
+    if (input.company_website) {
+      return NextResponse.json({ success: true }, { status: 201 })
+    }
+
+    const channel = classifyChannel(input.attribution, new URL(request.url).hostname)
+    const attribution = { ...input.attribution, channel }
 
     // Use admin client — this is a public endpoint (no auth), so the regular
     // client has no auth.uid() and RLS blocks the insert
@@ -72,23 +98,37 @@ export async function POST(request: Request) {
       createdAt: now,
     })
 
-    const { data: lead, error } = await supabase
-      .from('leads' as never)
-      .insert({
-        organization_id: organizationId,
-        name: input.name,
-        email: input.email,
-        phone: input.phone,
-        service: input.service ?? null,
-        message: input.message ?? null,
-        sms_consent: input.sms_consent,
-        score,
-        score_label: scoreLabel,
-        source: 'website',
-        updated_at: now,
-      } as never)
-      .select('id')
-      .single()
+    const baseRow = {
+      organization_id: organizationId,
+      name: input.name,
+      email: input.email,
+      phone: input.phone,
+      service: input.service ?? null,
+      message: input.message ?? null,
+      sms_consent: input.sms_consent,
+      score,
+      score_label: scoreLabel,
+      source: leadSourceForChannel(channel, input.attribution),
+      updated_at: now,
+    }
+    const insertLead = (row: Record<string, unknown>) =>
+      supabase
+        .from('leads' as never)
+        .insert(row as never)
+        .select('id')
+        .single()
+
+    let { data: lead, error } = await insertLead({
+      ...baseRow,
+      discovery_source: input.discovery_source ?? null,
+      attribution,
+    })
+
+    // Never lose a lead because the attribution migration hasn't been applied yet.
+    if (error && isMissingColumnError(error)) {
+      console.warn('[leads] attribution columns missing — saving lead without them')
+      ;({ data: lead, error } = await insertLead(baseRow))
+    }
 
     if (error || !lead) {
       console.error('Failed to insert lead:', error)
@@ -109,7 +149,12 @@ export async function POST(request: Request) {
     const settings = orgRow.settings as unknown as OrgSettings | null
     const notifyEmail = settings?.contact_info?.email
     if (notifyEmail) {
-      sendLeadNotification(notifyEmail, input).catch(() => {})
+      const discoveryLabel = DISCOVERY_SOURCES.find(
+        (s) => s.value === input.discovery_source,
+      )?.label
+      sendLeadNotification(notifyEmail, { ...input, discoverySource: discoveryLabel }).catch(
+        () => {},
+      )
     }
 
     return NextResponse.json({ success: true }, { status: 201 })

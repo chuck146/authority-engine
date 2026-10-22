@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
+import { cache } from 'react'
 import { createStaticClient } from '@/lib/supabase/static'
+import { MARKETING_ORG_SLUG } from '@/lib/marketing/site'
 import type {
   ServicePage,
   LocationPage,
@@ -14,11 +15,20 @@ import type {
   BlogCardLink,
 } from '@/types'
 
-export async function getPublishedServicePage(slug: string): Promise<ServicePage | null> {
-  const supabase = await createClient()
+// Public marketing-site reads. They use the cookie-free anon client so pages can
+// be statically generated / ISR-cached (cookie access forces dynamic rendering),
+// and rely on RLS "published … are public" SELECT policies. Every content query
+// is scoped to an organization so another tenant's slugs can't resolve here.
+
+export async function getPublishedServicePage(
+  orgId: string,
+  slug: string,
+): Promise<ServicePage | null> {
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('service_pages')
     .select('*')
+    .eq('organization_id', orgId)
     .eq('slug', slug)
     .eq('status', 'published')
     .returns<ServicePage[]>()
@@ -26,11 +36,15 @@ export async function getPublishedServicePage(slug: string): Promise<ServicePage
   return data
 }
 
-export async function getPublishedLocationPage(slug: string): Promise<LocationPage | null> {
-  const supabase = await createClient()
+export async function getPublishedLocationPage(
+  orgId: string,
+  slug: string,
+): Promise<LocationPage | null> {
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('location_pages')
     .select('*')
+    .eq('organization_id', orgId)
     .eq('slug', slug)
     .eq('status', 'published')
     .returns<LocationPage[]>()
@@ -38,11 +52,12 @@ export async function getPublishedLocationPage(slug: string): Promise<LocationPa
   return data
 }
 
-export async function getPublishedBlogPost(slug: string): Promise<BlogPost | null> {
-  const supabase = await createClient()
+export async function getPublishedBlogPost(orgId: string, slug: string): Promise<BlogPost | null> {
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('blog_posts')
     .select('*')
+    .eq('organization_id', orgId)
     .eq('slug', slug)
     .eq('status', 'published')
     .returns<BlogPost[]>()
@@ -52,31 +67,34 @@ export async function getPublishedBlogPost(slug: string): Promise<BlogPost | nul
 
 type ContentSlug = { slug: string; updated_at: string }
 
-export async function getAllPublishedServiceSlugs(): Promise<ContentSlug[]> {
+export async function getAllPublishedServiceSlugs(orgId: string): Promise<ContentSlug[]> {
   const supabase = createStaticClient()
   const { data } = await supabase
     .from('service_pages')
     .select('slug, updated_at')
+    .eq('organization_id', orgId)
     .eq('status', 'published')
     .returns<ContentSlug[]>()
   return data ?? []
 }
 
-export async function getAllPublishedLocationSlugs(): Promise<ContentSlug[]> {
+export async function getAllPublishedLocationSlugs(orgId: string): Promise<ContentSlug[]> {
   const supabase = createStaticClient()
   const { data } = await supabase
     .from('location_pages')
     .select('slug, updated_at')
+    .eq('organization_id', orgId)
     .eq('status', 'published')
     .returns<ContentSlug[]>()
   return data ?? []
 }
 
-export async function getAllPublishedBlogSlugs(): Promise<ContentSlug[]> {
+export async function getAllPublishedBlogSlugs(orgId: string): Promise<ContentSlug[]> {
   const supabase = createStaticClient()
   const { data } = await supabase
     .from('blog_posts')
     .select('slug, updated_at')
+    .eq('organization_id', orgId)
     .eq('status', 'published')
     .returns<ContentSlug[]>()
   return data ?? []
@@ -85,7 +103,7 @@ export async function getAllPublishedBlogSlugs(): Promise<ContentSlug[]> {
 // --- Organization queries ---
 
 export async function getOrganizationBySlug(slug: string): Promise<Organization | null> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('organizations')
     .select('*')
@@ -96,7 +114,7 @@ export async function getOrganizationBySlug(slug: string): Promise<Organization 
 }
 
 export async function getOrganizationById(id: string): Promise<Organization | null> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('organizations')
     .select('*')
@@ -106,6 +124,12 @@ export async function getOrganizationById(id: string): Promise<Organization | nu
   return data
 }
 
+// The organization served on the marketing domain. Deduplicated per render so
+// the layout, generateMetadata, and page share one lookup.
+export const getMarketingOrganization = cache(
+  (): Promise<Organization | null> => getOrganizationBySlug(MARKETING_ORG_SLUG),
+)
+
 // --- Related content queries (for cross-linking) ---
 
 export async function getRelatedServicePages(
@@ -113,7 +137,7 @@ export async function getRelatedServicePages(
   excludeSlug: string,
   limit = 3,
 ): Promise<RelatedServiceLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('service_pages')
     .select('slug, title')
@@ -126,7 +150,7 @@ export async function getRelatedServicePages(
 }
 
 export async function getAllPublishedServiceLinks(orgId: string): Promise<RelatedServiceLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('service_pages')
     .select('slug, title')
@@ -137,7 +161,7 @@ export async function getAllPublishedServiceLinks(orgId: string): Promise<Relate
 }
 
 export async function getAllPublishedLocationLinks(orgId: string): Promise<RelatedLocationLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('location_pages')
     .select('slug, title, city, state, county')
@@ -149,7 +173,7 @@ export async function getAllPublishedLocationLinks(orgId: string): Promise<Relat
 }
 
 export async function getAllPublishedBlogLinks(orgId: string): Promise<RelatedBlogLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('blog_posts')
     .select('slug, title, excerpt')
@@ -163,7 +187,7 @@ export async function getAllPublishedBlogLinks(orgId: string): Promise<RelatedBl
 // --- Hub page card queries (richer data for /services and /blog hubs) ---
 
 export async function getAllPublishedServiceCards(orgId: string): Promise<ServiceCardLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('service_pages')
     .select('slug, title, hero_image_url, content')
@@ -175,7 +199,7 @@ export async function getAllPublishedServiceCards(orgId: string): Promise<Servic
 }
 
 export async function getAllPublishedBlogCards(orgId: string): Promise<BlogCardLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('blog_posts')
     .select('slug, title, excerpt, featured_image_url, published_at')
@@ -191,7 +215,7 @@ export async function getRelatedLocationPages(
   excludeSlug: string,
   limit = 4,
 ): Promise<RelatedLocationLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('location_pages')
     .select('slug, title, city, state')
@@ -208,7 +232,7 @@ export async function getRelatedBlogPosts(
   excludeSlug: string,
   limit = 2,
 ): Promise<RelatedBlogLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('blog_posts')
     .select('slug, title, excerpt')
@@ -224,12 +248,14 @@ export async function getRelatedBlogPosts(
 // --- Commercial service page queries ---
 
 export async function getPublishedCommercialServicePage(
+  orgId: string,
   slug: string,
 ): Promise<CommercialServicePage | null> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('commercial_service_pages')
     .select('*')
+    .eq('organization_id', orgId)
     .eq('slug', slug)
     .eq('status', 'published')
     .returns<CommercialServicePage[]>()
@@ -237,11 +263,12 @@ export async function getPublishedCommercialServicePage(
   return data
 }
 
-export async function getAllPublishedCommercialServiceSlugs(): Promise<ContentSlug[]> {
+export async function getAllPublishedCommercialServiceSlugs(orgId: string): Promise<ContentSlug[]> {
   const supabase = createStaticClient()
   const { data } = await supabase
     .from('commercial_service_pages')
     .select('slug, updated_at')
+    .eq('organization_id', orgId)
     .eq('status', 'published')
     .returns<ContentSlug[]>()
   return data ?? []
@@ -250,7 +277,7 @@ export async function getAllPublishedCommercialServiceSlugs(): Promise<ContentSl
 export async function getAllPublishedCommercialServiceCards(
   orgId: string,
 ): Promise<CommercialServiceCardLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('commercial_service_pages')
     .select('slug, title, hero_image_url, content')
@@ -264,7 +291,7 @@ export async function getAllPublishedCommercialServiceCards(
 export async function getAllPublishedCommercialServiceLinks(
   orgId: string,
 ): Promise<RelatedServiceLink[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('commercial_service_pages')
     .select('slug, title')

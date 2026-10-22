@@ -1,6 +1,7 @@
 import { timingSafeEqual } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { publishScheduledContent } from '@/lib/queue/publish-worker'
+import { revalidateMarketingSite } from '@/lib/marketing/revalidate'
 
 export const maxDuration = 60
 
@@ -17,6 +18,7 @@ export async function GET(request: NextRequest) {
   }
 
   const result = await publishScheduledContent()
+  if (result.published > 0) revalidateMarketingSite()
 
   return NextResponse.json({
     success: true,

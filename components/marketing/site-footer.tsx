@@ -1,4 +1,6 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import Link from 'next/link'
+import { SOCIAL_PROFILES } from '@/lib/seo/business'
 
 type FooterLink = { slug: string; title: string; city?: string; state?: string }
 
@@ -8,12 +10,10 @@ type SiteFooterProps = {
   logoUrl?: string | null
   phone?: string
   email?: string
-  address?: {
-    streetAddress?: string
-    city?: string
-    state?: string
-    postalCode?: string
-  }
+  // Pre-formatted public address, e.g. "Rahway, NJ 07065" (see lib/seo/business.ts)
+  address?: string
+  // e.g. "Union, Essex & Morris counties"
+  serviceArea?: string
   services: FooterLink[]
   locations: FooterLink[]
 }
@@ -25,9 +25,14 @@ export function SiteFooter({
   phone,
   email,
   address,
+  serviceArea,
   services,
   locations,
 }: SiteFooterProps) {
+  const mapSrc = address
+    ? `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`
+    : undefined
+
   return (
     <footer className="bg-[#1A1A1A]">
       <div className="mx-auto max-w-[1400px] px-6 pt-20 pb-10 md:px-10 lg:px-[60px]">
@@ -66,7 +71,8 @@ export function SiteFooter({
             </p>
             <div className="mt-6 flex gap-3">
               <a
-                href="https://instagram.com/cleanestpainting"
+                href={SOCIAL_PROFILES.instagram}
+                aria-label={`${orgName} on Instagram`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-[#fbbf24]"
@@ -76,7 +82,8 @@ export function SiteFooter({
                 </svg>
               </a>
               <a
-                href="https://www.facebook.com/people/Cleanest-Painting-LLC/100065285028377/"
+                href={SOCIAL_PROFILES.facebook}
+                aria-label={`${orgName} on Facebook`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-[#fbbf24]"
@@ -85,16 +92,15 @@ export function SiteFooter({
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
               </a>
-              <a
-                href="https://www.cleanestpaintingnj.com"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/"
+                aria-label={`${orgName} homepage`}
                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-[#fbbf24]"
               >
                 <svg viewBox="0 0 24 24" fill="white" className="h-5 w-5">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                 </svg>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -112,6 +118,22 @@ export function SiteFooter({
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/services"
+                  className="text-[0.95rem] font-medium text-[#fbbf24] transition-colors hover:text-[#fbbf24]/80"
+                >
+                  All residential services &rarr;
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/commercial"
+                  className="text-[0.95rem] font-medium text-[#fbbf24] transition-colors hover:text-[#fbbf24]/80"
+                >
+                  Commercial painting &rarr;
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -149,12 +171,13 @@ export function SiteFooter({
                   <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
                     Phone
                   </p>
-                  <a
-                    href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                  <TrackedPhoneLink
+                    phone={phone}
+                    location="footer_contact"
                     className="text-[0.95rem] font-medium text-white transition-colors hover:text-[#fbbf24]"
                   >
                     {phone}
-                  </a>
+                  </TrackedPhoneLink>
                 </div>
               )}
               {email && (
@@ -173,25 +196,19 @@ export function SiteFooter({
               {address && (
                 <div>
                   <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
-                    Address
+                    Based In
                   </p>
-                  <p className="text-[0.95rem] text-white/90">
-                    {address.streetAddress && (
-                      <>
-                        {address.streetAddress}
-                        <br />
-                      </>
-                    )}
-                    {address.city}, {address.state} {address.postalCode}
-                  </p>
+                  <p className="text-[0.95rem] text-white/90">{address}</p>
                 </div>
               )}
-              <div>
-                <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
-                  Service Area
-                </p>
-                <p className="text-[0.95rem] text-white/90">All of New Jersey</p>
-              </div>
+              {serviceArea && (
+                <div>
+                  <p className="mb-1 text-xs font-semibold tracking-[0.1em] text-white/40 uppercase">
+                    Service Area
+                  </p>
+                  <p className="text-[0.95rem] text-white/90">{serviceArea}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -199,35 +216,33 @@ export function SiteFooter({
         {/* Map + NAP */}
         <div className="mt-4 mb-12">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
-            <div className="w-full overflow-hidden rounded-2xl shadow-lg lg:max-w-md">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.1583091352!2d-74.24322613964118!3d40.69714941879884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sus!4v1648482801994!5m2!1sen!2sus"
-                width="100%"
-                height="220"
-                style={{ border: 0, borderRadius: '16px' }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                sandbox="allow-scripts allow-same-origin allow-popups"
-                title="Service area map"
-              />
-            </div>
+            {mapSrc && (
+              <div className="w-full overflow-hidden rounded-2xl shadow-lg lg:max-w-md">
+                <iframe
+                  src={mapSrc}
+                  width="100%"
+                  height="220"
+                  style={{ border: 0, borderRadius: '16px' }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  sandbox="allow-scripts allow-same-origin allow-popups"
+                  title={`Map of ${address}`}
+                />
+              </div>
+            )}
             <div className="max-w-md">
-              <h4 className="mb-3 text-sm font-semibold text-white">{orgName}</h4>
-              {address && (
-                <p className="mb-2.5 text-[0.95rem] text-white/90">
-                  {address.streetAddress && <>{address.streetAddress}, </>}
-                  {address.city}, {address.state} {address.postalCode}
-                </p>
-              )}
+              <p className="mb-3 text-sm font-semibold text-white">{orgName}</p>
+              {address && <p className="mb-2.5 text-[0.95rem] text-white/90">{address}</p>}
               {phone && (
                 <p className="mb-2.5 text-[0.95rem] text-white/90">
-                  <a
-                    href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                  <TrackedPhoneLink
+                    phone={phone}
+                    location="footer_nap"
                     className="border-b border-white/30 text-white transition-colors hover:border-white"
                   >
                     {phone}
-                  </a>
+                  </TrackedPhoneLink>
                 </p>
               )}
               {email && (
@@ -240,7 +255,9 @@ export function SiteFooter({
                   </a>
                 </p>
               )}
-              <p className="text-sm text-white/50">Serving communities across New Jersey</p>
+              <p className="text-sm text-white/50">
+                {serviceArea ? `Serving ${serviceArea}` : 'Serving communities across New Jersey'}
+              </p>
             </div>
           </div>
         </div>
@@ -250,7 +267,16 @@ export function SiteFooter({
           <p className="text-sm text-white/40">
             &copy; {new Date().getFullYear()} {orgName}. All rights reserved.
           </p>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+            <Link
+              href="/estimate"
+              className="text-sm text-white/40 transition-colors hover:text-white"
+            >
+              Free Estimate
+            </Link>
+            <Link href="/blog" className="text-sm text-white/40 transition-colors hover:text-white">
+              Painting Guides
+            </Link>
             <a href="/privacy" className="text-sm text-white/40 transition-colors hover:text-white">
               Privacy Policy
             </a>

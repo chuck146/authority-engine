@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import {
   getPublishedBlogPost,
-  getOrganizationById,
+  getMarketingOrganization,
   getAllPublishedBlogSlugs,
   getRelatedBlogPosts,
   getRelatedServicePages,
@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/marketing/json-ld'
 import { RelatedBlogPosts, RelatedServices } from '@/components/marketing/related-links'
 import type { StructuredContent } from '@/types/content'
 import type { OrgSettings } from '@/types'
+import { getEstimateHref } from '@/lib/marketing/estimate'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
 
@@ -21,13 +22,16 @@ export const revalidate = 3600
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedBlogSlugs()
+  const org = await getMarketingOrganization()
+  if (!org) return []
+  const slugs = await getAllPublishedBlogSlugs(org.id)
   return slugs.map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPublishedBlogPost(slug)
+  const org = await getMarketingOrganization()
+  const post = org ? await getPublishedBlogPost(org.id, slug) : null
   if (!post) return {}
 
   const content = post.content as unknown as StructuredContent
@@ -56,20 +60,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostRoute({ params }: Props) {
   const { slug } = await params
-  const post = await getPublishedBlogPost(slug)
-  if (!post) notFound()
+  const org = await getMarketingOrganization()
+  const post = org ? await getPublishedBlogPost(org.id, slug) : null
+  if (!org || !post) notFound()
 
-  const [org, relatedPosts, relatedServices] = await Promise.all([
-    getOrganizationById(post.organization_id),
+  const [relatedPosts, relatedServices] = await Promise.all([
     getRelatedBlogPosts(post.organization_id, post.slug, 2),
     getRelatedServicePages(post.organization_id, '', 2),
   ])
 
   const settings = org?.settings as OrgSettings | null
   const phone = settings?.contact_info?.phone
-  const rawEstimateUrl = settings?.estimate_url
-  const estimateUrl =
-    rawEstimateUrl && /^https?:\/\//i.test(rawEstimateUrl) ? rawEstimateUrl : undefined
+  const estimateUrl = getEstimateHref(settings)
 
   return (
     <>

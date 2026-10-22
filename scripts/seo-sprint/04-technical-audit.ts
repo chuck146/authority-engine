@@ -25,7 +25,6 @@ import { createClient } from '@supabase/supabase-js'
 
 const ORG_ID = '00000000-0000-0000-0000-000000000001'
 const DOMAIN = 'cleanestpaintingnj.com'
-const BASE_URL = `https://${DOMAIN}`
 const FETCH_TIMEOUT_MS = 15000
 const CONCURRENT_FETCHES = 3
 
@@ -41,6 +40,15 @@ for (const arg of args) {
 }
 const verbose = flagMap.has('verbose')
 const checkFilter = flagMap.get('check')?.split(',') ?? null
+// --base-url=http://localhost:3000 audits a local `next start` build instead of production.
+const BASE_URL = (flagMap.get('base-url') ?? `https://${DOMAIN}`).replace(/\/$/, '')
+const BUSINESS_ID = `${BASE_URL}/#business`
+const BUSINESS_TYPES = new Set([
+  'LocalBusiness',
+  'HomeAndConstructionBusiness',
+  'HousePainter',
+  'GeneralContractor',
+])
 
 // ---------------------------------------------------------------------------
 // Clients
@@ -167,22 +175,36 @@ async function fetchPublishedPages(): Promise<{ type: string; pages: ContentRow[
       .order('title')
       .returns<ContentRow[]>(),
   ])
+  const commercial = await supabase
+    .from('commercial_service_pages')
+    .select('id, title, slug, status, meta_title, meta_description, hero_image_url')
+    .eq('organization_id', ORG_ID)
+    .eq('status', 'published' as never)
+    .order('title')
+    .returns<ContentRow[]>()
 
   if (services.error) throw new Error(`Service pages: ${services.error.message}`)
   if (locations.error) throw new Error(`Location pages: ${locations.error.message}`)
   if (blogs.error) throw new Error(`Blog posts: ${blogs.error.message}`)
+  if (commercial.error) throw new Error(`Commercial pages: ${commercial.error.message}`)
 
   return [
     { type: 'service_page', pages: services.data ?? [] },
     { type: 'location_page', pages: locations.data ?? [] },
     { type: 'blog_post', pages: blogs.data ?? [] },
+    { type: 'commercial_service_page', pages: commercial.data ?? [] },
   ]
 }
 
+const PAGE_PREFIX: Record<string, string> = {
+  service_page: 'services',
+  location_page: 'locations',
+  blog_post: 'blog',
+  commercial_service_page: 'commercial',
+}
+
 function pageUrl(type: string, slug: string): string {
-  const prefix =
-    type === 'service_page' ? 'services' : type === 'location_page' ? 'locations' : 'blog'
-  return `${BASE_URL}/${prefix}/${slug}`
+  return `${BASE_URL}/${PAGE_PREFIX[type] ?? 'blog'}/${slug}`
 }
 
 // ---------------------------------------------------------------------------
@@ -250,6 +272,17 @@ function checkMetaTags(result: PageCheckResult, dbPage: ContentRow, issues: Audi
   // Title tag
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i)
   const title = titleMatch?.[1]?.trim() ?? ''
+
+  if (/authority engine/i.test(title)) {
+    issues.push({
+      severity: 'high',
+      category: 'Meta Tags',
+      page: result.url,
+      message: `Title contains the platform name: "${title}"`,
+      recommendation:
+        'Marketing titles must name the business only — check the (marketing) title template.',
+    })
+  }
 
   if (!title) {
     issues.push({
@@ -389,6 +422,7 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
   const jsonLdMatches =
     html.match(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) ?? []
   const schemas: string[] = []
+  const businessIds: (string | undefined)[] = []
 
   for (const match of jsonLdMatches) {
     const contentMatch = match.match(/<script[^>]*>([\s\S]*?)<\/script>/i)
@@ -397,6 +431,7 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
         const parsed = JSON.parse(contentMatch[1])
         const type = parsed['@type'] ?? (Array.isArray(parsed['@graph']) ? 'graph' : 'unknown')
         schemas.push(type)
+        if (BUSINESS_TYPES.has(type)) businessIds.push(parsed['@id'])
       } catch {
         schemas.push('invalid-json')
       }
@@ -407,16 +442,20 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
     console.log(`    Schema types found: ${schemas.length > 0 ? schemas.join(', ') : 'none'}`)
   }
 
+  // Every page should describe the same business entity
+  if (businessIds.some((id) => id !== BUSINESS_ID)) {
+    issues.push({
+      severity: 'medium',
+      category: 'Schema',
+      page: result.url,
+      message: `Business schema @id is not ${BUSINESS_ID} (found: ${businessIds.join(', ') || 'none'})`,
+      recommendation: 'Use the shared business builder in lib/seo/json-ld.ts.',
+    })
+  }
+
   // Check for LocalBusiness on homepage
   if (result.url === BASE_URL || result.url === `${BASE_URL}/`) {
-    if (
-      !schemas.some(
-        (s) =>
-          s === 'LocalBusiness' ||
-          s === 'PaintingContractor' ||
-          s === 'HomeAndConstructionBusiness',
-      )
-    ) {
+    if (!schemas.some((s) => BUSINESS_TYPES.has(s))) {
       issues.push({
         severity: 'high',
         category: 'Schema',
@@ -442,7 +481,7 @@ function checkSchemaMarkup(result: PageCheckResult, pageType: string, issues: Au
   }
 
   // Check for Service schema on service pages
-  if (pageType === 'service_page') {
+  if (pageType === 'service_page' || pageType === 'commercial_service_page') {
     if (!schemas.some((s) => s === 'Service' || s === 'ProfessionalService')) {
       issues.push({
         severity: 'medium',
@@ -481,7 +520,8 @@ function checkHeadingStructure(result: PageCheckResult, issues: AuditIssue[]) {
 
   // Check for img alt text
   const imgTags = html.match(/<img\s[^>]*>/gi) ?? []
-  const missingAlt = imgTags.filter((img) => !img.match(/alt=["'][^"']+["']/i))
+  // alt="" is correct for decorative images — only a missing attribute is an issue.
+  const missingAlt = imgTags.filter((img) => !/\balt=["']/i.test(img))
   if (missingAlt.length > 0) {
     issues.push({
       severity: 'medium',

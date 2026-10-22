@@ -23,6 +23,9 @@ type LeadRow = {
   contacted_at: string | null
   closed_at: string | null
   close_reason: string | null
+  // Absent until the attribution migration is applied
+  discovery_source?: string | null
+  attribution?: Record<string, unknown> | null
   created_at: string
   updated_at: string | null
 }
@@ -80,6 +83,8 @@ export async function GET(_request: Request, context: RouteContext) {
       contactedAt: (lead.contacted_at as string) ?? null,
       closedAt: (lead.closed_at as string) ?? null,
       closeReason: (lead.close_reason as string) ?? null,
+      discoverySource: (lead.discovery_source as string) ?? null,
+      attribution: (lead.attribution as Record<string, unknown>) ?? null,
       createdAt: lead.created_at as string,
       updatedAt: (lead.updated_at as string) ?? null,
       activities: (activities ?? []).map(

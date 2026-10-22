@@ -8,6 +8,8 @@ type LeadNotificationData = {
   phone: string
   service?: string | null
   message?: string | null
+  // Customer-reported "How did you hear about us?" label
+  discoverySource?: string | null
 }
 
 export async function sendLeadNotification(to: string, lead: LeadNotificationData): Promise<void> {
@@ -27,6 +29,7 @@ export async function sendLeadNotification(to: string, lead: LeadNotificationDat
     `Phone: ${lead.phone}`,
     lead.service ? `Service: ${lead.service}` : null,
     lead.message ? `Message: ${lead.message}` : null,
+    lead.discoverySource ? `Heard about us: ${lead.discoverySource}` : null,
     '',
     '---',
     `Submitted via ${siteUrl}`,
@@ -55,6 +58,7 @@ export async function sendLeadNotification(to: string, lead: LeadNotificationDat
           </td>
         </tr>
         ${lead.service ? `<tr style="background: #f9fafb;"><td style="padding: 8px 12px; color: #666; font-size: 14px;">Service</td><td style="padding: 8px 12px; font-size: 14px;">${escapeHtml(lead.service)}</td></tr>` : ''}
+        ${lead.discoverySource ? `<tr><td style="padding: 8px 12px; color: #666; font-size: 14px;">Heard about us</td><td style="padding: 8px 12px; font-size: 14px;">${escapeHtml(lead.discoverySource)}</td></tr>` : ''}
       </table>
       ${lead.message ? `<div style="margin-top: 20px; padding: 16px; background: #f9fafb; border-radius: 8px;"><p style="margin: 0 0 4px; color: #666; font-size: 13px;">Message</p><p style="margin: 0; font-size: 14px; line-height: 1.5;">${escapeHtml(lead.message)}</p></div>` : ''}
       <p style="margin-top: 24px; color: #999; font-size: 12px;">Submitted via ${escapeHtml(siteUrl)}</p>

@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import {
   buildBreadcrumbSchema,
+  buildBusinessSchema,
+  buildHomePageSchemas,
   buildServicePageSchemas,
   buildLocationPageSchemas,
   buildBlogPostSchemas,
@@ -147,8 +149,83 @@ describe('buildBreadcrumbSchema', () => {
     })
     expect(items[1]).toMatchObject({ position: 2, name: 'Services' })
     expect(items[2]).toMatchObject({ position: 3, name: 'Interior Painting' })
-    // Last item (current page) should not have an item URL
+    // An item without href is emitted without a URL
     expect(items[2]).not.toHaveProperty('item')
+  })
+
+  it('page builders link the current page as the last crumb', () => {
+    const schemas = buildServicePageSchemas(buildMockServicePage(), buildMockOrg())
+    const items = schemas[2]!.itemListElement as Array<Record<string, unknown>>
+    expect(items.at(-1)!.item).toBe('https://cleanestpaintingnj.com/services/interior-painting')
+  })
+})
+
+describe('business entity', () => {
+  it('uses a stable @id that every Service provider references', () => {
+    const schemas = buildServicePageSchemas(buildMockServicePage(), buildMockOrg())
+    expect(schemas[0]!['@id']).toBe('https://cleanestpaintingnj.com/#business')
+    expect(schemas[1]!.provider).toMatchObject({
+      '@id': 'https://cleanestpaintingnj.com/#business',
+    })
+  })
+
+  it('makes a relative logo URL absolute', () => {
+    const org = buildMockOrg({ logo_url: '/logo.png' })
+    const business = buildBusinessSchema(org)
+    expect(business.logo).toBe('https://cleanestpaintingnj.com/logo.png')
+  })
+
+  it('never publishes a street address unless explicitly opted in', () => {
+    const settings = {
+      contact_info: {
+        address: { streetAddress: '12 Elm St', city: 'Rahway', state: 'NJ', postalCode: '07065' },
+      },
+    }
+    const hidden = buildBusinessSchema(buildMockOrg({ settings }))
+    expect(hidden.address).toEqual({
+      '@type': 'PostalAddress',
+      addressLocality: 'Rahway',
+      addressRegion: 'NJ',
+      postalCode: '07065',
+      addressCountry: 'US',
+    })
+
+    const shown = buildBusinessSchema(
+      buildMockOrg({
+        settings: { contact_info: { ...settings.contact_info, show_street_address: true } },
+      }),
+    )
+    expect(shown.address).toMatchObject({ streetAddress: '12 Elm St' })
+  })
+
+  it('drops a street field that just repeats the city', () => {
+    const business = buildBusinessSchema(
+      buildMockOrg({
+        settings: {
+          contact_info: {
+            show_street_address: true,
+            address: { streetAddress: 'Rahway', city: 'Rahway', state: 'NJ', postalCode: '07065' },
+          },
+        },
+      }),
+    )
+    expect(business.address).not.toHaveProperty('streetAddress')
+  })
+
+  it('does not emit rating or review markup', () => {
+    const business = buildBusinessSchema(buildMockOrg())
+    expect(business).not.toHaveProperty('aggregateRating')
+    expect(business).not.toHaveProperty('review')
+  })
+
+  it('home page emits the business and a WebSite published by it', () => {
+    const [business, website] = buildHomePageSchemas(buildMockOrg())
+    expect(business!['@type']).toBe('HousePainter')
+    expect(website).toMatchObject({
+      '@type': 'WebSite',
+      '@id': 'https://cleanestpaintingnj.com/#website',
+      publisher: { '@id': 'https://cleanestpaintingnj.com/#business' },
+    })
   })
 })
 
@@ -156,7 +233,7 @@ describe('buildServicePageSchemas', () => {
   it('returns 3 schemas: business, service, breadcrumb', () => {
     const schemas = buildServicePageSchemas(buildMockServicePage(), buildMockOrg())
     expect(schemas).toHaveLength(3)
-    expect(schemas[0]!['@type']).toBe('HomeAndConstructionBusiness')
+    expect(schemas[0]!['@type']).toBe('HousePainter')
     expect(schemas[1]!['@type']).toBe('Service')
     expect(schemas[2]!['@type']).toBe('BreadcrumbList')
   })
@@ -193,30 +270,31 @@ describe('buildLocationPageSchemas', () => {
   it('returns 3 schemas: business, service, breadcrumb', () => {
     const schemas = buildLocationPageSchemas(buildMockLocationPage(), buildMockOrg())
     expect(schemas).toHaveLength(3)
-    expect(schemas[0]!['@type']).toBe('HomeAndConstructionBusiness')
+    expect(schemas[0]!['@type']).toBe('HousePainter')
     expect(schemas[1]!['@type']).toBe('Service')
     expect(schemas[2]!['@type']).toBe('BreadcrumbList')
   })
 
-  it('includes geo coordinates', () => {
+  it('puts the town (with geo) on the Service, not the business', () => {
     const schemas = buildLocationPageSchemas(buildMockLocationPage(), buildMockOrg())
-    const geo = schemas[0]!.geo as Record<string, unknown>
-    expect(geo['@type']).toBe('GeoCoordinates')
-    expect(geo.latitude).toBe(40.7157)
-    expect(geo.longitude).toBe(-74.3593)
-  })
-
-  it('overrides areaServed with specific city', () => {
-    const schemas = buildLocationPageSchemas(buildMockLocationPage(), buildMockOrg())
-    const area = schemas[0]!.areaServed as Record<string, unknown>
+    const area = schemas[1]!.areaServed as Record<string, unknown>
     expect(area['@type']).toBe('City')
     expect(area.name).toBe('Summit, NJ')
+    const geo = area.geo as Record<string, unknown>
+    expect(geo).toMatchObject({ '@type': 'GeoCoordinates', latitude: 40.7157 })
+    expect(schemas[0]).not.toHaveProperty('geo')
+  })
+
+  it('keeps the business node identical to other pages', () => {
+    const location = buildLocationPageSchemas(buildMockLocationPage(), buildMockOrg())
+    const service = buildServicePageSchemas(buildMockServicePage(), buildMockOrg())
+    expect(location[0]).toEqual(service[0])
   })
 
   it('skips geo when latitude/longitude are null', () => {
     const page = buildMockLocationPage({ latitude: null, longitude: null })
     const schemas = buildLocationPageSchemas(page, buildMockOrg())
-    expect(schemas[0]).not.toHaveProperty('geo')
+    expect(schemas[1]!.areaServed).not.toHaveProperty('geo')
   })
 })
 

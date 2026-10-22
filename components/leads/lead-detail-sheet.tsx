@@ -11,6 +11,7 @@ import { LeadActivityTimeline } from './lead-activity-timeline'
 import { LeadSendSmsForm } from './lead-send-sms-form'
 import { LeadSendEmailForm } from './lead-send-email-form'
 import type { LeadDetail, LeadStatus } from '@/types/leads'
+import { CHANNEL_LABELS, discoverySourceLabel } from '@/lib/leads/attribution-shared'
 
 const PIPELINE_STAGES: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposed', 'won']
 
@@ -256,6 +257,27 @@ export function LeadDetailSheet({ leadId, open, onOpenChange, onUpdated }: LeadD
                 <span className="text-muted-foreground">Source</span>
                 <span className="capitalize">{lead.source}</span>
               </div>
+              {lead.discoverySource && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Heard about us</span>
+                  <span>{discoverySourceLabel(lead.discoverySource)}</span>
+                </div>
+              )}
+              {typeof lead.attribution?.channel === 'string' && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Channel</span>
+                  <span>
+                    {CHANNEL_LABELS[lead.attribution.channel as keyof typeof CHANNEL_LABELS] ??
+                      lead.attribution.channel}
+                  </span>
+                </div>
+              )}
+              {typeof lead.attribution?.landing_page === 'string' && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Landing page</span>
+                  <span className="truncate pl-4">{lead.attribution.landing_page}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Submitted</span>
                 <span>{new Date(lead.createdAt).toLocaleDateString()}</span>

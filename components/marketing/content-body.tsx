@@ -18,6 +18,22 @@ export function ContentBody({ content }: { content: StructuredContent }) {
           <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.body, sanitizeOptions) }} />
         </section>
       ))}
+      {content.faqs && content.faqs.length > 0 && (
+        <section
+          aria-labelledby="common-questions"
+          className="mt-10 border-t border-gray-100 pt-10 dark:border-gray-800"
+        >
+          <h2 id="common-questions">Common Questions</h2>
+          {content.faqs.map((faq) => (
+            <div key={faq.question}>
+              <h3>{faq.question}</h3>
+              <div
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(faq.answer, sanitizeOptions) }}
+              />
+            </div>
+          ))}
+        </section>
+      )}
     </div>
   )
 }

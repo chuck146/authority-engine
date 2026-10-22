@@ -16,6 +16,11 @@ vi.mock('@/lib/queue/publish-worker', () => ({
   publishScheduledContent: (...args: unknown[]) => mockPublishScheduledContent(...args),
 }))
 
+const mockRevalidateMarketingSite = vi.fn()
+vi.mock('@/lib/marketing/revalidate', () => ({
+  revalidateMarketingSite: () => mockRevalidateMarketingSite(),
+}))
+
 describe('POST /api/v1/content/publish-scheduled', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -47,6 +52,7 @@ describe('POST /api/v1/content/publish-scheduled', () => {
     expect(body.published).toBe(5)
     expect(body.failed).toBe(0)
     expect(body.publishedAt).toBeDefined()
+    expect(mockRevalidateMarketingSite).toHaveBeenCalledOnce()
   })
 
   it('returns 500 on unexpected error', async () => {

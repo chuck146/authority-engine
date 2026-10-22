@@ -8,16 +8,25 @@ export const contentSectionSchema = z.object({
   body: z.string(),
 })
 
+// Visible Q&A rendered under "Common Questions". Answers should open with the
+// direct answer. Rendered as normal page content only — no FAQPage markup.
+export const contentFaqSchema = z.object({
+  question: z.string().min(5).max(200),
+  answer: z.string().min(10).max(1200),
+})
+
 export const structuredContentSchema = z.object({
   headline: z.string(),
   intro: z.string(),
   sections: z.array(contentSectionSchema).min(1),
+  faqs: z.array(contentFaqSchema).max(12).optional(),
   cta: z.string(),
   meta_title: z.string().max(60),
   meta_description: z.string().max(160),
 })
 
 export type ContentSection = z.infer<typeof contentSectionSchema>
+export type ContentFaq = z.infer<typeof contentFaqSchema>
 export type StructuredContent = z.infer<typeof structuredContentSchema>
 
 // --- Content Type Discriminator ---

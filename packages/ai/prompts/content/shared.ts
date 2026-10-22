@@ -6,11 +6,30 @@ export type OrgContext = {
   branding: OrgBranding | null
   serviceAreaStates?: string[]
   serviceAreaCounties?: string[]
+  // Owner-confirmed claims (organizations.settings.verified_facts), e.g.
+  // "Licensed and insured", "NJ HIC registered". The only company-specific
+  // claims generated content may make.
+  verifiedFacts?: string[]
 }
 
 export type PromptPair = {
   system: string
   user: string
+}
+
+export function buildFactsGuardrail(org: OrgContext): string {
+  const facts = org.verifiedFacts?.filter((f) => f.trim().length > 0) ?? []
+  const factList = facts.length > 0 ? facts.map((f) => `- ${f}`).join('\n') : '- (none provided)'
+  return `
+Verified company facts — the ONLY company-specific claims you may make:
+${factList}
+
+Accuracy rules:
+- Never invent company facts: years in business, license or registration numbers, insurance, bonding, certifications, awards, ratings, review counts, project counts, prices, warranties, guarantees, turnaround times, named customers, testimonials, or local projects.
+- If a point would need a fact that is not listed above, leave it out or tell the homeowner what to ask about instead.
+- General painting knowledge (preparation steps, product types, what affects cost or timing) is fine when written as general information, not as a company promise.
+- No "best", "#1", or "top-rated" claims.
+`.trim()
 }
 
 export function buildBrandVoiceBlock(org: OrgContext): string {
@@ -20,6 +39,8 @@ Company: ${org.orgName}
 ${org.domain ? `Website: ${org.domain}` : ''}
 ${tagline}
 Service Area: ${org.serviceAreaStates?.join(', ') ?? 'Not specified'} (Counties: ${org.serviceAreaCounties?.join(', ') ?? 'Not specified'})
+
+${buildFactsGuardrail(org)}
 `.trim()
 }
 

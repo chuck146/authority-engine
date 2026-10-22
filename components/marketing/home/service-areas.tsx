@@ -1,3 +1,4 @@
+import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Phone } from 'lucide-react'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
@@ -7,9 +8,11 @@ type ServiceAreasProps = {
   locations: RelatedLocationLink[]
   phone?: string
   estimateUrl?: string
+  // e.g. "Union, Essex & Morris counties"
+  serviceArea?: string
 }
 
-export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProps) {
+export function ServiceAreas({ locations, phone, estimateUrl, serviceArea }: ServiceAreasProps) {
   if (locations.length === 0) return null
 
   return (
@@ -56,7 +59,9 @@ export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProp
         <ScrollReveal>
           <div className="mt-8 rounded-xl border border-gray-200 bg-white px-6 py-5 text-center">
             <p className="text-sm font-medium text-gray-900">
-              Don&apos;t see your town? We service all of New Jersey.
+              {serviceArea
+                ? `Don't see your town? We work throughout ${serviceArea}, and take projects elsewhere in New Jersey too — ask us about yours.`
+                : "Don't see your town? Ask us — we may already work near you."}
             </p>
             <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
               {estimateUrl && (
@@ -68,13 +73,14 @@ export function ServiceAreas({ locations, phone, estimateUrl }: ServiceAreasProp
                 </a>
               )}
               {phone && (
-                <a
-                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                <TrackedPhoneLink
+                  phone={phone}
+                  location="service_areas"
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
                 >
                   <Phone className="h-3.5 w-3.5" />
                   {phone}
-                </a>
+                </TrackedPhoneLink>
               )}
             </div>
           </div>
