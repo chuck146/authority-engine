@@ -18,7 +18,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Commercial Painting Services in NJ | Cleanest Painting',
   description:
-    'Professional commercial painting services for offices, retail spaces, warehouses, HOAs, and more. Licensed, insured, and serving all of New Jersey.',
+    'Professional commercial painting services for offices, retail spaces, warehouses, HOAs, and more. Licensed, insured, and serving Union, Essex, Morris and Somerset counties.',
   alternates: { canonical: `${BASE_URL}/commercial` },
   openGraph: {
     title: 'Commercial Painting Services in NJ | Cleanest Painting',
