@@ -36,6 +36,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Multi-tenant scoping:** public slug lookups and the sitemap are scoped to the marketing organization
 - **Auto-publish:** the SEO sprint content-gaps script no longer auto-publishes; all AI content stays in review
 - **Technical audit:** `--base-url`, HousePainter, `@id`, title and commercial checks. Decorative `alt=""` images are no longer flagged
+- **Owner corrections:** HIC number is 13VH11564300. `/privacy` and `/terms` show the SMS texting number (732) 913-8574 in their SMS sections; (732) 496-4607 stays the public phone. Service area is Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth and Bergen counties, and `/locations` lists only those counties
+- **Code review fixes:**
+  - The estimate form posts (`method="post"`), so a submit before JavaScript loads can't put contact details in the URL
+  - JSON-LD escapes `<`, so content can't break out of the script tag
+  - The lead-insert fallback only triggers on missing-column errors
+  - `/locations` never renders empty when a county name doesn't match
+  - Browser attribution code no longer ships Zod to every marketing page
+  - The leads overview selects only the columns it needs
+  - Hub pages use the cached marketing-org lookup
 
 ### Added
 

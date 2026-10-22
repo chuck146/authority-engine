@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { LeadOverview } from '@/types/leads'
-import { CHANNEL_LABELS, discoverySourceLabel } from '@/lib/leads/attribution'
+import { CHANNEL_LABELS, discoverySourceLabel } from '@/lib/leads/attribution-shared'
 
 type LeadOverviewCardsProps = {
   refreshKey?: number

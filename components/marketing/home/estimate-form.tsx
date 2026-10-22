@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react'
 import { Phone } from 'lucide-react'
-import { DISCOVERY_SOURCES } from '@/lib/leads/attribution'
+import { DISCOVERY_SOURCES } from '@/lib/leads/attribution-shared'
 import { readAttribution, trackEvent } from '@/lib/analytics/client'
 import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 
@@ -140,7 +140,9 @@ export function EstimateForm({
 
           {/* Right: Form */}
           <div className="lg:col-span-3">
-            <form onSubmit={handleSubmit} className="relative space-y-4">
+            {/* method="post": if JS hasn't loaded yet, a native submit must not put
+                contact details in the URL (and from there into analytics/logs). */}
+            <form method="post" onSubmit={handleSubmit} className="relative space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="sr-only" htmlFor={`${formLocation}-name`}>
                   Full name

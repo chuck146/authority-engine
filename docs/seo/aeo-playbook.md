@@ -124,6 +124,9 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 3. Regenerate types: `npx supabase gen types typescript --project-id oznuqgcipfjfbxvflbhc > types/database.ts`.
 4. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-…` in Vercel (Production) and redeploy.
 5. In GA4, mark `generate_lead` as a key event.
+6. After the migration, remove the two "migration not applied" fallbacks (marked `TODO` in `app/api/v1/leads/route.ts` and `app/api/v1/leads/overview/route.ts`).
+
+**Caching:** marketing pages are cached for up to an hour. Publishing or unpublishing through the dashboard refreshes them right away. Edits made directly in the database (org settings such as phone or counties, or page content changed outside the dashboard) appear within an hour, or immediately after a redeploy.
 
 ---
 

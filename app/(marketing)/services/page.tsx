@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Phone } from 'lucide-react'
-import { getOrganizationBySlug, getAllPublishedServiceCards } from '@/lib/queries/content'
+import { getMarketingOrganization, getAllPublishedServiceCards } from '@/lib/queries/content'
 import { HeroSection } from '@/components/marketing/hero-section'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
 import { JsonLd } from '@/components/marketing/json-ld'
@@ -11,7 +11,6 @@ import type { OrgSettings, ServiceCardLink } from '@/types'
 import { getEstimateHref } from '@/lib/marketing/estimate'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
-const ORG_SLUG = 'cleanest-painting'
 
 export const revalidate = 3600
 
@@ -43,7 +42,7 @@ function getMetaDescription(service: ServiceCardLink): string | null {
 }
 
 export default async function ServicesPage() {
-  const org = await getOrganizationBySlug(ORG_SLUG)
+  const org = await getMarketingOrganization()
   if (!org) return null
 
   const settings = org.settings as unknown as OrgSettings | null

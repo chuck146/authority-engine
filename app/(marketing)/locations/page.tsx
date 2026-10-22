@@ -1,8 +1,8 @@
 import { TrackedPhoneLink } from '@/components/marketing/tracked-phone-link'
 import type { Metadata } from 'next'
 import { MapPin, Phone } from 'lucide-react'
-import { getOrganizationBySlug, getAllPublishedLocationLinks } from '@/lib/queries/content'
-import { NJ_SERVICE_COUNTIES } from '@/lib/data/nj-towns'
+import { getMarketingOrganization, getAllPublishedLocationLinks } from '@/lib/queries/content'
+import { getServedCounties } from '@/lib/data/nj-towns'
 import { HeroSection } from '@/components/marketing/hero-section'
 import { LocationHubClient } from '@/components/marketing/locations/location-hub-client'
 import { ScrollReveal } from '@/components/marketing/scroll-reveal'
@@ -12,7 +12,6 @@ import { getEstimateHref } from '@/lib/marketing/estimate'
 import { getBusinessProfile, formatServiceArea } from '@/lib/seo/business'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cleanestpaintingnj.com'
-const ORG_SLUG = 'cleanest-painting'
 
 export const revalidate = 3600
 
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
 }
 
 export default async function LocationsPage() {
-  const org = await getOrganizationBySlug(ORG_SLUG)
+  const org = await getMarketingOrganization()
   if (!org) return null
 
   const settings = org.settings as unknown as OrgSettings | null
@@ -45,7 +44,6 @@ export default async function LocationsPage() {
   const estimateUrl = getEstimateHref(settings)
   const profile = getBusinessProfile(org)
   const serviceArea = formatServiceArea(profile) ?? 'New Jersey'
-  const servedCounties = new Set(profile.serviceAreaCounties.map((c) => c.toLowerCase()))
 
   const publishedLocations = await getAllPublishedLocationLinks(org.id)
 
@@ -57,10 +55,7 @@ export default async function LocationsPage() {
   }
 
   // Merge static NJ data with published pages, limited to the counties in settings
-  const servedNjCounties = servedCounties.size
-    ? NJ_SERVICE_COUNTIES.filter((c) => servedCounties.has(c.name.toLowerCase()))
-    : NJ_SERVICE_COUNTIES
-  const counties = servedNjCounties.map((county) => ({
+  const counties = getServedCounties(profile.serviceAreaCounties).map((county) => ({
     county: county.name,
     towns: county.towns.map((town) => {
       const pageSlug = publishedByCity.get(town.name.toLowerCase())

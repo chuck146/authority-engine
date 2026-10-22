@@ -35,9 +35,10 @@ const leadSchema = z.object({
 })
 
 // Postgres/PostgREST errors for a column that doesn't exist yet (migration not applied).
+// TODO: remove this fallback once migration 20261019000001 is applied.
 function isMissingColumnError(error: { code?: string; message?: string } | null): boolean {
   if (!error) return false
-  return error.code === 'PGRST204' || error.code === '42703' || /column/i.test(error.message ?? '')
+  return error.code === 'PGRST204' || error.code === '42703'
 }
 
 // Public POST — anyone can submit a lead

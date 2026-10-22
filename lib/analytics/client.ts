@@ -3,7 +3,11 @@
 //
 // Never pass names, emails, phone numbers, or message text to these functions.
 
-import { buildAttribution, attributionSchema, type Attribution } from '@/lib/leads/attribution'
+import {
+  buildAttribution,
+  sanitizeAttribution,
+  type Attribution,
+} from '@/lib/leads/attribution-shared'
 
 const ATTRIBUTION_KEY = 'ce_attribution'
 const ATTRIBUTION_TTL_MS = 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -39,8 +43,7 @@ export function readAttribution(): Attribution | undefined {
       window.localStorage.removeItem(ATTRIBUTION_KEY)
       return undefined
     }
-    const parsed = attributionSchema.safeParse(stored.data)
-    return parsed.success ? parsed.data : undefined
+    return sanitizeAttribution(stored.data)
   } catch {
     return undefined
   }

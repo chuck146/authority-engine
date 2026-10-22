@@ -175,6 +175,57 @@ describe('POST /api/v1/leads', () => {
     expect(leadInserts[1]).not.toHaveProperty('discovery_source')
   })
 
+  it('returns 500 without retrying for errors other than a missing column', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockSupabase.single.mockReset()
+    mockSupabase.single
+      .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null })
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          code: '23502',
+          message: 'null value in column "name" violates not-null constraint',
+        },
+      })
+      .mockResolvedValueOnce({ data: { id: 'lead-should-not-exist' }, error: null })
+
+    const res = await callPost(validLeadBody())
+
+    expect(res.status).toBe(500)
+    const leadInserts = mockSupabase.insert.mock.calls.filter(
+      (c: unknown[]) => (c[0] as Record<string, unknown>).email !== undefined,
+    )
+    expect(leadInserts).toHaveLength(1)
+    expect(mockSupabase.from).not.toHaveBeenCalledWith('lead_activities')
+  })
+
+  it('treats a referrer from the site itself as direct, not referral', async () => {
+    const { POST } = await import('@/app/api/v1/leads/route')
+    const request = new Request('https://cleanestpaintingnj.com/api/v1/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...validLeadBody(),
+        attribution: { landing_page: '/estimate', referrer_host: 'www.cleanestpaintingnj.com' },
+      }),
+    })
+
+    const res = await POST(request)
+
+    expect(res.status).toBe(201)
+    expect(leadInsertRow().attribution).toEqual({
+      landing_page: '/estimate',
+      referrer_host: 'www.cleanestpaintingnj.com',
+      channel: 'direct',
+    })
+    expect(leadInsertRow().source).toBe('website')
+  })
+
+  it('classifies a referrer from another site as referral', async () => {
+    await callPost({ ...validLeadBody(), attribution: { referrer_host: 'houzz.com' } })
+    expect((leadInsertRow().attribution as Record<string, unknown>).channel).toBe('referral')
+  })
+
   it('includes the discovery source label in the notification email', async () => {
     const { sendLeadNotification } = await import('@/lib/email/resend')
     mockSupabase.single.mockReset()

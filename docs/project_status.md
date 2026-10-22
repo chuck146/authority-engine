@@ -471,7 +471,8 @@ Sprint Results:
 - [x] Lead attribution (channel incl. AI assistants), call-click events, optional GA4, Leads dashboard channel cards
 - [x] Visible FAQ support. Crawlable ScrollReveal. No-fabrication prompt guardrail. Sprint script no longer auto-publishes
 - [x] Topic map, six page drafts, AI visibility prompt sample (docs/seo/)
-- [x] Test suite: 1,424 tests across 190 files, all passing. Typecheck, lint and build clean. Local technical audit: 40 pages, 0 issues after fixes
+- [x] Test suite: 1,513 tests across 198 files, all passing. Typecheck, lint and build clean. Local technical audit: 40 pages, 0 issues after fixes
+- [x] Four-reviewer code review (security, architecture, performance, tests): no blockers; review fixes and missing tests added
 - [ ] Apply migration `20261019000001_add_lead_attribution_and_marketing_events.sql` and regenerate types
 - [ ] Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel and mark `generate_lead` as a GA4 key event
 - [ ] Owner confirms the facts in the playbook checklist, then the reviewed FAQs/intros are loaded via the dashboard

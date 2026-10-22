@@ -61,6 +61,20 @@ describe('getBusinessProfile', () => {
     )
   })
 
+  it('strips a trailing "County" and whitespace from service-area counties', () => {
+    const profile = getBusinessProfile(
+      org({ service_area_counties: ['Union County', ' essex ', 'Morris county', '  '] }),
+    )
+    expect(profile.serviceAreaCounties).toEqual(['Union', 'essex', 'Morris'])
+    expect(formatServiceArea(profile)).toBe('Union, essex & Morris counties')
+    expect(formatServiceArea(profile)).not.toMatch(/county counties/i)
+  })
+
+  it('does not double "County" for a single county stored with the suffix', () => {
+    const profile = getBusinessProfile(org({ service_area_counties: ['Union County'] }))
+    expect(formatServiceArea(profile)).toBe('Union County')
+  })
+
   it('returns undefined address when no location is configured', () => {
     expect(formatPublicAddress(getBusinessProfile(org({})))).toBeUndefined()
   })

@@ -72,7 +72,10 @@ export function getBusinessProfile(org: Organization): BusinessProfile {
     ...(address?.state && { region: address.state }),
     ...(address?.postalCode && { postalCode: address.postalCode }),
     country: address?.country ?? 'US',
-    serviceAreaCounties: settings?.service_area_counties ?? [],
+    // Stored as "Union"; tolerate "Union County" so it isn't doubled in copy.
+    serviceAreaCounties: (settings?.service_area_counties ?? [])
+      .map((c) => c.trim().replace(/\s+county$/i, ''))
+      .filter(Boolean),
     serviceAreaState: settings?.service_area_states?.[0] ?? 'NJ',
     sameAs: Object.values(SOCIAL_PROFILES),
   }

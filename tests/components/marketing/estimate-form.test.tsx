@@ -99,6 +99,41 @@ describe('EstimateForm', () => {
     expect(container.querySelector('#estimate')).not.toBeNull()
   })
 
+  it('posts natively (method="post") so contact details never land in the URL', () => {
+    const { container } = render(<EstimateForm orgSlug="cleanest-painting" services={services} />)
+    expect(container.querySelector('form')).toHaveAttribute('method', 'post')
+  })
+
+  it('hides the honeypot from people and assistive tech', () => {
+    const { container } = render(<EstimateForm orgSlug="cleanest-painting" services={services} />)
+    const honeypot = container.querySelector('input[name="company_website"]') as HTMLInputElement
+    expect(honeypot).not.toBeNull()
+    expect(honeypot.tabIndex).toBe(-1)
+    expect(honeypot).toHaveAttribute('autocomplete', 'off')
+    expect(honeypot.closest('[aria-hidden="true"]')).not.toBeNull()
+    expect(honeypot.value).toBe('')
+  })
+
+  it('omits an empty honeypot from the payload', async () => {
+    fetchMock.mockResolvedValue(new Response('{}', { status: 201 }))
+    render(<EstimateForm orgSlug="cleanest-painting" services={services} />)
+    fillRequired()
+    fireEvent.submit(screen.getByRole('button', { name: 'Request Free Estimate' }))
+    await screen.findByText('Thank you!')
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body)).not.toHaveProperty('company_website')
+  })
+
+  it('sends the honeypot value when a bot fills it in', async () => {
+    fetchMock.mockResolvedValue(new Response('{}', { status: 201 }))
+    const { container } = render(<EstimateForm orgSlug="cleanest-painting" services={services} />)
+    fillRequired()
+    const hp = container.querySelector('input[name="company_website"]') as HTMLInputElement
+    fireEvent.change(hp, { target: { value: 'http://spam.example' } })
+    fireEvent.submit(screen.getByRole('button', { name: 'Request Free Estimate' }))
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled())
+    expect(JSON.parse(fetchMock.mock.calls[0]![1].body).company_website).toBe('http://spam.example')
+  })
+
   it('renders the heading as h1 on the estimate page', () => {
     render(
       <EstimateForm

@@ -11,7 +11,7 @@ import { LeadActivityTimeline } from './lead-activity-timeline'
 import { LeadSendSmsForm } from './lead-send-sms-form'
 import { LeadSendEmailForm } from './lead-send-email-form'
 import type { LeadDetail, LeadStatus } from '@/types/leads'
-import { CHANNEL_LABELS, discoverySourceLabel } from '@/lib/leads/attribution'
+import { CHANNEL_LABELS, discoverySourceLabel } from '@/lib/leads/attribution-shared'
 
 const PIPELINE_STAGES: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposed', 'won']
 
