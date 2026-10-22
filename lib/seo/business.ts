@@ -78,7 +78,7 @@ export function getBusinessProfile(org: Organization): BusinessProfile {
   }
 }
 
-// "Union, Essex, Morris & Somerset counties" — one wording everywhere.
+// "Union, Essex, Morris, Somerset & Middlesex counties" — one wording everywhere.
 export function formatServiceArea(profile: BusinessProfile): string | undefined {
   const counties = profile.serviceAreaCounties
   if (counties.length === 0) return undefined

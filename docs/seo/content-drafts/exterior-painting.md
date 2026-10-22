@@ -12,7 +12,7 @@ URL: https://cleanestpaintingnj.com/services/exterior-painting (fetched October 
 
 ## (b) Proposed intro rewrite (≤90 words)
 
-> Cleanest Painting LLC repaints the outside of homes across Union, Essex, Morris, and Somerset counties. We paint siding, trim, soffits, doors, and shutters. Most of an exterior job is prep. We wash, scrape loose paint, sand, prime bare wood, and caulk gaps before the finish coats go on. We paint when the weather allows good adhesion, generally spring through fall. Every project starts with a free estimate [CONFIRM: on-site visit for every exterior?]. We are licensed, insured, and NJ HIC registered.
+> Cleanest Painting LLC repaints the outside of homes across Union, Essex, Morris, Somerset, and Middlesex counties. We paint siding, trim, soffits, doors, and shutters. Most of an exterior job is prep. We wash, scrape loose paint, sand, prime bare wood, and caulk gaps before the finish coats go on. We paint when the weather allows good adhesion, generally spring through fall. Every project starts with a free estimate [CONFIRM: on-site visit for every exterior?]. We are licensed, insured, and NJ HIC registered.
 
 ## (c) Proposed new sections
 

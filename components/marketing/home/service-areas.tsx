@@ -8,7 +8,7 @@ type ServiceAreasProps = {
   locations: RelatedLocationLink[]
   phone?: string
   estimateUrl?: string
-  // e.g. "Union, Essex, Morris & Somerset counties"
+  // e.g. "Union, Essex, Morris, Somerset & Middlesex counties"
   serviceArea?: string
 }
 

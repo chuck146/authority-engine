@@ -12,7 +12,7 @@ URL: https://cleanestpaintingnj.com/services/interior-painting (fetched October 
 
 ## (b) Proposed intro rewrite (≤90 words)
 
-> Cleanest Painting LLC paints the inside of occupied homes across Union, Essex, Morris, and Somerset counties. That includes walls, ceilings, trim, and doors [CONFIRM: standard surfaces]. Every project starts with a free walkthrough and estimate. Before painting, we cover floors and furniture, fill small holes, sand rough spots, and prime where needed. Then we apply two finish coats [CONFIRM: standard coats]. We are licensed, insured, and NJ HIC registered, with over a decade of experience.
+> Cleanest Painting LLC paints the inside of occupied homes across Union, Essex, Morris, Somerset, and Middlesex counties. That includes walls, ceilings, trim, and doors [CONFIRM: standard surfaces]. Every project starts with a free walkthrough and estimate. Before painting, we cover floors and furniture, fill small holes, sand rough spots, and prime where needed. Then we apply two finish coats [CONFIRM: standard coats]. We are licensed, insured, and NJ HIC registered, with over a decade of experience.
 
 ## (c) Proposed new sections
 

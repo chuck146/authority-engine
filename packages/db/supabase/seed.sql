@@ -27,7 +27,7 @@ values (
     "hubspot_portal_id": "21546007",
     "clickup_list_id": "901320531655",
     "service_area_states": ["NJ"],
-    "service_area_counties": ["Union", "Essex", "Morris", "Somerset"],
+    "service_area_counties": ["Union", "Essex", "Morris", "Somerset", "Middlesex"],
     "contact_info": {
       "phone": "(732) 496-4607",
       "email": "home@cleanestpaintingnj.com",

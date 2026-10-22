@@ -11,7 +11,7 @@ URL: https://cleanestpaintingnj.com/services/deck-staining (fetched October 2026
 
 ## (b) Proposed intro rewrite (≤90 words)
 
-> Deck staining protects wood from sun and water and brings back its color. Cleanest Painting LLC washes the deck, sands rough spots, and applies a brightener. Then we apply a transparent, semi-transparent, or solid stain, or a clear sealer, based on your wood's condition and the look you want. We stain in dry weather, generally from late spring through early fall. We offer free estimates across Union, Essex, Morris, and Somerset counties.
+> Deck staining protects wood from sun and water and brings back its color. Cleanest Painting LLC washes the deck, sands rough spots, and applies a brightener. Then we apply a transparent, semi-transparent, or solid stain, or a clear sealer, based on your wood's condition and the look you want. We stain in dry weather, generally from late spring through early fall. We offer free estimates across Union, Essex, Morris, Somerset, and Middlesex counties.
 
 ## (c) Proposed new sections
 

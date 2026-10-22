@@ -17,22 +17,22 @@ const ORG_SLUG = 'cleanest-painting'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Service Areas — Union, Essex, Morris & Somerset, NJ',
+  title: 'Service Areas — Union, Essex, Morris, Somerset & Middlesex',
   description:
-    'Cleanest Painting serves towns across Union, Essex, Morris and Somerset counties in New Jersey. Find your town and request a free estimate.',
+    'Cleanest Painting serves towns across Union, Essex, Morris, Somerset and Middlesex counties in New Jersey. Find your town and request a free estimate.',
   alternates: { canonical: `${BASE_URL}/locations` },
   openGraph: {
-    title: 'Service Areas — Union, Essex, Morris & Somerset Counties, NJ',
+    title: 'Service Areas — Union, Essex, Morris, Somerset & Middlesex Counties, NJ',
     description:
-      'Professional painting across Union, Essex, Morris and Somerset counties. Find your town and get a free estimate.',
+      'Professional painting across Union, Essex, Morris, Somerset and Middlesex counties. Find your town and get a free estimate.',
     type: 'website',
     url: `${BASE_URL}/locations`,
   },
   twitter: {
     card: 'summary',
-    title: 'Service Areas — Union, Essex, Morris & Somerset Counties, NJ',
+    title: 'Service Areas — Union, Essex, Morris, Somerset & Middlesex Counties, NJ',
     description:
-      'Professional painting across Union, Essex, Morris and Somerset counties. Find your town and get a free estimate.',
+      'Professional painting across Union, Essex, Morris, Somerset and Middlesex counties. Find your town and get a free estimate.',
   },
 }
 
