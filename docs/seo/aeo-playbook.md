@@ -135,7 +135,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - [x] Phone numbers (owner, 2026-10-22): (732) 496-4607 is the direct line used everywhere. (732) 913-8574 is the Twilio texting number; `/privacy` and `/terms` show it in their SMS sections and contact lists (`MARKETING_SMS_PHONE` in lib/marketing/site.ts). It is not used in structured data.
 - [ ] Paint brands: "Benjamin Moore & Sherwin-Williams exclusively" (homepage) or Farrow & Ball / Fine Paints of Europe (service pages)?
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Hudson, Monmouth and Bergen added the same day. Woodbridge (Middlesex) stays.
-- [ ] Live org settings: set `settings.service_area_counties` to all eight counties so the hero, footer, `/locations` and JSON-LD pick it up.
+- [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). Live JSON-LD picks it up now; the hero, footer and `/locations` follow once this branch is deployed.
 - [ ] Are Rahway, Montclair, and West Orange served? Are drywall repair, trim/carpentry, and fence staining offered?
 - [ ] Lead-safe (EPA RRP) certification: needed before publishing any pre-1978 / lead paint FAQ.
 - [ ] Price ranges and typical timelines you're willing to publish (see `[CONFIRM]` placeholders in the drafts).
