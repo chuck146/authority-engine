@@ -40,17 +40,18 @@ URL: https://cleanestpaintingnj.com/services/deck-staining (fetched October 2026
 - Deck size, plus the number of stairs, railings, and spindles (spindles take the most hand work)
 - The current finish. Stripping a peeling solid stain takes much more work than recoating a semi-transparent one.
 - Wood condition: graying, mildew, splinters, raised grain
-- The stain product chosen [CONFIRM: stain brands]
+- The stain product chosen
+- Board repair. Loose, cracked, or rotted boards are repaired or replaced by our crew before staining, and listed on your estimate.
 - Weather. The deck must be dry before staining, and stain needs dry hours after.
 
-[CONFIRM: typical price range for a 12x16 deck with railings] [CONFIRM: typical number of days from wash to finished stain]
+Your free estimate gives you the price and an expected schedule for your deck.
 
 ### Before we arrive
 
 - Move furniture, grills, planters, and rugs off the deck.
-- Turn off sprinklers that hit the deck, starting a day before. [CONFIRM: timing]
+- Turn off sprinklers that hit the deck.
 - Close nearby windows and keep pets inside on work days.
-- Point out loose or damaged boards during the walkthrough. [CONFIRM: owner decision — repaired by us, subcontracted, or homeowner's responsibility]
+- Point out loose or damaged boards during the walkthrough so they are on the estimate.
 
 ## (d) FAQ
 
@@ -62,7 +63,7 @@ URL: https://cleanestpaintingnj.com/services/deck-staining (fetched October 2026
   },
   {
     "question": "How often should I restain my deck in New Jersey?",
-    "answer": "Many decks need a fresh coat every two to three years, but sun exposure, foot traffic, and stain type all change that. A simple test is to sprinkle water on the boards. If it soaks in instead of beading up, the deck needs attention. Semi-transparent stains usually need recoating sooner than solid stains. [CONFIRM: 2–3 years is our standard recommendation]"
+    "answer": "We recommend a fresh coat every two to three years, but sun exposure, foot traffic, and stain type all change that. A simple test is to sprinkle water on the boards. If it soaks in instead of beading up, the deck needs attention. Semi-transparent stains usually need recoating sooner than solid stains."
   },
   {
     "question": "When is the best time to stain a deck in New Jersey?",
@@ -70,21 +71,22 @@ URL: https://cleanestpaintingnj.com/services/deck-staining (fetched October 2026
   },
   {
     "question": "How long should I stay off my deck after staining?",
-    "answer": "Light foot traffic is often fine after a day or two of dry weather, but furniture, grills, and rugs should stay off longer so the finish can harden. The exact time depends on the stain product, temperature, and humidity. We tell you when it is safe to walk on the deck and when to move furniture back. [CONFIRM: our standard guidance in hours or days]"
+    "answer": "Light foot traffic is often fine after a day or two of dry weather, but furniture, grills, and rugs should stay off longer so the finish can harden. The exact time depends on the stain product, temperature, and humidity. We tell you when it is safe to walk on the deck and when to move furniture back."
   },
   {
     "question": "Do you repair or replace damaged deck boards?",
-    "answer": "Damaged boards need to be dealt with before staining, because stain will not fix soft or split wood. We note loose, cracked, or rotted boards during the walkthrough and list them on the estimate. [CONFIRM: owner decision — whether board repair is done by us, subcontracted, or left to the homeowner; the live page currently says boards are repaired or replaced]"
+    "answer": "Yes. Damaged boards need to be dealt with before staining, because stain will not fix soft or split wood. We note loose, cracked, or rotted boards during the walkthrough, list them on the estimate, and our crew repairs or replaces them before staining."
   }
 ]
 ```
 
 ## (e) Facts to confirm
 
-- [ ] **Owner decision:** deck board repair or replacement (the live page says it is done; carpentry is not a confirmed service).
-- [ ] Stain brands and lines. [CONFIRM: paint brands]
-- [ ] "Restain every 2–3 years" as our recommendation.
+- [x] Deck boards are repaired or replaced by our crew (owner, 2026-10-23).
+- [x] "Restain every 2–3 years" is our recommendation (owner, 2026-10-23).
+- [x] No published prices (owner, 2026-10-23).
+- [ ] Stain brands and lines.
 - [ ] Stripping failing solid stain — offered?
-- [ ] Typical price range (12x16 deck with railings) and typical number of days.
+- [ ] Typical number of days from wash to finished stain.
 - [ ] Off-deck guidance (foot traffic and furniture times).
 - [ ] Composite deck cleaning — offered? (The pressure washing page lists composite.)

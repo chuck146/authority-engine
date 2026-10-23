@@ -24,21 +24,21 @@ Taking paper off is only half the job. The wall must be clean, smooth, and seale
 2. **Wash off the old paste.** Leftover adhesive is the most common cause of paint that cracks, wrinkles, or bubbles later. Walls are washed until the residue is gone.
 3. **Let the wall dry.** Walls that got wet during removal need time to dry before anything goes on them.
 4. **Seal torn spots.** If removal tore the drywall's paper face, that area is sealed with a primer made for damaged drywall. This keeps it from bubbling.
-5. **Fill and smooth.** Gouges and holes are filled and sanded. [CONFIRM: whether skim coating is offered, or what "wall repair" covers]
+5. **Fill and smooth.** Gouges and holes are filled and sanded. Larger drywall or plaster damage is repaired by our own crew and listed on your estimate.
 6. **Prime.** A wallpaper primer goes on before new paper. A standard primer goes on before paint.
 
 ### Ordering paper and what affects price
 
-- **Who supplies the paper:** [CONFIRM: customer buys, we buy, or either]
-- **How much to order:** this depends on wall height, width, openings, and the pattern repeat. Large repeats waste more paper. [CONFIRM: we measure and give a roll count at the walkthrough]
+- **Who supplies the paper:** either. You can buy your own, or we can source it for you.
+- **How much to order:** this depends on wall height, width, openings, and the pattern repeat. Large repeats waste more paper. We measure at the walkthrough and give you a roll count.
 - **Price factors:** number of walls, ceiling height, windows and doors to cut around, paper type (grasscloth and unpasted papers take more labor), wall condition, and whether old paper must come off first.
 
-[CONFIRM: typical price range for one accent wall, and for a 12x12 room]
+Your free estimate gives you the price for your room.
 
 ### Before we arrive
 
 - Check that every roll has the same batch (dye lot) number. Rolls from different batches can differ slightly in color.
-- Keep the paper in the room for a day so it adjusts to the temperature. [CONFIRM: our standard guidance]
+- Follow the manufacturer's instructions on letting the paper adjust to the room before install.
 - Take down art, shelves, and curtains. Move furniture away from the walls being papered.
 - Have one extra roll on hand for future repairs.
 
@@ -48,19 +48,19 @@ Taking paper off is only half the job. The wall must be clean, smooth, and seale
 [
   {
     "question": "What preparation follows wallpaper removal?",
-    "answer": "After the paper is off, all leftover paste must be washed from the wall, because residue can make new paint crack or bubble. The wall then needs to dry. Any spots where the drywall's paper face tore are sealed with a special primer, and holes are filled and sanded. Finally, the wall is primed for paint or new wallpaper. [CONFIRM: what our removal 'wall repair' includes]"
+    "answer": "After the paper is off, all leftover paste must be washed from the wall, because residue can make new paint crack or bubble. The wall then needs to dry. Any spots where the drywall's paper face tore are sealed with a special primer, and holes are filled and sanded. Larger drywall or plaster damage is repaired by our own crew. Finally, the wall is primed for paint or new wallpaper."
   },
   {
     "question": "Can you paint over wallpaper instead of removing it?",
-    "answer": "It is possible in some cases, but it is usually not the best choice. Seams and texture often show through the paint, and moisture from painting can loosen the paper underneath. Painted-over paper is also much harder to remove later. In most homes, removing the paper and preparing the wall gives a cleaner, longer-lasting result. [CONFIRM: our policy on painting over wallpaper]"
+    "answer": "It is possible in some cases, but it is usually not the best choice. Seams and texture often show through the paint, and moisture from painting can loosen the paper underneath. Painted-over paper is also much harder to remove later. In most homes, removing the paper and preparing the wall gives a cleaner, longer-lasting result."
   },
   {
     "question": "Do I buy the wallpaper, or do you?",
-    "answer": "Many homeowners pick and buy their own paper, often through a designer or showroom. Before you order, ask us to measure the room so you buy the right number of rolls for your pattern repeat. Make sure all rolls share the same batch number, and keep one extra roll for future repairs. [CONFIRM: whether we also source wallpaper for customers]"
+    "answer": "Either works. Many homeowners pick and buy their own paper, often through a designer or showroom, and we can also source it for you. We measure the room at the walkthrough and give you a roll count for your pattern repeat. Make sure all rolls share the same batch number, and keep one extra roll for future repairs."
   },
   {
     "question": "How long does wallpaper installation take?",
-    "answer": "It depends on the size of the room, the number of windows and doors, the pattern repeat, and the type of paper. Grasscloth and unpasted papers take longer to hang than pre-pasted vinyl. If old paper must come off first, removal and wall prep add time before installation starts. Your estimate will include an expected schedule. [CONFIRM: typical time for one accent wall and one full room]"
+    "answer": "It depends on the size of the room, the number of windows and doors, the pattern repeat, and the type of paper. Grasscloth and unpasted papers take longer to hang than pre-pasted vinyl. If old paper must come off first, removal and wall prep add time before installation starts. Your estimate will include an expected schedule."
   },
   {
     "question": "Is peel-and-stick wallpaper a good choice?",
@@ -71,10 +71,12 @@ Taking paper off is only half the job. The wall must be clean, smooth, and seale
 
 ## (e) Facts to confirm
 
-- [ ] What "wall repair" after removal includes. Is skim coating offered? (**Owner decision** — drywall repair is not a confirmed service.)
-- [ ] Who supplies wallpaper. Do we measure and give a roll count?
+- [x] Drywall/plaster repair after removal is done in-house (owner, 2026-10-23).
+- [x] Customers can supply their own paper or we source it; we measure and give a roll count at the walkthrough (owner, 2026-10-23).
+- [x] No published prices (owner, 2026-10-23).
+- [ ] Whether skim coating is offered.
 - [ ] Remove or support "thousands of rolls" (live body) and "pattern matching guaranteed" (live meta description).
-- [ ] Wallpaper primer product. [CONFIRM: paint brands]
-- [ ] Typical price and time for one accent wall and one full room.
+- [ ] Wallpaper primer product.
+- [ ] Typical time for one accent wall and one full room.
 - [ ] Policy on painting over existing wallpaper.
 - [ ] Guidance on letting paper acclimate before install.
