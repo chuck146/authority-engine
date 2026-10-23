@@ -478,11 +478,15 @@ Sprint Results:
 - [x] `NEXT_PUBLIC_GA_MEASUREMENT_ID` set in Vercel and verified live (2026-10-23): page views reach GA4, no GA on auth/dashboard pages
 - [x] Paint-brand copy: Farrow & Ball / Fine Paints of Europe removed from five live pages and `seed.sql` (2026-10-23, owner-approved)
 - [ ] Mark `generate_lead` as a GA4 key event after the first real estimate request
-- [ ] Owner confirms the facts in the playbook checklist, then the reviewed FAQs/intros are loaded via the dashboard
+- [x] Owner answered the `[CONFIRM]` facts (2026-10-23). All six drafts are resolved, and `verified_facts` holds 21 confirmed claims
+- [x] Interior + exterior intros, sections and FAQs loaded live; cabinet price claims removed (2026-10-23, owner-approved)
+- [ ] Load cabinet, deck, wallpaper and homepage copy from the drafts
+- [ ] Generate Rahway, Montclair and West Orange location pages (dashboard → review → publish)
 
 ### What's Next
 
-- Finish the remaining owner steps in docs/seo/aeo-playbook.md (GA4 key event, `[CONFIRM]` facts, listings)
+- Finish the remaining owner steps in docs/seo/aeo-playbook.md (GA4 key event, listings, the claims still listed as unconfirmed)
+- In GSC, request indexing for `/services/interior-painting`, `/services/exterior-painting` and `/services/cabinet-refinishing`
 - Submit `cleanestpaintingnj.com/privacy` and `cleanestpaintingnj.com/terms` to SMS campaign registration
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)

@@ -137,7 +137,7 @@ values (
   now() - interval '10 days',
   '{
     "headline": "Give Your Kitchen a Fresh Look with Cabinet Refinishing",
-    "intro": "<p>A full kitchen renovation can cost $30,000 or more. Cabinet refinishing delivers a stunning transformation at a fraction of the price. Cleanest Painting LLC specializes in turning dated, worn cabinets into showpieces — using professional-grade finishes that look and feel like new.</p>",
+    "intro": "<p>Cabinet refinishing gives your kitchen a new look without replacing the cabinets. Cleanest Painting LLC specializes in turning dated, worn cabinets into showpieces — using professional-grade finishes that look and feel like new.</p>",
     "sections": [
       {
         "title": "Our Cabinet Refinishing Process",
@@ -149,7 +149,7 @@ values (
       },
       {
         "title": "Why Refinish Instead of Replace",
-        "body": "<p>Cabinet refinishing costs 60–75% less than full replacement. Your existing cabinet boxes are solid — they just need a facelift. Refinishing takes days, not weeks. There''s no demolition, no plumbing disruption, and no weeks without a functional kitchen. It''s the smartest upgrade for your money.</p>"
+        "body": "<p>Your existing cabinet boxes are solid — they just need a facelift. Refinishing takes days, not weeks. There''s no demolition, no plumbing disruption, and no weeks without a functional kitchen. It''s the smartest upgrade for your money.</p>"
       }
     ],
     "cta": "Ready to transform your kitchen? Get a free cabinet refinishing quote.",

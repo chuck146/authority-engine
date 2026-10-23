@@ -144,7 +144,9 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - [x] Rahway, Montclair and West Orange are served. Drywall/plaster repair, wood rot repair, trim carpentry and fence staining are done in-house (owner, 2026-10-23).
 - [x] EPA Lead-Safe Certified Firm (owner, 2026-10-23). The pre-1978 FAQs say so.
 - [x] Prices: none published (owner, 2026-10-23). Timelines: a bedroom about 1 day, a full first floor 3–5 days, a 2-story exterior 5–7 days (weather permitting), cabinets 5–7 business days. Estimates are in person and written, itemized on request. Two finish coats, daily tidy-up and a final walkthrough are standard; washing is free with exterior painting. All `[CONFIRM]` placeholders in the drafts are resolved; what's still open is listed in each draft's "Facts to confirm".
-- [ ] Add owner-confirmed claims to `organizations.settings.verified_facts` so AI-generated drafts can use them.
+- [x] `organizations.settings.verified_facts` set to 21 owner-confirmed claims (2026-10-23), including "Licensed, insured and bonded", "Over a decade of painting experience", "5.0 Google rating" and "Angi Super Service Award 2024". AI-generated drafts can now use them.
+- [x] Live load (2026-10-23, owner-approved): `interior-painting` and `exterior-painting` have the new intro, three new sections and six FAQs each. The "$30,000" and "60–75% less" claims are removed from `cabinet-refinishing` and `seed.sql`. Cabinet, deck, wallpaper and homepage copy are next.
+- [ ] Still live and unconfirmed: interior "low-VOC paints" and "scaffolding expertise"; exterior "10+ years" durability and SW Duration / BM Aura product names; wallpaper "thousands of rolls" and "pattern matching guaranteed"; cabinet hardware/soft-close upgrades.
 
 **Account settings:**
 
