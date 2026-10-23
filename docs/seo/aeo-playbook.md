@@ -117,14 +117,14 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - Bot visits in server logs show **access**, not citations or leads.
 - No personal data goes to GA4 or into attribution: only path, referrer host, UTM tags, and a gclid yes/no.
 
-**Deploy order** (the code is safe in any order):
+**Deploy order:**
 
-1. Merge and deploy. Leads still save before the migration because the insert falls back without the new columns.
-2. Apply the migration: `npm run db:migrate`, or via the Supabase dashboard.
-3. Regenerate types: `npx supabase gen types typescript --project-id oznuqgcipfjfbxvflbhc > types/database.ts`.
+1. ✅ Merged (PR #25) and deployed.
+2. ✅ Migration applied on 2026-10-22 through the Supabase SQL editor. It isn't recorded in Supabase's migration history, so before the next `npm run db:migrate` run `supabase migration repair --status applied 20261019000001`.
+3. ✅ `types/database.ts` updated for the new columns and table. Regenerate it with `npx supabase gen types typescript --project-id oznuqgcipfjfbxvflbhc > types/database.ts` the next time the CLI is logged in.
 4. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-…` in Vercel (Production) and redeploy.
 5. In GA4, mark `generate_lead` as a key event.
-6. After the migration, remove the two "migration not applied" fallbacks (marked `TODO` in `app/api/v1/leads/route.ts` and `app/api/v1/leads/overview/route.ts`).
+6. ✅ The temporary "migration not applied" fallbacks are removed (branch `fix/remove-attribution-fallbacks`).
 
 **Caching:** marketing pages are cached for up to an hour. Publishing or unpublishing through the dashboard refreshes them right away. Edits made directly in the database (org settings such as phone or counties, or page content changed outside the dashboard) appear within an hour, or immediately after a redeploy.
 
@@ -168,7 +168,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 
 | Week | Content                                                                                                               | Measurement                                                                                                                                  |
 | ---- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | Owner reviews drafts for interior + exterior; answers the `[CONFIRM]` items; load FAQs + intros through the dashboard | Apply migration; set GA4 ID; check GSC coverage; run [ai-visibility-prompts.md](ai-visibility-prompts.md) once for a baseline                |
+| 1    | Owner reviews drafts for interior + exterior; answers the `[CONFIRM]` items; load FAQs + intros through the dashboard | Set GA4 ID; check GSC coverage; run [ai-visibility-prompts.md](ai-visibility-prompts.md) once for a baseline                                 |
 | 2    | Cabinet + deck pages; resolve paint-brand wording; fix 3–4 stuffed location titles                                    | First look at the Leads → "Leads by Channel" and "How They Heard About Us" cards                                                             |
 | 3    | First real project case study (photos, town, scope, timeline); decide on Rahway page                                  | Compare GSC queries with the [topic map](topic-map.md); add questions people actually search for                                             |
 | 4    | Wallpaper page + one cost-factors blog post, if the owner confirms price ranges                                       | Rerun the AI prompt sample; report leads → qualified → won by channel; `npx tsx scripts/seo-sprint/04-technical-audit.ts` against production |

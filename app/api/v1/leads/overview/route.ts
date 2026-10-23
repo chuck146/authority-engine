@@ -11,30 +11,21 @@ export async function GET() {
     const supabase = await createClient()
 
     // Only the columns the counts need (no names, emails, or phone numbers).
-    const BASE_COLUMNS = 'status, source, service, created_at, contacted_at'
-    const fetchLeads = (columns: string) =>
-      supabase
-        .from('leads' as never)
-        .select(columns)
-        .eq('organization_id', auth.organizationId)
-        .returns<
-          {
-            status: string
-            source: string
-            service: string | null
-            created_at: string
-            contacted_at: string | null
-            discovery_source?: string | null
-            attribution?: { channel?: string } | null
-          }[]
-        >()
-
-    let { data: leads, error } = await fetchLeads(`${BASE_COLUMNS}, discovery_source, attribution`)
-    // TODO: remove once migration 20261019000001 is applied — before then the
-    // attribution columns don't exist (42703 undefined_column).
-    if (error?.code === '42703') {
-      ;({ data: leads, error } = await fetchLeads(BASE_COLUMNS))
-    }
+    const { data: leads, error } = await supabase
+      .from('leads')
+      .select('status, source, service, created_at, contacted_at, discovery_source, attribution')
+      .eq('organization_id', auth.organizationId)
+      .returns<
+        {
+          status: string
+          source: string
+          service: string | null
+          created_at: string
+          contacted_at: string | null
+          discovery_source: string | null
+          attribution: { channel?: string } | null
+        }[]
+      >()
 
     if (error) {
       console.error('Failed to fetch leads overview:', error)

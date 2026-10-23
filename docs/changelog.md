@@ -7,13 +7,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed — Lead attribution migration applied (branch `fix/remove-attribution-fallbacks`)
+
+- **Migration applied:** `leads.discovery_source`, `leads.attribution` and the `marketing_events` table are live (applied 2026-10-22 through the Supabase SQL editor)
+- **Types:** `types/database.ts` now includes the new columns, the `marketing_events` table and the existing `leads.sms_consent` column
+- **Fallbacks removed:** the lead insert and the leads overview no longer retry without the attribution columns, and the call-click insert no longer expects a missing table. The touched queries are typed instead of cast with `as never` (app/api/v1/leads/route.ts, app/api/v1/leads/overview/route.ts, app/api/v1/events/route.ts)
+
 ### Added — Search & AI visibility + lead attribution (branch `feature/seo-aeo-improvements`)
 
 - **`/estimate` page:** a dedicated, statically rendered estimate request page. Service pages link to `/estimate?service=<slug>` and the form preselects that service. All CTAs go through `getEstimateHref()` (lib/marketing/estimate.ts)
 - **Lead attribution:**
   - First-touch landing path, referrer host, UTM tags and a gclid flag, plus an optional "How did you hear about us?" answer
   - The server classifies the channel, including AI-assistant referrals
-  - New `leads.discovery_source` / `leads.attribution` columns and a `marketing_events` table (migration `20261019000001`, not yet applied). Lead inserts fall back if the columns are missing
+  - New `leads.discovery_source` / `leads.attribution` columns and a `marketing_events` table (migration `20261019000001`, applied 2026-10-22)
   - Code: lib/leads/attribution.ts, app/api/v1/leads/route.ts
 - **Call-click tracking:** `TrackedPhoneLink` on every marketing `tel:` link, plus an anonymous `/api/v1/events` beacon with its own rate limit
 - **Optional GA4:** loads on marketing pages only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. Signals and ad personalization are off. `generate_lead` fires only after a 201. CSP updated

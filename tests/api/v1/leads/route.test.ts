@@ -154,28 +154,7 @@ describe('POST /api/v1/leads', () => {
     expect(res.status).toBe(400)
   })
 
-  it('keeps the lead when attribution columns do not exist yet', async () => {
-    mockSupabase.single.mockReset()
-    mockSupabase.single
-      .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null })
-      .mockResolvedValueOnce({
-        data: null,
-        error: { code: 'PGRST204', message: "Could not find the 'attribution' column" },
-      })
-      .mockResolvedValueOnce({ data: { id: 'lead-1' }, error: null })
-
-    const res = await callPost({ ...validLeadBody(), discovery_source: 'google_search' })
-
-    expect(res.status).toBe(201)
-    const leadInserts = mockSupabase.insert.mock.calls
-      .map((c: unknown[]) => c[0] as Record<string, unknown>)
-      .filter((row: Record<string, unknown>) => row.email !== undefined)
-    expect(leadInserts).toHaveLength(2)
-    expect(leadInserts[1]).not.toHaveProperty('attribution')
-    expect(leadInserts[1]).not.toHaveProperty('discovery_source')
-  })
-
-  it('returns 500 without retrying for errors other than a missing column', async () => {
+  it('returns 500 without retrying when the lead insert fails', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     mockSupabase.single.mockReset()
     mockSupabase.single

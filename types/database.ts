@@ -614,10 +614,12 @@ export type Database = {
       leads: {
         Row: {
           assigned_to: string | null
+          attribution: Json
           close_reason: string | null
           closed_at: string | null
           contacted_at: string | null
           created_at: string | null
+          discovery_source: string | null
           email: string
           id: string
           message: string | null
@@ -628,16 +630,19 @@ export type Database = {
           score: number
           score_label: string | null
           service: string | null
+          sms_consent: boolean
           source: string
           status: string
           updated_at: string | null
         }
         Insert: {
           assigned_to?: string | null
+          attribution?: Json
           close_reason?: string | null
           closed_at?: string | null
           contacted_at?: string | null
           created_at?: string | null
+          discovery_source?: string | null
           email: string
           id?: string
           message?: string | null
@@ -648,16 +653,19 @@ export type Database = {
           score?: number
           score_label?: string | null
           service?: string | null
+          sms_consent?: boolean
           source?: string
           status?: string
           updated_at?: string | null
         }
         Update: {
           assigned_to?: string | null
+          attribution?: Json
           close_reason?: string | null
           closed_at?: string | null
           contacted_at?: string | null
           created_at?: string | null
+          discovery_source?: string | null
           email?: string
           id?: string
           message?: string | null
@@ -668,6 +676,7 @@ export type Database = {
           score?: number
           score_label?: string | null
           service?: string | null
+          sms_consent?: boolean
           source?: string
           status?: string
           updated_at?: string | null
@@ -764,6 +773,47 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: 'location_pages_organization_id_fkey'
+            columns: ['organization_id']
+            isOneToOne: false
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      marketing_events: {
+        Row: {
+          attribution: Json
+          channel: string | null
+          created_at: string
+          event_type: string
+          id: string
+          link_location: string | null
+          organization_id: string
+          page_path: string | null
+        }
+        Insert: {
+          attribution?: Json
+          channel?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          link_location?: string | null
+          organization_id: string
+          page_path?: string | null
+        }
+        Update: {
+          attribution?: Json
+          channel?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          link_location?: string | null
+          organization_id?: string
+          page_path?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'marketing_events_organization_id_fkey'
             columns: ['organization_id']
             isOneToOne: false
             referencedRelation: 'organizations'

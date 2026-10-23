@@ -34,13 +34,6 @@ const leadSchema = z.object({
   company_website: z.string().max(200).optional(),
 })
 
-// Postgres/PostgREST errors for a column that doesn't exist yet (migration not applied).
-// TODO: remove this fallback once migration 20261019000001 is applied.
-function isMissingColumnError(error: { code?: string; message?: string } | null): boolean {
-  if (!error) return false
-  return error.code === 'PGRST204' || error.code === '42703'
-}
-
 // Public POST — anyone can submit a lead
 export async function POST(request: Request) {
   try {
@@ -98,37 +91,25 @@ export async function POST(request: Request) {
       createdAt: now,
     })
 
-    const baseRow = {
-      organization_id: organizationId,
-      name: input.name,
-      email: input.email,
-      phone: input.phone,
-      service: input.service ?? null,
-      message: input.message ?? null,
-      sms_consent: input.sms_consent,
-      score,
-      score_label: scoreLabel,
-      source: leadSourceForChannel(channel, input.attribution),
-      updated_at: now,
-    }
-    const insertLead = (row: Record<string, unknown>) =>
-      supabase
-        .from('leads' as never)
-        .insert(row as never)
-        .select('id')
-        .single()
-
-    let { data: lead, error } = await insertLead({
-      ...baseRow,
-      discovery_source: input.discovery_source ?? null,
-      attribution,
-    })
-
-    // Never lose a lead because the attribution migration hasn't been applied yet.
-    if (error && isMissingColumnError(error)) {
-      console.warn('[leads] attribution columns missing — saving lead without them')
-      ;({ data: lead, error } = await insertLead(baseRow))
-    }
+    const { data: lead, error } = await supabase
+      .from('leads')
+      .insert({
+        organization_id: organizationId,
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        service: input.service ?? null,
+        message: input.message ?? null,
+        sms_consent: input.sms_consent,
+        score,
+        score_label: scoreLabel,
+        source: leadSourceForChannel(channel, input.attribution),
+        discovery_source: input.discovery_source ?? null,
+        attribution,
+        updated_at: now,
+      })
+      .select('id')
+      .single()
 
     if (error || !lead) {
       console.error('Failed to insert lead:', error)
@@ -136,10 +117,9 @@ export async function POST(request: Request) {
     }
 
     // Create initial activity
-    const leadRow = lead as unknown as { id: string }
     await supabase.from('lead_activities' as never).insert({
       organization_id: organizationId,
-      lead_id: leadRow.id,
+      lead_id: lead.id,
       activity_type: 'score_change',
       description: `Lead scored ${score} (${scoreLabel}) on submission`,
       metadata: { score, scoreLabel },

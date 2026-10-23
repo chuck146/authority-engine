@@ -46,17 +46,17 @@ export async function POST(request: Request) {
     if (!org) return noContent()
 
     const channel = classifyChannel(event.attribution, new URL(SITE_URL).hostname)
-    const { error } = await supabase.from('marketing_events' as never).insert({
-      organization_id: (org as { id: string }).id,
+    const { error } = await supabase.from('marketing_events').insert({
+      organization_id: org.id,
       event_type: event.event_type,
       page_path: event.page_path,
       link_location: event.link_location,
       channel,
       attribution: event.attribution ?? {},
-    } as never)
+    })
 
-    // Table may not exist until the migration is applied — never fail the page.
-    if (error) console.warn('[events] insert skipped:', error.message)
+    // A lost click count must never fail the page.
+    if (error) console.warn('[events] insert failed:', error.message)
 
     return noContent()
   } catch {
