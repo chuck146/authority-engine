@@ -116,10 +116,11 @@ google_connections   — OAuth2 tokens (AES-256-GCM encrypted), site URLs, GA4 p
 gsc_snapshots        — Daily sitemap + indexing snapshots from GSC sync
 ga4_page_metrics     — Per-page daily analytics (sessions, users, pageviews, bounce rate, engagement)
 ga4_snapshots        — JSONB snapshots (traffic_sources, device_breakdown, daily_totals)
-leads                — Lead pipeline (status, source, score, assignment, contact info)
+leads                — Lead pipeline (status, source, score, assignment, contact info, discovery_source, attribution)
 lead_activities      — Activity timeline per lead (notes, status changes, SMS/email, calls)
 lead_followups       — Scheduled follow-up sequences (SMS/email with step tracking)
 lead_events          — Unified lead tracking
+marketing_events     — Anonymous conversion events from the public site (call clicks; no PII)
 commercial_service_pages — Commercial painting service pages (office, retail, warehouse, HOA, etc.)
 media_assets         — Generated images + videos with metadata
 job_executions       — Background job logs for debugging

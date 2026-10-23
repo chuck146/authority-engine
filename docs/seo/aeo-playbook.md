@@ -1,6 +1,6 @@
 # Cleanest Painting — Search & AI Visibility Playbook
 
-_Prepared 2026-10-19 on branch `feature/seo-aeo-improvements`. Nothing in this branch is deployed._
+_Prepared 2026-10-19 on branch `feature/seo-aeo-improvements`. Merged in PR #25 and deployed; the attribution migration was applied 2026-10-22._
 
 This playbook covers how cleanestpaintingnj.com is found by Google and by AI search tools (ChatGPT search, Google AI Overviews / AI Mode, Perplexity, Gemini), how estimate requests are measured, and what the owner needs to do outside the code.
 
@@ -49,7 +49,7 @@ Related files:
 | P0       | Static/ISR marketing pages; sitemap revalidation; org-scoped queries                 | Faster pages, fresh sitemap, tenant safety         | M      | ✅ Done                                                    |
 | P0       | One business identity for visible contact details and JSON-LD                        | Consistent entity for Google and AI answers        | M      | ✅ Done                                                    |
 | P1       | `/estimate` page, preselected service, honeypot                                      | Fewer steps to a lead                              | M      | ✅ Done                                                    |
-| P1       | Lead attribution, call-click events, optional GA4                                    | Know which channels produce booked jobs            | M      | ✅ Code done. **Migration + GA4 ID pending**               |
+| P1       | Lead attribution, call-click events, optional GA4                                    | Know which channels produce booked jobs            | M      | ✅ Live. **GA4 ID pending**                                |
 | P2       | FAQ field; crawlable animations; no-fabrication prompts; internal links              | Answerable content; accurate claims                | M      | ✅ Done                                                    |
 | P2       | Load reviewed FAQ and intro drafts into the six pages                                | Pages that answer real customer questions          | S each | ⏳ Owner review of `content-drafts/` first                 |
 | P2       | Resolve the paint-brand contradiction ("BM & SW exclusively" vs Farrow & Ball copy)  | Trust; consistent AI answers                       | S      | Decided: BM & SW; live page edits pending                  |
@@ -117,14 +117,14 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - Bot visits in server logs show **access**, not citations or leads.
 - No personal data goes to GA4 or into attribution: only path, referrer host, UTM tags, and a gclid yes/no.
 
-**Deploy order** (the code is safe in any order):
+**Deploy order:**
 
-1. Merge and deploy. Leads still save before the migration because the insert falls back without the new columns.
-2. Apply the migration: `npm run db:migrate`, or via the Supabase dashboard.
-3. Regenerate types: `npx supabase gen types typescript --project-id oznuqgcipfjfbxvflbhc > types/database.ts`.
+1. ✅ Merged (PR #25) and deployed.
+2. ✅ Migration applied on 2026-10-22 through the Supabase SQL editor. It isn't recorded in Supabase's migration history, so mark it applied before the next push, against the same database the push uses: `supabase migration repair --status applied 20261019000001 --linked` (or `--db-url "$DATABASE_URL"` when pushing with `npm run db:migrate`). Without this the push re-runs it and fails on the existing `marketing_events_org_select` policy. Run `supabase migration list` first to check nothing else is unrecorded.
+3. ✅ `types/database.ts` updated for the new columns and table. Regenerate it with `npx supabase gen types typescript --project-id oznuqgcipfjfbxvflbhc > types/database.ts` the next time the CLI is logged in.
 4. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-…` in Vercel (Production) and redeploy.
 5. In GA4, mark `generate_lead` as a key event.
-6. After the migration, remove the two "migration not applied" fallbacks (marked `TODO` in `app/api/v1/leads/route.ts` and `app/api/v1/leads/overview/route.ts`).
+6. ✅ The temporary "migration not applied" fallbacks are removed (branch `fix/remove-attribution-fallbacks`).
 
 **Caching:** marketing pages are cached for up to an hour. Publishing or unpublishing through the dashboard refreshes them right away. Edits made directly in the database (org settings such as phone or counties, or page content changed outside the dashboard) appear within an hour, or immediately after a redeploy.
 
@@ -140,7 +140,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - [ ] Remove Farrow & Ball / Fine Paints of Europe mentions from five live pages: services `interior-painting`, `color-consultation`; locations `westfield-nj-painting`, `short-hills-nj-painting`, `bernardsville-nj-painting`.
 - [x] Projects outside the eight counties are accepted by request (owner, 2026-10-22). Shown on the homepage town list and `/locations`.
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Hudson, Monmouth and Bergen added the same day. Woodbridge (Middlesex) stays.
-- [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). Live JSON-LD picks it up now; the hero, footer and `/locations` follow once this branch is deployed.
+- [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). The hero, footer, `/locations` and JSON-LD all use it.
 - [ ] Are Rahway, Montclair, and West Orange served? Are drywall repair, trim/carpentry, and fence staining offered?
 - [ ] Lead-safe (EPA RRP) certification: needed before publishing any pre-1978 / lead paint FAQ.
 - [ ] Price ranges and typical timelines you're willing to publish (see `[CONFIRM]` placeholders in the drafts).
@@ -168,7 +168,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 
 | Week | Content                                                                                                               | Measurement                                                                                                                                  |
 | ---- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | Owner reviews drafts for interior + exterior; answers the `[CONFIRM]` items; load FAQs + intros through the dashboard | Apply migration; set GA4 ID; check GSC coverage; run [ai-visibility-prompts.md](ai-visibility-prompts.md) once for a baseline                |
+| 1    | Owner reviews drafts for interior + exterior; answers the `[CONFIRM]` items; load FAQs + intros through the dashboard | Set GA4 ID; check GSC coverage; run [ai-visibility-prompts.md](ai-visibility-prompts.md) once for a baseline                                 |
 | 2    | Cabinet + deck pages; resolve paint-brand wording; fix 3–4 stuffed location titles                                    | First look at the Leads → "Leads by Channel" and "How They Heard About Us" cards                                                             |
 | 3    | First real project case study (photos, town, scope, timeline); decide on Rahway page                                  | Compare GSC queries with the [topic map](topic-map.md); add questions people actually search for                                             |
 | 4    | Wallpaper page + one cost-factors blog post, if the owner confirms price ranges                                       | Rerun the AI prompt sample; report leads → qualified → won by channel; `npx tsx scripts/seo-sprint/04-technical-audit.ts` against production |

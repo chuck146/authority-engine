@@ -173,6 +173,16 @@ export function sanitizeAttribution(value: unknown): Attribution | undefined {
   return out
 }
 
+// The channel stored on a lead's attribution JSON, or 'unknown' for leads
+// saved before attribution existed.
+export function storedChannel(attribution: unknown): string {
+  if (!attribution || typeof attribution !== 'object' || Array.isArray(attribution)) {
+    return 'unknown'
+  }
+  const channel = (attribution as Record<string, unknown>).channel
+  return typeof channel === 'string' && channel ? channel : 'unknown'
+}
+
 // Build an attribution record from the browser's first page view.
 export function buildAttribution(input: {
   href: string

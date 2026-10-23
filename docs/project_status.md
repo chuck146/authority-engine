@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: October 19, 2026_
+_Last Updated: October 22, 2026_
 
 ---
 
@@ -461,7 +461,7 @@ Sprint Results:
 - [x] Footer links (`/privacy`, `/terms`) now resolve to real pages (were broken links before)
 - [x] Migration applied to live Supabase
 
-**Post-V2: Search & AI Visibility + Lead Attribution** 🔄 (branch `feature/seo-aeo-improvements`, not deployed)
+**Post-V2: Search & AI Visibility + Lead Attribution** 🔄 (merged in PR #25 and live; owner tasks remain)
 
 - [x] Audit of the live site and repo, recorded in docs/seo/aeo-playbook.md
 - [x] Marketing titles carry the business name, not the platform name. Branded 404. robots.txt fixed. www → apex 308
@@ -471,16 +471,15 @@ Sprint Results:
 - [x] Lead attribution (channel incl. AI assistants), call-click events, optional GA4, Leads dashboard channel cards
 - [x] Visible FAQ support. Crawlable ScrollReveal. No-fabrication prompt guardrail. Sprint script no longer auto-publishes
 - [x] Topic map, six page drafts, AI visibility prompt sample (docs/seo/)
-- [x] Test suite: 1,513 tests across 198 files, all passing. Typecheck, lint and build clean. Local technical audit: 40 pages, 0 issues after fixes
+- [x] Test suite: 1,525 tests across 198 files, all passing (after `fix/remove-attribution-fallbacks`). Typecheck, lint and build clean. Local technical audit: 40 pages, 0 issues after fixes
 - [x] Four-reviewer code review (security, architecture, performance, tests): no blockers; review fixes and missing tests added
-- [ ] Apply migration `20261019000001_add_lead_attribution_and_marketing_events.sql` and regenerate types
+- [x] Migration `20261019000001_add_lead_attribution_and_marketing_events.sql` applied to live Supabase (2026-10-22, SQL editor); types updated; temporary fallbacks removed
 - [ ] Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel and mark `generate_lead` as a GA4 key event
 - [ ] Owner confirms the facts in the playbook checklist, then the reviewed FAQs/intros are loaded via the dashboard
 
 ### What's Next
 
-- Review and merge `feature/seo-aeo-improvements`, then follow the deploy order in docs/seo/aeo-playbook.md
-- Deploy to Vercel (privacy/terms pages + estimate form fix go live)
+- Merge `fix/remove-attribution-fallbacks`, then finish the remaining steps in docs/seo/aeo-playbook.md (GA4 ID, key event)
 - Submit `cleanestpaintingnj.com/privacy` and `cleanestpaintingnj.com/terms` to SMS campaign registration
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)

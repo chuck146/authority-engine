@@ -7,13 +7,24 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed — Lead attribution migration applied (branch `fix/remove-attribution-fallbacks`)
+
+- **Migration applied:** `leads.discovery_source`, `leads.attribution` and the `marketing_events` table are live (applied 2026-10-22 through the Supabase SQL editor)
+- **Types:** `types/database.ts` now includes the new columns, the `marketing_events` table and the existing `leads.sms_consent` column
+- **Fallbacks removed:** the lead insert and the leads overview no longer retry without the attribution columns, and the call-click insert no longer expects a missing table. The lead insert, the overview query and the call-click insert are typed instead of cast with `as never` (app/api/v1/leads/route.ts, app/api/v1/leads/overview/route.ts, app/api/v1/events/route.ts). Other lead routes still carry older casts
+- **Code review fixes:**
+  - A failed lead insert logs only the error code and message, because Postgres error details can echo the customer's name, email and phone
+  - The leads overview reads the stored channel with `storedChannel()` instead of an unchecked type override, and skips leads with no `created_at` instead of treating them as 1970
+  - Tests now fail if the missing-column retry comes back, and cover org scoping on the public lead and event endpoints
+- **Docs:** `marketing_events` and the lead attribution columns added to docs/architecture.md; stale "not deployed" and "migration pending" notes updated
+
 ### Added — Search & AI visibility + lead attribution (branch `feature/seo-aeo-improvements`)
 
 - **`/estimate` page:** a dedicated, statically rendered estimate request page. Service pages link to `/estimate?service=<slug>` and the form preselects that service. All CTAs go through `getEstimateHref()` (lib/marketing/estimate.ts)
 - **Lead attribution:**
   - First-touch landing path, referrer host, UTM tags and a gclid flag, plus an optional "How did you hear about us?" answer
   - The server classifies the channel, including AI-assistant referrals
-  - New `leads.discovery_source` / `leads.attribution` columns and a `marketing_events` table (migration `20261019000001`, not yet applied). Lead inserts fall back if the columns are missing
+  - New `leads.discovery_source` / `leads.attribution` columns and a `marketing_events` table (migration `20261019000001`, applied 2026-10-22)
   - Code: lib/leads/attribution.ts, app/api/v1/leads/route.ts
 - **Call-click tracking:** `TrackedPhoneLink` on every marketing `tel:` link, plus an anonymous `/api/v1/events` beacon with its own rate limit
 - **Optional GA4:** loads on marketing pages only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. Signals and ad personalization are off. `generate_lead` fires only after a 201. CSP updated
@@ -40,7 +51,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Code review fixes:**
   - The estimate form posts (`method="post"`), so a submit before JavaScript loads can't put contact details in the URL
   - JSON-LD escapes `<`, so content can't break out of the script tag
-  - The lead-insert fallback only triggers on missing-column errors
   - `/locations` never renders empty when a county name doesn't match
   - Browser attribution code no longer ships Zod to every marketing page
   - The leads overview selects only the columns it needs
