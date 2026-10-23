@@ -83,7 +83,7 @@ Duration depends on the number of rooms, how much prep the walls need, ceiling h
 
 ## (e) Facts to confirm
 
-- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Remove Farrow & Ball from the live page.
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Farrow & Ball removed from the live page (2026-10-23).
 - [ ] Standard surfaces included (walls, ceilings, trim, doors, closets) and the standard number of coats.
 - [ ] The estimate is written and itemized, and how it is delivered.
 - [ ] **Owner decision:** larger drywall/plaster repair — offered, subcontracted, or excluded.

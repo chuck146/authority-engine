@@ -1,6 +1,6 @@
 # Authority Engine — Project Status
 
-_Last Updated: October 22, 2026_
+_Last Updated: October 23, 2026_
 
 ---
 
@@ -475,12 +475,14 @@ Sprint Results:
 - [x] Four-reviewer code review (security, architecture, performance, tests): no blockers; review fixes and missing tests added
 - [x] Migration `20261019000001_add_lead_attribution_and_marketing_events.sql` applied to live Supabase (2026-10-22, SQL editor); types updated; temporary fallbacks removed
 - [x] Anonymous inserts into `leads` blocked: `leads_public_insert` policy dropped (migration `20261022000001`, 2026-10-22); migration history repaired; types regenerated from the live schema
-- [ ] Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel and mark `generate_lead` as a GA4 key event
+- [x] `NEXT_PUBLIC_GA_MEASUREMENT_ID` set in Vercel and verified live (2026-10-23): page views reach GA4, no GA on auth/dashboard pages
+- [x] Paint-brand copy: Farrow & Ball / Fine Paints of Europe removed from five live pages and `seed.sql` (2026-10-23, owner-approved)
+- [ ] Mark `generate_lead` as a GA4 key event after the first real estimate request
 - [ ] Owner confirms the facts in the playbook checklist, then the reviewed FAQs/intros are loaded via the dashboard
 
 ### What's Next
 
-- Merge `fix/remove-attribution-fallbacks`, then finish the remaining steps in docs/seo/aeo-playbook.md (GA4 ID, key event)
+- Finish the remaining owner steps in docs/seo/aeo-playbook.md (GA4 key event, `[CONFIRM]` facts, listings)
 - Submit `cleanestpaintingnj.com/privacy` and `cleanestpaintingnj.com/terms` to SMS campaign registration
 - Next SEO sprint recommended: April 13, 2026
 - Proceed to Later milestone (White-Label + Community)

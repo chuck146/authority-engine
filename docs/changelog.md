@@ -7,6 +7,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed — Paint-brand copy (branch `fix/paint-brand-copy`)
+
+- **Live content (2026-10-23, owner-approved):** removed Farrow & Ball and Fine Paints of Europe from one paragraph each on services `interior-painting` and `color-consultation` and locations `westfield-nj-painting`, `short-hills-nj-painting` and `bernardsville-nj-painting`. The pages now name only Benjamin Moore and Sherwin-Williams, matching the homepage. Westfield's "Farrow & Ball Hague Blue" became "Sherwin-Williams Naval". Nothing else on the pages changed
+- **Seed data:** `packages/db/supabase/seed.sql` carries the same wording, so a reseed doesn't restore the old copy
+
 ### Security — Anonymous lead inserts blocked (branch `fix/drop-leads-public-insert`)
 
 - **Dropped the `leads_public_insert` RLS policy** (migration `20261022000001`, applied 2026-10-22). It let anyone holding the public anon key insert leads for any organization through PostgREST, bypassing the estimate API's rate limit, honeypot, validation and attribution. The estimate form is unaffected: `/api/v1/leads` inserts with the service role. Checked live without creating rows: an anonymous insert is now refused by RLS (`42501`), while the service role still passes RLS. No existing lead showed signs of having bypassed the API

@@ -77,7 +77,7 @@ values (
       },
       {
         "title": "Premium Paint Brands We Use",
-        "body": "<p>We partner with top-tier paint manufacturers to ensure lasting beauty. Our go-to brands include <strong>Benjamin Moore</strong>, <strong>Sherwin-Williams</strong>, and <strong>Farrow & Ball</strong>. Each brand offers unique advantages — from Benjamin Moore''s Aura line for exceptional coverage to Sherwin-Williams Duration for high-traffic durability.</p>"
+        "body": "<p>We partner with top-tier paint manufacturers to ensure lasting beauty. Our go-to brands are <strong>Benjamin Moore</strong> and <strong>Sherwin-Williams</strong>. Each brand offers unique advantages — from Benjamin Moore''s Aura line for exceptional coverage to Sherwin-Williams Duration for high-traffic durability.</p>"
       },
       {
         "title": "Why Choose Cleanest Painting",
@@ -284,7 +284,7 @@ values (
       },
       {
         "title": "Popular Color Trends in New Jersey",
-        "body": "<p>New Jersey homeowners are gravitating toward warm neutrals — think <strong>Benjamin Moore Revere Pewter</strong>, <strong>Sherwin-Williams Agreeable Gray</strong>, and <strong>Farrow & Ball Skimming Stone</strong>. For bold accents, deep greens (like BM Salamander) and rich navies (like SW Naval) continue to dominate. We stay current on trends while guiding you toward timeless choices.</p>"
+        "body": "<p>New Jersey homeowners are gravitating toward warm neutrals — think <strong>Benjamin Moore Revere Pewter</strong> and <strong>Sherwin-Williams Agreeable Gray</strong>. For bold accents, deep greens (like BM Salamander) and rich navies (like SW Naval) continue to dominate. We stay current on trends while guiding you toward timeless choices.</p>"
       }
     ],
     "cta": "Book a color consultation and fall in love with your palette.",
@@ -427,7 +427,7 @@ values (
       },
       {
         "title": "Westfield''s Most Popular Colors",
-        "body": "<p>Westfield homeowners gravitate toward timeless exteriors: <strong>Benjamin Moore Hale Navy</strong> for front doors, <strong>Revere Pewter</strong> for interiors, and classic white trim in <strong>White Dove</strong> or <strong>Simply White</strong>. For bolder interiors, we''re seeing <strong>Farrow & Ball Hague Blue</strong> in libraries and <strong>Salamander</strong> green in powder rooms. Our color consultation service helps you pick the perfect palette for your Westfield home.</p>"
+        "body": "<p>Westfield homeowners gravitate toward timeless exteriors: <strong>Benjamin Moore Hale Navy</strong> for front doors, <strong>Revere Pewter</strong> for interiors, and classic white trim in <strong>White Dove</strong> or <strong>Simply White</strong>. For bolder interiors, we''re seeing <strong>Sherwin-Williams Naval</strong> in libraries and <strong>Salamander</strong> green in powder rooms. Our color consultation service helps you pick the perfect palette for your Westfield home.</p>"
       }
     ],
     "cta": "Elevate your Westfield home — get a free estimate today.",
@@ -633,7 +633,7 @@ values (
       },
       {
         "title": "Why Short Hills Chooses Cleanest Painting",
-        "body": "<p>Short Hills homeowners know the difference between good and exceptional. We use only premium materials — <strong>Farrow & Ball</strong>, <strong>Benjamin Moore Aura</strong>, and <strong>Fine Paints of Europe</strong> — applied with techniques that bring out their full beauty. Our attention to detail extends to protecting your fine furnishings, hardwood floors, and landscaping throughout the project.</p>"
+        "body": "<p>Short Hills homeowners know the difference between good and exceptional. We use only premium paints from <strong>Benjamin Moore</strong> and <strong>Sherwin-Williams</strong>, applied with techniques that bring out their full beauty. Our attention to detail extends to protecting your fine furnishings, hardwood floors, and landscaping throughout the project.</p>"
       },
       {
         "title": "Estate-Scale Projects",
@@ -706,7 +706,7 @@ values (
       },
       {
         "title": "Somerset Hills Quality",
-        "body": "<p>We understand the Somerset Hills standard. Premium materials, skilled craftsmen, and meticulous attention to detail are non-negotiable. We use the finest paints available — including Fine Paints of Europe and Farrow & Ball — and apply them with techniques that create a flawless, lasting finish worthy of your Bernardsville home.</p>"
+        "body": "<p>We understand the Somerset Hills standard. Premium materials, skilled craftsmen, and meticulous attention to detail are non-negotiable. We use premium paints from Benjamin Moore and Sherwin-Williams and apply them with techniques that create a flawless, lasting finish worthy of your Bernardsville home.</p>"
       }
     ],
     "cta": "Request your free Bernardsville painting consultation.",

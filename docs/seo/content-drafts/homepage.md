@@ -69,7 +69,7 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
 
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Woodbridge stays.
 - [x] Projects outside the eight counties are accepted (owner, 2026-10-22). Option 2 wording.
-- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Farrow & Ball and Fine Paints of Europe mentions are to be removed from live pages.
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Farrow & Ball and Fine Paints of Europe mentions removed from live pages (2026-10-23).
 - [x] HIC registration number: 13VH11564300 (owner, 2026-10-22).
 - [ ] Estimate process details: walkthrough format, delivery method, itemization, validity period, deposit, lead time.
 - [ ] Certificate of insurance is available on request.
