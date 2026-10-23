@@ -7,6 +7,25 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed — Owner-confirmed facts (branch `docs/owner-confirmed-facts`)
+
+- **Drafts:** every `[CONFIRM]` placeholder in `docs/seo/content-drafts/` is resolved with the owner's 2026-10-23 answers:
+  - no published prices; typical durations
+  - in-person written estimates, itemized on request
+  - two coats, daily tidy-up and a final walkthrough; free wash with exterior painting
+  - in-house drywall, wood rot, trim and fence work
+  - EPA Lead-Safe Certified Firm
+  - cabinet spray process, deck board repair, wallpaper sourcing
+  - Rahway, Montclair and West Orange served
+
+  Unanswered items are reworded generically and listed as open in each draft
+
+- **Live content (2026-10-23, owner-approved):**
+  - `interior-painting` and `exterior-painting` have the reviewed intro, three new sections and six visible FAQs each
+  - `cabinet-refinishing` no longer claims "$30,000" renovations or "60–75% less" than replacement
+  - `organizations.settings.verified_facts` holds 21 owner-confirmed claims for AI-generated drafts
+- **Seed data:** `seed.sql` drops the same two cabinet claims
+
 ### Changed — Paint-brand copy (branch `fix/paint-brand-copy`)
 
 - **Live content (2026-10-23, owner-approved):** removed Farrow & Ball and Fine Paints of Europe from one paragraph each on services `interior-painting` and `color-consultation` and locations `westfield-nj-painting`, `short-hills-nj-painting` and `bernardsville-nj-painting`. The pages now name only Benjamin Moore and Sherwin-Williams, matching the homepage. Westfield's "Farrow & Ball Hague Blue" became "Sherwin-Williams Naval". Nothing else on the pages changed

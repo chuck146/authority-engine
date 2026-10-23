@@ -12,7 +12,7 @@ URL: https://cleanestpaintingnj.com/services/exterior-painting (fetched October 
 
 ## (b) Proposed intro rewrite (≤90 words)
 
-> Cleanest Painting LLC repaints the outside of homes across Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. We paint siding, trim, soffits, doors, and shutters. Most of an exterior job is prep. We wash, scrape loose paint, sand, prime bare wood, and caulk gaps before the finish coats go on. We paint when the weather allows good adhesion, generally spring through fall. Every project starts with a free estimate [CONFIRM: on-site visit for every exterior?]. We are licensed, insured, and NJ HIC registered.
+> Cleanest Painting LLC repaints the outside of homes across Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. We paint siding, trim, soffits, doors, and shutters. Most of an exterior job is prep. We wash, scrape loose paint, sand, prime bare wood, and caulk gaps before two finish coats go on. We paint when the weather allows good adhesion, generally spring through fall. Every project starts with a free on-site estimate. We are licensed, insured, and NJ HIC registered.
 
 ## (c) Proposed new sections
 
@@ -24,24 +24,24 @@ No two houses price the same. These are the main factors:
 - **Height and access.** Second- and third-story walls, steep grades, and tight lot lines need more ladder work or lifts.
 - **Siding type and condition.** Sound vinyl or recently painted wood needs less prep than weathered cedar or failing paint.
 - **Amount of scraping and priming.** Heavy peeling is the biggest driver of prep time.
-- **Wood repair.** Rotted trim or siding must be fixed before painting. [CONFIRM: in-house, subcontracted, or excluded]
+- **Wood repair.** Rotted trim or siding must be fixed before painting. Our crew does this in-house, and it is listed on your estimate.
 - **Colors and detail.** Multiple trim colors, shutters, and decorative trim take more brush work.
 - **Age of the home.** Pre-1978 homes may require lead-safe work practices, which add setup and cleanup time.
 
-[CONFIRM: typical price range for a 2-story colonial, siding + trim]
+Your free on-site estimate gives you the price for your house.
 
 ### What is included, and what is not
 
-**Included:** inspection, washing, scraping loose paint, sanding, priming bare wood, caulking gaps, covering plants and walkways, two finish coats [CONFIRM: standard coats], cleanup, and a final walkthrough [CONFIRM].
-**Not included unless listed:** replacing rotted wood [CONFIRM], gutters and roofing, deck staining (quoted separately), and HOA paperwork [CONFIRM].
+**Included:** inspection, washing (no extra charge), scraping loose paint, sanding, priming bare wood, caulking gaps, covering plants and walkways, two finish coats of Benjamin Moore or Sherwin-Williams paint, daily tidy-up, and a final walkthrough with you.
+**Quoted separately when needed:** rotted wood and trim repair, which we do in-house, and deck or fence staining.
+**Not included:** gutters and roofing.
 
 ### Before we arrive
 
 - Move cars out of the driveway and away from the house.
 - Move patio furniture, grills, planters, and hoses away from the walls.
-- Trim shrubs that touch the siding. [CONFIRM: or does the crew handle this?]
+- Trim shrubs that touch the siding.
 - Unlock gates and keep pets inside on work days.
-- Let us know if we can use an outdoor water spigot. [CONFIRM]
 - If you have an HOA, get color approval before the start date.
 
 ## (d) FAQ
@@ -50,39 +50,40 @@ No two houses price the same. These are the main factors:
 [
   {
     "question": "What affects exterior painting costs in New Jersey?",
-    "answer": "The biggest factors are the size of the house, how high and hard to reach the walls are, the siding type, and how much loose paint must be scraped and primed. Rotted wood repair, multiple trim colors, and lead-safe work on pre-1978 homes also add time. A free on-site estimate is the only way to get an accurate price. [CONFIRM: typical price range for a 2-story colonial]"
+    "answer": "The biggest factors are the size of the house, how high and hard to reach the walls are, the siding type, and how much loose paint must be scraped and primed. Rotted wood repair, multiple trim colors, and lead-safe work on pre-1978 homes also add time. A free on-site estimate is the only way to get an accurate price."
   },
   {
     "question": "Can peeling cedar shake siding be repainted?",
-    "answer": "Usually, yes, if the shingles are still sound. Loose paint must be scraped and sanded, and bare wood must be primed. The cause of the peeling, which is often moisture, should be found and fixed first, or the new paint may fail too. Split or rotted shingles may need to be replaced before painting. [CONFIRM: we paint and/or stain cedar shake; who replaces damaged shingles]"
+    "answer": "Usually, yes, if the shingles are still sound. Loose paint must be scraped and sanded, and bare wood must be primed. The cause of the peeling, which is often moisture, should be found and fixed first, or the new paint may fail too. Split or rotted shingles need to be replaced before painting. Our crew handles wood repair in-house and lists it on your estimate."
   },
   {
     "question": "Can you paint a house exterior in winter in New Jersey?",
-    "answer": "Usually not. Exterior paint needs dry surfaces and air and surface temperatures above the minimum on the label, which for many products is somewhere between 35°F and 50°F. New Jersey winters rarely give enough reliable days. We schedule exterior work from spring through fall. Winter is a good time to get an estimate and book a spring start. [CONFIRM: interior jobs available in winter]"
+    "answer": "Usually not. Exterior paint needs dry surfaces and air and surface temperatures above the minimum on the label, which for many products is somewhere between 35°F and 50°F. New Jersey winters rarely give enough reliable days. We schedule exterior work from spring through fall. Winter is a good time to get an estimate and book a spring start."
   },
   {
     "question": "My home was built before 1978. What about lead paint?",
-    "answer": "Homes built before 1978 may have lead-based paint on siding and trim. Under the EPA Renovation, Repair and Painting (RRP) Rule, paid work that disturbs those surfaces must be done by a certified firm using lead-safe practices, such as ground covering, containment, and careful cleanup of paint chips. Ask any contractor for their certification. [CONFIRM: whether Cleanest Painting LLC is an EPA Lead-Safe Certified Firm before publishing]"
+    "answer": "Homes built before 1978 may have lead-based paint on siding and trim. Under the EPA Renovation, Repair and Painting (RRP) Rule, paid work that disturbs those surfaces must be done by a certified firm using lead-safe practices, such as ground covering, containment, and careful cleanup of paint chips. Cleanest Painting LLC is an EPA Lead-Safe Certified Firm."
   },
   {
     "question": "Do you pressure wash before painting?",
-    "answer": "Yes. Washing is the first prep step on every exterior job. It removes dirt, mildew, chalky residue, and loose paint so the new coat can bond. We use lower pressure or soft washing on siding and painted wood to avoid damage. When you book painting and washing together, the wash is part of your painting prep. [CONFIRM: wash included at no extra charge, as the pressure washing page currently says]"
+    "answer": "Yes. Washing is the first prep step on every exterior job, and it is included at no extra charge when we paint your house. It removes dirt, mildew, chalky residue, and loose paint so the new coat can bond. We use lower pressure or soft washing on siding and painted wood to avoid damage."
   },
   {
     "question": "How long does it take to paint a house exterior?",
-    "answer": "It depends on the size of the house, the amount of scraping and priming, how hard the walls are to reach, the number of colors, and the weather. Rain days and cold mornings pause the work, because paint must go on dry surfaces. Your estimate will include an expected schedule. [CONFIRM: typical duration for a 2-story home]"
+    "answer": "A typical two-story home takes five to seven working days, weather permitting. Rain days and cold mornings pause the work, because paint must go on dry surfaces. The amount of scraping and priming, wood repair, and the number of colors can also change the schedule. Your estimate will include an expected timeline."
   }
 ]
 ```
 
 ## (e) Facts to confirm
 
-- [ ] Exterior paint brands/lines. [CONFIRM: paint brands] Also the "10+ years" durability statement — remove it unless it is backed by a written warranty.
-- [ ] Whether cedar shake is painted, stained, or both. Who replaces damaged shingles.
-- [ ] **Owner decision:** rotted wood/trim repair — in-house, subcontracted, or excluded.
-- [ ] Standard number of finish coats.
-- [ ] Typical price range and duration for a 2-story colonial.
-- [ ] **EPA Lead-Safe Certified Firm status.**
-- [ ] Wash included free when booked with painting (live pressure washing page claim).
-- [ ] Whether the crew trims shrubs, needs an outdoor spigot, or helps with HOA color submissions.
-- [ ] Interior work available in winter.
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22).
+- [x] Rotted wood and trim repair is done in-house (owner, 2026-10-23).
+- [x] Two finish coats, daily tidy-up and a final walkthrough are standard (owner, 2026-10-23).
+- [x] No published prices. A 2-story home takes 5–7 days, weather permitting (owner, 2026-10-23).
+- [x] EPA Lead-Safe Certified Firm (owner, 2026-10-23).
+- [x] Washing is included free with exterior painting (owner, 2026-10-23).
+- [x] The homeowner trims shrubs (owner, 2026-10-23).
+- [ ] The live page's "10+ years" durability statement and its SW Duration / BM Aura product names. Remove the durability claim unless a written warranty backs it.
+- [ ] Whether cedar shake is stained as well as painted.
+- [ ] "Licensed, insured" in the intro. It is already on the live site; the owner confirms it at the live load.

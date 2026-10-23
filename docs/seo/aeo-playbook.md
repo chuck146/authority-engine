@@ -141,10 +141,12 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - [x] Projects outside the eight counties are accepted by request (owner, 2026-10-22). Shown on the homepage town list and `/locations`.
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Hudson, Monmouth and Bergen added the same day. Woodbridge (Middlesex) stays.
 - [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). The hero, footer, `/locations` and JSON-LD all use it.
-- [ ] Are Rahway, Montclair, and West Orange served? Are drywall repair, trim/carpentry, and fence staining offered?
-- [ ] Lead-safe (EPA RRP) certification: needed before publishing any pre-1978 / lead paint FAQ.
-- [ ] Price ranges and typical timelines you're willing to publish (see `[CONFIRM]` placeholders in the drafts).
-- [ ] Add owner-confirmed claims to `organizations.settings.verified_facts` (e.g. "Licensed and insured", "Angi Super Service 2024") so AI-generated drafts can use them.
+- [x] Rahway, Montclair and West Orange are served. Drywall/plaster repair, wood rot repair, trim carpentry and fence staining are done in-house (owner, 2026-10-23).
+- [x] EPA Lead-Safe Certified Firm (owner, 2026-10-23). The pre-1978 FAQs say so.
+- [x] Prices: none published (owner, 2026-10-23). Timelines: a bedroom about 1 day, a full first floor 3–5 days, a 2-story exterior 5–7 days (weather permitting), cabinets 5–7 business days. Estimates are in person and written, itemized on request. Two finish coats, daily tidy-up and a final walkthrough are standard; washing is free with exterior painting. All `[CONFIRM]` placeholders in the drafts are resolved; what's still open is listed in each draft's "Facts to confirm".
+- [x] `organizations.settings.verified_facts` set to 21 owner-confirmed claims (2026-10-23), including "Licensed, insured and bonded", "Over a decade of painting experience", "5.0 Google rating" and "Angi Super Service Award 2024". AI-generated drafts can now use them.
+- [x] Live load (2026-10-23, owner-approved): `interior-painting` and `exterior-painting` have the new intro, three new sections and six FAQs each. The "$30,000" and "60–75% less" claims are removed from `cabinet-refinishing` and `seed.sql`. Cabinet, deck, wallpaper and homepage copy are next.
+- [ ] Still live and unconfirmed: interior "low-VOC paints" and "scaffolding expertise"; exterior "10+ years" durability and SW Duration / BM Aura product names; wallpaper "thousands of rolls" and "pattern matching guaranteed"; cabinet hardware/soft-close upgrades.
 
 **Account settings:**
 
@@ -170,7 +172,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 | ---- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1    | Owner reviews drafts for interior + exterior; answers the `[CONFIRM]` items; load FAQs + intros through the dashboard | Set GA4 ID; check GSC coverage; run [ai-visibility-prompts.md](ai-visibility-prompts.md) once for a baseline                                 |
 | 2    | Cabinet + deck pages; resolve paint-brand wording; fix 3–4 stuffed location titles                                    | First look at the Leads → "Leads by Channel" and "How They Heard About Us" cards                                                             |
-| 3    | First real project case study (photos, town, scope, timeline); decide on Rahway page                                  | Compare GSC queries with the [topic map](topic-map.md); add questions people actually search for                                             |
-| 4    | Wallpaper page + one cost-factors blog post, if the owner confirms price ranges                                       | Rerun the AI prompt sample; report leads → qualified → won by channel; `npx tsx scripts/seo-sprint/04-technical-audit.ts` against production |
+| 3    | First real project case study (photos, town, scope, timeline); Rahway, Montclair and West Orange location pages       | Compare GSC queries with the [topic map](topic-map.md); add questions people actually search for                                             |
+| 4    | Wallpaper page + one cost-factors blog post (no prices)                                                               | Rerun the AI prompt sample; report leads → qualified → won by channel; `npx tsx scripts/seo-sprint/04-technical-audit.ts` against production |
 
 Report monthly, keeping these four separate: **referral visits** (GA4/attribution), **observed mentions/citations** (prompt sample), **customer-reported discovery**, and **leads → qualified → won**.

@@ -31,18 +31,18 @@ URL: https://cleanestpaintingnj.com/services/cabinet-refinishing (fetched Octobe
 - Thermofoil or veneer is peeling badly
 - You want a very different door style
 
-[CONFIRM: typical refinishing price range for a 10x10 kitchen, or a per-door price] _Remove the live "60–75% less" and "$30,000" figures unless the owner has a source for them._
+Your free estimate gives you the price for your kitchen. _No published prices (owner, 2026-10-23). Remove the live "60–75% less" and "$30,000" figures._
 
 ### What to expect during the project
 
-- Doors and drawer fronts are removed, labeled, and finished away from your kitchen. [CONFIRM: off-site spray shop is current]
-- Cabinet frames and boxes that stay in place are cleaned, sanded, and primed, and the counters, floors, and appliances are masked. [CONFIRM: frames sprayed on site, or brushed and rolled]
-- Hardware is put back, or replaced if you choose new hardware. [CONFIRM: hardware/soft-close upgrade offered]
-- Turnaround: [CONFIRM: 5–7 business days, as the live page says]
+- Doors and drawer fronts are removed, labeled, and spray-finished away from your kitchen.
+- Cabinet frames and boxes that stay in place are cleaned, sanded, and primed, then sprayed on site. Counters, floors, walls, and appliances are masked first.
+- Hardware is put back when the finish is dry.
+- Typical turnaround is 5 to 7 business days.
 
 ### Before we arrive
 
-- Empty the cabinets and drawers that are being refinished. [CONFIRM: all, or only those with painted interiors]
+- Empty the cabinets and drawers that are being refinished.
 - Clear the countertops.
 - Set up a temporary spot for coffee, snacks, and dishes.
 - Pick new hardware early if you want it, so it is on hand for reinstall.
@@ -57,31 +57,32 @@ URL: https://cleanestpaintingnj.com/services/cabinet-refinishing (fetched Octobe
   },
   {
     "question": "Can cabinets be rolled instead of sprayed?",
-    "answer": "Yes. Brushing and rolling with a self-leveling cabinet enamel can look very good, but it may leave a slight texture. Spraying gives the smoothest, most factory-like finish. Our process sprays the doors and drawer fronts away from your kitchen. [CONFIRM: how frames and boxes are finished on site, and whether a brush-and-roll option is offered at a different price]"
+    "answer": "Yes. Brushing and rolling with a self-leveling cabinet enamel can look very good, but it may leave a slight texture. Spraying gives the smoothest, most factory-like finish. We spray the doors and drawer fronts away from your kitchen, and we spray the frames on site after masking the room."
   },
   {
     "question": "How long does cabinet refinishing take?",
-    "answer": "The timeline depends on the number of doors and drawers, the finish you choose, and drying and curing time between coats. Two-tone and glazed finishes take longer than a single painted color. Our current typical turnaround is listed as 5 to 7 business days. Your estimate will include a schedule for your kitchen. [CONFIRM: 5–7 business days is still accurate]"
+    "answer": "The timeline depends on the number of doors and drawers, the finish you choose, and drying and curing time between coats. Two-tone and glazed finishes take longer than a single painted color. Typical turnaround is 5 to 7 business days. Your estimate will include a schedule for your kitchen."
   },
   {
     "question": "Can I use my kitchen during cabinet refinishing?",
-    "answer": "Partly. Because doors and drawer fronts are finished away from your home, most of the noise and fumes stay out of the kitchen. While the frames are being prepped and painted, counters and nearby areas are masked off, so plan for limited use for a few days. Set up a small temporary station for coffee and simple meals. [CONFIRM: how long the kitchen is unusable]"
+    "answer": "Partly. Because doors and drawer fronts are finished away from your home, most of the noise and fumes stay out of the kitchen. While the frames are being prepped and sprayed, counters and nearby areas are masked off, so plan for limited use of the kitchen. Your estimate will say which days. Set up a small temporary station for coffee and simple meals."
   },
   {
     "question": "Can laminate or thermofoil cabinets be refinished?",
-    "answer": "Laminate cabinets can often be painted if they are cleaned well and coated with a bonding primer made for slick surfaces. Thermofoil is harder. If it is peeling or bubbling, painting over it usually fails, and replacing the doors is the better choice. We check the material during the walkthrough before recommending refinishing. [CONFIRM: whether we take laminate and thermofoil jobs]"
+    "answer": "Laminate cabinets can often be painted if they are cleaned well and coated with a bonding primer made for slick surfaces. Thermofoil is harder. If it is peeling or bubbling, painting over it usually fails, and replacing the doors is the better choice. We check the material during the walkthrough before recommending refinishing."
   }
 ]
 ```
 
 ## (e) Facts to confirm
 
-- [ ] Off-site spray shop is current. How frames and boxes are finished on site.
-- [ ] Brush-and-roll option offered? At what price difference?
-- [ ] Typical price range (10x10 kitchen or per door). Remove or source the "$30,000" and "60–75% less" figures.
-- [ ] Turnaround (live page: 5–7 business days) and how long the kitchen is unusable.
+- [x] Doors and drawers are sprayed off-site; frames are sprayed on site with masking (owner, 2026-10-23).
+- [x] No published prices. Remove the live "$30,000" and "60–75% less" figures (owner, 2026-10-23).
+- [x] Turnaround is 5–7 business days (owner, 2026-10-23).
+- [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22).
+- [ ] Brush-and-roll option at a different price.
+- [ ] How many days the kitchen is unusable.
 - [ ] Stained finish on previously painted or factory-finished cabinets — offered?
-- [ ] Hardware and soft-close hinge upgrades — offered?
+- [ ] Hardware and soft-close hinge upgrades — offered? (Still on the live page.)
 - [ ] Laminate/thermofoil policy.
-- [ ] Cabinet coating brand. [CONFIRM: paint brands]
 - [ ] Any written aftercare instructions or warranty. Do not imply a warranty until confirmed.

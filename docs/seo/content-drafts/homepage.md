@@ -17,7 +17,7 @@ Keep the H1. Pick one support line:
 
 - **Option A (services + location):** "Interior, exterior, and cabinet painting for homes in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties. Based in Rahway. Free estimates — we reply within 24 hours."
 - **Option B (homes + businesses):** "Residential and commercial painting from our base in Rahway, NJ. Licensed, insured, and rated 5.0 on Google."
-- **Option C (shortest):** "Rahway-based painters for homes across [CONFIRM: service area wording]. Free estimates."
+- **Option C (shortest):** "Rahway-based painters for homes across eight New Jersey counties. Free estimates."
 
 Recommendation: Option A. It answers "what" and "where" in one sentence, and the trust bar below already covers licensing and ratings.
 
@@ -28,9 +28,9 @@ Recommendation: Option A. It answers "what" and "where" in one sentence, and the
 Short block, placed directly above the estimate form. Four numbered steps:
 
 1. **Request.** Call (732) 496-4607 or fill out the form below. We get back to you within 24 hours.
-2. **Walkthrough.** We look at the rooms or surfaces you want painted, check their condition, and talk through colors and timing. [CONFIRM: in-person only or video option; typical length; whether a color consultation is included]
-3. **Written estimate.** You get a free estimate that lists the surfaces, prep work, and paint we plan to use. [CONFIRM: delivered by email/PDF/in person; how soon after the walkthrough; itemized or single price; how long the quote is valid]
-4. **Scheduling.** Once you approve, we set a start date and confirm it before we arrive. [CONFIRM: deposit required? typical lead time to start; how start date is confirmed]
+2. **Walkthrough.** We visit in person to look at the rooms or surfaces you want painted, check their condition, and talk through colors and timing.
+3. **Written estimate.** You get a free written estimate for the work, prep, and paint. Ask if you would like it itemized.
+4. **Scheduling.** Once you approve, we set a start date and confirm it before we arrive.
 
 ### Service-area wording options
 
@@ -38,9 +38,7 @@ Whatever is chosen must match in four places: the hero, the line below the town 
 
 - **Option 1 — counties only (strict):** "Serving Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties from our base in Rahway, NJ." Then either remove Woodbridge from the town list or add Middlesex County.
 - **Option 2 — core counties + by request:** "Based in Rahway, NJ. We serve Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties, and take projects elsewhere in New Jersey by request." This replaces "We service all of New Jersey."
-- **Option 3 — radius:** "We serve homes within about [CONFIRM: miles] of Rahway, NJ, including the towns below."
-
-Recommendation: Option 2. It is accurate if the company really does travel, and it avoids an "all of New Jersey" claim that AI tools and Google may treat as vague. [CONFIRM: owner's preferred wording]
+  Chosen: Option 2 (owner, 2026-10-22). It avoids an "all of New Jersey" claim that AI tools and Google may treat as vague.
 
 ## (d) FAQ (homepage)
 
@@ -48,19 +46,19 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
 [
   {
     "question": "Do you offer free painting estimates?",
-    "answer": "Yes. Estimates are free. Call (732) 496-4607 or fill out the form on this page, and we get back to you within 24 hours. We then set up a walkthrough to see the rooms or surfaces, check their condition, and talk about colors. After that you receive an estimate that lists the work and materials. [CONFIRM: how the estimate is delivered and how long it is valid]"
+    "answer": "Yes. Estimates are free. Call (732) 496-4607 or fill out the form on this page, and we get back to you within 24 hours. We then visit in person to see the rooms or surfaces, check their condition, and talk about colors. After that you receive a written estimate for the work and materials."
   },
   {
     "question": "What areas does Cleanest Painting LLC serve?",
-    "answer": "We are based in Rahway, NJ, and work mainly in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. Towns we serve include Westfield, Summit, Chatham, Cranford, Millburn, Short Hills, Madison, and Morristown. We also take projects elsewhere in New Jersey. If your town is not listed, call (732) 496-4607."
+    "answer": "We are based in Rahway, NJ, and work mainly in Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth, and Bergen counties. Towns we serve include Rahway, Westfield, Summit, Chatham, Cranford, Millburn, Short Hills, Montclair, West Orange, Madison, and Morristown. We also take projects elsewhere in New Jersey. If your town is not listed, call (732) 496-4607."
   },
   {
     "question": "Is Cleanest Painting LLC licensed and insured?",
-    "answer": "Yes. Cleanest Painting LLC is licensed, insured, and bonded, and it is registered as a New Jersey Home Improvement Contractor. We have over a decade of painting experience, a 5.0 Google rating, and an Angi 2024 Super Service award. You can ask for a copy of our insurance certificate before work begins. [CONFIRM: certificate of insurance is provided on request]"
+    "answer": "Yes. Cleanest Painting LLC is licensed, insured, and bonded, and it is registered as a New Jersey Home Improvement Contractor. We have over a decade of painting experience, a 5.0 Google rating, and an Angi 2024 Super Service award. We are also an EPA Lead-Safe Certified Firm."
   },
   {
     "question": "What painting services do you offer?",
-    "answer": "We offer interior painting, exterior painting, cabinet refinishing, deck staining and sealing, wallpaper installation and removal, pressure washing, color consultation, and commercial painting. Most projects are homes, but we also paint offices, retail spaces, and other commercial buildings. Each service has its own page with details on prep, process, and what to expect."
+    "answer": "We offer interior painting, exterior painting, cabinet refinishing, deck and fence staining, drywall and trim repair, wallpaper installation and removal, pressure washing, color consultation, and commercial painting. Most projects are homes, but we also paint offices, retail spaces, and other commercial buildings. Each service has its own page with details on prep, process, and what to expect."
   }
 ]
 ```
@@ -71,7 +69,11 @@ Recommendation: Option 2. It is accurate if the company really does travel, and 
 - [x] Projects outside the eight counties are accepted (owner, 2026-10-22). Option 2 wording.
 - [x] Paint brands: Benjamin Moore & Sherwin-Williams (owner, 2026-10-22). Farrow & Ball and Fine Paints of Europe mentions removed from live pages (2026-10-23).
 - [x] HIC registration number: 13VH11564300 (owner, 2026-10-22).
-- [ ] Estimate process details: walkthrough format, delivery method, itemization, validity period, deposit, lead time.
+- [x] Estimates: free, in-person walkthrough, written; itemized on request (owner, 2026-10-23).
+- [x] Rahway, Montclair and West Orange are served (owner, 2026-10-23).
+- [x] EPA Lead-Safe Certified Firm (owner, 2026-10-23).
+- [ ] Estimate validity period, deposit, and lead time to start.
 - [ ] Certificate of insurance is available on request.
+- [ ] "Licensed, insured, and bonded", "over a decade", "5.0 Google rating" and "Angi 2024 Super Service" are on the live site but weren't re-confirmed on 2026-10-23.
 - [x] The three homepage testimonials are real customers (owner confirmed 2026-10-19). Keep written permission on file.
 - [ ] Whether a projects/portfolio page will exist. If not, change "View all projects" to "View our services."
