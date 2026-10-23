@@ -7,6 +7,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security — Anonymous lead inserts blocked (branch `fix/drop-leads-public-insert`)
+
+- **Dropped the `leads_public_insert` RLS policy** (migration `20261022000001`, applied 2026-10-22). It let anyone holding the public anon key insert leads for any organization through PostgREST, bypassing the estimate API's rate limit, honeypot, validation and attribution. The estimate form is unaffected: `/api/v1/leads` inserts with the service role. Checked live without creating rows: an anonymous insert is now refused by RLS (`42501`), while the service role still passes RLS. No existing lead showed signs of having bypassed the API
+- **Migration history:** `20261019000001` (applied earlier through the SQL editor) is now recorded as applied, and `types/database.ts` was regenerated from the live schema with no changes
+
 ### Changed — Lead attribution migration applied (branch `fix/remove-attribution-fallbacks`)
 
 - **Migration applied:** `leads.discovery_source`, `leads.attribution` and the `marketing_events` table are live (applied 2026-10-22 through the Supabase SQL editor)

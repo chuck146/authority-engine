@@ -474,6 +474,7 @@ Sprint Results:
 - [x] Test suite: 1,525 tests across 198 files, all passing (after `fix/remove-attribution-fallbacks`). Typecheck, lint and build clean. Local technical audit: 40 pages, 0 issues after fixes
 - [x] Four-reviewer code review (security, architecture, performance, tests): no blockers; review fixes and missing tests added
 - [x] Migration `20261019000001_add_lead_attribution_and_marketing_events.sql` applied to live Supabase (2026-10-22, SQL editor); types updated; temporary fallbacks removed
+- [x] Anonymous inserts into `leads` blocked: `leads_public_insert` policy dropped (migration `20261022000001`, 2026-10-22); migration history repaired; types regenerated from the live schema
 - [ ] Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel and mark `generate_lead` as a GA4 key event
 - [ ] Owner confirms the facts in the playbook checklist, then the reviewed FAQs/intros are loaded via the dashboard
 
