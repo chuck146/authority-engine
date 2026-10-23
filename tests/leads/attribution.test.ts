@@ -4,6 +4,7 @@ import {
   classifyChannel,
   leadSourceForChannel,
   attributionSchema,
+  storedChannel,
 } from '@/lib/leads/attribution'
 
 const SITE = 'cleanestpaintingnj.com'
@@ -80,5 +81,19 @@ describe('leadSourceForChannel', () => {
     expect(leadSourceForChannel('social', { referrer_host: 'l.facebook.com' })).toBe('facebook')
     expect(leadSourceForChannel('social', { referrer_host: 'instagram.com' })).toBe('website')
     expect(leadSourceForChannel('ai_assistant', undefined)).toBe('website')
+  })
+})
+
+describe('storedChannel', () => {
+  it.each([
+    [{ channel: 'organic_search' }, 'organic_search'],
+    [{}, 'unknown'],
+    [{ channel: '' }, 'unknown'],
+    [{ channel: 42 }, 'unknown'],
+    [null, 'unknown'],
+    [['ai_assistant'], 'unknown'],
+    ['ai_assistant', 'unknown'],
+  ])('reads %j as %s', (attribution, expected) => {
+    expect(storedChannel(attribution)).toBe(expected)
   })
 })

@@ -1,6 +1,6 @@
 # Cleanest Painting — Search & AI Visibility Playbook
 
-_Prepared 2026-10-19 on branch `feature/seo-aeo-improvements`. Nothing in this branch is deployed._
+_Prepared 2026-10-19 on branch `feature/seo-aeo-improvements`. Merged in PR #25 and deployed; the attribution migration was applied 2026-10-22._
 
 This playbook covers how cleanestpaintingnj.com is found by Google and by AI search tools (ChatGPT search, Google AI Overviews / AI Mode, Perplexity, Gemini), how estimate requests are measured, and what the owner needs to do outside the code.
 
@@ -49,7 +49,7 @@ Related files:
 | P0       | Static/ISR marketing pages; sitemap revalidation; org-scoped queries                 | Faster pages, fresh sitemap, tenant safety         | M      | ✅ Done                                                    |
 | P0       | One business identity for visible contact details and JSON-LD                        | Consistent entity for Google and AI answers        | M      | ✅ Done                                                    |
 | P1       | `/estimate` page, preselected service, honeypot                                      | Fewer steps to a lead                              | M      | ✅ Done                                                    |
-| P1       | Lead attribution, call-click events, optional GA4                                    | Know which channels produce booked jobs            | M      | ✅ Code done. **Migration + GA4 ID pending**               |
+| P1       | Lead attribution, call-click events, optional GA4                                    | Know which channels produce booked jobs            | M      | ✅ Live. **GA4 ID pending**                                |
 | P2       | FAQ field; crawlable animations; no-fabrication prompts; internal links              | Answerable content; accurate claims                | M      | ✅ Done                                                    |
 | P2       | Load reviewed FAQ and intro drafts into the six pages                                | Pages that answer real customer questions          | S each | ⏳ Owner review of `content-drafts/` first                 |
 | P2       | Resolve the paint-brand contradiction ("BM & SW exclusively" vs Farrow & Ball copy)  | Trust; consistent AI answers                       | S      | Decided: BM & SW; live page edits pending                  |
@@ -120,7 +120,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 **Deploy order:**
 
 1. ✅ Merged (PR #25) and deployed.
-2. ✅ Migration applied on 2026-10-22 through the Supabase SQL editor. It isn't recorded in Supabase's migration history, so before the next `npm run db:migrate` run `supabase migration repair --status applied 20261019000001`.
+2. ✅ Migration applied on 2026-10-22 through the Supabase SQL editor. It isn't recorded in Supabase's migration history, so mark it applied before the next push, against the same database the push uses: `supabase migration repair --status applied 20261019000001 --linked` (or `--db-url "$DATABASE_URL"` when pushing with `npm run db:migrate`). Without this the push re-runs it and fails on the existing `marketing_events_org_select` policy. Run `supabase migration list` first to check nothing else is unrecorded.
 3. ✅ `types/database.ts` updated for the new columns and table. Regenerate it with `npx supabase gen types typescript --project-id oznuqgcipfjfbxvflbhc > types/database.ts` the next time the CLI is logged in.
 4. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-…` in Vercel (Production) and redeploy.
 5. In GA4, mark `generate_lead` as a key event.
@@ -140,7 +140,7 @@ To block a training crawler, add it to `app/robots.ts` as its own group with `di
 - [ ] Remove Farrow & Ball / Fine Paints of Europe mentions from five live pages: services `interior-painting`, `color-consultation`; locations `westfield-nj-painting`, `short-hills-nj-painting`, `bernardsville-nj-painting`.
 - [x] Projects outside the eight counties are accepted by request (owner, 2026-10-22). Shown on the homepage town list and `/locations`.
 - [x] Service area: Union, Essex, Morris, Somerset, Middlesex, Hudson, Monmouth & Bergen counties (owner, 2026-10-22). Hudson, Monmouth and Bergen added the same day. Woodbridge (Middlesex) stays.
-- [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). Live JSON-LD picks it up now; the hero, footer and `/locations` follow once this branch is deployed.
+- [x] Live org settings: `settings.service_area_counties` set to all eight counties (2026-10-22, owner-approved). The hero, footer, `/locations` and JSON-LD all use it.
 - [ ] Are Rahway, Montclair, and West Orange served? Are drywall repair, trim/carpentry, and fence staining offered?
 - [ ] Lead-safe (EPA RRP) certification: needed before publishing any pre-1978 / lead paint FAQ.
 - [ ] Price ranges and typical timelines you're willing to publish (see `[CONFIRM]` placeholders in the drafts).

@@ -35,7 +35,7 @@ describe('GET /api/v1/leads/overview', () => {
   })
 
   it('returns empty overview when no leads', async () => {
-    mockSupabase.returns.mockResolvedValueOnce({ data: [], error: null })
+    mockSupabase.eq.mockResolvedValueOnce({ data: [], error: null })
     const res = await callGet()
     expect(res.status).toBe(200)
     const json = await res.json()
@@ -75,7 +75,7 @@ describe('GET /api/v1/leads/overview', () => {
         contacted_at: '2026-03-09T12:00:00Z',
       },
     ]
-    mockSupabase.returns.mockResolvedValueOnce({ data: leads, error: null })
+    mockSupabase.eq.mockResolvedValueOnce({ data: leads, error: null })
 
     const res = await callGet()
     const json = await res.json()
@@ -109,7 +109,7 @@ describe('GET /api/v1/leads/overview', () => {
         contacted_at: null,
       },
     ]
-    mockSupabase.returns.mockResolvedValueOnce({ data: leads, error: null })
+    mockSupabase.eq.mockResolvedValueOnce({ data: leads, error: null })
 
     const res = await callGet()
     const json = await res.json()
@@ -127,7 +127,7 @@ describe('GET /api/v1/leads/overview', () => {
         contacted_at: null,
       },
     ]
-    mockSupabase.returns.mockResolvedValueOnce({ data: leads, error: null })
+    mockSupabase.eq.mockResolvedValueOnce({ data: leads, error: null })
 
     const res = await callGet()
     const json = await res.json()
@@ -141,7 +141,7 @@ describe('GET /api/v1/leads/overview', () => {
       created_at: new Date().toISOString(),
       contacted_at: null,
     }
-    mockSupabase.returns.mockResolvedValueOnce({
+    mockSupabase.eq.mockResolvedValueOnce({
       data: [
         {
           ...base,
@@ -181,7 +181,7 @@ describe('GET /api/v1/leads/overview', () => {
   })
 
   it('selects explicit columns only (no PII, no *) including attribution', async () => {
-    mockSupabase.returns.mockResolvedValueOnce({ data: [], error: null })
+    mockSupabase.eq.mockResolvedValueOnce({ data: [], error: null })
     await callGet()
 
     expect(mockSupabase.select).toHaveBeenCalledTimes(1)
@@ -196,15 +196,48 @@ describe('GET /api/v1/leads/overview', () => {
     expect(mockSupabase.eq).toHaveBeenCalledWith('organization_id', 'org-456')
   })
 
-  it('returns 500 when the query fails', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {})
-    mockSupabase.returns.mockResolvedValueOnce({
-      data: null,
-      error: { code: '42501', message: 'permission denied' },
-    })
+  // 42703 is a missing column: the old fallback retried on it, so assert it no longer does.
+  it.each([
+    ['42501', 'permission denied'],
+    ['42703', 'column leads.discovery_source does not exist'],
+  ])('returns 500 without retrying when the query fails (%s)', async (code, message) => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockSupabase.eq.mockResolvedValueOnce({ data: null, error: { code, message } })
     const res = await callGet()
     expect(res.status).toBe(500)
     expect(mockSupabase.select).toHaveBeenCalledTimes(1)
+    expect(errorSpy).toHaveBeenCalledWith('Failed to fetch leads overview:', code, message)
+  })
+
+  it('tolerates a missing created_at and attribution without a channel', async () => {
+    mockSupabase.eq.mockResolvedValueOnce({
+      data: [
+        {
+          status: 'new',
+          source: 'website',
+          service: null,
+          created_at: null,
+          contacted_at: new Date().toISOString(),
+          discovery_source: null,
+          attribution: {},
+        },
+        {
+          status: 'new',
+          source: 'website',
+          service: null,
+          created_at: new Date().toISOString(),
+          contacted_at: null,
+          discovery_source: null,
+          attribution: { channel: 42 },
+        },
+      ],
+      error: null,
+    })
+
+    const json = await (await callGet()).json()
+    expect(json.newThisWeek).toBe(1)
+    expect(json.avgResponseTimeHours).toBeNull()
+    expect(json.byChannel).toEqual([{ channel: 'unknown', leads: 2, qualified: 0, won: 0 }])
   })
 
   it('counts qualified, proposed and won as qualified per channel', async () => {
@@ -216,7 +249,7 @@ describe('GET /api/v1/leads/overview', () => {
       attribution: { channel: 'organic_search' },
       discovery_source: null,
     }
-    mockSupabase.returns.mockResolvedValueOnce({
+    mockSupabase.eq.mockResolvedValueOnce({
       data: ['new', 'contacted', 'qualified', 'proposed', 'won', 'lost'].map((status) => ({
         ...base,
         status,

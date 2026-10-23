@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { requireApiAuth, AuthError } from '@/lib/auth/api-guard'
+import { storedChannel } from '@/lib/leads/attribution-shared'
 import type { LeadOverview, LeadStatus, LeadSource } from '@/types/leads'
 
 const QUALIFIED_STATUSES = new Set(['qualified', 'proposed', 'won'])
@@ -15,20 +16,9 @@ export async function GET() {
       .from('leads')
       .select('status, source, service, created_at, contacted_at, discovery_source, attribution')
       .eq('organization_id', auth.organizationId)
-      .returns<
-        {
-          status: string
-          source: string
-          service: string | null
-          created_at: string
-          contacted_at: string | null
-          discovery_source: string | null
-          attribution: { channel?: string } | null
-        }[]
-      >()
 
     if (error) {
-      console.error('Failed to fetch leads overview:', error)
+      console.error('Failed to fetch leads overview:', error.code, error.message)
       return NextResponse.json({ error: 'Failed to fetch overview' }, { status: 500 })
     }
 
@@ -52,7 +42,7 @@ export async function GET() {
 
     // New this week
     const newThisWeek = allLeads.filter(
-      (l) => l.status === 'new' && new Date(l.created_at) >= oneWeekAgo,
+      (l) => l.status === 'new' && l.created_at !== null && new Date(l.created_at) >= oneWeekAgo,
     ).length
 
     // In pipeline (not won/lost)
@@ -85,13 +75,12 @@ export async function GET() {
       .slice(0, 10)
 
     // Avg response time (time from created_at to contacted_at)
-    const responseTimes = allLeads
-      .filter((l) => l.contacted_at)
-      .map((l) => {
-        const created = new Date(l.created_at).getTime()
-        const contacted = new Date(l.contacted_at!).getTime()
-        return (contacted - created) / (1000 * 60 * 60) // hours
-      })
+    const responseTimes = allLeads.flatMap((l) => {
+      if (!l.created_at || !l.contacted_at) return []
+      const created = new Date(l.created_at).getTime()
+      const contacted = new Date(l.contacted_at).getTime()
+      return [(contacted - created) / (1000 * 60 * 60)] // hours
+    })
     const avgResponseTimeHours =
       responseTimes.length > 0
         ? responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length
@@ -100,7 +89,7 @@ export async function GET() {
     // By observed channel, with lead quality downstream
     const channelMap = new Map<string, { leads: number; qualified: number; won: number }>()
     for (const lead of allLeads) {
-      const channel = lead.attribution?.channel ?? 'unknown'
+      const channel = storedChannel(lead.attribution)
       const row = channelMap.get(channel) ?? { leads: 0, qualified: 0, won: 0 }
       row.leads++
       if (QUALIFIED_STATUSES.has(lead.status)) row.qualified++

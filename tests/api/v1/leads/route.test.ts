@@ -44,7 +44,9 @@ function validLeadBody() {
 describe('POST /api/v1/leads', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
-    // Default: org slug lookup succeeds, then lead insert succeeds
+    // Default: org slug lookup succeeds, then lead insert succeeds. Reset first so
+    // values queued but unused by an earlier test can't leak into this one.
+    mockSupabase.single.mockReset()
     mockSupabase.single
       .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null }) // org slug lookup
       .mockResolvedValueOnce({ data: { id: 'lead-1' }, error: null }) // lead insert
@@ -154,28 +156,54 @@ describe('POST /api/v1/leads', () => {
     expect(res.status).toBe(400)
   })
 
-  it('returns 500 without retrying when the lead insert fails', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {})
-    mockSupabase.single.mockReset()
-    mockSupabase.single
-      .mockResolvedValueOnce({ data: { id: 'org-1', settings: null }, error: null })
-      .mockResolvedValueOnce({
-        data: null,
-        error: {
-          code: '23502',
-          message: 'null value in column "name" violates not-null constraint',
-        },
-      })
-      .mockResolvedValueOnce({ data: { id: 'lead-should-not-exist' }, error: null })
+  // PGRST204 and 42703 are missing-column errors: the old fallback retried without the
+  // attribution columns on those, so assert every failure now stops at one insert.
+  it.each([
+    ['23502', 'null value in column "name" violates not-null constraint'],
+    ['PGRST204', "Could not find the 'attribution' column of 'leads' in the schema cache"],
+    ['42703', 'column "discovery_source" of relation "leads" does not exist'],
+  ])(
+    'returns 500 without retrying or notifying when the insert fails (%s)',
+    async (code, message) => {
+      const { sendLeadNotification } = await import('@/lib/email/resend')
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      mockSupabase.single.mockReset()
+      mockSupabase.single
+        .mockResolvedValueOnce({
+          data: { id: 'org-1', settings: { contact_info: { email: 'owner@example.com' } } },
+          error: null,
+        })
+        .mockResolvedValueOnce({
+          data: null,
+          error: { code, message, details: 'Failing row contains (Jane Doe, jane@example.com)' },
+        })
+        .mockResolvedValueOnce({ data: { id: 'lead-should-not-exist' }, error: null })
 
-    const res = await callPost(validLeadBody())
+      const res = await callPost({ ...validLeadBody(), discovery_source: 'google_search' })
 
-    expect(res.status).toBe(500)
-    const leadInserts = mockSupabase.insert.mock.calls.filter(
-      (c: unknown[]) => (c[0] as Record<string, unknown>).email !== undefined,
-    )
-    expect(leadInserts).toHaveLength(1)
-    expect(mockSupabase.from).not.toHaveBeenCalledWith('lead_activities')
+      expect(res.status).toBe(500)
+      const leadInserts = mockSupabase.insert.mock.calls.filter(
+        (c: unknown[]) => (c[0] as Record<string, unknown>).email !== undefined,
+      )
+      expect(leadInserts).toHaveLength(1)
+      expect(mockSupabase.from).not.toHaveBeenCalledWith('lead_activities')
+      expect(sendLeadNotification).not.toHaveBeenCalled()
+      // The log carries the error code and message, never the row details.
+      expect(errorSpy).toHaveBeenCalledWith('Failed to insert lead:', code, message)
+      expect(JSON.stringify(errorSpy.mock.calls)).not.toContain('jane@example.com')
+    },
+  )
+
+  it('files the lead under the org looked up by slug, ignoring a client-supplied org id', async () => {
+    await callPost({ ...validLeadBody(), organization_id: 'someone-elses-org' })
+
+    expect(mockSupabase.from).toHaveBeenCalledWith('organizations')
+    expect(mockSupabase.eq).toHaveBeenCalledWith('slug', 'cleanest-painting')
+    expect(leadInsertRow().organization_id).toBe('org-1')
+    const activity = mockSupabase.insert.mock.calls
+      .map((c: unknown[]) => c[0] as Record<string, unknown>)
+      .find((row: Record<string, unknown>) => row.activity_type === 'score_change')
+    expect(activity).toMatchObject({ organization_id: 'org-1', lead_id: 'lead-1' })
   })
 
   it('treats a referrer from the site itself as direct, not referral', async () => {

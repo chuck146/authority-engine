@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createMockSupabaseClient } from '@/tests/mocks/supabase'
+import { MARKETING_ORG_SLUG } from '@/lib/marketing/site'
 
 const mockSupabase = createMockSupabaseClient()
 vi.mock('@/lib/supabase/admin', () => ({
@@ -59,10 +60,24 @@ describe('POST /api/v1/events', () => {
     expect(mockSupabase.insert).not.toHaveBeenCalled()
   })
 
-  it('does not surface database errors (e.g. table not migrated yet)', async () => {
-    mockSupabase.insert.mockResolvedValue({ error: { message: 'relation does not exist' } })
+  it('logs a failed insert but still answers 204', async () => {
+    mockSupabase.insert.mockResolvedValue({ error: { message: 'insert failed' } })
     const res = await callPost(validEvent)
     expect(res.status).toBe(204)
+    expect(console.warn).toHaveBeenCalledWith('[events] insert failed:', 'insert failed')
+  })
+
+  it('looks up the marketing org server-side', async () => {
+    await callPost(validEvent)
+    expect(mockSupabase.from).toHaveBeenCalledWith('organizations')
+    expect(mockSupabase.eq).toHaveBeenCalledWith('slug', MARKETING_ORG_SLUG)
+  })
+
+  it('records nothing when the marketing org is missing', async () => {
+    mockSupabase.single.mockResolvedValue({ data: null, error: { message: 'not found' } })
+    const res = await callPost(validEvent)
+    expect(res.status).toBe(204)
+    expect(mockSupabase.insert).not.toHaveBeenCalled()
   })
 
   it('stops recording after the per-IP limit', async () => {

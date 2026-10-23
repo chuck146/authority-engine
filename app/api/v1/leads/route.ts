@@ -112,7 +112,8 @@ export async function POST(request: Request) {
       .single()
 
     if (error || !lead) {
-      console.error('Failed to insert lead:', error)
+      // Code and message only: error.details can echo the row (name, email, phone).
+      console.error('Failed to insert lead:', error?.code, error?.message)
       return NextResponse.json({ error: 'Failed to submit request' }, { status: 500 })
     }
 
